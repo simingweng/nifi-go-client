@@ -570,9 +570,3 @@ Class | Method | HTTP request | Description
 
  Endpoints do not require authorization.
 
-
-
-## Author
-
-dev@nifi.apache.org
-
