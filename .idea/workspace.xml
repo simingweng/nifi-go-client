@@ -1,13 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="30c554c5-343b-4b5c-8500-6a436f82f703" name="Default Changelist" comment="" />
+    <list default="true" id="30c554c5-343b-4b5c-8500-6a436f82f703" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/api_flow_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
   <component name="GOROOT" path="/usr/local/Cellar/go/1.14.6/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
@@ -16,6 +47,7 @@
     <option name="namespace" value="default" />
   </component>
   <component name="ProjectId" id="1fk2MffbsI5K8X0bQDeRxSZqCkX" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -37,7 +69,18 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Test.TestFlowApiService_GetAboutInfo in github.com/simingweng/nifi-go-client">
+    <configuration name="TestFlowApiService_GetAboutInfo in github.com/simingweng/nifi-go-client" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="nifi-go-client" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/simingweng/nifi-go-client" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^TestFlowApiService_GetAboutInfo$" />
+      <method v="2" />
+    </configuration>
     <configuration name="all" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="all" workingDirectory="" arguments="">
         <envs />
@@ -46,6 +89,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestFlowApiService_GetAboutInfo in github.com/simingweng/nifi-go-client" />
         <item itemvalue="Makefile.all" />
       </list>
     </recent_temporary>
@@ -54,25 +98,48 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="WindowStateProjectService">
-    <state width="1878" height="293" key="GridCell.Tab.0.bottom" timestamp="1596760606853">
+    <state x="716" y="398" key="Github.ShareDialog" timestamp="1596761230414">
       <screen x="0" y="23" width="1920" height="978" />
     </state>
-    <state width="1878" height="293" key="GridCell.Tab.0.bottom/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596760606853" />
-    <state width="1878" height="293" key="GridCell.Tab.0.center" timestamp="1596760606852">
+    <state x="716" y="398" key="Github.ShareDialog/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596761230414" />
+    <state x="704" y="224" key="Github.UntrackedFilesDialog" timestamp="1596761252789">
       <screen x="0" y="23" width="1920" height="978" />
     </state>
-    <state width="1878" height="293" key="GridCell.Tab.0.center/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596760606852" />
-    <state width="1878" height="293" key="GridCell.Tab.0.left" timestamp="1596760606851">
-      <screen x="0" y="23" width="1920" height="978" />
+    <state x="704" y="224" key="Github.UntrackedFilesDialog/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596761252789" />
+    <state width="1638" height="225" key="GridCell.Tab.0.bottom" timestamp="1596764422005">
+      <screen x="0" y="23" width="1680" height="954" />
     </state>
-    <state width="1878" height="293" key="GridCell.Tab.0.left/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596760606851" />
-    <state width="1878" height="293" key="GridCell.Tab.0.right" timestamp="1596760606852">
-      <screen x="0" y="23" width="1920" height="978" />
+    <state width="1638" height="225" key="GridCell.Tab.0.bottom/0.23.1680.954@0.23.1680.954" timestamp="1596764422005" />
+    <state width="1878" height="293" key="GridCell.Tab.0.bottom/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596761319157" />
+    <state width="1638" height="225" key="GridCell.Tab.0.center" timestamp="1596764422005">
+      <screen x="0" y="23" width="1680" height="954" />
     </state>
-    <state width="1878" height="293" key="GridCell.Tab.0.right/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596760606852" />
+    <state width="1638" height="225" key="GridCell.Tab.0.center/0.23.1680.954@0.23.1680.954" timestamp="1596764422005" />
+    <state width="1878" height="293" key="GridCell.Tab.0.center/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596761319156" />
+    <state width="1638" height="225" key="GridCell.Tab.0.left" timestamp="1596764422004">
+      <screen x="0" y="23" width="1680" height="954" />
+    </state>
+    <state width="1638" height="225" key="GridCell.Tab.0.left/0.23.1680.954@0.23.1680.954" timestamp="1596764422004" />
+    <state width="1878" height="293" key="GridCell.Tab.0.left/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596761319155" />
+    <state width="1638" height="225" key="GridCell.Tab.0.right" timestamp="1596764422005">
+      <screen x="0" y="23" width="1680" height="954" />
+    </state>
+    <state width="1638" height="225" key="GridCell.Tab.0.right/0.23.1680.954@0.23.1680.954" timestamp="1596764422005" />
+    <state width="1878" height="293" key="GridCell.Tab.0.right/0.23.1920.978/3000.562.1680.1027/1920.-601.1080.1897@0.23.1920.978" timestamp="1596761319156" />
   </component>
 </project>
