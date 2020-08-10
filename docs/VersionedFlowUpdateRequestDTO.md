@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **RequestId** | **string** | The unique ID of this request. | [optional] [readonly] 
-**ProcessGroupId** | **string** | The unique ID of the Process Group that the variable registry belongs to | [optional] 
+**ProcessGroupId** | **string** | The unique ID of the Process Group being updated | [optional] 
 **Uri** | **string** | The URI for future requests to this drop request. | [optional] [readonly] 
 **LastUpdated** | **string** | The last time this request was updated. | [optional] [readonly] 
 **Complete** | **bool** | Whether or not this request has completed | [optional] [readonly] 

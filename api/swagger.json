@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "description" : "The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and \n                                            stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,\n                                            definitions of the expected input and output, potential response codes, and the authorizations required\n                                            to invoke each service.",
-    "version" : "1.11.4",
+    "version" : "1.12.0-SNAPSHOT",
     "title" : "NiFi Rest Api",
     "contact" : {
       "url" : "https://nifi.apache.org",
@@ -2939,6 +2939,49 @@
         } ]
       }
     },
+    "/flow/metrics/{producer}" : {
+      "get" : {
+        "tags" : [ "flow" ],
+        "summary" : "Gets all metrics for the flow from a particular node",
+        "description" : "",
+        "operationId" : "getFlowMetrics",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "producer",
+          "in" : "path",
+          "description" : "The producer for flow file metrics. Each producer may have its own output format.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/StreamingOutput"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /flow" : [ ]
+        } ]
+      }
+    },
     "/flow/output-ports/{id}/status" : {
       "get" : {
         "tags" : [ "flow" ],
@@ -3894,6 +3937,11 @@
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "q",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "a",
           "in" : "query",
           "required" : false,
           "type" : "string"
@@ -5873,6 +5921,97 @@
         } ]
       }
     },
+    "/process-groups/replace-requests/{id}" : {
+      "get" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Returns the Replace Request with the given ID",
+        "description" : "Returns the Replace Request with the given ID. Once a Replace Request has been created by performing a POST to /process-groups/{id}/replace-requests, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "getReplaceProcessGroupRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The ID of the Replace Request",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessGroupReplaceRequestEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Only the user that submitted the request can get it" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Deletes the Replace Request with the given ID",
+        "description" : "Deletes the Replace Request with the given ID. After a request is created via a POST to /process-groups/{id}/replace-requests, it is expected that the client will properly clean up the request by DELETE'ing it, once the Replace process has completed. If the request is deleted before the request completes, then the Replace request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "deleteReplaceProcessGroupRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "disconnectedNodeAcknowledged",
+          "in" : "query",
+          "description" : "Acknowledges that this node is disconnected to allow for mutable requests to proceed.",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The ID of the Update Request",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessGroupReplaceRequestEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Only the user that submitted the request can remove it" : [ ]
+        } ]
+      }
+    },
     "/process-groups/{groupId}/variable-registry/update-requests/{updateId}" : {
       "get" : {
         "tags" : [ "process-groups" ],
@@ -6322,6 +6461,59 @@
         },
         "security" : [ {
           "Read - /process-groups/{uuid}" : [ ]
+        } ]
+      }
+    },
+    "/process-groups/{id}/flow-contents" : {
+      "put" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Replace Process Group contents with the given ID with the specified Process Group contents",
+        "description" : "This endpoint is used for replication within a cluster, when replacing a flow with a new flow. It expects that the flow beingreplaced is not under version control and that the given snapshot will not modify any Processor that is currently running or any Controller Service that is enabled. Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "replaceProcessGroup",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The process group id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The process group replace request entity.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ProcessGroupImportEntity"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessGroupImportEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /process-groups/{uuid}" : [ ]
+        }, {
+          "Write - /process-groups/{uuid}" : [ ]
         } ]
       }
     },
@@ -7025,6 +7217,67 @@
         } ]
       }
     },
+    "/process-groups/{id}/replace-requests" : {
+      "post" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Initiate the Replace Request of a Process Group with the given ID",
+        "description" : "This will initiate the action of replacing a process group with the given process group. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a ProcessGroupReplaceRequestEntity, and the process of replacing the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /process-groups/replace-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /process-groups/replace-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "initiateReplaceProcessGroup",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The process group id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The process group replace request entity",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ProcessGroupImportEntity"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessGroupReplaceRequestEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /process-groups/{uuid}" : [ ]
+        }, {
+          "Write - /process-groups/{uuid}" : [ ]
+        }, {
+          "Read - /{component-type}/{uuid} - For all encapsulated components" : [ ]
+        }, {
+          "Write - /{component-type}/{uuid} - For all encapsulated components" : [ ]
+        }, {
+          "Write - if the template contains any restricted components - /restricted-components" : [ ]
+        }, {
+          "Read - /parameter-contexts/{uuid} - For any Parameter Context that is referenced by a Property that is changed, added, or removed" : [ ]
+        } ]
+      }
+    },
     "/process-groups/{id}/snippet-instance" : {
       "post" : {
         "tags" : [ "process-groups" ],
@@ -7429,6 +7682,51 @@
         },
         "security" : [ {
           "Write - /process-groups/{uuid}" : [ ]
+        } ]
+      }
+    },
+    "/processors/run-status-details/queries" : {
+      "post" : {
+        "tags" : [ "processors" ],
+        "summary" : "Submits a query to retrieve the run status details of all processors that are in the given list of Processor IDs",
+        "description" : "",
+        "operationId" : "getProcessorRunStatusDetails",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The request for the processors that should be included in the results",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/RunStatusDetailsRequestEntity"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessorsRunStatusDetailsEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /processors/{uuid} for each processor whose run status information is requested" : [ ]
         } ]
       }
     },
@@ -15753,6 +16051,16 @@
           "description" : "The Parameter Context that this Process Group is bound to.",
           "$ref" : "#/definitions/ParameterContextReferenceEntity"
         },
+        "flowfileConcurrency" : {
+          "type" : "string",
+          "description" : "The FlowFile Concurrency for this Process Group.",
+          "enum" : [ "UNBOUNDED", "SINGLE_FLOWFILE_PER_NODE" ]
+        },
+        "flowfileOutboundPolicy" : {
+          "type" : "string",
+          "description" : "The Oubound Policy that is used for determining how FlowFiles should be transferred out of the Process Group.",
+          "enum" : [ "STREAM_WHEN_AVAILABLE", "BATCH_OUTPUT" ]
+        },
         "runningCount" : {
           "type" : "integer",
           "format" : "int32",
@@ -16042,6 +16350,26 @@
         "name" : "processGroupFlowEntity"
       }
     },
+    "ProcessGroupImportEntity" : {
+      "type" : "object",
+      "properties" : {
+        "processGroupRevision" : {
+          "description" : "The Revision for the Process Group",
+          "$ref" : "#/definitions/RevisionDTO"
+        },
+        "disconnectedNodeAcknowledged" : {
+          "type" : "boolean",
+          "description" : "Acknowledges that this node is disconnected to allow for mutable requests to proceed."
+        },
+        "versionedFlowSnapshot" : {
+          "description" : "The Versioned Flow Snapshot to import",
+          "$ref" : "#/definitions/VersionedFlowSnapshot"
+        }
+      },
+      "xml" : {
+        "name" : "processGroupImportEntity"
+      }
+    },
     "ProcessGroupNameDTO" : {
       "type" : "object",
       "properties" : {
@@ -16053,6 +16381,72 @@
           "type" : "string",
           "description" : "The name of the Process Group, or the ID of the Process Group if the user does not have the READ policy for the Process Group"
         }
+      }
+    },
+    "ProcessGroupReplaceRequestDTO" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "The unique ID of this request.",
+          "readOnly" : true
+        },
+        "processGroupId" : {
+          "type" : "string",
+          "description" : "The unique ID of the Process Group being updated"
+        },
+        "uri" : {
+          "type" : "string",
+          "description" : "The URI for future requests to this drop request.",
+          "readOnly" : true
+        },
+        "lastUpdated" : {
+          "type" : "string",
+          "description" : "The last time this request was updated.",
+          "readOnly" : true
+        },
+        "complete" : {
+          "type" : "boolean",
+          "description" : "Whether or not this request has completed",
+          "readOnly" : true
+        },
+        "failureReason" : {
+          "type" : "string",
+          "description" : "An explanation of why this request failed, or null if this request has not failed",
+          "readOnly" : true
+        },
+        "percentCompleted" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The percentage complete for the request, between 0 and 100",
+          "readOnly" : true
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "The state of the request",
+          "readOnly" : true
+        }
+      }
+    },
+    "ProcessGroupReplaceRequestEntity" : {
+      "type" : "object",
+      "properties" : {
+        "processGroupRevision" : {
+          "description" : "The revision for the Process Group being updated.",
+          "$ref" : "#/definitions/RevisionDTO"
+        },
+        "request" : {
+          "description" : "The Process Group Change Request",
+          "$ref" : "#/definitions/ProcessGroupReplaceRequestDTO"
+        },
+        "versionedFlowSnapshot" : {
+          "description" : "Returns the Versioned Flow to replace with",
+          "readOnly" : true,
+          "$ref" : "#/definitions/VersionedFlowSnapshot"
+        }
+      },
+      "xml" : {
+        "name" : "processGroupReplaceRequestEntity"
       }
     },
     "ProcessGroupStatusDTO" : {
@@ -16573,6 +16967,57 @@
         "name" : "processorEntity"
       }
     },
+    "ProcessorRunStatusDetailsDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The ID of the processor"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "The name of the processor"
+        },
+        "runStatus" : {
+          "type" : "string",
+          "description" : "The run status of the processor",
+          "enum" : [ "RUNNING", "STOPPED", "INVALID", "VALIDATING", "VALID", "DISABLED" ]
+        },
+        "validationErrors" : {
+          "type" : "array",
+          "description" : "The processor's validation errors",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "activeThreadCount" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The current number of threads that the processor is currently using"
+        }
+      }
+    },
+    "ProcessorRunStatusDetailsEntity" : {
+      "type" : "object",
+      "properties" : {
+        "revision" : {
+          "description" : "The revision for the Processor.",
+          "$ref" : "#/definitions/RevisionDTO"
+        },
+        "permissions" : {
+          "description" : "The permissions for the Processor.",
+          "$ref" : "#/definitions/PermissionsDTO"
+        },
+        "runStatusDetails" : {
+          "description" : "The details of a Processor's run status",
+          "$ref" : "#/definitions/ProcessorRunStatusDetailsDTO"
+        }
+      },
+      "xml" : {
+        "name" : "entity"
+      }
+    },
     "ProcessorRunStatusEntity" : {
       "type" : "object",
       "properties" : {
@@ -16804,6 +17249,20 @@
       },
       "xml" : {
         "name" : "processorsEntity"
+      }
+    },
+    "ProcessorsRunStatusDetailsEntity" : {
+      "type" : "object",
+      "properties" : {
+        "runStatusDetails" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ProcessorRunStatusDetailsEntity"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "processorsRunStatusDetails"
       }
     },
     "PropertyDescriptorDTO" : {
@@ -18233,6 +18692,22 @@
         }
       }
     },
+    "RunStatusDetailsRequestEntity" : {
+      "type" : "object",
+      "properties" : {
+        "processorIds" : {
+          "type" : "array",
+          "description" : "The IDs of all processors whose run status details should be provided",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "runStatusDetailsRequest"
+      }
+    },
     "ScheduleComponentsEntity" : {
       "type" : "object",
       "properties" : {
@@ -18323,6 +18798,20 @@
         "funnelResults" : {
           "type" : "array",
           "description" : "The funnels that matched the search.",
+          "items" : {
+            "$ref" : "#/definitions/ComponentSearchResultDTO"
+          }
+        },
+        "labelResults" : {
+          "type" : "array",
+          "description" : "The labels that matched the search.",
+          "items" : {
+            "$ref" : "#/definitions/ComponentSearchResultDTO"
+          }
+        },
+        "controllerServiceNodeResults" : {
+          "type" : "array",
+          "description" : "The controller service nodes that matched the search",
           "items" : {
             "$ref" : "#/definitions/ComponentSearchResultDTO"
           }
@@ -19552,10 +20041,6 @@
     "VersionControlInformationEntity" : {
       "type" : "object",
       "properties" : {
-        "versionControlInformation" : {
-          "description" : "The Version Control information",
-          "$ref" : "#/definitions/VersionControlInformationDTO"
-        },
         "processGroupRevision" : {
           "description" : "The Revision for the Process Group",
           "$ref" : "#/definitions/RevisionDTO"
@@ -19563,6 +20048,10 @@
         "disconnectedNodeAcknowledged" : {
           "type" : "boolean",
           "description" : "Acknowledges that this node is disconnected to allow for mutable requests to proceed."
+        },
+        "versionControlInformation" : {
+          "description" : "The Version Control information",
+          "$ref" : "#/definitions/VersionControlInformationDTO"
         }
       },
       "xml" : {
@@ -20064,7 +20553,7 @@
         },
         "processGroupId" : {
           "type" : "string",
-          "description" : "The unique ID of the Process Group that the variable registry belongs to"
+          "description" : "The unique ID of the Process Group being updated"
         },
         "uri" : {
           "type" : "string",
@@ -20107,13 +20596,13 @@
     "VersionedFlowUpdateRequestEntity" : {
       "type" : "object",
       "properties" : {
-        "request" : {
-          "description" : "The Versioned Flow Update Request",
-          "$ref" : "#/definitions/VersionedFlowUpdateRequestDTO"
-        },
         "processGroupRevision" : {
-          "description" : "The revision for the Process Group that owns this variable registry.",
+          "description" : "The revision for the Process Group being updated.",
           "$ref" : "#/definitions/RevisionDTO"
+        },
+        "request" : {
+          "description" : "The Flow Update Request",
+          "$ref" : "#/definitions/VersionedFlowUpdateRequestDTO"
         }
       },
       "xml" : {

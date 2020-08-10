@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**DeleteProcessor**](ProcessorsApi.md#DeleteProcessor) | **Delete** /processors/{id} | Deletes a processor
 [**GetProcessor**](ProcessorsApi.md#GetProcessor) | **Get** /processors/{id} | Gets a processor
 [**GetProcessorDiagnostics**](ProcessorsApi.md#GetProcessorDiagnostics) | **Get** /processors/{id}/diagnostics | Gets diagnostics information about a processor
+[**GetProcessorRunStatusDetails**](ProcessorsApi.md#GetProcessorRunStatusDetails) | **Post** /processors/run-status-details/queries | Submits a query to retrieve the run status details of all processors that are in the given list of Processor IDs
 [**GetPropertyDescriptor**](ProcessorsApi.md#GetPropertyDescriptor) | **Get** /processors/{id}/descriptors | Gets the descriptor for a processor property
 [**GetState**](ProcessorsApi.md#GetState) | **Get** /processors/{id}/state | Gets the state for a processor
 [**TerminateProcessor**](ProcessorsApi.md#TerminateProcessor) | **Delete** /processors/{id}/threads | Terminates a processor, essentially \&quot;deleting\&quot; its threads and any active tasks
@@ -152,6 +153,47 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetProcessorRunStatusDetails
+
+> ProcessorsRunStatusDetailsEntity GetProcessorRunStatusDetails(ctx, optional)
+
+Submits a query to retrieve the run status details of all processors that are in the given list of Processor IDs
+
+### Required Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***GetProcessorRunStatusDetailsOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a GetProcessorRunStatusDetailsOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**optional.Interface of RunStatusDetailsRequestEntity**](RunStatusDetailsRequestEntity.md)| The request for the processors that should be included in the results | 
+
+### Return type
+
+[**ProcessorsRunStatusDetailsEntity**](ProcessorsRunStatusDetailsEntity.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

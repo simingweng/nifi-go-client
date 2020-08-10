@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.11.4
+ * API version: 1.12.0-SNAPSHOT
  * Contact: dev@nifi.apache.org
  */
 
@@ -28,6 +28,10 @@ type ProcessGroupDto struct {
 	Variables                 map[string]string               `json:"variables,omitempty"`
 	VersionControlInformation VersionControlInformationDto    `json:"versionControlInformation,omitempty"`
 	ParameterContext          ParameterContextReferenceEntity `json:"parameterContext,omitempty"`
+	// The FlowFile Concurrency for this Process Group.
+	FlowfileConcurrency string `json:"flowfileConcurrency,omitempty"`
+	// The Oubound Policy that is used for determining how FlowFiles should be transferred out of the Process Group.
+	FlowfileOutboundPolicy string `json:"flowfileOutboundPolicy,omitempty"`
 	// The number of running components in this process group.
 	RunningCount int32 `json:"runningCount,omitempty"`
 	// The number of stopped components in the process group.

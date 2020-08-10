@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **OutputPortResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The output ports that matched the search. | [optional] 
 **RemoteProcessGroupResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The remote process groups that matched the search. | [optional] 
 **FunnelResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The funnels that matched the search. | [optional] 
+**LabelResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The labels that matched the search. | [optional] 
+**ControllerServiceNodeResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The controller service nodes that matched the search | [optional] 
 **ParameterContextResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The parameter contexts that matched the search. | [optional] 
 **ParameterResults** | [**[]ComponentSearchResultDto**](ComponentSearchResultDTO.md) | The parameters that matched the search. | [optional] 
 
