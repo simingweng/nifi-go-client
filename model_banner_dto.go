@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// BannerDto struct for BannerDto
-type BannerDto struct {
+import (
+	"encoding/json"
+)
+
+// BannerDTO struct for BannerDTO
+type BannerDTO struct {
 	// The header text.
-	HeaderText string `json:"headerText,omitempty"`
+	HeaderText *string `json:"headerText,omitempty"`
 	// The footer text.
-	FooterText string `json:"footerText,omitempty"`
+	FooterText *string `json:"footerText,omitempty"`
+}
+
+// NewBannerDTO instantiates a new BannerDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBannerDTO() *BannerDTO {
+	this := BannerDTO{}
+	return &this
+}
+
+// NewBannerDTOWithDefaults instantiates a new BannerDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBannerDTOWithDefaults() *BannerDTO {
+	this := BannerDTO{}
+	return &this
+}
+
+// GetHeaderText returns the HeaderText field value if set, zero value otherwise.
+func (o *BannerDTO) GetHeaderText() string {
+	if o == nil || o.HeaderText == nil {
+		var ret string
+		return ret
+	}
+	return *o.HeaderText
+}
+
+// GetHeaderTextOk returns a tuple with the HeaderText field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BannerDTO) GetHeaderTextOk() (*string, bool) {
+	if o == nil || o.HeaderText == nil {
+		return nil, false
+	}
+	return o.HeaderText, true
+}
+
+// HasHeaderText returns a boolean if a field has been set.
+func (o *BannerDTO) HasHeaderText() bool {
+	if o != nil && o.HeaderText != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHeaderText gets a reference to the given string and assigns it to the HeaderText field.
+func (o *BannerDTO) SetHeaderText(v string) {
+	o.HeaderText = &v
+}
+
+// GetFooterText returns the FooterText field value if set, zero value otherwise.
+func (o *BannerDTO) GetFooterText() string {
+	if o == nil || o.FooterText == nil {
+		var ret string
+		return ret
+	}
+	return *o.FooterText
+}
+
+// GetFooterTextOk returns a tuple with the FooterText field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BannerDTO) GetFooterTextOk() (*string, bool) {
+	if o == nil || o.FooterText == nil {
+		return nil, false
+	}
+	return o.FooterText, true
+}
+
+// HasFooterText returns a boolean if a field has been set.
+func (o *BannerDTO) HasFooterText() bool {
+	if o != nil && o.FooterText != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFooterText gets a reference to the given string and assigns it to the FooterText field.
+func (o *BannerDTO) SetFooterText(v string) {
+	o.FooterText = &v
+}
+
+func (o BannerDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.HeaderText != nil {
+		toSerialize["headerText"] = o.HeaderText
+	}
+	if o.FooterText != nil {
+		toSerialize["footerText"] = o.FooterText
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBannerDTO struct {
+	value *BannerDTO
+	isSet bool
+}
+
+func (v NullableBannerDTO) Get() *BannerDTO {
+	return v.value
+}
+
+func (v *NullableBannerDTO) Set(val *BannerDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBannerDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBannerDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBannerDTO(val *BannerDTO) *NullableBannerDTO {
+	return &NullableBannerDTO{value: val, isSet: true}
+}
+
+func (v NullableBannerDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBannerDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

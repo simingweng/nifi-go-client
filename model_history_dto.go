@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// HistoryDto struct for HistoryDto
-type HistoryDto struct {
+import (
+	"encoding/json"
+)
+
+// HistoryDTO struct for HistoryDTO
+type HistoryDTO struct {
 	// The number of number of actions that matched the search criteria..
-	Total int32 `json:"total,omitempty"`
+	Total *int32 `json:"total,omitempty"`
 	// The timestamp when the report was generated.
-	LastRefreshed string `json:"lastRefreshed,omitempty"`
+	LastRefreshed *string `json:"lastRefreshed,omitempty"`
 	// The actions.
-	Actions []ActionEntity `json:"actions,omitempty"`
+	Actions *[]ActionEntity `json:"actions,omitempty"`
+}
+
+// NewHistoryDTO instantiates a new HistoryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewHistoryDTO() *HistoryDTO {
+	this := HistoryDTO{}
+	return &this
+}
+
+// NewHistoryDTOWithDefaults instantiates a new HistoryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewHistoryDTOWithDefaults() *HistoryDTO {
+	this := HistoryDTO{}
+	return &this
+}
+
+// GetTotal returns the Total field value if set, zero value otherwise.
+func (o *HistoryDTO) GetTotal() int32 {
+	if o == nil || o.Total == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Total
+}
+
+// GetTotalOk returns a tuple with the Total field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HistoryDTO) GetTotalOk() (*int32, bool) {
+	if o == nil || o.Total == nil {
+		return nil, false
+	}
+	return o.Total, true
+}
+
+// HasTotal returns a boolean if a field has been set.
+func (o *HistoryDTO) HasTotal() bool {
+	if o != nil && o.Total != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTotal gets a reference to the given int32 and assigns it to the Total field.
+func (o *HistoryDTO) SetTotal(v int32) {
+	o.Total = &v
+}
+
+// GetLastRefreshed returns the LastRefreshed field value if set, zero value otherwise.
+func (o *HistoryDTO) GetLastRefreshed() string {
+	if o == nil || o.LastRefreshed == nil {
+		var ret string
+		return ret
+	}
+	return *o.LastRefreshed
+}
+
+// GetLastRefreshedOk returns a tuple with the LastRefreshed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HistoryDTO) GetLastRefreshedOk() (*string, bool) {
+	if o == nil || o.LastRefreshed == nil {
+		return nil, false
+	}
+	return o.LastRefreshed, true
+}
+
+// HasLastRefreshed returns a boolean if a field has been set.
+func (o *HistoryDTO) HasLastRefreshed() bool {
+	if o != nil && o.LastRefreshed != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLastRefreshed gets a reference to the given string and assigns it to the LastRefreshed field.
+func (o *HistoryDTO) SetLastRefreshed(v string) {
+	o.LastRefreshed = &v
+}
+
+// GetActions returns the Actions field value if set, zero value otherwise.
+func (o *HistoryDTO) GetActions() []ActionEntity {
+	if o == nil || o.Actions == nil {
+		var ret []ActionEntity
+		return ret
+	}
+	return *o.Actions
+}
+
+// GetActionsOk returns a tuple with the Actions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HistoryDTO) GetActionsOk() (*[]ActionEntity, bool) {
+	if o == nil || o.Actions == nil {
+		return nil, false
+	}
+	return o.Actions, true
+}
+
+// HasActions returns a boolean if a field has been set.
+func (o *HistoryDTO) HasActions() bool {
+	if o != nil && o.Actions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActions gets a reference to the given []ActionEntity and assigns it to the Actions field.
+func (o *HistoryDTO) SetActions(v []ActionEntity) {
+	o.Actions = &v
+}
+
+func (o HistoryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Total != nil {
+		toSerialize["total"] = o.Total
+	}
+	if o.LastRefreshed != nil {
+		toSerialize["lastRefreshed"] = o.LastRefreshed
+	}
+	if o.Actions != nil {
+		toSerialize["actions"] = o.Actions
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableHistoryDTO struct {
+	value *HistoryDTO
+	isSet bool
+}
+
+func (v NullableHistoryDTO) Get() *HistoryDTO {
+	return v.value
+}
+
+func (v *NullableHistoryDTO) Set(val *HistoryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableHistoryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableHistoryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableHistoryDTO(val *HistoryDTO) *NullableHistoryDTO {
+	return &NullableHistoryDTO{value: val, isSet: true}
+}
+
+func (v NullableHistoryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableHistoryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

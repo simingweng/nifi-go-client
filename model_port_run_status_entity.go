@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,11 +11,178 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // PortRunStatusEntity struct for PortRunStatusEntity
 type PortRunStatusEntity struct {
-	Revision RevisionDto `json:"revision,omitempty"`
+	Revision *RevisionDTO `json:"revision,omitempty"`
 	// The run status of the Port.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool `json:"disconnectedNodeAcknowledged,omitempty"`
+	DisconnectedNodeAcknowledged *bool `json:"disconnectedNodeAcknowledged,omitempty"`
+}
+
+// NewPortRunStatusEntity instantiates a new PortRunStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPortRunStatusEntity() *PortRunStatusEntity {
+	this := PortRunStatusEntity{}
+	return &this
+}
+
+// NewPortRunStatusEntityWithDefaults instantiates a new PortRunStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPortRunStatusEntityWithDefaults() *PortRunStatusEntity {
+	this := PortRunStatusEntity{}
+	return &this
+}
+
+// GetRevision returns the Revision field value if set, zero value otherwise.
+func (o *PortRunStatusEntity) GetRevision() RevisionDTO {
+	if o == nil || o.Revision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.Revision
+}
+
+// GetRevisionOk returns a tuple with the Revision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortRunStatusEntity) GetRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.Revision == nil {
+		return nil, false
+	}
+	return o.Revision, true
+}
+
+// HasRevision returns a boolean if a field has been set.
+func (o *PortRunStatusEntity) HasRevision() bool {
+	if o != nil && o.Revision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRevision gets a reference to the given RevisionDTO and assigns it to the Revision field.
+func (o *PortRunStatusEntity) SetRevision(v RevisionDTO) {
+	o.Revision = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *PortRunStatusEntity) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortRunStatusEntity) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *PortRunStatusEntity) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *PortRunStatusEntity) SetState(v string) {
+	o.State = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *PortRunStatusEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortRunStatusEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *PortRunStatusEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *PortRunStatusEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+func (o PortRunStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Revision != nil {
+		toSerialize["revision"] = o.Revision
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePortRunStatusEntity struct {
+	value *PortRunStatusEntity
+	isSet bool
+}
+
+func (v NullablePortRunStatusEntity) Get() *PortRunStatusEntity {
+	return v.value
+}
+
+func (v *NullablePortRunStatusEntity) Set(val *PortRunStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePortRunStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePortRunStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePortRunStatusEntity(val *PortRunStatusEntity) *NullablePortRunStatusEntity {
+	return &NullablePortRunStatusEntity{value: val, isSet: true}
+}
+
+func (v NullablePortRunStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePortRunStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,27 +11,509 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedControllerService struct for VersionedControllerService
 type VersionedControllerService struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments string   `json:"comments,omitempty"`
-	Position Position `json:"position,omitempty"`
+	Comments *string   `json:"comments,omitempty"`
+	Position *Position `json:"position,omitempty"`
 	// The type of the controller service.
-	Type   string `json:"type,omitempty"`
-	Bundle Bundle `json:"bundle,omitempty"`
+	Type   *string `json:"type,omitempty"`
+	Bundle *Bundle `json:"bundle,omitempty"`
 	// Lists the APIs this Controller Service implements.
-	ControllerServiceApis []ControllerServiceApi `json:"controllerServiceApis,omitempty"`
+	ControllerServiceApis *[]ControllerServiceAPI `json:"controllerServiceApis,omitempty"`
 	// The properties of the controller service.
-	Properties map[string]string `json:"properties,omitempty"`
+	Properties *map[string]string `json:"properties,omitempty"`
 	// The property descriptors for the processor.
-	PropertyDescriptors map[string]VersionedPropertyDescriptor `json:"propertyDescriptors,omitempty"`
+	PropertyDescriptors *map[string]VersionedPropertyDescriptor `json:"propertyDescriptors,omitempty"`
 	// The annotation for the controller service. This is how the custom UI relays configuration to the controller service.
-	AnnotationData string `json:"annotationData,omitempty"`
-	ComponentType  string `json:"componentType,omitempty"`
+	AnnotationData *string `json:"annotationData,omitempty"`
+	ComponentType  *string `json:"componentType,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedControllerService instantiates a new VersionedControllerService object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedControllerService() *VersionedControllerService {
+	this := VersionedControllerService{}
+	return &this
+}
+
+// NewVersionedControllerServiceWithDefaults instantiates a new VersionedControllerService object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedControllerServiceWithDefaults() *VersionedControllerService {
+	this := VersionedControllerService{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedControllerService) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedControllerService) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedControllerService) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedControllerService) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *VersionedControllerService) SetType(v string) {
+	o.Type = &v
+}
+
+// GetBundle returns the Bundle field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetBundle() Bundle {
+	if o == nil || o.Bundle == nil {
+		var ret Bundle
+		return ret
+	}
+	return *o.Bundle
+}
+
+// GetBundleOk returns a tuple with the Bundle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetBundleOk() (*Bundle, bool) {
+	if o == nil || o.Bundle == nil {
+		return nil, false
+	}
+	return o.Bundle, true
+}
+
+// HasBundle returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasBundle() bool {
+	if o != nil && o.Bundle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBundle gets a reference to the given Bundle and assigns it to the Bundle field.
+func (o *VersionedControllerService) SetBundle(v Bundle) {
+	o.Bundle = &v
+}
+
+// GetControllerServiceApis returns the ControllerServiceApis field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetControllerServiceApis() []ControllerServiceAPI {
+	if o == nil || o.ControllerServiceApis == nil {
+		var ret []ControllerServiceAPI
+		return ret
+	}
+	return *o.ControllerServiceApis
+}
+
+// GetControllerServiceApisOk returns a tuple with the ControllerServiceApis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetControllerServiceApisOk() (*[]ControllerServiceAPI, bool) {
+	if o == nil || o.ControllerServiceApis == nil {
+		return nil, false
+	}
+	return o.ControllerServiceApis, true
+}
+
+// HasControllerServiceApis returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasControllerServiceApis() bool {
+	if o != nil && o.ControllerServiceApis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServiceApis gets a reference to the given []ControllerServiceAPI and assigns it to the ControllerServiceApis field.
+func (o *VersionedControllerService) SetControllerServiceApis(v []ControllerServiceAPI) {
+	o.ControllerServiceApis = &v
+}
+
+// GetProperties returns the Properties field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetProperties() map[string]string {
+	if o == nil || o.Properties == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Properties
+}
+
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetPropertiesOk() (*map[string]string, bool) {
+	if o == nil || o.Properties == nil {
+		return nil, false
+	}
+	return o.Properties, true
+}
+
+// HasProperties returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasProperties() bool {
+	if o != nil && o.Properties != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+func (o *VersionedControllerService) SetProperties(v map[string]string) {
+	o.Properties = &v
+}
+
+// GetPropertyDescriptors returns the PropertyDescriptors field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetPropertyDescriptors() map[string]VersionedPropertyDescriptor {
+	if o == nil || o.PropertyDescriptors == nil {
+		var ret map[string]VersionedPropertyDescriptor
+		return ret
+	}
+	return *o.PropertyDescriptors
+}
+
+// GetPropertyDescriptorsOk returns a tuple with the PropertyDescriptors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetPropertyDescriptorsOk() (*map[string]VersionedPropertyDescriptor, bool) {
+	if o == nil || o.PropertyDescriptors == nil {
+		return nil, false
+	}
+	return o.PropertyDescriptors, true
+}
+
+// HasPropertyDescriptors returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasPropertyDescriptors() bool {
+	if o != nil && o.PropertyDescriptors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPropertyDescriptors gets a reference to the given map[string]VersionedPropertyDescriptor and assigns it to the PropertyDescriptors field.
+func (o *VersionedControllerService) SetPropertyDescriptors(v map[string]VersionedPropertyDescriptor) {
+	o.PropertyDescriptors = &v
+}
+
+// GetAnnotationData returns the AnnotationData field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetAnnotationData() string {
+	if o == nil || o.AnnotationData == nil {
+		var ret string
+		return ret
+	}
+	return *o.AnnotationData
+}
+
+// GetAnnotationDataOk returns a tuple with the AnnotationData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetAnnotationDataOk() (*string, bool) {
+	if o == nil || o.AnnotationData == nil {
+		return nil, false
+	}
+	return o.AnnotationData, true
+}
+
+// HasAnnotationData returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasAnnotationData() bool {
+	if o != nil && o.AnnotationData != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAnnotationData gets a reference to the given string and assigns it to the AnnotationData field.
+func (o *VersionedControllerService) SetAnnotationData(v string) {
+	o.AnnotationData = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedControllerService) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedControllerService) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedControllerService) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedControllerService) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedControllerService) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedControllerService) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Bundle != nil {
+		toSerialize["bundle"] = o.Bundle
+	}
+	if o.ControllerServiceApis != nil {
+		toSerialize["controllerServiceApis"] = o.ControllerServiceApis
+	}
+	if o.Properties != nil {
+		toSerialize["properties"] = o.Properties
+	}
+	if o.PropertyDescriptors != nil {
+		toSerialize["propertyDescriptors"] = o.PropertyDescriptors
+	}
+	if o.AnnotationData != nil {
+		toSerialize["annotationData"] = o.AnnotationData
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedControllerService struct {
+	value *VersionedControllerService
+	isSet bool
+}
+
+func (v NullableVersionedControllerService) Get() *VersionedControllerService {
+	return v.value
+}
+
+func (v *NullableVersionedControllerService) Set(val *VersionedControllerService) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedControllerService) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedControllerService) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedControllerService(val *VersionedControllerService) *NullableVersionedControllerService {
+	return &NullableVersionedControllerService{value: val, isSet: true}
+}
+
+func (v NullableVersionedControllerService) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedControllerService) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

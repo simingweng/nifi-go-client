@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,11 +11,178 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessGroupStatusSnapshotEntity struct for ProcessGroupStatusSnapshotEntity
 type ProcessGroupStatusSnapshotEntity struct {
 	// The id of the process group.
-	Id                         string                        `json:"id,omitempty"`
-	ProcessGroupStatusSnapshot ProcessGroupStatusSnapshotDto `json:"processGroupStatusSnapshot,omitempty"`
+	Id                         *string                        `json:"id,omitempty"`
+	ProcessGroupStatusSnapshot *ProcessGroupStatusSnapshotDTO `json:"processGroupStatusSnapshot,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewProcessGroupStatusSnapshotEntity instantiates a new ProcessGroupStatusSnapshotEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupStatusSnapshotEntity() *ProcessGroupStatusSnapshotEntity {
+	this := ProcessGroupStatusSnapshotEntity{}
+	return &this
+}
+
+// NewProcessGroupStatusSnapshotEntityWithDefaults instantiates a new ProcessGroupStatusSnapshotEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupStatusSnapshotEntityWithDefaults() *ProcessGroupStatusSnapshotEntity {
+	this := ProcessGroupStatusSnapshotEntity{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotEntity) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotEntity) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProcessGroupStatusSnapshotEntity) SetId(v string) {
+	o.Id = &v
+}
+
+// GetProcessGroupStatusSnapshot returns the ProcessGroupStatusSnapshot field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotEntity) GetProcessGroupStatusSnapshot() ProcessGroupStatusSnapshotDTO {
+	if o == nil || o.ProcessGroupStatusSnapshot == nil {
+		var ret ProcessGroupStatusSnapshotDTO
+		return ret
+	}
+	return *o.ProcessGroupStatusSnapshot
+}
+
+// GetProcessGroupStatusSnapshotOk returns a tuple with the ProcessGroupStatusSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotEntity) GetProcessGroupStatusSnapshotOk() (*ProcessGroupStatusSnapshotDTO, bool) {
+	if o == nil || o.ProcessGroupStatusSnapshot == nil {
+		return nil, false
+	}
+	return o.ProcessGroupStatusSnapshot, true
+}
+
+// HasProcessGroupStatusSnapshot returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotEntity) HasProcessGroupStatusSnapshot() bool {
+	if o != nil && o.ProcessGroupStatusSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupStatusSnapshot gets a reference to the given ProcessGroupStatusSnapshotDTO and assigns it to the ProcessGroupStatusSnapshot field.
+func (o *ProcessGroupStatusSnapshotEntity) SetProcessGroupStatusSnapshot(v ProcessGroupStatusSnapshotDTO) {
+	o.ProcessGroupStatusSnapshot = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *ProcessGroupStatusSnapshotEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o ProcessGroupStatusSnapshotEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.ProcessGroupStatusSnapshot != nil {
+		toSerialize["processGroupStatusSnapshot"] = o.ProcessGroupStatusSnapshot
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupStatusSnapshotEntity struct {
+	value *ProcessGroupStatusSnapshotEntity
+	isSet bool
+}
+
+func (v NullableProcessGroupStatusSnapshotEntity) Get() *ProcessGroupStatusSnapshotEntity {
+	return v.value
+}
+
+func (v *NullableProcessGroupStatusSnapshotEntity) Set(val *ProcessGroupStatusSnapshotEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupStatusSnapshotEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupStatusSnapshotEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupStatusSnapshotEntity(val *ProcessGroupStatusSnapshotEntity) *NullableProcessGroupStatusSnapshotEntity {
+	return &NullableProcessGroupStatusSnapshotEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupStatusSnapshotEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupStatusSnapshotEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

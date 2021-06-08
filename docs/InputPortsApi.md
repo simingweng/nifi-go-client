@@ -13,17 +13,53 @@ Method | HTTP request | Description
 
 ## GetInputPort
 
-> PortEntity GetInputPort(ctx, id)
+> PortEntity GetInputPort(ctx, id).Execute()
 
 Gets an input port
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The input port id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.InputPortsApi.GetInputPort(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `InputPortsApi.GetInputPort``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetInputPort`: PortEntity
+    fmt.Fprintf(os.Stdout, "Response from `InputPortsApi.GetInputPort`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The input port id. | 
+**id** | **string** | The input port id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetInputPortRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -45,30 +81,59 @@ No authorization required
 
 ## RemoveInputPort
 
-> PortEntity RemoveInputPort(ctx, id, optional)
+> PortEntity RemoveInputPort(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes an input port
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The input port id.
+    version := "version_example" // string | The revision is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.InputPortsApi.RemoveInputPort(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `InputPortsApi.RemoveInputPort``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveInputPort`: PortEntity
+    fmt.Fprintf(os.Stdout, "Response from `InputPortsApi.RemoveInputPort`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The input port id. | 
- **optional** | ***RemoveInputPortOpts** | optional parameters | nil if no parameters
+**id** | **string** | The input port id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a RemoveInputPortOpts struct
+Other parameters are passed through a pointer to a apiRemoveInputPortRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The revision is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The revision is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -90,18 +155,55 @@ No authorization required
 
 ## UpdateInputPort
 
-> PortEntity UpdateInputPort(ctx, id, body)
+> PortEntity UpdateInputPort(ctx, id).Body(body).Execute()
 
 Updates an input port
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The input port id.
+    body := *openapiclient.NewPortEntity() // PortEntity | The input port configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.InputPortsApi.UpdateInputPort(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `InputPortsApi.UpdateInputPort``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateInputPort`: PortEntity
+    fmt.Fprintf(os.Stdout, "Response from `InputPortsApi.UpdateInputPort`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The input port id. | 
-**body** | [**PortEntity**](PortEntity.md)| The input port configuration details. | 
+**id** | **string** | The input port id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateInputPortRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**PortEntity**](PortEntity.md) | The input port configuration details. | 
 
 ### Return type
 
@@ -123,18 +225,55 @@ No authorization required
 
 ## UpdateRunStatus
 
-> ProcessorEntity UpdateRunStatus(ctx, id, body)
+> ProcessorEntity UpdateRunStatus(ctx, id).Body(body).Execute()
 
 Updates run status of an input-port
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The port id.
+    body := *openapiclient.NewPortRunStatusEntity() // PortRunStatusEntity | The port run status.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.InputPortsApi.UpdateRunStatus(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `InputPortsApi.UpdateRunStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateRunStatus`: ProcessorEntity
+    fmt.Fprintf(os.Stdout, "Response from `InputPortsApi.UpdateRunStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The port id. | 
-**body** | [**PortRunStatusEntity**](PortRunStatusEntity.md)| The port run status. | 
+**id** | **string** | The port id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateRunStatusRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**PortRunStatusEntity**](PortRunStatusEntity.md) | The port run status. | 
 
 ### Return type
 

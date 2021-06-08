@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ControllerStatusEntity struct for ControllerStatusEntity
 type ControllerStatusEntity struct {
-	ControllerStatus ControllerStatusDto `json:"controllerStatus,omitempty"`
+	ControllerStatus *ControllerStatusDTO `json:"controllerStatus,omitempty"`
+}
+
+// NewControllerStatusEntity instantiates a new ControllerStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerStatusEntity() *ControllerStatusEntity {
+	this := ControllerStatusEntity{}
+	return &this
+}
+
+// NewControllerStatusEntityWithDefaults instantiates a new ControllerStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerStatusEntityWithDefaults() *ControllerStatusEntity {
+	this := ControllerStatusEntity{}
+	return &this
+}
+
+// GetControllerStatus returns the ControllerStatus field value if set, zero value otherwise.
+func (o *ControllerStatusEntity) GetControllerStatus() ControllerStatusDTO {
+	if o == nil || o.ControllerStatus == nil {
+		var ret ControllerStatusDTO
+		return ret
+	}
+	return *o.ControllerStatus
+}
+
+// GetControllerStatusOk returns a tuple with the ControllerStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusEntity) GetControllerStatusOk() (*ControllerStatusDTO, bool) {
+	if o == nil || o.ControllerStatus == nil {
+		return nil, false
+	}
+	return o.ControllerStatus, true
+}
+
+// HasControllerStatus returns a boolean if a field has been set.
+func (o *ControllerStatusEntity) HasControllerStatus() bool {
+	if o != nil && o.ControllerStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerStatus gets a reference to the given ControllerStatusDTO and assigns it to the ControllerStatus field.
+func (o *ControllerStatusEntity) SetControllerStatus(v ControllerStatusDTO) {
+	o.ControllerStatus = &v
+}
+
+func (o ControllerStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ControllerStatus != nil {
+		toSerialize["controllerStatus"] = o.ControllerStatus
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerStatusEntity struct {
+	value *ControllerStatusEntity
+	isSet bool
+}
+
+func (v NullableControllerStatusEntity) Get() *ControllerStatusEntity {
+	return v.value
+}
+
+func (v *NullableControllerStatusEntity) Set(val *ControllerStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerStatusEntity(val *ControllerStatusEntity) *NullableControllerStatusEntity {
+	return &NullableControllerStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableControllerStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

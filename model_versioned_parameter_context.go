@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedParameterContext struct for VersionedParameterContext
 type VersionedParameterContext struct {
 	// The name of the context
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The description of the parameter context
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The parameters in the context
-	Parameters []VersionedParameter `json:"parameters,omitempty"`
+	Parameters *[]VersionedParameter `json:"parameters,omitempty"`
+}
+
+// NewVersionedParameterContext instantiates a new VersionedParameterContext object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedParameterContext() *VersionedParameterContext {
+	this := VersionedParameterContext{}
+	return &this
+}
+
+// NewVersionedParameterContextWithDefaults instantiates a new VersionedParameterContext object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedParameterContextWithDefaults() *VersionedParameterContext {
+	this := VersionedParameterContext{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedParameterContext) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedParameterContext) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedParameterContext) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedParameterContext) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *VersionedParameterContext) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedParameterContext) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *VersionedParameterContext) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *VersionedParameterContext) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetParameters returns the Parameters field value if set, zero value otherwise.
+func (o *VersionedParameterContext) GetParameters() []VersionedParameter {
+	if o == nil || o.Parameters == nil {
+		var ret []VersionedParameter
+		return ret
+	}
+	return *o.Parameters
+}
+
+// GetParametersOk returns a tuple with the Parameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedParameterContext) GetParametersOk() (*[]VersionedParameter, bool) {
+	if o == nil || o.Parameters == nil {
+		return nil, false
+	}
+	return o.Parameters, true
+}
+
+// HasParameters returns a boolean if a field has been set.
+func (o *VersionedParameterContext) HasParameters() bool {
+	if o != nil && o.Parameters != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameters gets a reference to the given []VersionedParameter and assigns it to the Parameters field.
+func (o *VersionedParameterContext) SetParameters(v []VersionedParameter) {
+	o.Parameters = &v
+}
+
+func (o VersionedParameterContext) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Parameters != nil {
+		toSerialize["parameters"] = o.Parameters
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedParameterContext struct {
+	value *VersionedParameterContext
+	isSet bool
+}
+
+func (v NullableVersionedParameterContext) Get() *VersionedParameterContext {
+	return v.value
+}
+
+func (v *NullableVersionedParameterContext) Set(val *VersionedParameterContext) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedParameterContext) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedParameterContext) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedParameterContext(val *VersionedParameterContext) *NullableVersionedParameterContext {
+	return &NullableVersionedParameterContext{value: val, isSet: true}
+}
+
+func (v NullableVersionedParameterContext) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedParameterContext) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

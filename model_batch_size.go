@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // BatchSize struct for BatchSize
 type BatchSize struct {
 	// Preferred number of flow files to include in a transaction.
-	Count int32 `json:"count,omitempty"`
+	Count *int32 `json:"count,omitempty"`
 	// Preferred number of bytes to include in a transaction.
-	Size string `json:"size,omitempty"`
+	Size *string `json:"size,omitempty"`
 	// Preferred amount of time that a transaction should span.
-	Duration string `json:"duration,omitempty"`
+	Duration *string `json:"duration,omitempty"`
+}
+
+// NewBatchSize instantiates a new BatchSize object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBatchSize() *BatchSize {
+	this := BatchSize{}
+	return &this
+}
+
+// NewBatchSizeWithDefaults instantiates a new BatchSize object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBatchSizeWithDefaults() *BatchSize {
+	this := BatchSize{}
+	return &this
+}
+
+// GetCount returns the Count field value if set, zero value otherwise.
+func (o *BatchSize) GetCount() int32 {
+	if o == nil || o.Count == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Count
+}
+
+// GetCountOk returns a tuple with the Count field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BatchSize) GetCountOk() (*int32, bool) {
+	if o == nil || o.Count == nil {
+		return nil, false
+	}
+	return o.Count, true
+}
+
+// HasCount returns a boolean if a field has been set.
+func (o *BatchSize) HasCount() bool {
+	if o != nil && o.Count != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCount gets a reference to the given int32 and assigns it to the Count field.
+func (o *BatchSize) SetCount(v int32) {
+	o.Count = &v
+}
+
+// GetSize returns the Size field value if set, zero value otherwise.
+func (o *BatchSize) GetSize() string {
+	if o == nil || o.Size == nil {
+		var ret string
+		return ret
+	}
+	return *o.Size
+}
+
+// GetSizeOk returns a tuple with the Size field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BatchSize) GetSizeOk() (*string, bool) {
+	if o == nil || o.Size == nil {
+		return nil, false
+	}
+	return o.Size, true
+}
+
+// HasSize returns a boolean if a field has been set.
+func (o *BatchSize) HasSize() bool {
+	if o != nil && o.Size != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSize gets a reference to the given string and assigns it to the Size field.
+func (o *BatchSize) SetSize(v string) {
+	o.Size = &v
+}
+
+// GetDuration returns the Duration field value if set, zero value otherwise.
+func (o *BatchSize) GetDuration() string {
+	if o == nil || o.Duration == nil {
+		var ret string
+		return ret
+	}
+	return *o.Duration
+}
+
+// GetDurationOk returns a tuple with the Duration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BatchSize) GetDurationOk() (*string, bool) {
+	if o == nil || o.Duration == nil {
+		return nil, false
+	}
+	return o.Duration, true
+}
+
+// HasDuration returns a boolean if a field has been set.
+func (o *BatchSize) HasDuration() bool {
+	if o != nil && o.Duration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDuration gets a reference to the given string and assigns it to the Duration field.
+func (o *BatchSize) SetDuration(v string) {
+	o.Duration = &v
+}
+
+func (o BatchSize) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Count != nil {
+		toSerialize["count"] = o.Count
+	}
+	if o.Size != nil {
+		toSerialize["size"] = o.Size
+	}
+	if o.Duration != nil {
+		toSerialize["duration"] = o.Duration
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBatchSize struct {
+	value *BatchSize
+	isSet bool
+}
+
+func (v NullableBatchSize) Get() *BatchSize {
+	return v.value
+}
+
+func (v *NullableBatchSize) Set(val *BatchSize) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBatchSize) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBatchSize) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBatchSize(val *BatchSize) *NullableBatchSize {
+	return &NullableBatchSize{value: val, isSet: true}
+}
+
+func (v NullableBatchSize) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBatchSize) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

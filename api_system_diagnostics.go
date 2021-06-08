@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -27,21 +27,43 @@ var (
 // SystemDiagnosticsApiService SystemDiagnosticsApi service
 type SystemDiagnosticsApiService service
 
-// SystemDiagnosticsApiGetSystemDiagnosticsOpts Optional parameters for the method 'GetSystemDiagnostics'
-type SystemDiagnosticsApiGetSystemDiagnosticsOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type SystemDiagnosticsApiApiGetSystemDiagnosticsRequest struct {
+	ctx           _context.Context
+	ApiService    *SystemDiagnosticsApiService
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r SystemDiagnosticsApiApiGetSystemDiagnosticsRequest) Nodewise(nodewise bool) SystemDiagnosticsApiApiGetSystemDiagnosticsRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r SystemDiagnosticsApiApiGetSystemDiagnosticsRequest) ClusterNodeId(clusterNodeId string) SystemDiagnosticsApiApiGetSystemDiagnosticsRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r SystemDiagnosticsApiApiGetSystemDiagnosticsRequest) Execute() (SystemDiagnosticsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetSystemDiagnosticsExecute(r)
 }
 
 /*
-GetSystemDiagnostics Gets the diagnostics for the system NiFi is running on
+ * GetSystemDiagnostics Gets the diagnostics for the system NiFi is running on
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *SystemDiagnosticsApiGetSystemDiagnosticsOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return SystemDiagnosticsEntity
-*/
-func (a *SystemDiagnosticsApiService) GetSystemDiagnostics(ctx _context.Context, localVarOptionals *SystemDiagnosticsApiGetSystemDiagnosticsOpts) (SystemDiagnosticsEntity, *_nethttp.Response, error) {
+ * @return SystemDiagnosticsApiApiGetSystemDiagnosticsRequest
+ */
+func (a *SystemDiagnosticsApiService) GetSystemDiagnostics(ctx _context.Context) SystemDiagnosticsApiApiGetSystemDiagnosticsRequest {
+	return SystemDiagnosticsApiApiGetSystemDiagnosticsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return SystemDiagnosticsEntity
+ */
+func (a *SystemDiagnosticsApiService) GetSystemDiagnosticsExecute(r SystemDiagnosticsApiApiGetSystemDiagnosticsRequest) (SystemDiagnosticsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -51,17 +73,22 @@ func (a *SystemDiagnosticsApiService) GetSystemDiagnostics(ctx _context.Context,
 		localVarReturnValue  SystemDiagnosticsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/system-diagnostics"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemDiagnosticsApiService.GetSystemDiagnostics")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/system-diagnostics"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -80,18 +107,19 @@ func (a *SystemDiagnosticsApiService) GetSystemDiagnostics(ctx _context.Context,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

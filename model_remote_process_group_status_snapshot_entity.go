@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,11 +11,178 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // RemoteProcessGroupStatusSnapshotEntity struct for RemoteProcessGroupStatusSnapshotEntity
 type RemoteProcessGroupStatusSnapshotEntity struct {
 	// The id of the remote process group.
-	Id                               string                              `json:"id,omitempty"`
-	RemoteProcessGroupStatusSnapshot RemoteProcessGroupStatusSnapshotDto `json:"remoteProcessGroupStatusSnapshot,omitempty"`
+	Id                               *string                              `json:"id,omitempty"`
+	RemoteProcessGroupStatusSnapshot *RemoteProcessGroupStatusSnapshotDTO `json:"remoteProcessGroupStatusSnapshot,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewRemoteProcessGroupStatusSnapshotEntity instantiates a new RemoteProcessGroupStatusSnapshotEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRemoteProcessGroupStatusSnapshotEntity() *RemoteProcessGroupStatusSnapshotEntity {
+	this := RemoteProcessGroupStatusSnapshotEntity{}
+	return &this
+}
+
+// NewRemoteProcessGroupStatusSnapshotEntityWithDefaults instantiates a new RemoteProcessGroupStatusSnapshotEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRemoteProcessGroupStatusSnapshotEntityWithDefaults() *RemoteProcessGroupStatusSnapshotEntity {
+	this := RemoteProcessGroupStatusSnapshotEntity{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *RemoteProcessGroupStatusSnapshotEntity) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupStatusSnapshotEntity) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *RemoteProcessGroupStatusSnapshotEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *RemoteProcessGroupStatusSnapshotEntity) SetId(v string) {
+	o.Id = &v
+}
+
+// GetRemoteProcessGroupStatusSnapshot returns the RemoteProcessGroupStatusSnapshot field value if set, zero value otherwise.
+func (o *RemoteProcessGroupStatusSnapshotEntity) GetRemoteProcessGroupStatusSnapshot() RemoteProcessGroupStatusSnapshotDTO {
+	if o == nil || o.RemoteProcessGroupStatusSnapshot == nil {
+		var ret RemoteProcessGroupStatusSnapshotDTO
+		return ret
+	}
+	return *o.RemoteProcessGroupStatusSnapshot
+}
+
+// GetRemoteProcessGroupStatusSnapshotOk returns a tuple with the RemoteProcessGroupStatusSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupStatusSnapshotEntity) GetRemoteProcessGroupStatusSnapshotOk() (*RemoteProcessGroupStatusSnapshotDTO, bool) {
+	if o == nil || o.RemoteProcessGroupStatusSnapshot == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroupStatusSnapshot, true
+}
+
+// HasRemoteProcessGroupStatusSnapshot returns a boolean if a field has been set.
+func (o *RemoteProcessGroupStatusSnapshotEntity) HasRemoteProcessGroupStatusSnapshot() bool {
+	if o != nil && o.RemoteProcessGroupStatusSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroupStatusSnapshot gets a reference to the given RemoteProcessGroupStatusSnapshotDTO and assigns it to the RemoteProcessGroupStatusSnapshot field.
+func (o *RemoteProcessGroupStatusSnapshotEntity) SetRemoteProcessGroupStatusSnapshot(v RemoteProcessGroupStatusSnapshotDTO) {
+	o.RemoteProcessGroupStatusSnapshot = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *RemoteProcessGroupStatusSnapshotEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupStatusSnapshotEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *RemoteProcessGroupStatusSnapshotEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *RemoteProcessGroupStatusSnapshotEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o RemoteProcessGroupStatusSnapshotEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.RemoteProcessGroupStatusSnapshot != nil {
+		toSerialize["remoteProcessGroupStatusSnapshot"] = o.RemoteProcessGroupStatusSnapshot
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRemoteProcessGroupStatusSnapshotEntity struct {
+	value *RemoteProcessGroupStatusSnapshotEntity
+	isSet bool
+}
+
+func (v NullableRemoteProcessGroupStatusSnapshotEntity) Get() *RemoteProcessGroupStatusSnapshotEntity {
+	return v.value
+}
+
+func (v *NullableRemoteProcessGroupStatusSnapshotEntity) Set(val *RemoteProcessGroupStatusSnapshotEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRemoteProcessGroupStatusSnapshotEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRemoteProcessGroupStatusSnapshotEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRemoteProcessGroupStatusSnapshotEntity(val *RemoteProcessGroupStatusSnapshotEntity) *NullableRemoteProcessGroupStatusSnapshotEntity {
+	return &NullableRemoteProcessGroupStatusSnapshotEntity{value: val, isSet: true}
+}
+
+func (v NullableRemoteProcessGroupStatusSnapshotEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRemoteProcessGroupStatusSnapshotEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

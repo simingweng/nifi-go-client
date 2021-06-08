@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // InputPortsApiService InputPortsApi service
 type InputPortsApiService service
 
+type InputPortsApiApiGetInputPortRequest struct {
+	ctx        _context.Context
+	ApiService *InputPortsApiService
+	id         string
+}
+
+func (r InputPortsApiApiGetInputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetInputPortExecute(r)
+}
+
 /*
-GetInputPort Gets an input port
+ * GetInputPort Gets an input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The input port id.
-@return PortEntity
-*/
-func (a *InputPortsApiService) GetInputPort(ctx _context.Context, id string) (PortEntity, *_nethttp.Response, error) {
+ * @return InputPortsApiApiGetInputPortRequest
+ */
+func (a *InputPortsApiService) GetInputPort(ctx _context.Context, id string) InputPortsApiApiGetInputPortRequest {
+	return InputPortsApiApiGetInputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *InputPortsApiService) GetInputPortExecute(r InputPortsApiApiGetInputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *InputPortsApiService) GetInputPort(ctx _context.Context, id string) (Po
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/input-ports/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InputPortsApiService.GetInputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/input-ports/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *InputPortsApiService) GetInputPort(ctx _context.Context, id string) (Po
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,24 +132,51 @@ func (a *InputPortsApiService) GetInputPort(ctx _context.Context, id string) (Po
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// InputPortsApiRemoveInputPortOpts Optional parameters for the method 'RemoveInputPort'
-type InputPortsApiRemoveInputPortOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type InputPortsApiApiRemoveInputPortRequest struct {
+	ctx                          _context.Context
+	ApiService                   *InputPortsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r InputPortsApiApiRemoveInputPortRequest) Version(version string) InputPortsApiApiRemoveInputPortRequest {
+	r.version = &version
+	return r
+}
+func (r InputPortsApiApiRemoveInputPortRequest) ClientId(clientId string) InputPortsApiApiRemoveInputPortRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r InputPortsApiApiRemoveInputPortRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) InputPortsApiApiRemoveInputPortRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r InputPortsApiApiRemoveInputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveInputPortExecute(r)
 }
 
 /*
-RemoveInputPort Deletes an input port
+ * RemoveInputPort Deletes an input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The input port id.
- * @param optional nil or *InputPortsApiRemoveInputPortOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return PortEntity
-*/
-func (a *InputPortsApiService) RemoveInputPort(ctx _context.Context, id string, localVarOptionals *InputPortsApiRemoveInputPortOpts) (PortEntity, *_nethttp.Response, error) {
+ * @return InputPortsApiApiRemoveInputPortRequest
+ */
+func (a *InputPortsApiService) RemoveInputPort(ctx _context.Context, id string) InputPortsApiApiRemoveInputPortRequest {
+	return InputPortsApiApiRemoveInputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *InputPortsApiService) RemoveInputPortExecute(r InputPortsApiApiRemoveInputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -132,22 +186,26 @@ func (a *InputPortsApiService) RemoveInputPort(ctx _context.Context, id string, 
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/input-ports/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InputPortsApiService.RemoveInputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/input-ports/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +224,19 @@ func (a *InputPortsApiService) RemoveInputPort(ctx _context.Context, id string, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,14 +261,41 @@ func (a *InputPortsApiService) RemoveInputPort(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type InputPortsApiApiUpdateInputPortRequest struct {
+	ctx        _context.Context
+	ApiService *InputPortsApiService
+	id         string
+	body       *PortEntity
+}
+
+func (r InputPortsApiApiUpdateInputPortRequest) Body(body PortEntity) InputPortsApiApiUpdateInputPortRequest {
+	r.body = &body
+	return r
+}
+
+func (r InputPortsApiApiUpdateInputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateInputPortExecute(r)
+}
+
 /*
-UpdateInputPort Updates an input port
+ * UpdateInputPort Updates an input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The input port id.
- * @param body The input port configuration details.
-@return PortEntity
-*/
-func (a *InputPortsApiService) UpdateInputPort(ctx _context.Context, id string, body PortEntity) (PortEntity, *_nethttp.Response, error) {
+ * @return InputPortsApiApiUpdateInputPortRequest
+ */
+func (a *InputPortsApiService) UpdateInputPort(ctx _context.Context, id string) InputPortsApiApiUpdateInputPortRequest {
+	return InputPortsApiApiUpdateInputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *InputPortsApiService) UpdateInputPortExecute(r InputPortsApiApiUpdateInputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -219,13 +305,20 @@ func (a *InputPortsApiService) UpdateInputPort(ctx _context.Context, id string, 
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/input-ports/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InputPortsApiService.UpdateInputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/input-ports/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -245,19 +338,20 @@ func (a *InputPortsApiService) UpdateInputPort(ctx _context.Context, id string, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -282,14 +376,41 @@ func (a *InputPortsApiService) UpdateInputPort(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type InputPortsApiApiUpdateRunStatusRequest struct {
+	ctx        _context.Context
+	ApiService *InputPortsApiService
+	id         string
+	body       *PortRunStatusEntity
+}
+
+func (r InputPortsApiApiUpdateRunStatusRequest) Body(body PortRunStatusEntity) InputPortsApiApiUpdateRunStatusRequest {
+	r.body = &body
+	return r
+}
+
+func (r InputPortsApiApiUpdateRunStatusRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRunStatusExecute(r)
+}
+
 /*
-UpdateRunStatus Updates run status of an input-port
+ * UpdateRunStatus Updates run status of an input-port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The port id.
- * @param body The port run status.
-@return ProcessorEntity
-*/
-func (a *InputPortsApiService) UpdateRunStatus(ctx _context.Context, id string, body PortRunStatusEntity) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return InputPortsApiApiUpdateRunStatusRequest
+ */
+func (a *InputPortsApiService) UpdateRunStatus(ctx _context.Context, id string) InputPortsApiApiUpdateRunStatusRequest {
+	return InputPortsApiApiUpdateRunStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *InputPortsApiService) UpdateRunStatusExecute(r InputPortsApiApiUpdateRunStatusRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -299,13 +420,20 @@ func (a *InputPortsApiService) UpdateRunStatus(ctx _context.Context, id string, 
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/input-ports/{id}/run-status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InputPortsApiService.UpdateRunStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/input-ports/{id}/run-status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -325,19 +453,20 @@ func (a *InputPortsApiService) UpdateRunStatus(ctx _context.Context, id string, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

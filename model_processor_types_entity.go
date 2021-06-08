@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessorTypesEntity struct for ProcessorTypesEntity
 type ProcessorTypesEntity struct {
-	ProcessorTypes []DocumentedTypeDto `json:"processorTypes,omitempty"`
+	ProcessorTypes *[]DocumentedTypeDTO `json:"processorTypes,omitempty"`
+}
+
+// NewProcessorTypesEntity instantiates a new ProcessorTypesEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorTypesEntity() *ProcessorTypesEntity {
+	this := ProcessorTypesEntity{}
+	return &this
+}
+
+// NewProcessorTypesEntityWithDefaults instantiates a new ProcessorTypesEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorTypesEntityWithDefaults() *ProcessorTypesEntity {
+	this := ProcessorTypesEntity{}
+	return &this
+}
+
+// GetProcessorTypes returns the ProcessorTypes field value if set, zero value otherwise.
+func (o *ProcessorTypesEntity) GetProcessorTypes() []DocumentedTypeDTO {
+	if o == nil || o.ProcessorTypes == nil {
+		var ret []DocumentedTypeDTO
+		return ret
+	}
+	return *o.ProcessorTypes
+}
+
+// GetProcessorTypesOk returns a tuple with the ProcessorTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorTypesEntity) GetProcessorTypesOk() (*[]DocumentedTypeDTO, bool) {
+	if o == nil || o.ProcessorTypes == nil {
+		return nil, false
+	}
+	return o.ProcessorTypes, true
+}
+
+// HasProcessorTypes returns a boolean if a field has been set.
+func (o *ProcessorTypesEntity) HasProcessorTypes() bool {
+	if o != nil && o.ProcessorTypes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessorTypes gets a reference to the given []DocumentedTypeDTO and assigns it to the ProcessorTypes field.
+func (o *ProcessorTypesEntity) SetProcessorTypes(v []DocumentedTypeDTO) {
+	o.ProcessorTypes = &v
+}
+
+func (o ProcessorTypesEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessorTypes != nil {
+		toSerialize["processorTypes"] = o.ProcessorTypes
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorTypesEntity struct {
+	value *ProcessorTypesEntity
+	isSet bool
+}
+
+func (v NullableProcessorTypesEntity) Get() *ProcessorTypesEntity {
+	return v.value
+}
+
+func (v *NullableProcessorTypesEntity) Set(val *ProcessorTypesEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorTypesEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorTypesEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorTypesEntity(val *ProcessorTypesEntity) *NullableProcessorTypesEntity {
+	return &NullableProcessorTypesEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessorTypesEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorTypesEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

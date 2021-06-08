@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // Position The position of a component on the graph
 type Position struct {
 	// The x coordinate.
-	X float64 `json:"x,omitempty"`
+	X *float64 `json:"x,omitempty"`
 	// The y coordinate.
-	Y float64 `json:"y,omitempty"`
+	Y *float64 `json:"y,omitempty"`
+}
+
+// NewPosition instantiates a new Position object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPosition() *Position {
+	this := Position{}
+	return &this
+}
+
+// NewPositionWithDefaults instantiates a new Position object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPositionWithDefaults() *Position {
+	this := Position{}
+	return &this
+}
+
+// GetX returns the X field value if set, zero value otherwise.
+func (o *Position) GetX() float64 {
+	if o == nil || o.X == nil {
+		var ret float64
+		return ret
+	}
+	return *o.X
+}
+
+// GetXOk returns a tuple with the X field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Position) GetXOk() (*float64, bool) {
+	if o == nil || o.X == nil {
+		return nil, false
+	}
+	return o.X, true
+}
+
+// HasX returns a boolean if a field has been set.
+func (o *Position) HasX() bool {
+	if o != nil && o.X != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetX gets a reference to the given float64 and assigns it to the X field.
+func (o *Position) SetX(v float64) {
+	o.X = &v
+}
+
+// GetY returns the Y field value if set, zero value otherwise.
+func (o *Position) GetY() float64 {
+	if o == nil || o.Y == nil {
+		var ret float64
+		return ret
+	}
+	return *o.Y
+}
+
+// GetYOk returns a tuple with the Y field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Position) GetYOk() (*float64, bool) {
+	if o == nil || o.Y == nil {
+		return nil, false
+	}
+	return o.Y, true
+}
+
+// HasY returns a boolean if a field has been set.
+func (o *Position) HasY() bool {
+	if o != nil && o.Y != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetY gets a reference to the given float64 and assigns it to the Y field.
+func (o *Position) SetY(v float64) {
+	o.Y = &v
+}
+
+func (o Position) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.X != nil {
+		toSerialize["x"] = o.X
+	}
+	if o.Y != nil {
+		toSerialize["y"] = o.Y
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePosition struct {
+	value *Position
+	isSet bool
+}
+
+func (v NullablePosition) Get() *Position {
+	return v.value
+}
+
+func (v *NullablePosition) Set(val *Position) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePosition) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePosition) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePosition(val *Position) *NullablePosition {
+	return &NullablePosition{value: val, isSet: true}
+}
+
+func (v NullablePosition) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePosition) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // RemoteProcessGroupStatusEntity struct for RemoteProcessGroupStatusEntity
 type RemoteProcessGroupStatusEntity struct {
-	RemoteProcessGroupStatus RemoteProcessGroupStatusDto `json:"remoteProcessGroupStatus,omitempty"`
+	RemoteProcessGroupStatus *RemoteProcessGroupStatusDTO `json:"remoteProcessGroupStatus,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewRemoteProcessGroupStatusEntity instantiates a new RemoteProcessGroupStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRemoteProcessGroupStatusEntity() *RemoteProcessGroupStatusEntity {
+	this := RemoteProcessGroupStatusEntity{}
+	return &this
+}
+
+// NewRemoteProcessGroupStatusEntityWithDefaults instantiates a new RemoteProcessGroupStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRemoteProcessGroupStatusEntityWithDefaults() *RemoteProcessGroupStatusEntity {
+	this := RemoteProcessGroupStatusEntity{}
+	return &this
+}
+
+// GetRemoteProcessGroupStatus returns the RemoteProcessGroupStatus field value if set, zero value otherwise.
+func (o *RemoteProcessGroupStatusEntity) GetRemoteProcessGroupStatus() RemoteProcessGroupStatusDTO {
+	if o == nil || o.RemoteProcessGroupStatus == nil {
+		var ret RemoteProcessGroupStatusDTO
+		return ret
+	}
+	return *o.RemoteProcessGroupStatus
+}
+
+// GetRemoteProcessGroupStatusOk returns a tuple with the RemoteProcessGroupStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupStatusEntity) GetRemoteProcessGroupStatusOk() (*RemoteProcessGroupStatusDTO, bool) {
+	if o == nil || o.RemoteProcessGroupStatus == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroupStatus, true
+}
+
+// HasRemoteProcessGroupStatus returns a boolean if a field has been set.
+func (o *RemoteProcessGroupStatusEntity) HasRemoteProcessGroupStatus() bool {
+	if o != nil && o.RemoteProcessGroupStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroupStatus gets a reference to the given RemoteProcessGroupStatusDTO and assigns it to the RemoteProcessGroupStatus field.
+func (o *RemoteProcessGroupStatusEntity) SetRemoteProcessGroupStatus(v RemoteProcessGroupStatusDTO) {
+	o.RemoteProcessGroupStatus = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *RemoteProcessGroupStatusEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupStatusEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *RemoteProcessGroupStatusEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *RemoteProcessGroupStatusEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o RemoteProcessGroupStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.RemoteProcessGroupStatus != nil {
+		toSerialize["remoteProcessGroupStatus"] = o.RemoteProcessGroupStatus
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRemoteProcessGroupStatusEntity struct {
+	value *RemoteProcessGroupStatusEntity
+	isSet bool
+}
+
+func (v NullableRemoteProcessGroupStatusEntity) Get() *RemoteProcessGroupStatusEntity {
+	return v.value
+}
+
+func (v *NullableRemoteProcessGroupStatusEntity) Set(val *RemoteProcessGroupStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRemoteProcessGroupStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRemoteProcessGroupStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRemoteProcessGroupStatusEntity(val *RemoteProcessGroupStatusEntity) *NullableRemoteProcessGroupStatusEntity {
+	return &NullableRemoteProcessGroupStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableRemoteProcessGroupStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRemoteProcessGroupStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

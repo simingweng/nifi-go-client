@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // CreateTemplateRequestEntity struct for CreateTemplateRequestEntity
 type CreateTemplateRequestEntity struct {
 	// The name of the template.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The description of the template.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The identifier of the snippet.
-	SnippetId string `json:"snippetId,omitempty"`
+	SnippetId *string `json:"snippetId,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool `json:"disconnectedNodeAcknowledged,omitempty"`
+	DisconnectedNodeAcknowledged *bool `json:"disconnectedNodeAcknowledged,omitempty"`
+}
+
+// NewCreateTemplateRequestEntity instantiates a new CreateTemplateRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCreateTemplateRequestEntity() *CreateTemplateRequestEntity {
+	this := CreateTemplateRequestEntity{}
+	return &this
+}
+
+// NewCreateTemplateRequestEntityWithDefaults instantiates a new CreateTemplateRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCreateTemplateRequestEntityWithDefaults() *CreateTemplateRequestEntity {
+	this := CreateTemplateRequestEntity{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *CreateTemplateRequestEntity) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequestEntity) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *CreateTemplateRequestEntity) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *CreateTemplateRequestEntity) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *CreateTemplateRequestEntity) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequestEntity) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *CreateTemplateRequestEntity) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *CreateTemplateRequestEntity) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetSnippetId returns the SnippetId field value if set, zero value otherwise.
+func (o *CreateTemplateRequestEntity) GetSnippetId() string {
+	if o == nil || o.SnippetId == nil {
+		var ret string
+		return ret
+	}
+	return *o.SnippetId
+}
+
+// GetSnippetIdOk returns a tuple with the SnippetId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequestEntity) GetSnippetIdOk() (*string, bool) {
+	if o == nil || o.SnippetId == nil {
+		return nil, false
+	}
+	return o.SnippetId, true
+}
+
+// HasSnippetId returns a boolean if a field has been set.
+func (o *CreateTemplateRequestEntity) HasSnippetId() bool {
+	if o != nil && o.SnippetId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSnippetId gets a reference to the given string and assigns it to the SnippetId field.
+func (o *CreateTemplateRequestEntity) SetSnippetId(v string) {
+	o.SnippetId = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *CreateTemplateRequestEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTemplateRequestEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *CreateTemplateRequestEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *CreateTemplateRequestEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+func (o CreateTemplateRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.SnippetId != nil {
+		toSerialize["snippetId"] = o.SnippetId
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableCreateTemplateRequestEntity struct {
+	value *CreateTemplateRequestEntity
+	isSet bool
+}
+
+func (v NullableCreateTemplateRequestEntity) Get() *CreateTemplateRequestEntity {
+	return v.value
+}
+
+func (v *NullableCreateTemplateRequestEntity) Set(val *CreateTemplateRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableCreateTemplateRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableCreateTemplateRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableCreateTemplateRequestEntity(val *CreateTemplateRequestEntity) *NullableCreateTemplateRequestEntity {
+	return &NullableCreateTemplateRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableCreateTemplateRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableCreateTemplateRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

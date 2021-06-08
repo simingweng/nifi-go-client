@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,28 +11,475 @@
 
 package nifi
 
-// VersionControlInformationDto struct for VersionControlInformationDto
-type VersionControlInformationDto struct {
+import (
+	"encoding/json"
+)
+
+// VersionControlInformationDTO struct for VersionControlInformationDTO
+type VersionControlInformationDTO struct {
 	// The ID of the Process Group that is under version control
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The ID of the registry that the flow is stored in
-	RegistryId string `json:"registryId,omitempty"`
+	RegistryId *string `json:"registryId,omitempty"`
 	// The name of the registry that the flow is stored in
-	RegistryName string `json:"registryName,omitempty"`
+	RegistryName *string `json:"registryName,omitempty"`
 	// The ID of the bucket that the flow is stored in
-	BucketId string `json:"bucketId,omitempty"`
+	BucketId *string `json:"bucketId,omitempty"`
 	// The name of the bucket that the flow is stored in
-	BucketName string `json:"bucketName,omitempty"`
+	BucketName *string `json:"bucketName,omitempty"`
 	// The ID of the flow
-	FlowId string `json:"flowId,omitempty"`
+	FlowId *string `json:"flowId,omitempty"`
 	// The name of the flow
-	FlowName string `json:"flowName,omitempty"`
+	FlowName *string `json:"flowName,omitempty"`
 	// The description of the flow
-	FlowDescription string `json:"flowDescription,omitempty"`
+	FlowDescription *string `json:"flowDescription,omitempty"`
 	// The version of the flow
-	Version int32 `json:"version,omitempty"`
+	Version *int32 `json:"version,omitempty"`
 	// The current state of the Process Group, as it relates to the Versioned Flow
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// Explanation of why the group is in the specified state
-	StateExplanation string `json:"stateExplanation,omitempty"`
+	StateExplanation *string `json:"stateExplanation,omitempty"`
+}
+
+// NewVersionControlInformationDTO instantiates a new VersionControlInformationDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionControlInformationDTO() *VersionControlInformationDTO {
+	this := VersionControlInformationDTO{}
+	return &this
+}
+
+// NewVersionControlInformationDTOWithDefaults instantiates a new VersionControlInformationDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionControlInformationDTOWithDefaults() *VersionControlInformationDTO {
+	this := VersionControlInformationDTO{}
+	return &this
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *VersionControlInformationDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetRegistryId returns the RegistryId field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetRegistryId() string {
+	if o == nil || o.RegistryId == nil {
+		var ret string
+		return ret
+	}
+	return *o.RegistryId
+}
+
+// GetRegistryIdOk returns a tuple with the RegistryId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetRegistryIdOk() (*string, bool) {
+	if o == nil || o.RegistryId == nil {
+		return nil, false
+	}
+	return o.RegistryId, true
+}
+
+// HasRegistryId returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasRegistryId() bool {
+	if o != nil && o.RegistryId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRegistryId gets a reference to the given string and assigns it to the RegistryId field.
+func (o *VersionControlInformationDTO) SetRegistryId(v string) {
+	o.RegistryId = &v
+}
+
+// GetRegistryName returns the RegistryName field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetRegistryName() string {
+	if o == nil || o.RegistryName == nil {
+		var ret string
+		return ret
+	}
+	return *o.RegistryName
+}
+
+// GetRegistryNameOk returns a tuple with the RegistryName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetRegistryNameOk() (*string, bool) {
+	if o == nil || o.RegistryName == nil {
+		return nil, false
+	}
+	return o.RegistryName, true
+}
+
+// HasRegistryName returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasRegistryName() bool {
+	if o != nil && o.RegistryName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRegistryName gets a reference to the given string and assigns it to the RegistryName field.
+func (o *VersionControlInformationDTO) SetRegistryName(v string) {
+	o.RegistryName = &v
+}
+
+// GetBucketId returns the BucketId field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetBucketId() string {
+	if o == nil || o.BucketId == nil {
+		var ret string
+		return ret
+	}
+	return *o.BucketId
+}
+
+// GetBucketIdOk returns a tuple with the BucketId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetBucketIdOk() (*string, bool) {
+	if o == nil || o.BucketId == nil {
+		return nil, false
+	}
+	return o.BucketId, true
+}
+
+// HasBucketId returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasBucketId() bool {
+	if o != nil && o.BucketId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBucketId gets a reference to the given string and assigns it to the BucketId field.
+func (o *VersionControlInformationDTO) SetBucketId(v string) {
+	o.BucketId = &v
+}
+
+// GetBucketName returns the BucketName field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetBucketName() string {
+	if o == nil || o.BucketName == nil {
+		var ret string
+		return ret
+	}
+	return *o.BucketName
+}
+
+// GetBucketNameOk returns a tuple with the BucketName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetBucketNameOk() (*string, bool) {
+	if o == nil || o.BucketName == nil {
+		return nil, false
+	}
+	return o.BucketName, true
+}
+
+// HasBucketName returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasBucketName() bool {
+	if o != nil && o.BucketName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBucketName gets a reference to the given string and assigns it to the BucketName field.
+func (o *VersionControlInformationDTO) SetBucketName(v string) {
+	o.BucketName = &v
+}
+
+// GetFlowId returns the FlowId field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetFlowId() string {
+	if o == nil || o.FlowId == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowId
+}
+
+// GetFlowIdOk returns a tuple with the FlowId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetFlowIdOk() (*string, bool) {
+	if o == nil || o.FlowId == nil {
+		return nil, false
+	}
+	return o.FlowId, true
+}
+
+// HasFlowId returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasFlowId() bool {
+	if o != nil && o.FlowId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowId gets a reference to the given string and assigns it to the FlowId field.
+func (o *VersionControlInformationDTO) SetFlowId(v string) {
+	o.FlowId = &v
+}
+
+// GetFlowName returns the FlowName field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetFlowName() string {
+	if o == nil || o.FlowName == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowName
+}
+
+// GetFlowNameOk returns a tuple with the FlowName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetFlowNameOk() (*string, bool) {
+	if o == nil || o.FlowName == nil {
+		return nil, false
+	}
+	return o.FlowName, true
+}
+
+// HasFlowName returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasFlowName() bool {
+	if o != nil && o.FlowName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowName gets a reference to the given string and assigns it to the FlowName field.
+func (o *VersionControlInformationDTO) SetFlowName(v string) {
+	o.FlowName = &v
+}
+
+// GetFlowDescription returns the FlowDescription field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetFlowDescription() string {
+	if o == nil || o.FlowDescription == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowDescription
+}
+
+// GetFlowDescriptionOk returns a tuple with the FlowDescription field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetFlowDescriptionOk() (*string, bool) {
+	if o == nil || o.FlowDescription == nil {
+		return nil, false
+	}
+	return o.FlowDescription, true
+}
+
+// HasFlowDescription returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasFlowDescription() bool {
+	if o != nil && o.FlowDescription != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowDescription gets a reference to the given string and assigns it to the FlowDescription field.
+func (o *VersionControlInformationDTO) SetFlowDescription(v string) {
+	o.FlowDescription = &v
+}
+
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetVersion() int32 {
+	if o == nil || o.Version == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetVersionOk() (*int32, bool) {
+	if o == nil || o.Version == nil {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasVersion() bool {
+	if o != nil && o.Version != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given int32 and assigns it to the Version field.
+func (o *VersionControlInformationDTO) SetVersion(v int32) {
+	o.Version = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *VersionControlInformationDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetStateExplanation returns the StateExplanation field value if set, zero value otherwise.
+func (o *VersionControlInformationDTO) GetStateExplanation() string {
+	if o == nil || o.StateExplanation == nil {
+		var ret string
+		return ret
+	}
+	return *o.StateExplanation
+}
+
+// GetStateExplanationOk returns a tuple with the StateExplanation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationDTO) GetStateExplanationOk() (*string, bool) {
+	if o == nil || o.StateExplanation == nil {
+		return nil, false
+	}
+	return o.StateExplanation, true
+}
+
+// HasStateExplanation returns a boolean if a field has been set.
+func (o *VersionControlInformationDTO) HasStateExplanation() bool {
+	if o != nil && o.StateExplanation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStateExplanation gets a reference to the given string and assigns it to the StateExplanation field.
+func (o *VersionControlInformationDTO) SetStateExplanation(v string) {
+	o.StateExplanation = &v
+}
+
+func (o VersionControlInformationDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.RegistryId != nil {
+		toSerialize["registryId"] = o.RegistryId
+	}
+	if o.RegistryName != nil {
+		toSerialize["registryName"] = o.RegistryName
+	}
+	if o.BucketId != nil {
+		toSerialize["bucketId"] = o.BucketId
+	}
+	if o.BucketName != nil {
+		toSerialize["bucketName"] = o.BucketName
+	}
+	if o.FlowId != nil {
+		toSerialize["flowId"] = o.FlowId
+	}
+	if o.FlowName != nil {
+		toSerialize["flowName"] = o.FlowName
+	}
+	if o.FlowDescription != nil {
+		toSerialize["flowDescription"] = o.FlowDescription
+	}
+	if o.Version != nil {
+		toSerialize["version"] = o.Version
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.StateExplanation != nil {
+		toSerialize["stateExplanation"] = o.StateExplanation
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionControlInformationDTO struct {
+	value *VersionControlInformationDTO
+	isSet bool
+}
+
+func (v NullableVersionControlInformationDTO) Get() *VersionControlInformationDTO {
+	return v.value
+}
+
+func (v *NullableVersionControlInformationDTO) Set(val *VersionControlInformationDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionControlInformationDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionControlInformationDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionControlInformationDTO(val *VersionControlInformationDTO) *NullableVersionControlInformationDTO {
+	return &NullableVersionControlInformationDTO{value: val, isSet: true}
+}
+
+func (v NullableVersionControlInformationDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionControlInformationDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

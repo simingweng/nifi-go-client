@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// GarbageCollectionDto struct for GarbageCollectionDto
-type GarbageCollectionDto struct {
+import (
+	"encoding/json"
+)
+
+// GarbageCollectionDTO struct for GarbageCollectionDTO
+type GarbageCollectionDTO struct {
 	// The name of the garbage collector.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The number of times garbage collection has run.
-	CollectionCount int64 `json:"collectionCount,omitempty"`
+	CollectionCount *int64 `json:"collectionCount,omitempty"`
 	// The total amount of time spent garbage collecting.
-	CollectionTime string `json:"collectionTime,omitempty"`
+	CollectionTime *string `json:"collectionTime,omitempty"`
 	// The total number of milliseconds spent garbage collecting.
-	CollectionMillis int64 `json:"collectionMillis,omitempty"`
+	CollectionMillis *int64 `json:"collectionMillis,omitempty"`
+}
+
+// NewGarbageCollectionDTO instantiates a new GarbageCollectionDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewGarbageCollectionDTO() *GarbageCollectionDTO {
+	this := GarbageCollectionDTO{}
+	return &this
+}
+
+// NewGarbageCollectionDTOWithDefaults instantiates a new GarbageCollectionDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewGarbageCollectionDTOWithDefaults() *GarbageCollectionDTO {
+	this := GarbageCollectionDTO{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *GarbageCollectionDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GarbageCollectionDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *GarbageCollectionDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *GarbageCollectionDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetCollectionCount returns the CollectionCount field value if set, zero value otherwise.
+func (o *GarbageCollectionDTO) GetCollectionCount() int64 {
+	if o == nil || o.CollectionCount == nil {
+		var ret int64
+		return ret
+	}
+	return *o.CollectionCount
+}
+
+// GetCollectionCountOk returns a tuple with the CollectionCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GarbageCollectionDTO) GetCollectionCountOk() (*int64, bool) {
+	if o == nil || o.CollectionCount == nil {
+		return nil, false
+	}
+	return o.CollectionCount, true
+}
+
+// HasCollectionCount returns a boolean if a field has been set.
+func (o *GarbageCollectionDTO) HasCollectionCount() bool {
+	if o != nil && o.CollectionCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCollectionCount gets a reference to the given int64 and assigns it to the CollectionCount field.
+func (o *GarbageCollectionDTO) SetCollectionCount(v int64) {
+	o.CollectionCount = &v
+}
+
+// GetCollectionTime returns the CollectionTime field value if set, zero value otherwise.
+func (o *GarbageCollectionDTO) GetCollectionTime() string {
+	if o == nil || o.CollectionTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.CollectionTime
+}
+
+// GetCollectionTimeOk returns a tuple with the CollectionTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GarbageCollectionDTO) GetCollectionTimeOk() (*string, bool) {
+	if o == nil || o.CollectionTime == nil {
+		return nil, false
+	}
+	return o.CollectionTime, true
+}
+
+// HasCollectionTime returns a boolean if a field has been set.
+func (o *GarbageCollectionDTO) HasCollectionTime() bool {
+	if o != nil && o.CollectionTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCollectionTime gets a reference to the given string and assigns it to the CollectionTime field.
+func (o *GarbageCollectionDTO) SetCollectionTime(v string) {
+	o.CollectionTime = &v
+}
+
+// GetCollectionMillis returns the CollectionMillis field value if set, zero value otherwise.
+func (o *GarbageCollectionDTO) GetCollectionMillis() int64 {
+	if o == nil || o.CollectionMillis == nil {
+		var ret int64
+		return ret
+	}
+	return *o.CollectionMillis
+}
+
+// GetCollectionMillisOk returns a tuple with the CollectionMillis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GarbageCollectionDTO) GetCollectionMillisOk() (*int64, bool) {
+	if o == nil || o.CollectionMillis == nil {
+		return nil, false
+	}
+	return o.CollectionMillis, true
+}
+
+// HasCollectionMillis returns a boolean if a field has been set.
+func (o *GarbageCollectionDTO) HasCollectionMillis() bool {
+	if o != nil && o.CollectionMillis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCollectionMillis gets a reference to the given int64 and assigns it to the CollectionMillis field.
+func (o *GarbageCollectionDTO) SetCollectionMillis(v int64) {
+	o.CollectionMillis = &v
+}
+
+func (o GarbageCollectionDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.CollectionCount != nil {
+		toSerialize["collectionCount"] = o.CollectionCount
+	}
+	if o.CollectionTime != nil {
+		toSerialize["collectionTime"] = o.CollectionTime
+	}
+	if o.CollectionMillis != nil {
+		toSerialize["collectionMillis"] = o.CollectionMillis
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableGarbageCollectionDTO struct {
+	value *GarbageCollectionDTO
+	isSet bool
+}
+
+func (v NullableGarbageCollectionDTO) Get() *GarbageCollectionDTO {
+	return v.value
+}
+
+func (v *NullableGarbageCollectionDTO) Set(val *GarbageCollectionDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableGarbageCollectionDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableGarbageCollectionDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableGarbageCollectionDTO(val *GarbageCollectionDTO) *NullableGarbageCollectionDTO {
+	return &NullableGarbageCollectionDTO{value: val, isSet: true}
+}
+
+func (v NullableGarbageCollectionDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableGarbageCollectionDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

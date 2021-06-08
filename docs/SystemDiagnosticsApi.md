@@ -10,27 +10,51 @@ Method | HTTP request | Description
 
 ## GetSystemDiagnostics
 
-> SystemDiagnosticsEntity GetSystemDiagnostics(ctx, optional)
+> SystemDiagnosticsEntity GetSystemDiagnostics(ctx).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets the diagnostics for the system NiFi is running on
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.SystemDiagnosticsApi.GetSystemDiagnostics(context.Background()).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SystemDiagnosticsApi.GetSystemDiagnostics``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetSystemDiagnostics`: SystemDiagnosticsEntity
+    fmt.Fprintf(os.Stdout, "Response from `SystemDiagnosticsApi.GetSystemDiagnostics`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSystemDiagnosticsRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetSystemDiagnosticsOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetSystemDiagnosticsOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 

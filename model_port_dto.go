@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,33 +11,585 @@
 
 package nifi
 
-// PortDto struct for PortDto
-type PortDto struct {
+import (
+	"encoding/json"
+)
+
+// PortDTO struct for PortDTO
+type PortDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The name of the port.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The comments for the port.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
 	// The state of the port.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// The type of port.
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 	// Whether the port has incoming or output connections to a remote NiFi. This is only applicable when the port is allowed to be accessed remotely.
-	Transmitting bool `json:"transmitting,omitempty"`
+	Transmitting *bool `json:"transmitting,omitempty"`
 	// The number of tasks that should be concurrently scheduled for the port.
-	ConcurrentlySchedulableTaskCount int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
+	ConcurrentlySchedulableTaskCount *int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
 	// The users that are allowed to access the port.
-	UserAccessControl []string `json:"userAccessControl,omitempty"`
+	UserAccessControl *[]string `json:"userAccessControl,omitempty"`
 	// The user groups that are allowed to access the port.
-	GroupAccessControl []string `json:"groupAccessControl,omitempty"`
+	GroupAccessControl *[]string `json:"groupAccessControl,omitempty"`
 	// Whether this port can be accessed remotely via Site-to-Site protocol.
-	AllowRemoteAccess bool `json:"allowRemoteAccess,omitempty"`
+	AllowRemoteAccess *bool `json:"allowRemoteAccess,omitempty"`
 	// Gets the validation errors from this port. These validation errors represent the problems with the port that must be resolved before it can be started.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
+}
+
+// NewPortDTO instantiates a new PortDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPortDTO() *PortDTO {
+	this := PortDTO{}
+	return &this
+}
+
+// NewPortDTOWithDefaults instantiates a new PortDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPortDTOWithDefaults() *PortDTO {
+	this := PortDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *PortDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *PortDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *PortDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *PortDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *PortDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *PortDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *PortDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *PortDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *PortDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *PortDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *PortDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *PortDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *PortDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *PortDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *PortDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *PortDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *PortDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *PortDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *PortDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *PortDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *PortDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *PortDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *PortDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *PortDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetTransmitting returns the Transmitting field value if set, zero value otherwise.
+func (o *PortDTO) GetTransmitting() bool {
+	if o == nil || o.Transmitting == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Transmitting
+}
+
+// GetTransmittingOk returns a tuple with the Transmitting field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetTransmittingOk() (*bool, bool) {
+	if o == nil || o.Transmitting == nil {
+		return nil, false
+	}
+	return o.Transmitting, true
+}
+
+// HasTransmitting returns a boolean if a field has been set.
+func (o *PortDTO) HasTransmitting() bool {
+	if o != nil && o.Transmitting != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransmitting gets a reference to the given bool and assigns it to the Transmitting field.
+func (o *PortDTO) SetTransmitting(v bool) {
+	o.Transmitting = &v
+}
+
+// GetConcurrentlySchedulableTaskCount returns the ConcurrentlySchedulableTaskCount field value if set, zero value otherwise.
+func (o *PortDTO) GetConcurrentlySchedulableTaskCount() int32 {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ConcurrentlySchedulableTaskCount
+}
+
+// GetConcurrentlySchedulableTaskCountOk returns a tuple with the ConcurrentlySchedulableTaskCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetConcurrentlySchedulableTaskCountOk() (*int32, bool) {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		return nil, false
+	}
+	return o.ConcurrentlySchedulableTaskCount, true
+}
+
+// HasConcurrentlySchedulableTaskCount returns a boolean if a field has been set.
+func (o *PortDTO) HasConcurrentlySchedulableTaskCount() bool {
+	if o != nil && o.ConcurrentlySchedulableTaskCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConcurrentlySchedulableTaskCount gets a reference to the given int32 and assigns it to the ConcurrentlySchedulableTaskCount field.
+func (o *PortDTO) SetConcurrentlySchedulableTaskCount(v int32) {
+	o.ConcurrentlySchedulableTaskCount = &v
+}
+
+// GetUserAccessControl returns the UserAccessControl field value if set, zero value otherwise.
+func (o *PortDTO) GetUserAccessControl() []string {
+	if o == nil || o.UserAccessControl == nil {
+		var ret []string
+		return ret
+	}
+	return *o.UserAccessControl
+}
+
+// GetUserAccessControlOk returns a tuple with the UserAccessControl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetUserAccessControlOk() (*[]string, bool) {
+	if o == nil || o.UserAccessControl == nil {
+		return nil, false
+	}
+	return o.UserAccessControl, true
+}
+
+// HasUserAccessControl returns a boolean if a field has been set.
+func (o *PortDTO) HasUserAccessControl() bool {
+	if o != nil && o.UserAccessControl != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUserAccessControl gets a reference to the given []string and assigns it to the UserAccessControl field.
+func (o *PortDTO) SetUserAccessControl(v []string) {
+	o.UserAccessControl = &v
+}
+
+// GetGroupAccessControl returns the GroupAccessControl field value if set, zero value otherwise.
+func (o *PortDTO) GetGroupAccessControl() []string {
+	if o == nil || o.GroupAccessControl == nil {
+		var ret []string
+		return ret
+	}
+	return *o.GroupAccessControl
+}
+
+// GetGroupAccessControlOk returns a tuple with the GroupAccessControl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetGroupAccessControlOk() (*[]string, bool) {
+	if o == nil || o.GroupAccessControl == nil {
+		return nil, false
+	}
+	return o.GroupAccessControl, true
+}
+
+// HasGroupAccessControl returns a boolean if a field has been set.
+func (o *PortDTO) HasGroupAccessControl() bool {
+	if o != nil && o.GroupAccessControl != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupAccessControl gets a reference to the given []string and assigns it to the GroupAccessControl field.
+func (o *PortDTO) SetGroupAccessControl(v []string) {
+	o.GroupAccessControl = &v
+}
+
+// GetAllowRemoteAccess returns the AllowRemoteAccess field value if set, zero value otherwise.
+func (o *PortDTO) GetAllowRemoteAccess() bool {
+	if o == nil || o.AllowRemoteAccess == nil {
+		var ret bool
+		return ret
+	}
+	return *o.AllowRemoteAccess
+}
+
+// GetAllowRemoteAccessOk returns a tuple with the AllowRemoteAccess field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetAllowRemoteAccessOk() (*bool, bool) {
+	if o == nil || o.AllowRemoteAccess == nil {
+		return nil, false
+	}
+	return o.AllowRemoteAccess, true
+}
+
+// HasAllowRemoteAccess returns a boolean if a field has been set.
+func (o *PortDTO) HasAllowRemoteAccess() bool {
+	if o != nil && o.AllowRemoteAccess != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowRemoteAccess gets a reference to the given bool and assigns it to the AllowRemoteAccess field.
+func (o *PortDTO) SetAllowRemoteAccess(v bool) {
+	o.AllowRemoteAccess = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *PortDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *PortDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *PortDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+func (o PortDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Transmitting != nil {
+		toSerialize["transmitting"] = o.Transmitting
+	}
+	if o.ConcurrentlySchedulableTaskCount != nil {
+		toSerialize["concurrentlySchedulableTaskCount"] = o.ConcurrentlySchedulableTaskCount
+	}
+	if o.UserAccessControl != nil {
+		toSerialize["userAccessControl"] = o.UserAccessControl
+	}
+	if o.GroupAccessControl != nil {
+		toSerialize["groupAccessControl"] = o.GroupAccessControl
+	}
+	if o.AllowRemoteAccess != nil {
+		toSerialize["allowRemoteAccess"] = o.AllowRemoteAccess
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePortDTO struct {
+	value *PortDTO
+	isSet bool
+}
+
+func (v NullablePortDTO) Get() *PortDTO {
+	return v.value
+}
+
+func (v *NullablePortDTO) Set(val *PortDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePortDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePortDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePortDTO(val *PortDTO) *NullablePortDTO {
+	return &NullablePortDTO{value: val, isSet: true}
+}
+
+func (v NullablePortDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePortDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

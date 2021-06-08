@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,38 @@ var (
 // ParameterContextsApiService ParameterContextsApi service
 type ParameterContextsApiService service
 
+type ParameterContextsApiApiCreateParameterContextRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	body       *ParameterContextEntity
+}
+
+func (r ParameterContextsApiApiCreateParameterContextRequest) Body(body ParameterContextEntity) ParameterContextsApiApiCreateParameterContextRequest {
+	r.body = &body
+	return r
+}
+
+func (r ParameterContextsApiApiCreateParameterContextRequest) Execute() (ParameterContextEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateParameterContextExecute(r)
+}
+
 /*
-CreateParameterContext Create a Parameter Context
+ * CreateParameterContext Create a Parameter Context
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The Parameter Context.
-@return ParameterContextEntity
-*/
-func (a *ParameterContextsApiService) CreateParameterContext(ctx _context.Context, body ParameterContextEntity) (ParameterContextEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiCreateParameterContextRequest
+ */
+func (a *ParameterContextsApiService) CreateParameterContext(ctx _context.Context) ParameterContextsApiApiCreateParameterContextRequest {
+	return ParameterContextsApiApiCreateParameterContextRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextEntity
+ */
+func (a *ParameterContextsApiService) CreateParameterContextExecute(r ParameterContextsApiApiCreateParameterContextRequest) (ParameterContextEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -44,11 +69,19 @@ func (a *ParameterContextsApiService) CreateParameterContext(ctx _context.Contex
 		localVarReturnValue  ParameterContextEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.CreateParameterContext")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/parameter-contexts"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -68,19 +101,20 @@ func (a *ParameterContextsApiService) CreateParameterContext(ctx _context.Contex
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,25 +139,52 @@ func (a *ParameterContextsApiService) CreateParameterContext(ctx _context.Contex
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ParameterContextsApiDeleteParameterContextOpts Optional parameters for the method 'DeleteParameterContext'
-type ParameterContextsApiDeleteParameterContextOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type ParameterContextsApiApiDeleteParameterContextRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ParameterContextsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ParameterContextsApiApiDeleteParameterContextRequest) Version(version string) ParameterContextsApiApiDeleteParameterContextRequest {
+	r.version = &version
+	return r
+}
+func (r ParameterContextsApiApiDeleteParameterContextRequest) ClientId(clientId string) ParameterContextsApiApiDeleteParameterContextRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r ParameterContextsApiApiDeleteParameterContextRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ParameterContextsApiApiDeleteParameterContextRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ParameterContextsApiApiDeleteParameterContextRequest) Execute() (ParameterContextEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteParameterContextExecute(r)
 }
 
 /*
-DeleteParameterContext Deletes the Parameter Context with the given ID
-Deletes the Parameter Context with the given ID.
+ * DeleteParameterContext Deletes the Parameter Context with the given ID
+ * Deletes the Parameter Context with the given ID.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The Parameter Context ID.
- * @param optional nil or *ParameterContextsApiDeleteParameterContextOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The version is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ParameterContextEntity
-*/
-func (a *ParameterContextsApiService) DeleteParameterContext(ctx _context.Context, id string, localVarOptionals *ParameterContextsApiDeleteParameterContextOpts) (ParameterContextEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiDeleteParameterContextRequest
+ */
+func (a *ParameterContextsApiService) DeleteParameterContext(ctx _context.Context, id string) ParameterContextsApiApiDeleteParameterContextRequest {
+	return ParameterContextsApiApiDeleteParameterContextRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextEntity
+ */
+func (a *ParameterContextsApiService) DeleteParameterContextExecute(r ParameterContextsApiApiDeleteParameterContextRequest) (ParameterContextEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -133,22 +194,26 @@ func (a *ParameterContextsApiService) DeleteParameterContext(ctx _context.Contex
 		localVarReturnValue  ParameterContextEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.DeleteParameterContext")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/parameter-contexts/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -167,18 +232,19 @@ func (a *ParameterContextsApiService) DeleteParameterContext(ctx _context.Contex
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -203,22 +269,45 @@ func (a *ParameterContextsApiService) DeleteParameterContext(ctx _context.Contex
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ParameterContextsApiDeleteUpdateRequestOpts Optional parameters for the method 'DeleteUpdateRequest'
-type ParameterContextsApiDeleteUpdateRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type ParameterContextsApiApiDeleteUpdateRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ParameterContextsApiService
+	contextId                    string
+	requestId                    string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ParameterContextsApiApiDeleteUpdateRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ParameterContextsApiApiDeleteUpdateRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ParameterContextsApiApiDeleteUpdateRequestRequest) Execute() (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteUpdateRequestExecute(r)
 }
 
 /*
-DeleteUpdateRequest Deletes the Update Request with the given ID
-Deletes the Update Request with the given ID. After a request is created via a POST to /nifi-api/parameter-contexts/update-requests, it is expected that the client will properly clean up the request by DELETE&#39;ing it, once the Update process has completed. If the request is deleted before the request completes, then the Update request will finish the step that it is currently performing and then will cancel any subsequent steps.
+ * DeleteUpdateRequest Deletes the Update Request with the given ID
+ * Deletes the Update Request with the given ID. After a request is created via a POST to /nifi-api/parameter-contexts/update-requests, it is expected that the client will properly clean up the request by DELETE'ing it, once the Update process has completed. If the request is deleted before the request completes, then the Update request will finish the step that it is currently performing and then will cancel any subsequent steps.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param contextId The ID of the ParameterContext
  * @param requestId The ID of the Update Request
- * @param optional nil or *ParameterContextsApiDeleteUpdateRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ParameterContextUpdateRequestEntity
-*/
-func (a *ParameterContextsApiService) DeleteUpdateRequest(ctx _context.Context, contextId string, requestId string, localVarOptionals *ParameterContextsApiDeleteUpdateRequestOpts) (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiDeleteUpdateRequestRequest
+ */
+func (a *ParameterContextsApiService) DeleteUpdateRequest(ctx _context.Context, contextId string, requestId string) ParameterContextsApiApiDeleteUpdateRequestRequest {
+	return ParameterContextsApiApiDeleteUpdateRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		contextId:  contextId,
+		requestId:  requestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextUpdateRequestEntity
+ */
+func (a *ParameterContextsApiService) DeleteUpdateRequestExecute(r ParameterContextsApiApiDeleteUpdateRequestRequest) (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -228,18 +317,21 @@ func (a *ParameterContextsApiService) DeleteUpdateRequest(ctx _context.Context, 
 		localVarReturnValue  ParameterContextUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{contextId}/update-requests/{requestId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.QueryEscape(parameterToString(contextId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.DeleteUpdateRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"requestId"+"}", _neturl.QueryEscape(parameterToString(requestId, "")), -1)
+	localVarPath := localBasePath + "/parameter-contexts/{contextId}/update-requests/{requestId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.PathEscape(parameterToString(r.contextId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"requestId"+"}", _neturl.PathEscape(parameterToString(r.requestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -258,18 +350,19 @@ func (a *ParameterContextsApiService) DeleteUpdateRequest(ctx _context.Context, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -294,22 +387,45 @@ func (a *ParameterContextsApiService) DeleteUpdateRequest(ctx _context.Context, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ParameterContextsApiDeleteValidationRequestOpts Optional parameters for the method 'DeleteValidationRequest'
-type ParameterContextsApiDeleteValidationRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type ParameterContextsApiApiDeleteValidationRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ParameterContextsApiService
+	contextId                    string
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ParameterContextsApiApiDeleteValidationRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ParameterContextsApiApiDeleteValidationRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ParameterContextsApiApiDeleteValidationRequestRequest) Execute() (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteValidationRequestExecute(r)
 }
 
 /*
-DeleteValidationRequest Deletes the Validation Request with the given ID
-Deletes the Validation Request with the given ID. After a request is created via a POST to /nifi-api/validation-contexts, it is expected that the client will properly clean up the request by DELETE&#39;ing it, once the validation process has completed. If the request is deleted before the request completes, then the Validation request will finish the step that it is currently performing and then will cancel any subsequent steps.
+ * DeleteValidationRequest Deletes the Validation Request with the given ID
+ * Deletes the Validation Request with the given ID. After a request is created via a POST to /nifi-api/validation-contexts, it is expected that the client will properly clean up the request by DELETE'ing it, once the validation process has completed. If the request is deleted before the request completes, then the Validation request will finish the step that it is currently performing and then will cancel any subsequent steps.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param contextId The ID of the Parameter Context
  * @param id The ID of the Update Request
- * @param optional nil or *ParameterContextsApiDeleteValidationRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ParameterContextValidationRequestEntity
-*/
-func (a *ParameterContextsApiService) DeleteValidationRequest(ctx _context.Context, contextId string, id string, localVarOptionals *ParameterContextsApiDeleteValidationRequestOpts) (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiDeleteValidationRequestRequest
+ */
+func (a *ParameterContextsApiService) DeleteValidationRequest(ctx _context.Context, contextId string, id string) ParameterContextsApiApiDeleteValidationRequestRequest {
+	return ParameterContextsApiApiDeleteValidationRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		contextId:  contextId,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextValidationRequestEntity
+ */
+func (a *ParameterContextsApiService) DeleteValidationRequestExecute(r ParameterContextsApiApiDeleteValidationRequestRequest) (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -319,18 +435,21 @@ func (a *ParameterContextsApiService) DeleteValidationRequest(ctx _context.Conte
 		localVarReturnValue  ParameterContextValidationRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{contextId}/validation-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.QueryEscape(parameterToString(contextId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.DeleteValidationRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localVarPath := localBasePath + "/parameter-contexts/{contextId}/validation-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.PathEscape(parameterToString(r.contextId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -349,18 +468,19 @@ func (a *ParameterContextsApiService) DeleteValidationRequest(ctx _context.Conte
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -385,14 +505,36 @@ func (a *ParameterContextsApiService) DeleteValidationRequest(ctx _context.Conte
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ParameterContextsApiApiGetParameterContextRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	id         string
+}
+
+func (r ParameterContextsApiApiGetParameterContextRequest) Execute() (ParameterContextEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetParameterContextExecute(r)
+}
+
 /*
-GetParameterContext Returns the Parameter Context with the given ID
-Returns the Parameter Context with the given ID.
+ * GetParameterContext Returns the Parameter Context with the given ID
+ * Returns the Parameter Context with the given ID.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Parameter Context
-@return ParameterContextEntity
-*/
-func (a *ParameterContextsApiService) GetParameterContext(ctx _context.Context, id string) (ParameterContextEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiGetParameterContextRequest
+ */
+func (a *ParameterContextsApiService) GetParameterContext(ctx _context.Context, id string) ParameterContextsApiApiGetParameterContextRequest {
+	return ParameterContextsApiApiGetParameterContextRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextEntity
+ */
+func (a *ParameterContextsApiService) GetParameterContextExecute(r ParameterContextsApiApiGetParameterContextRequest) (ParameterContextEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -402,9 +544,13 @@ func (a *ParameterContextsApiService) GetParameterContext(ctx _context.Context, 
 		localVarReturnValue  ParameterContextEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.GetParameterContext")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/parameter-contexts/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -427,18 +573,19 @@ func (a *ParameterContextsApiService) GetParameterContext(ctx _context.Context, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -463,15 +610,39 @@ func (a *ParameterContextsApiService) GetParameterContext(ctx _context.Context, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ParameterContextsApiApiGetParameterContextUpdateRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	contextId  string
+	requestId  string
+}
+
+func (r ParameterContextsApiApiGetParameterContextUpdateRequest) Execute() (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetParameterContextUpdateExecute(r)
+}
+
 /*
-GetParameterContextUpdate Returns the Update Request with the given ID
-Returns the Update Request with the given ID. Once an Update Request has been created by performing a POST to /nifi-api/parameter-contexts, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures.
+ * GetParameterContextUpdate Returns the Update Request with the given ID
+ * Returns the Update Request with the given ID. Once an Update Request has been created by performing a POST to /nifi-api/parameter-contexts, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param contextId The ID of the Parameter Context
  * @param requestId The ID of the Update Request
-@return ParameterContextUpdateRequestEntity
-*/
-func (a *ParameterContextsApiService) GetParameterContextUpdate(ctx _context.Context, contextId string, requestId string) (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiGetParameterContextUpdateRequest
+ */
+func (a *ParameterContextsApiService) GetParameterContextUpdate(ctx _context.Context, contextId string, requestId string) ParameterContextsApiApiGetParameterContextUpdateRequest {
+	return ParameterContextsApiApiGetParameterContextUpdateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		contextId:  contextId,
+		requestId:  requestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextUpdateRequestEntity
+ */
+func (a *ParameterContextsApiService) GetParameterContextUpdateExecute(r ParameterContextsApiApiGetParameterContextUpdateRequest) (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -481,11 +652,14 @@ func (a *ParameterContextsApiService) GetParameterContextUpdate(ctx _context.Con
 		localVarReturnValue  ParameterContextUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{contextId}/update-requests/{requestId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.QueryEscape(parameterToString(contextId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.GetParameterContextUpdate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"requestId"+"}", _neturl.QueryEscape(parameterToString(requestId, "")), -1)
+	localVarPath := localBasePath + "/parameter-contexts/{contextId}/update-requests/{requestId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.PathEscape(parameterToString(r.contextId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"requestId"+"}", _neturl.PathEscape(parameterToString(r.requestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -508,18 +682,19 @@ func (a *ParameterContextsApiService) GetParameterContextUpdate(ctx _context.Con
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -544,15 +719,39 @@ func (a *ParameterContextsApiService) GetParameterContextUpdate(ctx _context.Con
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ParameterContextsApiApiGetValidationRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	contextId  string
+	id         string
+}
+
+func (r ParameterContextsApiApiGetValidationRequestRequest) Execute() (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetValidationRequestExecute(r)
+}
+
 /*
-GetValidationRequest Returns the Validation Request with the given ID
-Returns the Validation Request with the given ID. Once a Validation Request has been created by performing a POST to /nifi-api/validation-contexts, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures.
+ * GetValidationRequest Returns the Validation Request with the given ID
+ * Returns the Validation Request with the given ID. Once a Validation Request has been created by performing a POST to /nifi-api/validation-contexts, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param contextId The ID of the Parameter Context
  * @param id The ID of the Validation Request
-@return ParameterContextValidationRequestEntity
-*/
-func (a *ParameterContextsApiService) GetValidationRequest(ctx _context.Context, contextId string, id string) (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiGetValidationRequestRequest
+ */
+func (a *ParameterContextsApiService) GetValidationRequest(ctx _context.Context, contextId string, id string) ParameterContextsApiApiGetValidationRequestRequest {
+	return ParameterContextsApiApiGetValidationRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		contextId:  contextId,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextValidationRequestEntity
+ */
+func (a *ParameterContextsApiService) GetValidationRequestExecute(r ParameterContextsApiApiGetValidationRequestRequest) (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -562,11 +761,14 @@ func (a *ParameterContextsApiService) GetValidationRequest(ctx _context.Context,
 		localVarReturnValue  ParameterContextValidationRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{contextId}/validation-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.QueryEscape(parameterToString(contextId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.GetValidationRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localVarPath := localBasePath + "/parameter-contexts/{contextId}/validation-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.PathEscape(parameterToString(r.contextId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -589,18 +791,19 @@ func (a *ParameterContextsApiService) GetValidationRequest(ctx _context.Context,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -625,15 +828,42 @@ func (a *ParameterContextsApiService) GetValidationRequest(ctx _context.Context,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ParameterContextsApiApiSubmitParameterContextUpdateRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	contextId  string
+	body       *ParameterContextEntity
+}
+
+func (r ParameterContextsApiApiSubmitParameterContextUpdateRequest) Body(body ParameterContextEntity) ParameterContextsApiApiSubmitParameterContextUpdateRequest {
+	r.body = &body
+	return r
+}
+
+func (r ParameterContextsApiApiSubmitParameterContextUpdateRequest) Execute() (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.SubmitParameterContextUpdateExecute(r)
+}
+
 /*
-SubmitParameterContextUpdate Initiate the Update Request of a Parameter Context
-This will initiate the process of updating a Parameter Context. Changing the value of a Parameter may require that one or more components be stopped and restarted, so this acttion may take significantly more time than many other REST API actions. As a result, this endpoint will immediately return a ParameterContextUpdateRequestEntity, and the process of updating the necessary components will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /parameter-contexts/update-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /parameter-contexts/update-requests/{requestId}.
+ * SubmitParameterContextUpdate Initiate the Update Request of a Parameter Context
+ * This will initiate the process of updating a Parameter Context. Changing the value of a Parameter may require that one or more components be stopped and restarted, so this acttion may take significantly more time than many other REST API actions. As a result, this endpoint will immediately return a ParameterContextUpdateRequestEntity, and the process of updating the necessary components will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /parameter-contexts/update-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /parameter-contexts/update-requests/{requestId}.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param contextId
- * @param body The updated version of the parameter context.
-@return ParameterContextUpdateRequestEntity
-*/
-func (a *ParameterContextsApiService) SubmitParameterContextUpdate(ctx _context.Context, contextId string, body ParameterContextEntity) (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiSubmitParameterContextUpdateRequest
+ */
+func (a *ParameterContextsApiService) SubmitParameterContextUpdate(ctx _context.Context, contextId string) ParameterContextsApiApiSubmitParameterContextUpdateRequest {
+	return ParameterContextsApiApiSubmitParameterContextUpdateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		contextId:  contextId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextUpdateRequestEntity
+ */
+func (a *ParameterContextsApiService) SubmitParameterContextUpdateExecute(r ParameterContextsApiApiSubmitParameterContextUpdateRequest) (ParameterContextUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -643,13 +873,20 @@ func (a *ParameterContextsApiService) SubmitParameterContextUpdate(ctx _context.
 		localVarReturnValue  ParameterContextUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{contextId}/update-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.QueryEscape(parameterToString(contextId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.SubmitParameterContextUpdate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/parameter-contexts/{contextId}/update-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.PathEscape(parameterToString(r.contextId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -669,19 +906,20 @@ func (a *ParameterContextsApiService) SubmitParameterContextUpdate(ctx _context.
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -706,15 +944,42 @@ func (a *ParameterContextsApiService) SubmitParameterContextUpdate(ctx _context.
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ParameterContextsApiApiSubmitValidationRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	contextId  string
+	body       *ParameterContextValidationRequestEntity
+}
+
+func (r ParameterContextsApiApiSubmitValidationRequestRequest) Body(body ParameterContextValidationRequestEntity) ParameterContextsApiApiSubmitValidationRequestRequest {
+	r.body = &body
+	return r
+}
+
+func (r ParameterContextsApiApiSubmitValidationRequestRequest) Execute() (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.SubmitValidationRequestExecute(r)
+}
+
 /*
-SubmitValidationRequest Initiate a Validation Request to determine how the validity of components will change if a Parameter Context were to be updated
-This will initiate the process of validating all components whose Process Group is bound to the specified Parameter Context. Performing validation against an arbitrary number of components may be expect and take significantly more time than many other REST API actions. As a result, this endpoint will immediately return a ParameterContextValidationRequestEntity, and the process of validating the necessary components will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /parameter-contexts/validation-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /parameter-contexts/validation-requests/{requestId}.
+ * SubmitValidationRequest Initiate a Validation Request to determine how the validity of components will change if a Parameter Context were to be updated
+ * This will initiate the process of validating all components whose Process Group is bound to the specified Parameter Context. Performing validation against an arbitrary number of components may be expect and take significantly more time than many other REST API actions. As a result, this endpoint will immediately return a ParameterContextValidationRequestEntity, and the process of validating the necessary components will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /parameter-contexts/validation-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /parameter-contexts/validation-requests/{requestId}.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param contextId
- * @param body The validation request
-@return ParameterContextValidationRequestEntity
-*/
-func (a *ParameterContextsApiService) SubmitValidationRequest(ctx _context.Context, contextId string, body ParameterContextValidationRequestEntity) (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiSubmitValidationRequestRequest
+ */
+func (a *ParameterContextsApiService) SubmitValidationRequest(ctx _context.Context, contextId string) ParameterContextsApiApiSubmitValidationRequestRequest {
+	return ParameterContextsApiApiSubmitValidationRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		contextId:  contextId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextValidationRequestEntity
+ */
+func (a *ParameterContextsApiService) SubmitValidationRequestExecute(r ParameterContextsApiApiSubmitValidationRequestRequest) (ParameterContextValidationRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -724,13 +989,20 @@ func (a *ParameterContextsApiService) SubmitValidationRequest(ctx _context.Conte
 		localVarReturnValue  ParameterContextValidationRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{contextId}/validation-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.QueryEscape(parameterToString(contextId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.SubmitValidationRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/parameter-contexts/{contextId}/validation-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"contextId"+"}", _neturl.PathEscape(parameterToString(r.contextId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -750,19 +1022,20 @@ func (a *ParameterContextsApiService) SubmitValidationRequest(ctx _context.Conte
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -787,15 +1060,42 @@ func (a *ParameterContextsApiService) SubmitValidationRequest(ctx _context.Conte
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ParameterContextsApiApiUpdateParameterContextRequest struct {
+	ctx        _context.Context
+	ApiService *ParameterContextsApiService
+	id         string
+	body       *ParameterContextEntity
+}
+
+func (r ParameterContextsApiApiUpdateParameterContextRequest) Body(body ParameterContextEntity) ParameterContextsApiApiUpdateParameterContextRequest {
+	r.body = &body
+	return r
+}
+
+func (r ParameterContextsApiApiUpdateParameterContextRequest) Execute() (ParameterContextEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateParameterContextExecute(r)
+}
+
 /*
-UpdateParameterContext Modifies a Parameter Context
-This endpoint will update a Parameter Context to match the provided entity. However, this request will fail if any component is running and is referencing a Parameter in the Parameter Context. Generally, this endpoint is not called directly. Instead, an update request should be submitted by making a POST to the /parameter-contexts/update-requests endpoint. That endpoint will, in turn, call this endpoint.
+ * UpdateParameterContext Modifies a Parameter Context
+ * This endpoint will update a Parameter Context to match the provided entity. However, this request will fail if any component is running and is referencing a Parameter in the Parameter Context. Generally, this endpoint is not called directly. Instead, an update request should be submitted by making a POST to the /parameter-contexts/update-requests endpoint. That endpoint will, in turn, call this endpoint.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @param body The updated Parameter Context
-@return ParameterContextEntity
-*/
-func (a *ParameterContextsApiService) UpdateParameterContext(ctx _context.Context, id string, body ParameterContextEntity) (ParameterContextEntity, *_nethttp.Response, error) {
+ * @return ParameterContextsApiApiUpdateParameterContextRequest
+ */
+func (a *ParameterContextsApiService) UpdateParameterContext(ctx _context.Context, id string) ParameterContextsApiApiUpdateParameterContextRequest {
+	return ParameterContextsApiApiUpdateParameterContextRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextEntity
+ */
+func (a *ParameterContextsApiService) UpdateParameterContextExecute(r ParameterContextsApiApiUpdateParameterContextRequest) (ParameterContextEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -805,13 +1105,20 @@ func (a *ParameterContextsApiService) UpdateParameterContext(ctx _context.Contex
 		localVarReturnValue  ParameterContextEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/parameter-contexts/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ParameterContextsApiService.UpdateParameterContext")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/parameter-contexts/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -831,19 +1138,20 @@ func (a *ParameterContextsApiService) UpdateParameterContext(ctx _context.Contex
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

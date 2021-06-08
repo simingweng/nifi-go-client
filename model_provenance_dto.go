@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,20 +11,362 @@
 
 package nifi
 
-// ProvenanceDto struct for ProvenanceDto
-type ProvenanceDto struct {
+import (
+	"encoding/json"
+)
+
+// ProvenanceDTO struct for ProvenanceDTO
+type ProvenanceDTO struct {
 	// The id of the provenance query.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The URI for this query. Used for obtaining/deleting the request at a later time
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The timestamp when the query was submitted.
-	SubmissionTime string `json:"submissionTime,omitempty"`
+	SubmissionTime *string `json:"submissionTime,omitempty"`
 	// The timestamp when the query will expire.
-	Expiration string `json:"expiration,omitempty"`
+	Expiration *string `json:"expiration,omitempty"`
 	// The current percent complete.
-	PercentCompleted int32 `json:"percentCompleted,omitempty"`
+	PercentCompleted *int32 `json:"percentCompleted,omitempty"`
 	// Whether the query has finished.
-	Finished bool                 `json:"finished,omitempty"`
-	Request  ProvenanceRequestDto `json:"request,omitempty"`
-	Results  ProvenanceResultsDto `json:"results,omitempty"`
+	Finished *bool                 `json:"finished,omitempty"`
+	Request  *ProvenanceRequestDTO `json:"request,omitempty"`
+	Results  *ProvenanceResultsDTO `json:"results,omitempty"`
+}
+
+// NewProvenanceDTO instantiates a new ProvenanceDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProvenanceDTO() *ProvenanceDTO {
+	this := ProvenanceDTO{}
+	return &this
+}
+
+// NewProvenanceDTOWithDefaults instantiates a new ProvenanceDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProvenanceDTOWithDefaults() *ProvenanceDTO {
+	this := ProvenanceDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProvenanceDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *ProvenanceDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetSubmissionTime returns the SubmissionTime field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetSubmissionTime() string {
+	if o == nil || o.SubmissionTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.SubmissionTime
+}
+
+// GetSubmissionTimeOk returns a tuple with the SubmissionTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetSubmissionTimeOk() (*string, bool) {
+	if o == nil || o.SubmissionTime == nil {
+		return nil, false
+	}
+	return o.SubmissionTime, true
+}
+
+// HasSubmissionTime returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasSubmissionTime() bool {
+	if o != nil && o.SubmissionTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSubmissionTime gets a reference to the given string and assigns it to the SubmissionTime field.
+func (o *ProvenanceDTO) SetSubmissionTime(v string) {
+	o.SubmissionTime = &v
+}
+
+// GetExpiration returns the Expiration field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetExpiration() string {
+	if o == nil || o.Expiration == nil {
+		var ret string
+		return ret
+	}
+	return *o.Expiration
+}
+
+// GetExpirationOk returns a tuple with the Expiration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetExpirationOk() (*string, bool) {
+	if o == nil || o.Expiration == nil {
+		return nil, false
+	}
+	return o.Expiration, true
+}
+
+// HasExpiration returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasExpiration() bool {
+	if o != nil && o.Expiration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExpiration gets a reference to the given string and assigns it to the Expiration field.
+func (o *ProvenanceDTO) SetExpiration(v string) {
+	o.Expiration = &v
+}
+
+// GetPercentCompleted returns the PercentCompleted field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetPercentCompleted() int32 {
+	if o == nil || o.PercentCompleted == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PercentCompleted
+}
+
+// GetPercentCompletedOk returns a tuple with the PercentCompleted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetPercentCompletedOk() (*int32, bool) {
+	if o == nil || o.PercentCompleted == nil {
+		return nil, false
+	}
+	return o.PercentCompleted, true
+}
+
+// HasPercentCompleted returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasPercentCompleted() bool {
+	if o != nil && o.PercentCompleted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPercentCompleted gets a reference to the given int32 and assigns it to the PercentCompleted field.
+func (o *ProvenanceDTO) SetPercentCompleted(v int32) {
+	o.PercentCompleted = &v
+}
+
+// GetFinished returns the Finished field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetFinished() bool {
+	if o == nil || o.Finished == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Finished
+}
+
+// GetFinishedOk returns a tuple with the Finished field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetFinishedOk() (*bool, bool) {
+	if o == nil || o.Finished == nil {
+		return nil, false
+	}
+	return o.Finished, true
+}
+
+// HasFinished returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasFinished() bool {
+	if o != nil && o.Finished != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFinished gets a reference to the given bool and assigns it to the Finished field.
+func (o *ProvenanceDTO) SetFinished(v bool) {
+	o.Finished = &v
+}
+
+// GetRequest returns the Request field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetRequest() ProvenanceRequestDTO {
+	if o == nil || o.Request == nil {
+		var ret ProvenanceRequestDTO
+		return ret
+	}
+	return *o.Request
+}
+
+// GetRequestOk returns a tuple with the Request field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetRequestOk() (*ProvenanceRequestDTO, bool) {
+	if o == nil || o.Request == nil {
+		return nil, false
+	}
+	return o.Request, true
+}
+
+// HasRequest returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasRequest() bool {
+	if o != nil && o.Request != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequest gets a reference to the given ProvenanceRequestDTO and assigns it to the Request field.
+func (o *ProvenanceDTO) SetRequest(v ProvenanceRequestDTO) {
+	o.Request = &v
+}
+
+// GetResults returns the Results field value if set, zero value otherwise.
+func (o *ProvenanceDTO) GetResults() ProvenanceResultsDTO {
+	if o == nil || o.Results == nil {
+		var ret ProvenanceResultsDTO
+		return ret
+	}
+	return *o.Results
+}
+
+// GetResultsOk returns a tuple with the Results field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceDTO) GetResultsOk() (*ProvenanceResultsDTO, bool) {
+	if o == nil || o.Results == nil {
+		return nil, false
+	}
+	return o.Results, true
+}
+
+// HasResults returns a boolean if a field has been set.
+func (o *ProvenanceDTO) HasResults() bool {
+	if o != nil && o.Results != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetResults gets a reference to the given ProvenanceResultsDTO and assigns it to the Results field.
+func (o *ProvenanceDTO) SetResults(v ProvenanceResultsDTO) {
+	o.Results = &v
+}
+
+func (o ProvenanceDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.SubmissionTime != nil {
+		toSerialize["submissionTime"] = o.SubmissionTime
+	}
+	if o.Expiration != nil {
+		toSerialize["expiration"] = o.Expiration
+	}
+	if o.PercentCompleted != nil {
+		toSerialize["percentCompleted"] = o.PercentCompleted
+	}
+	if o.Finished != nil {
+		toSerialize["finished"] = o.Finished
+	}
+	if o.Request != nil {
+		toSerialize["request"] = o.Request
+	}
+	if o.Results != nil {
+		toSerialize["results"] = o.Results
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProvenanceDTO struct {
+	value *ProvenanceDTO
+	isSet bool
+}
+
+func (v NullableProvenanceDTO) Get() *ProvenanceDTO {
+	return v.value
+}
+
+func (v *NullableProvenanceDTO) Set(val *ProvenanceDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProvenanceDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProvenanceDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProvenanceDTO(val *ProvenanceDTO) *NullableProvenanceDTO {
+	return &NullableProvenanceDTO{value: val, isSet: true}
+}
+
+func (v NullableProvenanceDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProvenanceDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

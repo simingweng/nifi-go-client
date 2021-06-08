@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,177 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VariableRegistryEntity struct for VariableRegistryEntity
 type VariableRegistryEntity struct {
-	ProcessGroupRevision RevisionDto         `json:"processGroupRevision,omitempty"`
-	VariableRegistry     VariableRegistryDto `json:"variableRegistry,omitempty"`
+	ProcessGroupRevision *RevisionDTO         `json:"processGroupRevision,omitempty"`
+	VariableRegistry     *VariableRegistryDTO `json:"variableRegistry,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool `json:"disconnectedNodeAcknowledged,omitempty"`
+	DisconnectedNodeAcknowledged *bool `json:"disconnectedNodeAcknowledged,omitempty"`
+}
+
+// NewVariableRegistryEntity instantiates a new VariableRegistryEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVariableRegistryEntity() *VariableRegistryEntity {
+	this := VariableRegistryEntity{}
+	return &this
+}
+
+// NewVariableRegistryEntityWithDefaults instantiates a new VariableRegistryEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVariableRegistryEntityWithDefaults() *VariableRegistryEntity {
+	this := VariableRegistryEntity{}
+	return &this
+}
+
+// GetProcessGroupRevision returns the ProcessGroupRevision field value if set, zero value otherwise.
+func (o *VariableRegistryEntity) GetProcessGroupRevision() RevisionDTO {
+	if o == nil || o.ProcessGroupRevision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroupRevision
+}
+
+// GetProcessGroupRevisionOk returns a tuple with the ProcessGroupRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryEntity) GetProcessGroupRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.ProcessGroupRevision == nil {
+		return nil, false
+	}
+	return o.ProcessGroupRevision, true
+}
+
+// HasProcessGroupRevision returns a boolean if a field has been set.
+func (o *VariableRegistryEntity) HasProcessGroupRevision() bool {
+	if o != nil && o.ProcessGroupRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupRevision gets a reference to the given RevisionDTO and assigns it to the ProcessGroupRevision field.
+func (o *VariableRegistryEntity) SetProcessGroupRevision(v RevisionDTO) {
+	o.ProcessGroupRevision = &v
+}
+
+// GetVariableRegistry returns the VariableRegistry field value if set, zero value otherwise.
+func (o *VariableRegistryEntity) GetVariableRegistry() VariableRegistryDTO {
+	if o == nil || o.VariableRegistry == nil {
+		var ret VariableRegistryDTO
+		return ret
+	}
+	return *o.VariableRegistry
+}
+
+// GetVariableRegistryOk returns a tuple with the VariableRegistry field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryEntity) GetVariableRegistryOk() (*VariableRegistryDTO, bool) {
+	if o == nil || o.VariableRegistry == nil {
+		return nil, false
+	}
+	return o.VariableRegistry, true
+}
+
+// HasVariableRegistry returns a boolean if a field has been set.
+func (o *VariableRegistryEntity) HasVariableRegistry() bool {
+	if o != nil && o.VariableRegistry != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVariableRegistry gets a reference to the given VariableRegistryDTO and assigns it to the VariableRegistry field.
+func (o *VariableRegistryEntity) SetVariableRegistry(v VariableRegistryDTO) {
+	o.VariableRegistry = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *VariableRegistryEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *VariableRegistryEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *VariableRegistryEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+func (o VariableRegistryEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupRevision != nil {
+		toSerialize["processGroupRevision"] = o.ProcessGroupRevision
+	}
+	if o.VariableRegistry != nil {
+		toSerialize["variableRegistry"] = o.VariableRegistry
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVariableRegistryEntity struct {
+	value *VariableRegistryEntity
+	isSet bool
+}
+
+func (v NullableVariableRegistryEntity) Get() *VariableRegistryEntity {
+	return v.value
+}
+
+func (v *NullableVariableRegistryEntity) Set(val *VariableRegistryEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVariableRegistryEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVariableRegistryEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVariableRegistryEntity(val *VariableRegistryEntity) *NullableVariableRegistryEntity {
+	return &NullableVariableRegistryEntity{value: val, isSet: true}
+}
+
+func (v NullableVariableRegistryEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVariableRegistryEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

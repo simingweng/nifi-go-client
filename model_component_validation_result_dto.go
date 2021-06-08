@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,26 +11,438 @@
 
 package nifi
 
-// ComponentValidationResultDto struct for ComponentValidationResultDto
-type ComponentValidationResultDto struct {
+import (
+	"encoding/json"
+)
+
+// ComponentValidationResultDTO struct for ComponentValidationResultDTO
+type ComponentValidationResultDTO struct {
 	// The UUID of the Process Group that this component is in
-	ProcessGroupId string `json:"processGroupId,omitempty"`
+	ProcessGroupId *string `json:"processGroupId,omitempty"`
 	// The UUID of this component
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The type of this component
-	ReferenceType string `json:"referenceType,omitempty"`
+	ReferenceType *string `json:"referenceType,omitempty"`
 	// The name of this component.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The scheduled state of a processor or reporting task referencing a controller service. If this component is another controller service, this field represents the controller service state.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// The number of active threads for the referencing component.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// The validation errors for the component.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
 	// Whether or not the component is currently valid
-	CurrentlyValid bool `json:"currentlyValid,omitempty"`
+	CurrentlyValid *bool `json:"currentlyValid,omitempty"`
 	// Whether or not the component will be valid if the Parameter Context is changed
-	ResultsValid bool `json:"resultsValid,omitempty"`
+	ResultsValid *bool `json:"resultsValid,omitempty"`
 	// The validation errors that will apply to the component if the Parameter Context is changed
-	ResultantValidationErrors []string `json:"resultantValidationErrors,omitempty"`
+	ResultantValidationErrors *[]string `json:"resultantValidationErrors,omitempty"`
+}
+
+// NewComponentValidationResultDTO instantiates a new ComponentValidationResultDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewComponentValidationResultDTO() *ComponentValidationResultDTO {
+	this := ComponentValidationResultDTO{}
+	return &this
+}
+
+// NewComponentValidationResultDTOWithDefaults instantiates a new ComponentValidationResultDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewComponentValidationResultDTOWithDefaults() *ComponentValidationResultDTO {
+	this := ComponentValidationResultDTO{}
+	return &this
+}
+
+// GetProcessGroupId returns the ProcessGroupId field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetProcessGroupId() string {
+	if o == nil || o.ProcessGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProcessGroupId
+}
+
+// GetProcessGroupIdOk returns a tuple with the ProcessGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetProcessGroupIdOk() (*string, bool) {
+	if o == nil || o.ProcessGroupId == nil {
+		return nil, false
+	}
+	return o.ProcessGroupId, true
+}
+
+// HasProcessGroupId returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasProcessGroupId() bool {
+	if o != nil && o.ProcessGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupId gets a reference to the given string and assigns it to the ProcessGroupId field.
+func (o *ComponentValidationResultDTO) SetProcessGroupId(v string) {
+	o.ProcessGroupId = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ComponentValidationResultDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetReferenceType returns the ReferenceType field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetReferenceType() string {
+	if o == nil || o.ReferenceType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ReferenceType
+}
+
+// GetReferenceTypeOk returns a tuple with the ReferenceType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetReferenceTypeOk() (*string, bool) {
+	if o == nil || o.ReferenceType == nil {
+		return nil, false
+	}
+	return o.ReferenceType, true
+}
+
+// HasReferenceType returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasReferenceType() bool {
+	if o != nil && o.ReferenceType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferenceType gets a reference to the given string and assigns it to the ReferenceType field.
+func (o *ComponentValidationResultDTO) SetReferenceType(v string) {
+	o.ReferenceType = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ComponentValidationResultDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ComponentValidationResultDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *ComponentValidationResultDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *ComponentValidationResultDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+// GetCurrentlyValid returns the CurrentlyValid field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetCurrentlyValid() bool {
+	if o == nil || o.CurrentlyValid == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CurrentlyValid
+}
+
+// GetCurrentlyValidOk returns a tuple with the CurrentlyValid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetCurrentlyValidOk() (*bool, bool) {
+	if o == nil || o.CurrentlyValid == nil {
+		return nil, false
+	}
+	return o.CurrentlyValid, true
+}
+
+// HasCurrentlyValid returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasCurrentlyValid() bool {
+	if o != nil && o.CurrentlyValid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCurrentlyValid gets a reference to the given bool and assigns it to the CurrentlyValid field.
+func (o *ComponentValidationResultDTO) SetCurrentlyValid(v bool) {
+	o.CurrentlyValid = &v
+}
+
+// GetResultsValid returns the ResultsValid field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetResultsValid() bool {
+	if o == nil || o.ResultsValid == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ResultsValid
+}
+
+// GetResultsValidOk returns a tuple with the ResultsValid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetResultsValidOk() (*bool, bool) {
+	if o == nil || o.ResultsValid == nil {
+		return nil, false
+	}
+	return o.ResultsValid, true
+}
+
+// HasResultsValid returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasResultsValid() bool {
+	if o != nil && o.ResultsValid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetResultsValid gets a reference to the given bool and assigns it to the ResultsValid field.
+func (o *ComponentValidationResultDTO) SetResultsValid(v bool) {
+	o.ResultsValid = &v
+}
+
+// GetResultantValidationErrors returns the ResultantValidationErrors field value if set, zero value otherwise.
+func (o *ComponentValidationResultDTO) GetResultantValidationErrors() []string {
+	if o == nil || o.ResultantValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ResultantValidationErrors
+}
+
+// GetResultantValidationErrorsOk returns a tuple with the ResultantValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentValidationResultDTO) GetResultantValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ResultantValidationErrors == nil {
+		return nil, false
+	}
+	return o.ResultantValidationErrors, true
+}
+
+// HasResultantValidationErrors returns a boolean if a field has been set.
+func (o *ComponentValidationResultDTO) HasResultantValidationErrors() bool {
+	if o != nil && o.ResultantValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetResultantValidationErrors gets a reference to the given []string and assigns it to the ResultantValidationErrors field.
+func (o *ComponentValidationResultDTO) SetResultantValidationErrors(v []string) {
+	o.ResultantValidationErrors = &v
+}
+
+func (o ComponentValidationResultDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupId != nil {
+		toSerialize["processGroupId"] = o.ProcessGroupId
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.ReferenceType != nil {
+		toSerialize["referenceType"] = o.ReferenceType
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	if o.CurrentlyValid != nil {
+		toSerialize["currentlyValid"] = o.CurrentlyValid
+	}
+	if o.ResultsValid != nil {
+		toSerialize["resultsValid"] = o.ResultsValid
+	}
+	if o.ResultantValidationErrors != nil {
+		toSerialize["resultantValidationErrors"] = o.ResultantValidationErrors
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableComponentValidationResultDTO struct {
+	value *ComponentValidationResultDTO
+	isSet bool
+}
+
+func (v NullableComponentValidationResultDTO) Get() *ComponentValidationResultDTO {
+	return v.value
+}
+
+func (v *NullableComponentValidationResultDTO) Set(val *ComponentValidationResultDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableComponentValidationResultDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableComponentValidationResultDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableComponentValidationResultDTO(val *ComponentValidationResultDTO) *NullableComponentValidationResultDTO {
+	return &NullableComponentValidationResultDTO{value: val, isSet: true}
+}
+
+func (v NullableComponentValidationResultDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableComponentValidationResultDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

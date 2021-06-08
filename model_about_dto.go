@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,401 @@
 
 package nifi
 
-// AboutDto struct for AboutDto
-type AboutDto struct {
+import (
+	"encoding/json"
+)
+
+// AboutDTO struct for AboutDTO
+type AboutDTO struct {
 	// The title to be used on the page and in the about dialog.
-	Title string `json:"title,omitempty"`
+	Title *string `json:"title,omitempty"`
 	// The version of this NiFi.
-	Version string `json:"version,omitempty"`
+	Version *string `json:"version,omitempty"`
 	// The URI for the NiFi.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The URL for the content viewer if configured.
-	ContentViewerUrl string `json:"contentViewerUrl,omitempty"`
+	ContentViewerUrl *string `json:"contentViewerUrl,omitempty"`
 	// The timezone of the NiFi instance.
-	Timezone string `json:"timezone,omitempty"`
+	Timezone *string `json:"timezone,omitempty"`
 	// Build tag
-	BuildTag string `json:"buildTag,omitempty"`
+	BuildTag *string `json:"buildTag,omitempty"`
 	// Build revision or commit hash
-	BuildRevision string `json:"buildRevision,omitempty"`
+	BuildRevision *string `json:"buildRevision,omitempty"`
 	// Build branch
-	BuildBranch string `json:"buildBranch,omitempty"`
+	BuildBranch *string `json:"buildBranch,omitempty"`
 	// Build timestamp
-	BuildTimestamp string `json:"buildTimestamp,omitempty"`
+	BuildTimestamp *string `json:"buildTimestamp,omitempty"`
+}
+
+// NewAboutDTO instantiates a new AboutDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAboutDTO() *AboutDTO {
+	this := AboutDTO{}
+	return &this
+}
+
+// NewAboutDTOWithDefaults instantiates a new AboutDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAboutDTOWithDefaults() *AboutDTO {
+	this := AboutDTO{}
+	return &this
+}
+
+// GetTitle returns the Title field value if set, zero value otherwise.
+func (o *AboutDTO) GetTitle() string {
+	if o == nil || o.Title == nil {
+		var ret string
+		return ret
+	}
+	return *o.Title
+}
+
+// GetTitleOk returns a tuple with the Title field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetTitleOk() (*string, bool) {
+	if o == nil || o.Title == nil {
+		return nil, false
+	}
+	return o.Title, true
+}
+
+// HasTitle returns a boolean if a field has been set.
+func (o *AboutDTO) HasTitle() bool {
+	if o != nil && o.Title != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTitle gets a reference to the given string and assigns it to the Title field.
+func (o *AboutDTO) SetTitle(v string) {
+	o.Title = &v
+}
+
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *AboutDTO) GetVersion() string {
+	if o == nil || o.Version == nil {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetVersionOk() (*string, bool) {
+	if o == nil || o.Version == nil {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *AboutDTO) HasVersion() bool {
+	if o != nil && o.Version != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *AboutDTO) SetVersion(v string) {
+	o.Version = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *AboutDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *AboutDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *AboutDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetContentViewerUrl returns the ContentViewerUrl field value if set, zero value otherwise.
+func (o *AboutDTO) GetContentViewerUrl() string {
+	if o == nil || o.ContentViewerUrl == nil {
+		var ret string
+		return ret
+	}
+	return *o.ContentViewerUrl
+}
+
+// GetContentViewerUrlOk returns a tuple with the ContentViewerUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetContentViewerUrlOk() (*string, bool) {
+	if o == nil || o.ContentViewerUrl == nil {
+		return nil, false
+	}
+	return o.ContentViewerUrl, true
+}
+
+// HasContentViewerUrl returns a boolean if a field has been set.
+func (o *AboutDTO) HasContentViewerUrl() bool {
+	if o != nil && o.ContentViewerUrl != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentViewerUrl gets a reference to the given string and assigns it to the ContentViewerUrl field.
+func (o *AboutDTO) SetContentViewerUrl(v string) {
+	o.ContentViewerUrl = &v
+}
+
+// GetTimezone returns the Timezone field value if set, zero value otherwise.
+func (o *AboutDTO) GetTimezone() string {
+	if o == nil || o.Timezone == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timezone
+}
+
+// GetTimezoneOk returns a tuple with the Timezone field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetTimezoneOk() (*string, bool) {
+	if o == nil || o.Timezone == nil {
+		return nil, false
+	}
+	return o.Timezone, true
+}
+
+// HasTimezone returns a boolean if a field has been set.
+func (o *AboutDTO) HasTimezone() bool {
+	if o != nil && o.Timezone != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimezone gets a reference to the given string and assigns it to the Timezone field.
+func (o *AboutDTO) SetTimezone(v string) {
+	o.Timezone = &v
+}
+
+// GetBuildTag returns the BuildTag field value if set, zero value otherwise.
+func (o *AboutDTO) GetBuildTag() string {
+	if o == nil || o.BuildTag == nil {
+		var ret string
+		return ret
+	}
+	return *o.BuildTag
+}
+
+// GetBuildTagOk returns a tuple with the BuildTag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetBuildTagOk() (*string, bool) {
+	if o == nil || o.BuildTag == nil {
+		return nil, false
+	}
+	return o.BuildTag, true
+}
+
+// HasBuildTag returns a boolean if a field has been set.
+func (o *AboutDTO) HasBuildTag() bool {
+	if o != nil && o.BuildTag != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBuildTag gets a reference to the given string and assigns it to the BuildTag field.
+func (o *AboutDTO) SetBuildTag(v string) {
+	o.BuildTag = &v
+}
+
+// GetBuildRevision returns the BuildRevision field value if set, zero value otherwise.
+func (o *AboutDTO) GetBuildRevision() string {
+	if o == nil || o.BuildRevision == nil {
+		var ret string
+		return ret
+	}
+	return *o.BuildRevision
+}
+
+// GetBuildRevisionOk returns a tuple with the BuildRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetBuildRevisionOk() (*string, bool) {
+	if o == nil || o.BuildRevision == nil {
+		return nil, false
+	}
+	return o.BuildRevision, true
+}
+
+// HasBuildRevision returns a boolean if a field has been set.
+func (o *AboutDTO) HasBuildRevision() bool {
+	if o != nil && o.BuildRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBuildRevision gets a reference to the given string and assigns it to the BuildRevision field.
+func (o *AboutDTO) SetBuildRevision(v string) {
+	o.BuildRevision = &v
+}
+
+// GetBuildBranch returns the BuildBranch field value if set, zero value otherwise.
+func (o *AboutDTO) GetBuildBranch() string {
+	if o == nil || o.BuildBranch == nil {
+		var ret string
+		return ret
+	}
+	return *o.BuildBranch
+}
+
+// GetBuildBranchOk returns a tuple with the BuildBranch field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetBuildBranchOk() (*string, bool) {
+	if o == nil || o.BuildBranch == nil {
+		return nil, false
+	}
+	return o.BuildBranch, true
+}
+
+// HasBuildBranch returns a boolean if a field has been set.
+func (o *AboutDTO) HasBuildBranch() bool {
+	if o != nil && o.BuildBranch != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBuildBranch gets a reference to the given string and assigns it to the BuildBranch field.
+func (o *AboutDTO) SetBuildBranch(v string) {
+	o.BuildBranch = &v
+}
+
+// GetBuildTimestamp returns the BuildTimestamp field value if set, zero value otherwise.
+func (o *AboutDTO) GetBuildTimestamp() string {
+	if o == nil || o.BuildTimestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.BuildTimestamp
+}
+
+// GetBuildTimestampOk returns a tuple with the BuildTimestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AboutDTO) GetBuildTimestampOk() (*string, bool) {
+	if o == nil || o.BuildTimestamp == nil {
+		return nil, false
+	}
+	return o.BuildTimestamp, true
+}
+
+// HasBuildTimestamp returns a boolean if a field has been set.
+func (o *AboutDTO) HasBuildTimestamp() bool {
+	if o != nil && o.BuildTimestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBuildTimestamp gets a reference to the given string and assigns it to the BuildTimestamp field.
+func (o *AboutDTO) SetBuildTimestamp(v string) {
+	o.BuildTimestamp = &v
+}
+
+func (o AboutDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Title != nil {
+		toSerialize["title"] = o.Title
+	}
+	if o.Version != nil {
+		toSerialize["version"] = o.Version
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.ContentViewerUrl != nil {
+		toSerialize["contentViewerUrl"] = o.ContentViewerUrl
+	}
+	if o.Timezone != nil {
+		toSerialize["timezone"] = o.Timezone
+	}
+	if o.BuildTag != nil {
+		toSerialize["buildTag"] = o.BuildTag
+	}
+	if o.BuildRevision != nil {
+		toSerialize["buildRevision"] = o.BuildRevision
+	}
+	if o.BuildBranch != nil {
+		toSerialize["buildBranch"] = o.BuildBranch
+	}
+	if o.BuildTimestamp != nil {
+		toSerialize["buildTimestamp"] = o.BuildTimestamp
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAboutDTO struct {
+	value *AboutDTO
+	isSet bool
+}
+
+func (v NullableAboutDTO) Get() *AboutDTO {
+	return v.value
+}
+
+func (v *NullableAboutDTO) Set(val *AboutDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAboutDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAboutDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAboutDTO(val *AboutDTO) *NullableAboutDTO {
+	return &NullableAboutDTO{value: val, isSet: true}
+}
+
+func (v NullableAboutDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAboutDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

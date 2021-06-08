@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessorsEntity struct for ProcessorsEntity
 type ProcessorsEntity struct {
-	Processors []ProcessorEntity `json:"processors,omitempty"`
+	Processors *[]ProcessorEntity `json:"processors,omitempty"`
+}
+
+// NewProcessorsEntity instantiates a new ProcessorsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorsEntity() *ProcessorsEntity {
+	this := ProcessorsEntity{}
+	return &this
+}
+
+// NewProcessorsEntityWithDefaults instantiates a new ProcessorsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorsEntityWithDefaults() *ProcessorsEntity {
+	this := ProcessorsEntity{}
+	return &this
+}
+
+// GetProcessors returns the Processors field value if set, zero value otherwise.
+func (o *ProcessorsEntity) GetProcessors() []ProcessorEntity {
+	if o == nil || o.Processors == nil {
+		var ret []ProcessorEntity
+		return ret
+	}
+	return *o.Processors
+}
+
+// GetProcessorsOk returns a tuple with the Processors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorsEntity) GetProcessorsOk() (*[]ProcessorEntity, bool) {
+	if o == nil || o.Processors == nil {
+		return nil, false
+	}
+	return o.Processors, true
+}
+
+// HasProcessors returns a boolean if a field has been set.
+func (o *ProcessorsEntity) HasProcessors() bool {
+	if o != nil && o.Processors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessors gets a reference to the given []ProcessorEntity and assigns it to the Processors field.
+func (o *ProcessorsEntity) SetProcessors(v []ProcessorEntity) {
+	o.Processors = &v
+}
+
+func (o ProcessorsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Processors != nil {
+		toSerialize["processors"] = o.Processors
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorsEntity struct {
+	value *ProcessorsEntity
+	isSet bool
+}
+
+func (v NullableProcessorsEntity) Get() *ProcessorsEntity {
+	return v.value
+}
+
+func (v *NullableProcessorsEntity) Set(val *ProcessorsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorsEntity(val *ProcessorsEntity) *NullableProcessorsEntity {
+	return &NullableProcessorsEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessorsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

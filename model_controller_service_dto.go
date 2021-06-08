@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,48 +11,880 @@
 
 package nifi
 
-// ControllerServiceDto struct for ControllerServiceDto
-type ControllerServiceDto struct {
+import (
+	"encoding/json"
+)
+
+// ControllerServiceDTO struct for ControllerServiceDTO
+type ControllerServiceDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The name of the controller service.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The type of the controller service.
-	Type   string    `json:"type,omitempty"`
-	Bundle BundleDto `json:"bundle,omitempty"`
+	Type   *string    `json:"type,omitempty"`
+	Bundle *BundleDTO `json:"bundle,omitempty"`
 	// Lists the APIs this Controller Service implements.
-	ControllerServiceApis []ControllerServiceApiDto `json:"controllerServiceApis,omitempty"`
+	ControllerServiceApis *[]ControllerServiceApiDTO `json:"controllerServiceApis,omitempty"`
 	// The comments for the controller service.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
 	// The state of the controller service.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// Whether the controller service persists state.
-	PersistsState bool `json:"persistsState,omitempty"`
+	PersistsState *bool `json:"persistsState,omitempty"`
 	// Whether the controller service requires elevated privileges.
-	Restricted bool `json:"restricted,omitempty"`
+	Restricted *bool `json:"restricted,omitempty"`
 	// Whether the ontroller service has been deprecated.
-	Deprecated bool `json:"deprecated,omitempty"`
+	Deprecated *bool `json:"deprecated,omitempty"`
 	// Whether the controller service has multiple versions available.
-	MultipleVersionsAvailable bool `json:"multipleVersionsAvailable,omitempty"`
+	MultipleVersionsAvailable *bool `json:"multipleVersionsAvailable,omitempty"`
 	// The properties of the controller service.
-	Properties map[string]string `json:"properties,omitempty"`
+	Properties *map[string]string `json:"properties,omitempty"`
 	// The descriptors for the controller service properties.
-	Descriptors map[string]PropertyDescriptorDto `json:"descriptors,omitempty"`
+	Descriptors *map[string]PropertyDescriptorDTO `json:"descriptors,omitempty"`
 	// The URL for the controller services custom configuration UI if applicable.
-	CustomUiUrl string `json:"customUiUrl,omitempty"`
+	CustomUiUrl *string `json:"customUiUrl,omitempty"`
 	// The annotation for the controller service. This is how the custom UI relays configuration to the controller service.
-	AnnotationData string `json:"annotationData,omitempty"`
+	AnnotationData *string `json:"annotationData,omitempty"`
 	// All components referencing this controller service.
-	ReferencingComponents []ControllerServiceReferencingComponentEntity `json:"referencingComponents,omitempty"`
+	ReferencingComponents *[]ControllerServiceReferencingComponentEntity `json:"referencingComponents,omitempty"`
 	// The validation errors from the controller service. These validation errors represent the problems with the controller service that must be resolved before it can be enabled.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
 	// Indicates whether the ControllerService is valid, invalid, or still in the process of validating (i.e., it is unknown whether or not the ControllerService is valid)
-	ValidationStatus string `json:"validationStatus,omitempty"`
+	ValidationStatus *string `json:"validationStatus,omitempty"`
 	// Whether the underlying extension is missing.
-	ExtensionMissing bool `json:"extensionMissing,omitempty"`
+	ExtensionMissing *bool `json:"extensionMissing,omitempty"`
+}
+
+// NewControllerServiceDTO instantiates a new ControllerServiceDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerServiceDTO() *ControllerServiceDTO {
+	this := ControllerServiceDTO{}
+	return &this
+}
+
+// NewControllerServiceDTOWithDefaults instantiates a new ControllerServiceDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerServiceDTOWithDefaults() *ControllerServiceDTO {
+	this := ControllerServiceDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ControllerServiceDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *ControllerServiceDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *ControllerServiceDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *ControllerServiceDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ControllerServiceDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ControllerServiceDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetBundle returns the Bundle field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetBundle() BundleDTO {
+	if o == nil || o.Bundle == nil {
+		var ret BundleDTO
+		return ret
+	}
+	return *o.Bundle
+}
+
+// GetBundleOk returns a tuple with the Bundle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetBundleOk() (*BundleDTO, bool) {
+	if o == nil || o.Bundle == nil {
+		return nil, false
+	}
+	return o.Bundle, true
+}
+
+// HasBundle returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasBundle() bool {
+	if o != nil && o.Bundle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBundle gets a reference to the given BundleDTO and assigns it to the Bundle field.
+func (o *ControllerServiceDTO) SetBundle(v BundleDTO) {
+	o.Bundle = &v
+}
+
+// GetControllerServiceApis returns the ControllerServiceApis field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetControllerServiceApis() []ControllerServiceApiDTO {
+	if o == nil || o.ControllerServiceApis == nil {
+		var ret []ControllerServiceApiDTO
+		return ret
+	}
+	return *o.ControllerServiceApis
+}
+
+// GetControllerServiceApisOk returns a tuple with the ControllerServiceApis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetControllerServiceApisOk() (*[]ControllerServiceApiDTO, bool) {
+	if o == nil || o.ControllerServiceApis == nil {
+		return nil, false
+	}
+	return o.ControllerServiceApis, true
+}
+
+// HasControllerServiceApis returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasControllerServiceApis() bool {
+	if o != nil && o.ControllerServiceApis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServiceApis gets a reference to the given []ControllerServiceApiDTO and assigns it to the ControllerServiceApis field.
+func (o *ControllerServiceDTO) SetControllerServiceApis(v []ControllerServiceApiDTO) {
+	o.ControllerServiceApis = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *ControllerServiceDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ControllerServiceDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetPersistsState returns the PersistsState field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetPersistsState() bool {
+	if o == nil || o.PersistsState == nil {
+		var ret bool
+		return ret
+	}
+	return *o.PersistsState
+}
+
+// GetPersistsStateOk returns a tuple with the PersistsState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetPersistsStateOk() (*bool, bool) {
+	if o == nil || o.PersistsState == nil {
+		return nil, false
+	}
+	return o.PersistsState, true
+}
+
+// HasPersistsState returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasPersistsState() bool {
+	if o != nil && o.PersistsState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPersistsState gets a reference to the given bool and assigns it to the PersistsState field.
+func (o *ControllerServiceDTO) SetPersistsState(v bool) {
+	o.PersistsState = &v
+}
+
+// GetRestricted returns the Restricted field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetRestricted() bool {
+	if o == nil || o.Restricted == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Restricted
+}
+
+// GetRestrictedOk returns a tuple with the Restricted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetRestrictedOk() (*bool, bool) {
+	if o == nil || o.Restricted == nil {
+		return nil, false
+	}
+	return o.Restricted, true
+}
+
+// HasRestricted returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasRestricted() bool {
+	if o != nil && o.Restricted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRestricted gets a reference to the given bool and assigns it to the Restricted field.
+func (o *ControllerServiceDTO) SetRestricted(v bool) {
+	o.Restricted = &v
+}
+
+// GetDeprecated returns the Deprecated field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetDeprecated() bool {
+	if o == nil || o.Deprecated == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Deprecated
+}
+
+// GetDeprecatedOk returns a tuple with the Deprecated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetDeprecatedOk() (*bool, bool) {
+	if o == nil || o.Deprecated == nil {
+		return nil, false
+	}
+	return o.Deprecated, true
+}
+
+// HasDeprecated returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasDeprecated() bool {
+	if o != nil && o.Deprecated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDeprecated gets a reference to the given bool and assigns it to the Deprecated field.
+func (o *ControllerServiceDTO) SetDeprecated(v bool) {
+	o.Deprecated = &v
+}
+
+// GetMultipleVersionsAvailable returns the MultipleVersionsAvailable field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetMultipleVersionsAvailable() bool {
+	if o == nil || o.MultipleVersionsAvailable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.MultipleVersionsAvailable
+}
+
+// GetMultipleVersionsAvailableOk returns a tuple with the MultipleVersionsAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetMultipleVersionsAvailableOk() (*bool, bool) {
+	if o == nil || o.MultipleVersionsAvailable == nil {
+		return nil, false
+	}
+	return o.MultipleVersionsAvailable, true
+}
+
+// HasMultipleVersionsAvailable returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasMultipleVersionsAvailable() bool {
+	if o != nil && o.MultipleVersionsAvailable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMultipleVersionsAvailable gets a reference to the given bool and assigns it to the MultipleVersionsAvailable field.
+func (o *ControllerServiceDTO) SetMultipleVersionsAvailable(v bool) {
+	o.MultipleVersionsAvailable = &v
+}
+
+// GetProperties returns the Properties field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetProperties() map[string]string {
+	if o == nil || o.Properties == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Properties
+}
+
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetPropertiesOk() (*map[string]string, bool) {
+	if o == nil || o.Properties == nil {
+		return nil, false
+	}
+	return o.Properties, true
+}
+
+// HasProperties returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasProperties() bool {
+	if o != nil && o.Properties != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+func (o *ControllerServiceDTO) SetProperties(v map[string]string) {
+	o.Properties = &v
+}
+
+// GetDescriptors returns the Descriptors field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetDescriptors() map[string]PropertyDescriptorDTO {
+	if o == nil || o.Descriptors == nil {
+		var ret map[string]PropertyDescriptorDTO
+		return ret
+	}
+	return *o.Descriptors
+}
+
+// GetDescriptorsOk returns a tuple with the Descriptors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetDescriptorsOk() (*map[string]PropertyDescriptorDTO, bool) {
+	if o == nil || o.Descriptors == nil {
+		return nil, false
+	}
+	return o.Descriptors, true
+}
+
+// HasDescriptors returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasDescriptors() bool {
+	if o != nil && o.Descriptors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescriptors gets a reference to the given map[string]PropertyDescriptorDTO and assigns it to the Descriptors field.
+func (o *ControllerServiceDTO) SetDescriptors(v map[string]PropertyDescriptorDTO) {
+	o.Descriptors = &v
+}
+
+// GetCustomUiUrl returns the CustomUiUrl field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetCustomUiUrl() string {
+	if o == nil || o.CustomUiUrl == nil {
+		var ret string
+		return ret
+	}
+	return *o.CustomUiUrl
+}
+
+// GetCustomUiUrlOk returns a tuple with the CustomUiUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetCustomUiUrlOk() (*string, bool) {
+	if o == nil || o.CustomUiUrl == nil {
+		return nil, false
+	}
+	return o.CustomUiUrl, true
+}
+
+// HasCustomUiUrl returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasCustomUiUrl() bool {
+	if o != nil && o.CustomUiUrl != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCustomUiUrl gets a reference to the given string and assigns it to the CustomUiUrl field.
+func (o *ControllerServiceDTO) SetCustomUiUrl(v string) {
+	o.CustomUiUrl = &v
+}
+
+// GetAnnotationData returns the AnnotationData field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetAnnotationData() string {
+	if o == nil || o.AnnotationData == nil {
+		var ret string
+		return ret
+	}
+	return *o.AnnotationData
+}
+
+// GetAnnotationDataOk returns a tuple with the AnnotationData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetAnnotationDataOk() (*string, bool) {
+	if o == nil || o.AnnotationData == nil {
+		return nil, false
+	}
+	return o.AnnotationData, true
+}
+
+// HasAnnotationData returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasAnnotationData() bool {
+	if o != nil && o.AnnotationData != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAnnotationData gets a reference to the given string and assigns it to the AnnotationData field.
+func (o *ControllerServiceDTO) SetAnnotationData(v string) {
+	o.AnnotationData = &v
+}
+
+// GetReferencingComponents returns the ReferencingComponents field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetReferencingComponents() []ControllerServiceReferencingComponentEntity {
+	if o == nil || o.ReferencingComponents == nil {
+		var ret []ControllerServiceReferencingComponentEntity
+		return ret
+	}
+	return *o.ReferencingComponents
+}
+
+// GetReferencingComponentsOk returns a tuple with the ReferencingComponents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetReferencingComponentsOk() (*[]ControllerServiceReferencingComponentEntity, bool) {
+	if o == nil || o.ReferencingComponents == nil {
+		return nil, false
+	}
+	return o.ReferencingComponents, true
+}
+
+// HasReferencingComponents returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasReferencingComponents() bool {
+	if o != nil && o.ReferencingComponents != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferencingComponents gets a reference to the given []ControllerServiceReferencingComponentEntity and assigns it to the ReferencingComponents field.
+func (o *ControllerServiceDTO) SetReferencingComponents(v []ControllerServiceReferencingComponentEntity) {
+	o.ReferencingComponents = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *ControllerServiceDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+// GetValidationStatus returns the ValidationStatus field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetValidationStatus() string {
+	if o == nil || o.ValidationStatus == nil {
+		var ret string
+		return ret
+	}
+	return *o.ValidationStatus
+}
+
+// GetValidationStatusOk returns a tuple with the ValidationStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetValidationStatusOk() (*string, bool) {
+	if o == nil || o.ValidationStatus == nil {
+		return nil, false
+	}
+	return o.ValidationStatus, true
+}
+
+// HasValidationStatus returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasValidationStatus() bool {
+	if o != nil && o.ValidationStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationStatus gets a reference to the given string and assigns it to the ValidationStatus field.
+func (o *ControllerServiceDTO) SetValidationStatus(v string) {
+	o.ValidationStatus = &v
+}
+
+// GetExtensionMissing returns the ExtensionMissing field value if set, zero value otherwise.
+func (o *ControllerServiceDTO) GetExtensionMissing() bool {
+	if o == nil || o.ExtensionMissing == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ExtensionMissing
+}
+
+// GetExtensionMissingOk returns a tuple with the ExtensionMissing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceDTO) GetExtensionMissingOk() (*bool, bool) {
+	if o == nil || o.ExtensionMissing == nil {
+		return nil, false
+	}
+	return o.ExtensionMissing, true
+}
+
+// HasExtensionMissing returns a boolean if a field has been set.
+func (o *ControllerServiceDTO) HasExtensionMissing() bool {
+	if o != nil && o.ExtensionMissing != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExtensionMissing gets a reference to the given bool and assigns it to the ExtensionMissing field.
+func (o *ControllerServiceDTO) SetExtensionMissing(v bool) {
+	o.ExtensionMissing = &v
+}
+
+func (o ControllerServiceDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Bundle != nil {
+		toSerialize["bundle"] = o.Bundle
+	}
+	if o.ControllerServiceApis != nil {
+		toSerialize["controllerServiceApis"] = o.ControllerServiceApis
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.PersistsState != nil {
+		toSerialize["persistsState"] = o.PersistsState
+	}
+	if o.Restricted != nil {
+		toSerialize["restricted"] = o.Restricted
+	}
+	if o.Deprecated != nil {
+		toSerialize["deprecated"] = o.Deprecated
+	}
+	if o.MultipleVersionsAvailable != nil {
+		toSerialize["multipleVersionsAvailable"] = o.MultipleVersionsAvailable
+	}
+	if o.Properties != nil {
+		toSerialize["properties"] = o.Properties
+	}
+	if o.Descriptors != nil {
+		toSerialize["descriptors"] = o.Descriptors
+	}
+	if o.CustomUiUrl != nil {
+		toSerialize["customUiUrl"] = o.CustomUiUrl
+	}
+	if o.AnnotationData != nil {
+		toSerialize["annotationData"] = o.AnnotationData
+	}
+	if o.ReferencingComponents != nil {
+		toSerialize["referencingComponents"] = o.ReferencingComponents
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	if o.ValidationStatus != nil {
+		toSerialize["validationStatus"] = o.ValidationStatus
+	}
+	if o.ExtensionMissing != nil {
+		toSerialize["extensionMissing"] = o.ExtensionMissing
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerServiceDTO struct {
+	value *ControllerServiceDTO
+	isSet bool
+}
+
+func (v NullableControllerServiceDTO) Get() *ControllerServiceDTO {
+	return v.value
+}
+
+func (v *NullableControllerServiceDTO) Set(val *ControllerServiceDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerServiceDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerServiceDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerServiceDTO(val *ControllerServiceDTO) *NullableControllerServiceDTO {
+	return &NullableControllerServiceDTO{value: val, isSet: true}
+}
+
+func (v NullableControllerServiceDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerServiceDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

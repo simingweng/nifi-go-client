@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,76 +11,1363 @@
 
 package nifi
 
-// ProcessGroupStatusSnapshotDto struct for ProcessGroupStatusSnapshotDto
-type ProcessGroupStatusSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// ProcessGroupStatusSnapshotDTO struct for ProcessGroupStatusSnapshotDTO
+type ProcessGroupStatusSnapshotDTO struct {
 	// The id of the process group.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The name of this process group.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The status of all connections in the process group.
-	ConnectionStatusSnapshots []ConnectionStatusSnapshotEntity `json:"connectionStatusSnapshots,omitempty"`
+	ConnectionStatusSnapshots *[]ConnectionStatusSnapshotEntity `json:"connectionStatusSnapshots,omitempty"`
 	// The status of all processors in the process group.
-	ProcessorStatusSnapshots []ProcessorStatusSnapshotEntity `json:"processorStatusSnapshots,omitempty"`
+	ProcessorStatusSnapshots *[]ProcessorStatusSnapshotEntity `json:"processorStatusSnapshots,omitempty"`
 	// The status of all process groups in the process group.
-	ProcessGroupStatusSnapshots []ProcessGroupStatusSnapshotEntity `json:"processGroupStatusSnapshots,omitempty"`
+	ProcessGroupStatusSnapshots *[]ProcessGroupStatusSnapshotEntity `json:"processGroupStatusSnapshots,omitempty"`
 	// The status of all remote process groups in the process group.
-	RemoteProcessGroupStatusSnapshots []RemoteProcessGroupStatusSnapshotEntity `json:"remoteProcessGroupStatusSnapshots,omitempty"`
+	RemoteProcessGroupStatusSnapshots *[]RemoteProcessGroupStatusSnapshotEntity `json:"remoteProcessGroupStatusSnapshots,omitempty"`
 	// The status of all input ports in the process group.
-	InputPortStatusSnapshots []PortStatusSnapshotEntity `json:"inputPortStatusSnapshots,omitempty"`
+	InputPortStatusSnapshots *[]PortStatusSnapshotEntity `json:"inputPortStatusSnapshots,omitempty"`
 	// The status of all output ports in the process group.
-	OutputPortStatusSnapshots []PortStatusSnapshotEntity `json:"outputPortStatusSnapshots,omitempty"`
+	OutputPortStatusSnapshots *[]PortStatusSnapshotEntity `json:"outputPortStatusSnapshots,omitempty"`
 	// The current state of the Process Group, as it relates to the Versioned Flow
-	VersionedFlowState string `json:"versionedFlowState,omitempty"`
+	VersionedFlowState *string `json:"versionedFlowState,omitempty"`
 	// The number of FlowFiles that have come into this ProcessGroup in the last 5 minutes
-	FlowFilesIn int32 `json:"flowFilesIn,omitempty"`
+	FlowFilesIn *int32 `json:"flowFilesIn,omitempty"`
 	// The number of bytes that have come into this ProcessGroup in the last 5 minutes
-	BytesIn int64 `json:"bytesIn,omitempty"`
+	BytesIn *int64 `json:"bytesIn,omitempty"`
 	// The input count/size for the process group in the last 5 minutes (pretty printed).
-	Input string `json:"input,omitempty"`
+	Input *string `json:"input,omitempty"`
 	// The number of FlowFiles that are queued up in this ProcessGroup right now
-	FlowFilesQueued int32 `json:"flowFilesQueued,omitempty"`
+	FlowFilesQueued *int32 `json:"flowFilesQueued,omitempty"`
 	// The number of bytes that are queued up in this ProcessGroup right now
-	BytesQueued int64 `json:"bytesQueued,omitempty"`
+	BytesQueued *int64 `json:"bytesQueued,omitempty"`
 	// The count/size that is queued in the the process group.
-	Queued string `json:"queued,omitempty"`
+	Queued *string `json:"queued,omitempty"`
 	// The count that is queued for the process group.
-	QueuedCount string `json:"queuedCount,omitempty"`
+	QueuedCount *string `json:"queuedCount,omitempty"`
 	// The size that is queued for the process group.
-	QueuedSize string `json:"queuedSize,omitempty"`
+	QueuedSize *string `json:"queuedSize,omitempty"`
 	// The number of bytes read by components in this ProcessGroup in the last 5 minutes
-	BytesRead int64 `json:"bytesRead,omitempty"`
+	BytesRead *int64 `json:"bytesRead,omitempty"`
 	// The number of bytes read in the last 5 minutes.
-	Read string `json:"read,omitempty"`
+	Read *string `json:"read,omitempty"`
 	// The number of bytes written by components in this ProcessGroup in the last 5 minutes
-	BytesWritten int64 `json:"bytesWritten,omitempty"`
+	BytesWritten *int64 `json:"bytesWritten,omitempty"`
 	// The number of bytes written in the last 5 minutes.
-	Written string `json:"written,omitempty"`
+	Written *string `json:"written,omitempty"`
 	// The number of FlowFiles transferred out of this ProcessGroup in the last 5 minutes
-	FlowFilesOut int32 `json:"flowFilesOut,omitempty"`
+	FlowFilesOut *int32 `json:"flowFilesOut,omitempty"`
 	// The number of bytes transferred out of this ProcessGroup in the last 5 minutes
-	BytesOut int64 `json:"bytesOut,omitempty"`
+	BytesOut *int64 `json:"bytesOut,omitempty"`
 	// The output count/size for the process group in the last 5 minutes.
-	Output string `json:"output,omitempty"`
+	Output *string `json:"output,omitempty"`
 	// The number of FlowFiles transferred in this ProcessGroup in the last 5 minutes
-	FlowFilesTransferred int32 `json:"flowFilesTransferred,omitempty"`
+	FlowFilesTransferred *int32 `json:"flowFilesTransferred,omitempty"`
 	// The number of bytes transferred in this ProcessGroup in the last 5 minutes
-	BytesTransferred int64 `json:"bytesTransferred,omitempty"`
+	BytesTransferred *int64 `json:"bytesTransferred,omitempty"`
 	// The count/size transferred to/from queues in the process group in the last 5 minutes.
-	Transferred string `json:"transferred,omitempty"`
+	Transferred *string `json:"transferred,omitempty"`
 	// The number of bytes received from external sources by components within this ProcessGroup in the last 5 minutes
-	BytesReceived int64 `json:"bytesReceived,omitempty"`
+	BytesReceived *int64 `json:"bytesReceived,omitempty"`
 	// The number of FlowFiles received from external sources by components within this ProcessGroup in the last 5 minutes
-	FlowFilesReceived int32 `json:"flowFilesReceived,omitempty"`
+	FlowFilesReceived *int32 `json:"flowFilesReceived,omitempty"`
 	// The count/size sent to the process group in the last 5 minutes.
-	Received string `json:"received,omitempty"`
+	Received *string `json:"received,omitempty"`
 	// The number of bytes sent to an external sink by components within this ProcessGroup in the last 5 minutes
-	BytesSent int64 `json:"bytesSent,omitempty"`
+	BytesSent *int64 `json:"bytesSent,omitempty"`
 	// The number of FlowFiles sent to an external sink by components within this ProcessGroup in the last 5 minutes
-	FlowFilesSent int32 `json:"flowFilesSent,omitempty"`
+	FlowFilesSent *int32 `json:"flowFilesSent,omitempty"`
 	// The count/size sent from this process group in the last 5 minutes.
-	Sent string `json:"sent,omitempty"`
+	Sent *string `json:"sent,omitempty"`
 	// The active thread count for this process group.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// The number of threads currently terminated for the process group.
-	TerminatedThreadCount int32 `json:"terminatedThreadCount,omitempty"`
+	TerminatedThreadCount *int32 `json:"terminatedThreadCount,omitempty"`
+}
+
+// NewProcessGroupStatusSnapshotDTO instantiates a new ProcessGroupStatusSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupStatusSnapshotDTO() *ProcessGroupStatusSnapshotDTO {
+	this := ProcessGroupStatusSnapshotDTO{}
+	return &this
+}
+
+// NewProcessGroupStatusSnapshotDTOWithDefaults instantiates a new ProcessGroupStatusSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupStatusSnapshotDTOWithDefaults() *ProcessGroupStatusSnapshotDTO {
+	this := ProcessGroupStatusSnapshotDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProcessGroupStatusSnapshotDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ProcessGroupStatusSnapshotDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetConnectionStatusSnapshots returns the ConnectionStatusSnapshots field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetConnectionStatusSnapshots() []ConnectionStatusSnapshotEntity {
+	if o == nil || o.ConnectionStatusSnapshots == nil {
+		var ret []ConnectionStatusSnapshotEntity
+		return ret
+	}
+	return *o.ConnectionStatusSnapshots
+}
+
+// GetConnectionStatusSnapshotsOk returns a tuple with the ConnectionStatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetConnectionStatusSnapshotsOk() (*[]ConnectionStatusSnapshotEntity, bool) {
+	if o == nil || o.ConnectionStatusSnapshots == nil {
+		return nil, false
+	}
+	return o.ConnectionStatusSnapshots, true
+}
+
+// HasConnectionStatusSnapshots returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasConnectionStatusSnapshots() bool {
+	if o != nil && o.ConnectionStatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectionStatusSnapshots gets a reference to the given []ConnectionStatusSnapshotEntity and assigns it to the ConnectionStatusSnapshots field.
+func (o *ProcessGroupStatusSnapshotDTO) SetConnectionStatusSnapshots(v []ConnectionStatusSnapshotEntity) {
+	o.ConnectionStatusSnapshots = &v
+}
+
+// GetProcessorStatusSnapshots returns the ProcessorStatusSnapshots field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetProcessorStatusSnapshots() []ProcessorStatusSnapshotEntity {
+	if o == nil || o.ProcessorStatusSnapshots == nil {
+		var ret []ProcessorStatusSnapshotEntity
+		return ret
+	}
+	return *o.ProcessorStatusSnapshots
+}
+
+// GetProcessorStatusSnapshotsOk returns a tuple with the ProcessorStatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetProcessorStatusSnapshotsOk() (*[]ProcessorStatusSnapshotEntity, bool) {
+	if o == nil || o.ProcessorStatusSnapshots == nil {
+		return nil, false
+	}
+	return o.ProcessorStatusSnapshots, true
+}
+
+// HasProcessorStatusSnapshots returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasProcessorStatusSnapshots() bool {
+	if o != nil && o.ProcessorStatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessorStatusSnapshots gets a reference to the given []ProcessorStatusSnapshotEntity and assigns it to the ProcessorStatusSnapshots field.
+func (o *ProcessGroupStatusSnapshotDTO) SetProcessorStatusSnapshots(v []ProcessorStatusSnapshotEntity) {
+	o.ProcessorStatusSnapshots = &v
+}
+
+// GetProcessGroupStatusSnapshots returns the ProcessGroupStatusSnapshots field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetProcessGroupStatusSnapshots() []ProcessGroupStatusSnapshotEntity {
+	if o == nil || o.ProcessGroupStatusSnapshots == nil {
+		var ret []ProcessGroupStatusSnapshotEntity
+		return ret
+	}
+	return *o.ProcessGroupStatusSnapshots
+}
+
+// GetProcessGroupStatusSnapshotsOk returns a tuple with the ProcessGroupStatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetProcessGroupStatusSnapshotsOk() (*[]ProcessGroupStatusSnapshotEntity, bool) {
+	if o == nil || o.ProcessGroupStatusSnapshots == nil {
+		return nil, false
+	}
+	return o.ProcessGroupStatusSnapshots, true
+}
+
+// HasProcessGroupStatusSnapshots returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasProcessGroupStatusSnapshots() bool {
+	if o != nil && o.ProcessGroupStatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupStatusSnapshots gets a reference to the given []ProcessGroupStatusSnapshotEntity and assigns it to the ProcessGroupStatusSnapshots field.
+func (o *ProcessGroupStatusSnapshotDTO) SetProcessGroupStatusSnapshots(v []ProcessGroupStatusSnapshotEntity) {
+	o.ProcessGroupStatusSnapshots = &v
+}
+
+// GetRemoteProcessGroupStatusSnapshots returns the RemoteProcessGroupStatusSnapshots field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetRemoteProcessGroupStatusSnapshots() []RemoteProcessGroupStatusSnapshotEntity {
+	if o == nil || o.RemoteProcessGroupStatusSnapshots == nil {
+		var ret []RemoteProcessGroupStatusSnapshotEntity
+		return ret
+	}
+	return *o.RemoteProcessGroupStatusSnapshots
+}
+
+// GetRemoteProcessGroupStatusSnapshotsOk returns a tuple with the RemoteProcessGroupStatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetRemoteProcessGroupStatusSnapshotsOk() (*[]RemoteProcessGroupStatusSnapshotEntity, bool) {
+	if o == nil || o.RemoteProcessGroupStatusSnapshots == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroupStatusSnapshots, true
+}
+
+// HasRemoteProcessGroupStatusSnapshots returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasRemoteProcessGroupStatusSnapshots() bool {
+	if o != nil && o.RemoteProcessGroupStatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroupStatusSnapshots gets a reference to the given []RemoteProcessGroupStatusSnapshotEntity and assigns it to the RemoteProcessGroupStatusSnapshots field.
+func (o *ProcessGroupStatusSnapshotDTO) SetRemoteProcessGroupStatusSnapshots(v []RemoteProcessGroupStatusSnapshotEntity) {
+	o.RemoteProcessGroupStatusSnapshots = &v
+}
+
+// GetInputPortStatusSnapshots returns the InputPortStatusSnapshots field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetInputPortStatusSnapshots() []PortStatusSnapshotEntity {
+	if o == nil || o.InputPortStatusSnapshots == nil {
+		var ret []PortStatusSnapshotEntity
+		return ret
+	}
+	return *o.InputPortStatusSnapshots
+}
+
+// GetInputPortStatusSnapshotsOk returns a tuple with the InputPortStatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetInputPortStatusSnapshotsOk() (*[]PortStatusSnapshotEntity, bool) {
+	if o == nil || o.InputPortStatusSnapshots == nil {
+		return nil, false
+	}
+	return o.InputPortStatusSnapshots, true
+}
+
+// HasInputPortStatusSnapshots returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasInputPortStatusSnapshots() bool {
+	if o != nil && o.InputPortStatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPortStatusSnapshots gets a reference to the given []PortStatusSnapshotEntity and assigns it to the InputPortStatusSnapshots field.
+func (o *ProcessGroupStatusSnapshotDTO) SetInputPortStatusSnapshots(v []PortStatusSnapshotEntity) {
+	o.InputPortStatusSnapshots = &v
+}
+
+// GetOutputPortStatusSnapshots returns the OutputPortStatusSnapshots field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetOutputPortStatusSnapshots() []PortStatusSnapshotEntity {
+	if o == nil || o.OutputPortStatusSnapshots == nil {
+		var ret []PortStatusSnapshotEntity
+		return ret
+	}
+	return *o.OutputPortStatusSnapshots
+}
+
+// GetOutputPortStatusSnapshotsOk returns a tuple with the OutputPortStatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetOutputPortStatusSnapshotsOk() (*[]PortStatusSnapshotEntity, bool) {
+	if o == nil || o.OutputPortStatusSnapshots == nil {
+		return nil, false
+	}
+	return o.OutputPortStatusSnapshots, true
+}
+
+// HasOutputPortStatusSnapshots returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasOutputPortStatusSnapshots() bool {
+	if o != nil && o.OutputPortStatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPortStatusSnapshots gets a reference to the given []PortStatusSnapshotEntity and assigns it to the OutputPortStatusSnapshots field.
+func (o *ProcessGroupStatusSnapshotDTO) SetOutputPortStatusSnapshots(v []PortStatusSnapshotEntity) {
+	o.OutputPortStatusSnapshots = &v
+}
+
+// GetVersionedFlowState returns the VersionedFlowState field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetVersionedFlowState() string {
+	if o == nil || o.VersionedFlowState == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedFlowState
+}
+
+// GetVersionedFlowStateOk returns a tuple with the VersionedFlowState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetVersionedFlowStateOk() (*string, bool) {
+	if o == nil || o.VersionedFlowState == nil {
+		return nil, false
+	}
+	return o.VersionedFlowState, true
+}
+
+// HasVersionedFlowState returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasVersionedFlowState() bool {
+	if o != nil && o.VersionedFlowState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlowState gets a reference to the given string and assigns it to the VersionedFlowState field.
+func (o *ProcessGroupStatusSnapshotDTO) SetVersionedFlowState(v string) {
+	o.VersionedFlowState = &v
+}
+
+// GetFlowFilesIn returns the FlowFilesIn field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesIn() int32 {
+	if o == nil || o.FlowFilesIn == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesIn
+}
+
+// GetFlowFilesInOk returns a tuple with the FlowFilesIn field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesInOk() (*int32, bool) {
+	if o == nil || o.FlowFilesIn == nil {
+		return nil, false
+	}
+	return o.FlowFilesIn, true
+}
+
+// HasFlowFilesIn returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasFlowFilesIn() bool {
+	if o != nil && o.FlowFilesIn != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesIn gets a reference to the given int32 and assigns it to the FlowFilesIn field.
+func (o *ProcessGroupStatusSnapshotDTO) SetFlowFilesIn(v int32) {
+	o.FlowFilesIn = &v
+}
+
+// GetBytesIn returns the BytesIn field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesIn() int64 {
+	if o == nil || o.BytesIn == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesIn
+}
+
+// GetBytesInOk returns a tuple with the BytesIn field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesInOk() (*int64, bool) {
+	if o == nil || o.BytesIn == nil {
+		return nil, false
+	}
+	return o.BytesIn, true
+}
+
+// HasBytesIn returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesIn() bool {
+	if o != nil && o.BytesIn != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesIn gets a reference to the given int64 and assigns it to the BytesIn field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesIn(v int64) {
+	o.BytesIn = &v
+}
+
+// GetInput returns the Input field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetInput() string {
+	if o == nil || o.Input == nil {
+		var ret string
+		return ret
+	}
+	return *o.Input
+}
+
+// GetInputOk returns a tuple with the Input field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetInputOk() (*string, bool) {
+	if o == nil || o.Input == nil {
+		return nil, false
+	}
+	return o.Input, true
+}
+
+// HasInput returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasInput() bool {
+	if o != nil && o.Input != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInput gets a reference to the given string and assigns it to the Input field.
+func (o *ProcessGroupStatusSnapshotDTO) SetInput(v string) {
+	o.Input = &v
+}
+
+// GetFlowFilesQueued returns the FlowFilesQueued field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesQueued() int32 {
+	if o == nil || o.FlowFilesQueued == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesQueued
+}
+
+// GetFlowFilesQueuedOk returns a tuple with the FlowFilesQueued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesQueuedOk() (*int32, bool) {
+	if o == nil || o.FlowFilesQueued == nil {
+		return nil, false
+	}
+	return o.FlowFilesQueued, true
+}
+
+// HasFlowFilesQueued returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasFlowFilesQueued() bool {
+	if o != nil && o.FlowFilesQueued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesQueued gets a reference to the given int32 and assigns it to the FlowFilesQueued field.
+func (o *ProcessGroupStatusSnapshotDTO) SetFlowFilesQueued(v int32) {
+	o.FlowFilesQueued = &v
+}
+
+// GetBytesQueued returns the BytesQueued field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesQueued() int64 {
+	if o == nil || o.BytesQueued == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesQueued
+}
+
+// GetBytesQueuedOk returns a tuple with the BytesQueued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesQueuedOk() (*int64, bool) {
+	if o == nil || o.BytesQueued == nil {
+		return nil, false
+	}
+	return o.BytesQueued, true
+}
+
+// HasBytesQueued returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesQueued() bool {
+	if o != nil && o.BytesQueued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesQueued gets a reference to the given int64 and assigns it to the BytesQueued field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesQueued(v int64) {
+	o.BytesQueued = &v
+}
+
+// GetQueued returns the Queued field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetQueued() string {
+	if o == nil || o.Queued == nil {
+		var ret string
+		return ret
+	}
+	return *o.Queued
+}
+
+// GetQueuedOk returns a tuple with the Queued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetQueuedOk() (*string, bool) {
+	if o == nil || o.Queued == nil {
+		return nil, false
+	}
+	return o.Queued, true
+}
+
+// HasQueued returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasQueued() bool {
+	if o != nil && o.Queued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueued gets a reference to the given string and assigns it to the Queued field.
+func (o *ProcessGroupStatusSnapshotDTO) SetQueued(v string) {
+	o.Queued = &v
+}
+
+// GetQueuedCount returns the QueuedCount field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetQueuedCount() string {
+	if o == nil || o.QueuedCount == nil {
+		var ret string
+		return ret
+	}
+	return *o.QueuedCount
+}
+
+// GetQueuedCountOk returns a tuple with the QueuedCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetQueuedCountOk() (*string, bool) {
+	if o == nil || o.QueuedCount == nil {
+		return nil, false
+	}
+	return o.QueuedCount, true
+}
+
+// HasQueuedCount returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasQueuedCount() bool {
+	if o != nil && o.QueuedCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueuedCount gets a reference to the given string and assigns it to the QueuedCount field.
+func (o *ProcessGroupStatusSnapshotDTO) SetQueuedCount(v string) {
+	o.QueuedCount = &v
+}
+
+// GetQueuedSize returns the QueuedSize field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetQueuedSize() string {
+	if o == nil || o.QueuedSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.QueuedSize
+}
+
+// GetQueuedSizeOk returns a tuple with the QueuedSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetQueuedSizeOk() (*string, bool) {
+	if o == nil || o.QueuedSize == nil {
+		return nil, false
+	}
+	return o.QueuedSize, true
+}
+
+// HasQueuedSize returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasQueuedSize() bool {
+	if o != nil && o.QueuedSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueuedSize gets a reference to the given string and assigns it to the QueuedSize field.
+func (o *ProcessGroupStatusSnapshotDTO) SetQueuedSize(v string) {
+	o.QueuedSize = &v
+}
+
+// GetBytesRead returns the BytesRead field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesRead() int64 {
+	if o == nil || o.BytesRead == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesRead
+}
+
+// GetBytesReadOk returns a tuple with the BytesRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesReadOk() (*int64, bool) {
+	if o == nil || o.BytesRead == nil {
+		return nil, false
+	}
+	return o.BytesRead, true
+}
+
+// HasBytesRead returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesRead() bool {
+	if o != nil && o.BytesRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesRead gets a reference to the given int64 and assigns it to the BytesRead field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesRead(v int64) {
+	o.BytesRead = &v
+}
+
+// GetRead returns the Read field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetRead() string {
+	if o == nil || o.Read == nil {
+		var ret string
+		return ret
+	}
+	return *o.Read
+}
+
+// GetReadOk returns a tuple with the Read field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetReadOk() (*string, bool) {
+	if o == nil || o.Read == nil {
+		return nil, false
+	}
+	return o.Read, true
+}
+
+// HasRead returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasRead() bool {
+	if o != nil && o.Read != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRead gets a reference to the given string and assigns it to the Read field.
+func (o *ProcessGroupStatusSnapshotDTO) SetRead(v string) {
+	o.Read = &v
+}
+
+// GetBytesWritten returns the BytesWritten field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesWritten() int64 {
+	if o == nil || o.BytesWritten == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesWritten
+}
+
+// GetBytesWrittenOk returns a tuple with the BytesWritten field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesWrittenOk() (*int64, bool) {
+	if o == nil || o.BytesWritten == nil {
+		return nil, false
+	}
+	return o.BytesWritten, true
+}
+
+// HasBytesWritten returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesWritten() bool {
+	if o != nil && o.BytesWritten != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesWritten gets a reference to the given int64 and assigns it to the BytesWritten field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesWritten(v int64) {
+	o.BytesWritten = &v
+}
+
+// GetWritten returns the Written field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetWritten() string {
+	if o == nil || o.Written == nil {
+		var ret string
+		return ret
+	}
+	return *o.Written
+}
+
+// GetWrittenOk returns a tuple with the Written field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetWrittenOk() (*string, bool) {
+	if o == nil || o.Written == nil {
+		return nil, false
+	}
+	return o.Written, true
+}
+
+// HasWritten returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasWritten() bool {
+	if o != nil && o.Written != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetWritten gets a reference to the given string and assigns it to the Written field.
+func (o *ProcessGroupStatusSnapshotDTO) SetWritten(v string) {
+	o.Written = &v
+}
+
+// GetFlowFilesOut returns the FlowFilesOut field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesOut() int32 {
+	if o == nil || o.FlowFilesOut == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesOut
+}
+
+// GetFlowFilesOutOk returns a tuple with the FlowFilesOut field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesOutOk() (*int32, bool) {
+	if o == nil || o.FlowFilesOut == nil {
+		return nil, false
+	}
+	return o.FlowFilesOut, true
+}
+
+// HasFlowFilesOut returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasFlowFilesOut() bool {
+	if o != nil && o.FlowFilesOut != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesOut gets a reference to the given int32 and assigns it to the FlowFilesOut field.
+func (o *ProcessGroupStatusSnapshotDTO) SetFlowFilesOut(v int32) {
+	o.FlowFilesOut = &v
+}
+
+// GetBytesOut returns the BytesOut field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesOut() int64 {
+	if o == nil || o.BytesOut == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesOut
+}
+
+// GetBytesOutOk returns a tuple with the BytesOut field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesOutOk() (*int64, bool) {
+	if o == nil || o.BytesOut == nil {
+		return nil, false
+	}
+	return o.BytesOut, true
+}
+
+// HasBytesOut returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesOut() bool {
+	if o != nil && o.BytesOut != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesOut gets a reference to the given int64 and assigns it to the BytesOut field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesOut(v int64) {
+	o.BytesOut = &v
+}
+
+// GetOutput returns the Output field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetOutput() string {
+	if o == nil || o.Output == nil {
+		var ret string
+		return ret
+	}
+	return *o.Output
+}
+
+// GetOutputOk returns a tuple with the Output field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetOutputOk() (*string, bool) {
+	if o == nil || o.Output == nil {
+		return nil, false
+	}
+	return o.Output, true
+}
+
+// HasOutput returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasOutput() bool {
+	if o != nil && o.Output != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutput gets a reference to the given string and assigns it to the Output field.
+func (o *ProcessGroupStatusSnapshotDTO) SetOutput(v string) {
+	o.Output = &v
+}
+
+// GetFlowFilesTransferred returns the FlowFilesTransferred field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesTransferred() int32 {
+	if o == nil || o.FlowFilesTransferred == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesTransferred
+}
+
+// GetFlowFilesTransferredOk returns a tuple with the FlowFilesTransferred field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesTransferredOk() (*int32, bool) {
+	if o == nil || o.FlowFilesTransferred == nil {
+		return nil, false
+	}
+	return o.FlowFilesTransferred, true
+}
+
+// HasFlowFilesTransferred returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasFlowFilesTransferred() bool {
+	if o != nil && o.FlowFilesTransferred != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesTransferred gets a reference to the given int32 and assigns it to the FlowFilesTransferred field.
+func (o *ProcessGroupStatusSnapshotDTO) SetFlowFilesTransferred(v int32) {
+	o.FlowFilesTransferred = &v
+}
+
+// GetBytesTransferred returns the BytesTransferred field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesTransferred() int64 {
+	if o == nil || o.BytesTransferred == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesTransferred
+}
+
+// GetBytesTransferredOk returns a tuple with the BytesTransferred field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesTransferredOk() (*int64, bool) {
+	if o == nil || o.BytesTransferred == nil {
+		return nil, false
+	}
+	return o.BytesTransferred, true
+}
+
+// HasBytesTransferred returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesTransferred() bool {
+	if o != nil && o.BytesTransferred != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesTransferred gets a reference to the given int64 and assigns it to the BytesTransferred field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesTransferred(v int64) {
+	o.BytesTransferred = &v
+}
+
+// GetTransferred returns the Transferred field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetTransferred() string {
+	if o == nil || o.Transferred == nil {
+		var ret string
+		return ret
+	}
+	return *o.Transferred
+}
+
+// GetTransferredOk returns a tuple with the Transferred field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetTransferredOk() (*string, bool) {
+	if o == nil || o.Transferred == nil {
+		return nil, false
+	}
+	return o.Transferred, true
+}
+
+// HasTransferred returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasTransferred() bool {
+	if o != nil && o.Transferred != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransferred gets a reference to the given string and assigns it to the Transferred field.
+func (o *ProcessGroupStatusSnapshotDTO) SetTransferred(v string) {
+	o.Transferred = &v
+}
+
+// GetBytesReceived returns the BytesReceived field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesReceived() int64 {
+	if o == nil || o.BytesReceived == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesReceived
+}
+
+// GetBytesReceivedOk returns a tuple with the BytesReceived field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesReceivedOk() (*int64, bool) {
+	if o == nil || o.BytesReceived == nil {
+		return nil, false
+	}
+	return o.BytesReceived, true
+}
+
+// HasBytesReceived returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesReceived() bool {
+	if o != nil && o.BytesReceived != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesReceived gets a reference to the given int64 and assigns it to the BytesReceived field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesReceived(v int64) {
+	o.BytesReceived = &v
+}
+
+// GetFlowFilesReceived returns the FlowFilesReceived field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesReceived() int32 {
+	if o == nil || o.FlowFilesReceived == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesReceived
+}
+
+// GetFlowFilesReceivedOk returns a tuple with the FlowFilesReceived field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesReceivedOk() (*int32, bool) {
+	if o == nil || o.FlowFilesReceived == nil {
+		return nil, false
+	}
+	return o.FlowFilesReceived, true
+}
+
+// HasFlowFilesReceived returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasFlowFilesReceived() bool {
+	if o != nil && o.FlowFilesReceived != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesReceived gets a reference to the given int32 and assigns it to the FlowFilesReceived field.
+func (o *ProcessGroupStatusSnapshotDTO) SetFlowFilesReceived(v int32) {
+	o.FlowFilesReceived = &v
+}
+
+// GetReceived returns the Received field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetReceived() string {
+	if o == nil || o.Received == nil {
+		var ret string
+		return ret
+	}
+	return *o.Received
+}
+
+// GetReceivedOk returns a tuple with the Received field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetReceivedOk() (*string, bool) {
+	if o == nil || o.Received == nil {
+		return nil, false
+	}
+	return o.Received, true
+}
+
+// HasReceived returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasReceived() bool {
+	if o != nil && o.Received != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReceived gets a reference to the given string and assigns it to the Received field.
+func (o *ProcessGroupStatusSnapshotDTO) SetReceived(v string) {
+	o.Received = &v
+}
+
+// GetBytesSent returns the BytesSent field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesSent() int64 {
+	if o == nil || o.BytesSent == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesSent
+}
+
+// GetBytesSentOk returns a tuple with the BytesSent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetBytesSentOk() (*int64, bool) {
+	if o == nil || o.BytesSent == nil {
+		return nil, false
+	}
+	return o.BytesSent, true
+}
+
+// HasBytesSent returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasBytesSent() bool {
+	if o != nil && o.BytesSent != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesSent gets a reference to the given int64 and assigns it to the BytesSent field.
+func (o *ProcessGroupStatusSnapshotDTO) SetBytesSent(v int64) {
+	o.BytesSent = &v
+}
+
+// GetFlowFilesSent returns the FlowFilesSent field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesSent() int32 {
+	if o == nil || o.FlowFilesSent == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesSent
+}
+
+// GetFlowFilesSentOk returns a tuple with the FlowFilesSent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetFlowFilesSentOk() (*int32, bool) {
+	if o == nil || o.FlowFilesSent == nil {
+		return nil, false
+	}
+	return o.FlowFilesSent, true
+}
+
+// HasFlowFilesSent returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasFlowFilesSent() bool {
+	if o != nil && o.FlowFilesSent != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesSent gets a reference to the given int32 and assigns it to the FlowFilesSent field.
+func (o *ProcessGroupStatusSnapshotDTO) SetFlowFilesSent(v int32) {
+	o.FlowFilesSent = &v
+}
+
+// GetSent returns the Sent field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetSent() string {
+	if o == nil || o.Sent == nil {
+		var ret string
+		return ret
+	}
+	return *o.Sent
+}
+
+// GetSentOk returns a tuple with the Sent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetSentOk() (*string, bool) {
+	if o == nil || o.Sent == nil {
+		return nil, false
+	}
+	return o.Sent, true
+}
+
+// HasSent returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasSent() bool {
+	if o != nil && o.Sent != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSent gets a reference to the given string and assigns it to the Sent field.
+func (o *ProcessGroupStatusSnapshotDTO) SetSent(v string) {
+	o.Sent = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *ProcessGroupStatusSnapshotDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetTerminatedThreadCount returns the TerminatedThreadCount field value if set, zero value otherwise.
+func (o *ProcessGroupStatusSnapshotDTO) GetTerminatedThreadCount() int32 {
+	if o == nil || o.TerminatedThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.TerminatedThreadCount
+}
+
+// GetTerminatedThreadCountOk returns a tuple with the TerminatedThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusSnapshotDTO) GetTerminatedThreadCountOk() (*int32, bool) {
+	if o == nil || o.TerminatedThreadCount == nil {
+		return nil, false
+	}
+	return o.TerminatedThreadCount, true
+}
+
+// HasTerminatedThreadCount returns a boolean if a field has been set.
+func (o *ProcessGroupStatusSnapshotDTO) HasTerminatedThreadCount() bool {
+	if o != nil && o.TerminatedThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTerminatedThreadCount gets a reference to the given int32 and assigns it to the TerminatedThreadCount field.
+func (o *ProcessGroupStatusSnapshotDTO) SetTerminatedThreadCount(v int32) {
+	o.TerminatedThreadCount = &v
+}
+
+func (o ProcessGroupStatusSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.ConnectionStatusSnapshots != nil {
+		toSerialize["connectionStatusSnapshots"] = o.ConnectionStatusSnapshots
+	}
+	if o.ProcessorStatusSnapshots != nil {
+		toSerialize["processorStatusSnapshots"] = o.ProcessorStatusSnapshots
+	}
+	if o.ProcessGroupStatusSnapshots != nil {
+		toSerialize["processGroupStatusSnapshots"] = o.ProcessGroupStatusSnapshots
+	}
+	if o.RemoteProcessGroupStatusSnapshots != nil {
+		toSerialize["remoteProcessGroupStatusSnapshots"] = o.RemoteProcessGroupStatusSnapshots
+	}
+	if o.InputPortStatusSnapshots != nil {
+		toSerialize["inputPortStatusSnapshots"] = o.InputPortStatusSnapshots
+	}
+	if o.OutputPortStatusSnapshots != nil {
+		toSerialize["outputPortStatusSnapshots"] = o.OutputPortStatusSnapshots
+	}
+	if o.VersionedFlowState != nil {
+		toSerialize["versionedFlowState"] = o.VersionedFlowState
+	}
+	if o.FlowFilesIn != nil {
+		toSerialize["flowFilesIn"] = o.FlowFilesIn
+	}
+	if o.BytesIn != nil {
+		toSerialize["bytesIn"] = o.BytesIn
+	}
+	if o.Input != nil {
+		toSerialize["input"] = o.Input
+	}
+	if o.FlowFilesQueued != nil {
+		toSerialize["flowFilesQueued"] = o.FlowFilesQueued
+	}
+	if o.BytesQueued != nil {
+		toSerialize["bytesQueued"] = o.BytesQueued
+	}
+	if o.Queued != nil {
+		toSerialize["queued"] = o.Queued
+	}
+	if o.QueuedCount != nil {
+		toSerialize["queuedCount"] = o.QueuedCount
+	}
+	if o.QueuedSize != nil {
+		toSerialize["queuedSize"] = o.QueuedSize
+	}
+	if o.BytesRead != nil {
+		toSerialize["bytesRead"] = o.BytesRead
+	}
+	if o.Read != nil {
+		toSerialize["read"] = o.Read
+	}
+	if o.BytesWritten != nil {
+		toSerialize["bytesWritten"] = o.BytesWritten
+	}
+	if o.Written != nil {
+		toSerialize["written"] = o.Written
+	}
+	if o.FlowFilesOut != nil {
+		toSerialize["flowFilesOut"] = o.FlowFilesOut
+	}
+	if o.BytesOut != nil {
+		toSerialize["bytesOut"] = o.BytesOut
+	}
+	if o.Output != nil {
+		toSerialize["output"] = o.Output
+	}
+	if o.FlowFilesTransferred != nil {
+		toSerialize["flowFilesTransferred"] = o.FlowFilesTransferred
+	}
+	if o.BytesTransferred != nil {
+		toSerialize["bytesTransferred"] = o.BytesTransferred
+	}
+	if o.Transferred != nil {
+		toSerialize["transferred"] = o.Transferred
+	}
+	if o.BytesReceived != nil {
+		toSerialize["bytesReceived"] = o.BytesReceived
+	}
+	if o.FlowFilesReceived != nil {
+		toSerialize["flowFilesReceived"] = o.FlowFilesReceived
+	}
+	if o.Received != nil {
+		toSerialize["received"] = o.Received
+	}
+	if o.BytesSent != nil {
+		toSerialize["bytesSent"] = o.BytesSent
+	}
+	if o.FlowFilesSent != nil {
+		toSerialize["flowFilesSent"] = o.FlowFilesSent
+	}
+	if o.Sent != nil {
+		toSerialize["sent"] = o.Sent
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.TerminatedThreadCount != nil {
+		toSerialize["terminatedThreadCount"] = o.TerminatedThreadCount
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupStatusSnapshotDTO struct {
+	value *ProcessGroupStatusSnapshotDTO
+	isSet bool
+}
+
+func (v NullableProcessGroupStatusSnapshotDTO) Get() *ProcessGroupStatusSnapshotDTO {
+	return v.value
+}
+
+func (v *NullableProcessGroupStatusSnapshotDTO) Set(val *ProcessGroupStatusSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupStatusSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupStatusSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupStatusSnapshotDTO(val *ProcessGroupStatusSnapshotDTO) *NullableProcessGroupStatusSnapshotDTO {
+	return &NullableProcessGroupStatusSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupStatusSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupStatusSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

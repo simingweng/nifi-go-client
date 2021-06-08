@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,13 +11,215 @@
 
 package nifi
 
-// NodeRemoteProcessGroupStatusSnapshotDto struct for NodeRemoteProcessGroupStatusSnapshotDto
-type NodeRemoteProcessGroupStatusSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeRemoteProcessGroupStatusSnapshotDTO struct for NodeRemoteProcessGroupStatusSnapshotDTO
+type NodeRemoteProcessGroupStatusSnapshotDTO struct {
 	// The unique ID that identifies the node
-	NodeId string `json:"nodeId,omitempty"`
+	NodeId *string `json:"nodeId,omitempty"`
 	// The API address of the node
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// The API port used to communicate with the node
-	ApiPort        int32                               `json:"apiPort,omitempty"`
-	StatusSnapshot RemoteProcessGroupStatusSnapshotDto `json:"statusSnapshot,omitempty"`
+	ApiPort        *int32                               `json:"apiPort,omitempty"`
+	StatusSnapshot *RemoteProcessGroupStatusSnapshotDTO `json:"statusSnapshot,omitempty"`
+}
+
+// NewNodeRemoteProcessGroupStatusSnapshotDTO instantiates a new NodeRemoteProcessGroupStatusSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeRemoteProcessGroupStatusSnapshotDTO() *NodeRemoteProcessGroupStatusSnapshotDTO {
+	this := NodeRemoteProcessGroupStatusSnapshotDTO{}
+	return &this
+}
+
+// NewNodeRemoteProcessGroupStatusSnapshotDTOWithDefaults instantiates a new NodeRemoteProcessGroupStatusSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeRemoteProcessGroupStatusSnapshotDTOWithDefaults() *NodeRemoteProcessGroupStatusSnapshotDTO {
+	this := NodeRemoteProcessGroupStatusSnapshotDTO{}
+	return &this
+}
+
+// GetNodeId returns the NodeId field value if set, zero value otherwise.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetNodeId() string {
+	if o == nil || o.NodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeId
+}
+
+// GetNodeIdOk returns a tuple with the NodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetNodeIdOk() (*string, bool) {
+	if o == nil || o.NodeId == nil {
+		return nil, false
+	}
+	return o.NodeId, true
+}
+
+// HasNodeId returns a boolean if a field has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) HasNodeId() bool {
+	if o != nil && o.NodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeId gets a reference to the given string and assigns it to the NodeId field.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) SetNodeId(v string) {
+	o.NodeId = &v
+}
+
+// GetAddress returns the Address field value if set, zero value otherwise.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetAddress() string {
+	if o == nil || o.Address == nil {
+		var ret string
+		return ret
+	}
+	return *o.Address
+}
+
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetAddressOk() (*string, bool) {
+	if o == nil || o.Address == nil {
+		return nil, false
+	}
+	return o.Address, true
+}
+
+// HasAddress returns a boolean if a field has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) HasAddress() bool {
+	if o != nil && o.Address != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) SetAddress(v string) {
+	o.Address = &v
+}
+
+// GetApiPort returns the ApiPort field value if set, zero value otherwise.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetApiPort() int32 {
+	if o == nil || o.ApiPort == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ApiPort
+}
+
+// GetApiPortOk returns a tuple with the ApiPort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetApiPortOk() (*int32, bool) {
+	if o == nil || o.ApiPort == nil {
+		return nil, false
+	}
+	return o.ApiPort, true
+}
+
+// HasApiPort returns a boolean if a field has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) HasApiPort() bool {
+	if o != nil && o.ApiPort != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetApiPort gets a reference to the given int32 and assigns it to the ApiPort field.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) SetApiPort(v int32) {
+	o.ApiPort = &v
+}
+
+// GetStatusSnapshot returns the StatusSnapshot field value if set, zero value otherwise.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetStatusSnapshot() RemoteProcessGroupStatusSnapshotDTO {
+	if o == nil || o.StatusSnapshot == nil {
+		var ret RemoteProcessGroupStatusSnapshotDTO
+		return ret
+	}
+	return *o.StatusSnapshot
+}
+
+// GetStatusSnapshotOk returns a tuple with the StatusSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) GetStatusSnapshotOk() (*RemoteProcessGroupStatusSnapshotDTO, bool) {
+	if o == nil || o.StatusSnapshot == nil {
+		return nil, false
+	}
+	return o.StatusSnapshot, true
+}
+
+// HasStatusSnapshot returns a boolean if a field has been set.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) HasStatusSnapshot() bool {
+	if o != nil && o.StatusSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatusSnapshot gets a reference to the given RemoteProcessGroupStatusSnapshotDTO and assigns it to the StatusSnapshot field.
+func (o *NodeRemoteProcessGroupStatusSnapshotDTO) SetStatusSnapshot(v RemoteProcessGroupStatusSnapshotDTO) {
+	o.StatusSnapshot = &v
+}
+
+func (o NodeRemoteProcessGroupStatusSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.NodeId != nil {
+		toSerialize["nodeId"] = o.NodeId
+	}
+	if o.Address != nil {
+		toSerialize["address"] = o.Address
+	}
+	if o.ApiPort != nil {
+		toSerialize["apiPort"] = o.ApiPort
+	}
+	if o.StatusSnapshot != nil {
+		toSerialize["statusSnapshot"] = o.StatusSnapshot
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeRemoteProcessGroupStatusSnapshotDTO struct {
+	value *NodeRemoteProcessGroupStatusSnapshotDTO
+	isSet bool
+}
+
+func (v NullableNodeRemoteProcessGroupStatusSnapshotDTO) Get() *NodeRemoteProcessGroupStatusSnapshotDTO {
+	return v.value
+}
+
+func (v *NullableNodeRemoteProcessGroupStatusSnapshotDTO) Set(val *NodeRemoteProcessGroupStatusSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeRemoteProcessGroupStatusSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeRemoteProcessGroupStatusSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeRemoteProcessGroupStatusSnapshotDTO(val *NodeRemoteProcessGroupStatusSnapshotDTO) *NullableNodeRemoteProcessGroupStatusSnapshotDTO {
+	return &NullableNodeRemoteProcessGroupStatusSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeRemoteProcessGroupStatusSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeRemoteProcessGroupStatusSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

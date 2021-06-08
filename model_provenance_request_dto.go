@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,401 @@
 
 package nifi
 
-// ProvenanceRequestDto struct for ProvenanceRequestDto
-type ProvenanceRequestDto struct {
+import (
+	"encoding/json"
+)
+
+// ProvenanceRequestDTO struct for ProvenanceRequestDTO
+type ProvenanceRequestDTO struct {
 	// The search terms used to perform the search.
-	SearchTerms map[string]string `json:"searchTerms,omitempty"`
+	SearchTerms *map[string]ProvenanceSearchValueDTO `json:"searchTerms,omitempty"`
 	// The id of the node in the cluster where this provenance originated.
-	ClusterNodeId string `json:"clusterNodeId,omitempty"`
+	ClusterNodeId *string `json:"clusterNodeId,omitempty"`
 	// The earliest event time to include in the query.
-	StartDate string `json:"startDate,omitempty"`
+	StartDate *string `json:"startDate,omitempty"`
 	// The latest event time to include in the query.
-	EndDate string `json:"endDate,omitempty"`
+	EndDate *string `json:"endDate,omitempty"`
 	// The minimum file size to include in the query.
-	MinimumFileSize string `json:"minimumFileSize,omitempty"`
+	MinimumFileSize *string `json:"minimumFileSize,omitempty"`
 	// The maximum file size to include in the query.
-	MaximumFileSize string `json:"maximumFileSize,omitempty"`
+	MaximumFileSize *string `json:"maximumFileSize,omitempty"`
 	// The maximum number of results to include.
-	MaxResults int32 `json:"maxResults,omitempty"`
+	MaxResults *int32 `json:"maxResults,omitempty"`
 	// Whether or not to summarize provenance events returned. This property is false by default.
-	Summarize bool `json:"summarize,omitempty"`
+	Summarize *bool `json:"summarize,omitempty"`
 	// Whether or not incremental results are returned. If false, provenance events are only returned once the query completes. This property is true by default.
-	IncrementalResults bool `json:"incrementalResults,omitempty"`
+	IncrementalResults *bool `json:"incrementalResults,omitempty"`
+}
+
+// NewProvenanceRequestDTO instantiates a new ProvenanceRequestDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProvenanceRequestDTO() *ProvenanceRequestDTO {
+	this := ProvenanceRequestDTO{}
+	return &this
+}
+
+// NewProvenanceRequestDTOWithDefaults instantiates a new ProvenanceRequestDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProvenanceRequestDTOWithDefaults() *ProvenanceRequestDTO {
+	this := ProvenanceRequestDTO{}
+	return &this
+}
+
+// GetSearchTerms returns the SearchTerms field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetSearchTerms() map[string]ProvenanceSearchValueDTO {
+	if o == nil || o.SearchTerms == nil {
+		var ret map[string]ProvenanceSearchValueDTO
+		return ret
+	}
+	return *o.SearchTerms
+}
+
+// GetSearchTermsOk returns a tuple with the SearchTerms field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetSearchTermsOk() (*map[string]ProvenanceSearchValueDTO, bool) {
+	if o == nil || o.SearchTerms == nil {
+		return nil, false
+	}
+	return o.SearchTerms, true
+}
+
+// HasSearchTerms returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasSearchTerms() bool {
+	if o != nil && o.SearchTerms != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSearchTerms gets a reference to the given map[string]ProvenanceSearchValueDTO and assigns it to the SearchTerms field.
+func (o *ProvenanceRequestDTO) SetSearchTerms(v map[string]ProvenanceSearchValueDTO) {
+	o.SearchTerms = &v
+}
+
+// GetClusterNodeId returns the ClusterNodeId field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetClusterNodeId() string {
+	if o == nil || o.ClusterNodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeId
+}
+
+// GetClusterNodeIdOk returns a tuple with the ClusterNodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetClusterNodeIdOk() (*string, bool) {
+	if o == nil || o.ClusterNodeId == nil {
+		return nil, false
+	}
+	return o.ClusterNodeId, true
+}
+
+// HasClusterNodeId returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasClusterNodeId() bool {
+	if o != nil && o.ClusterNodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeId gets a reference to the given string and assigns it to the ClusterNodeId field.
+func (o *ProvenanceRequestDTO) SetClusterNodeId(v string) {
+	o.ClusterNodeId = &v
+}
+
+// GetStartDate returns the StartDate field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetStartDate() string {
+	if o == nil || o.StartDate == nil {
+		var ret string
+		return ret
+	}
+	return *o.StartDate
+}
+
+// GetStartDateOk returns a tuple with the StartDate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetStartDateOk() (*string, bool) {
+	if o == nil || o.StartDate == nil {
+		return nil, false
+	}
+	return o.StartDate, true
+}
+
+// HasStartDate returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasStartDate() bool {
+	if o != nil && o.StartDate != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStartDate gets a reference to the given string and assigns it to the StartDate field.
+func (o *ProvenanceRequestDTO) SetStartDate(v string) {
+	o.StartDate = &v
+}
+
+// GetEndDate returns the EndDate field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetEndDate() string {
+	if o == nil || o.EndDate == nil {
+		var ret string
+		return ret
+	}
+	return *o.EndDate
+}
+
+// GetEndDateOk returns a tuple with the EndDate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetEndDateOk() (*string, bool) {
+	if o == nil || o.EndDate == nil {
+		return nil, false
+	}
+	return o.EndDate, true
+}
+
+// HasEndDate returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasEndDate() bool {
+	if o != nil && o.EndDate != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEndDate gets a reference to the given string and assigns it to the EndDate field.
+func (o *ProvenanceRequestDTO) SetEndDate(v string) {
+	o.EndDate = &v
+}
+
+// GetMinimumFileSize returns the MinimumFileSize field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetMinimumFileSize() string {
+	if o == nil || o.MinimumFileSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.MinimumFileSize
+}
+
+// GetMinimumFileSizeOk returns a tuple with the MinimumFileSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetMinimumFileSizeOk() (*string, bool) {
+	if o == nil || o.MinimumFileSize == nil {
+		return nil, false
+	}
+	return o.MinimumFileSize, true
+}
+
+// HasMinimumFileSize returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasMinimumFileSize() bool {
+	if o != nil && o.MinimumFileSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMinimumFileSize gets a reference to the given string and assigns it to the MinimumFileSize field.
+func (o *ProvenanceRequestDTO) SetMinimumFileSize(v string) {
+	o.MinimumFileSize = &v
+}
+
+// GetMaximumFileSize returns the MaximumFileSize field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetMaximumFileSize() string {
+	if o == nil || o.MaximumFileSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.MaximumFileSize
+}
+
+// GetMaximumFileSizeOk returns a tuple with the MaximumFileSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetMaximumFileSizeOk() (*string, bool) {
+	if o == nil || o.MaximumFileSize == nil {
+		return nil, false
+	}
+	return o.MaximumFileSize, true
+}
+
+// HasMaximumFileSize returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasMaximumFileSize() bool {
+	if o != nil && o.MaximumFileSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMaximumFileSize gets a reference to the given string and assigns it to the MaximumFileSize field.
+func (o *ProvenanceRequestDTO) SetMaximumFileSize(v string) {
+	o.MaximumFileSize = &v
+}
+
+// GetMaxResults returns the MaxResults field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetMaxResults() int32 {
+	if o == nil || o.MaxResults == nil {
+		var ret int32
+		return ret
+	}
+	return *o.MaxResults
+}
+
+// GetMaxResultsOk returns a tuple with the MaxResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetMaxResultsOk() (*int32, bool) {
+	if o == nil || o.MaxResults == nil {
+		return nil, false
+	}
+	return o.MaxResults, true
+}
+
+// HasMaxResults returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasMaxResults() bool {
+	if o != nil && o.MaxResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMaxResults gets a reference to the given int32 and assigns it to the MaxResults field.
+func (o *ProvenanceRequestDTO) SetMaxResults(v int32) {
+	o.MaxResults = &v
+}
+
+// GetSummarize returns the Summarize field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetSummarize() bool {
+	if o == nil || o.Summarize == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Summarize
+}
+
+// GetSummarizeOk returns a tuple with the Summarize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetSummarizeOk() (*bool, bool) {
+	if o == nil || o.Summarize == nil {
+		return nil, false
+	}
+	return o.Summarize, true
+}
+
+// HasSummarize returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasSummarize() bool {
+	if o != nil && o.Summarize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSummarize gets a reference to the given bool and assigns it to the Summarize field.
+func (o *ProvenanceRequestDTO) SetSummarize(v bool) {
+	o.Summarize = &v
+}
+
+// GetIncrementalResults returns the IncrementalResults field value if set, zero value otherwise.
+func (o *ProvenanceRequestDTO) GetIncrementalResults() bool {
+	if o == nil || o.IncrementalResults == nil {
+		var ret bool
+		return ret
+	}
+	return *o.IncrementalResults
+}
+
+// GetIncrementalResultsOk returns a tuple with the IncrementalResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceRequestDTO) GetIncrementalResultsOk() (*bool, bool) {
+	if o == nil || o.IncrementalResults == nil {
+		return nil, false
+	}
+	return o.IncrementalResults, true
+}
+
+// HasIncrementalResults returns a boolean if a field has been set.
+func (o *ProvenanceRequestDTO) HasIncrementalResults() bool {
+	if o != nil && o.IncrementalResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIncrementalResults gets a reference to the given bool and assigns it to the IncrementalResults field.
+func (o *ProvenanceRequestDTO) SetIncrementalResults(v bool) {
+	o.IncrementalResults = &v
+}
+
+func (o ProvenanceRequestDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.SearchTerms != nil {
+		toSerialize["searchTerms"] = o.SearchTerms
+	}
+	if o.ClusterNodeId != nil {
+		toSerialize["clusterNodeId"] = o.ClusterNodeId
+	}
+	if o.StartDate != nil {
+		toSerialize["startDate"] = o.StartDate
+	}
+	if o.EndDate != nil {
+		toSerialize["endDate"] = o.EndDate
+	}
+	if o.MinimumFileSize != nil {
+		toSerialize["minimumFileSize"] = o.MinimumFileSize
+	}
+	if o.MaximumFileSize != nil {
+		toSerialize["maximumFileSize"] = o.MaximumFileSize
+	}
+	if o.MaxResults != nil {
+		toSerialize["maxResults"] = o.MaxResults
+	}
+	if o.Summarize != nil {
+		toSerialize["summarize"] = o.Summarize
+	}
+	if o.IncrementalResults != nil {
+		toSerialize["incrementalResults"] = o.IncrementalResults
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProvenanceRequestDTO struct {
+	value *ProvenanceRequestDTO
+	isSet bool
+}
+
+func (v NullableProvenanceRequestDTO) Get() *ProvenanceRequestDTO {
+	return v.value
+}
+
+func (v *NullableProvenanceRequestDTO) Set(val *ProvenanceRequestDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProvenanceRequestDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProvenanceRequestDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProvenanceRequestDTO(val *ProvenanceRequestDTO) *NullableProvenanceRequestDTO {
+	return &NullableProvenanceRequestDTO{value: val, isSet: true}
+}
+
+func (v NullableProvenanceRequestDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProvenanceRequestDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

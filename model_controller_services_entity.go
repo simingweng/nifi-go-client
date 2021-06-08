@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ControllerServicesEntity struct for ControllerServicesEntity
 type ControllerServicesEntity struct {
 	// The current time on the system.
-	CurrentTime        string                    `json:"currentTime,omitempty"`
-	ControllerServices []ControllerServiceEntity `json:"controllerServices,omitempty"`
+	CurrentTime        *string                    `json:"currentTime,omitempty"`
+	ControllerServices *[]ControllerServiceEntity `json:"controllerServices,omitempty"`
+}
+
+// NewControllerServicesEntity instantiates a new ControllerServicesEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerServicesEntity() *ControllerServicesEntity {
+	this := ControllerServicesEntity{}
+	return &this
+}
+
+// NewControllerServicesEntityWithDefaults instantiates a new ControllerServicesEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerServicesEntityWithDefaults() *ControllerServicesEntity {
+	this := ControllerServicesEntity{}
+	return &this
+}
+
+// GetCurrentTime returns the CurrentTime field value if set, zero value otherwise.
+func (o *ControllerServicesEntity) GetCurrentTime() string {
+	if o == nil || o.CurrentTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.CurrentTime
+}
+
+// GetCurrentTimeOk returns a tuple with the CurrentTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServicesEntity) GetCurrentTimeOk() (*string, bool) {
+	if o == nil || o.CurrentTime == nil {
+		return nil, false
+	}
+	return o.CurrentTime, true
+}
+
+// HasCurrentTime returns a boolean if a field has been set.
+func (o *ControllerServicesEntity) HasCurrentTime() bool {
+	if o != nil && o.CurrentTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCurrentTime gets a reference to the given string and assigns it to the CurrentTime field.
+func (o *ControllerServicesEntity) SetCurrentTime(v string) {
+	o.CurrentTime = &v
+}
+
+// GetControllerServices returns the ControllerServices field value if set, zero value otherwise.
+func (o *ControllerServicesEntity) GetControllerServices() []ControllerServiceEntity {
+	if o == nil || o.ControllerServices == nil {
+		var ret []ControllerServiceEntity
+		return ret
+	}
+	return *o.ControllerServices
+}
+
+// GetControllerServicesOk returns a tuple with the ControllerServices field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServicesEntity) GetControllerServicesOk() (*[]ControllerServiceEntity, bool) {
+	if o == nil || o.ControllerServices == nil {
+		return nil, false
+	}
+	return o.ControllerServices, true
+}
+
+// HasControllerServices returns a boolean if a field has been set.
+func (o *ControllerServicesEntity) HasControllerServices() bool {
+	if o != nil && o.ControllerServices != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServices gets a reference to the given []ControllerServiceEntity and assigns it to the ControllerServices field.
+func (o *ControllerServicesEntity) SetControllerServices(v []ControllerServiceEntity) {
+	o.ControllerServices = &v
+}
+
+func (o ControllerServicesEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.CurrentTime != nil {
+		toSerialize["currentTime"] = o.CurrentTime
+	}
+	if o.ControllerServices != nil {
+		toSerialize["controllerServices"] = o.ControllerServices
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerServicesEntity struct {
+	value *ControllerServicesEntity
+	isSet bool
+}
+
+func (v NullableControllerServicesEntity) Get() *ControllerServicesEntity {
+	return v.value
+}
+
+func (v *NullableControllerServicesEntity) Set(val *ControllerServicesEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerServicesEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerServicesEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerServicesEntity(val *ControllerServicesEntity) *NullableControllerServicesEntity {
+	return &NullableControllerServicesEntity{value: val, isSet: true}
+}
+
+func (v NullableControllerServicesEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerServicesEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

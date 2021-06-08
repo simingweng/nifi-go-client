@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// RegistryDto struct for RegistryDto
-type RegistryDto struct {
+import (
+	"encoding/json"
+)
+
+// RegistryDTO struct for RegistryDTO
+type RegistryDTO struct {
 	// The registry identifier
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The registry name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The registry description
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The registry URI
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
+}
+
+// NewRegistryDTO instantiates a new RegistryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRegistryDTO() *RegistryDTO {
+	this := RegistryDTO{}
+	return &this
+}
+
+// NewRegistryDTOWithDefaults instantiates a new RegistryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRegistryDTOWithDefaults() *RegistryDTO {
+	this := RegistryDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *RegistryDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RegistryDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *RegistryDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *RegistryDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *RegistryDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RegistryDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *RegistryDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *RegistryDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *RegistryDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RegistryDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *RegistryDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *RegistryDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *RegistryDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RegistryDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *RegistryDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *RegistryDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+func (o RegistryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRegistryDTO struct {
+	value *RegistryDTO
+	isSet bool
+}
+
+func (v NullableRegistryDTO) Get() *RegistryDTO {
+	return v.value
+}
+
+func (v *NullableRegistryDTO) Set(val *RegistryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRegistryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRegistryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRegistryDTO(val *RegistryDTO) *NullableRegistryDTO {
+	return &NullableRegistryDTO{value: val, isSet: true}
+}
+
+func (v NullableRegistryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRegistryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

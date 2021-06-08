@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,14 +28,39 @@ var (
 // VersionsApiService VersionsApi service
 type VersionsApiService service
 
+type VersionsApiApiCreateVersionControlRequestRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	body       *CreateActiveRequestEntity
+}
+
+func (r VersionsApiApiCreateVersionControlRequestRequest) Body(body CreateActiveRequestEntity) VersionsApiApiCreateVersionControlRequestRequest {
+	r.body = &body
+	return r
+}
+
+func (r VersionsApiApiCreateVersionControlRequestRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.CreateVersionControlRequestExecute(r)
+}
+
 /*
-CreateVersionControlRequest Create a version control request
-Creates a request so that a Process Group can be placed under Version Control or have its Version Control configuration changed. Creating this request will prevent any other threads from simultaneously saving local changes to Version Control. It will not, however, actually save the local flow to the Flow Registry. A POST to /versions/process-groups/{id} should be used to initiate saving of the local flow to the Flow Registry. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * CreateVersionControlRequest Create a version control request
+ * Creates a request so that a Process Group can be placed under Version Control or have its Version Control configuration changed. Creating this request will prevent any other threads from simultaneously saving local changes to Version Control. It will not, however, actually save the local flow to the Flow Registry. A POST to /versions/process-groups/{id} should be used to initiate saving of the local flow to the Flow Registry. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The versioned flow details.
-@return string
-*/
-func (a *VersionsApiService) CreateVersionControlRequest(ctx _context.Context, body CreateActiveRequestEntity) (string, *_nethttp.Response, error) {
+ * @return VersionsApiApiCreateVersionControlRequestRequest
+ */
+func (a *VersionsApiService) CreateVersionControlRequest(ctx _context.Context) VersionsApiApiCreateVersionControlRequestRequest {
+	return VersionsApiApiCreateVersionControlRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *VersionsApiService) CreateVersionControlRequestExecute(r VersionsApiApiCreateVersionControlRequestRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -45,11 +70,19 @@ func (a *VersionsApiService) CreateVersionControlRequest(ctx _context.Context, b
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/active-requests"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.CreateVersionControlRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/active-requests"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -69,19 +102,20 @@ func (a *VersionsApiService) CreateVersionControlRequest(ctx _context.Context, b
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -106,21 +140,42 @@ func (a *VersionsApiService) CreateVersionControlRequest(ctx _context.Context, b
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// VersionsApiDeleteRevertRequestOpts Optional parameters for the method 'DeleteRevertRequest'
-type VersionsApiDeleteRevertRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type VersionsApiApiDeleteRevertRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *VersionsApiService
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r VersionsApiApiDeleteRevertRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) VersionsApiApiDeleteRevertRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r VersionsApiApiDeleteRevertRequestRequest) Execute() (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteRevertRequestExecute(r)
 }
 
 /*
-DeleteRevertRequest Deletes the Revert Request with the given ID
-Deletes the Revert Request with the given ID. After a request is created via a POST to /versions/revert-requests/process-groups/{id}, it is expected that the client will properly clean up the request by DELETE&#39;ing it, once the Revert process has completed. If the request is deleted before the request completes, then the Revert request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * DeleteRevertRequest Deletes the Revert Request with the given ID
+ * Deletes the Revert Request with the given ID. After a request is created via a POST to /versions/revert-requests/process-groups/{id}, it is expected that the client will properly clean up the request by DELETE'ing it, once the Revert process has completed. If the request is deleted before the request completes, then the Revert request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Revert Request
- * @param optional nil or *VersionsApiDeleteRevertRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return VersionedFlowUpdateRequestEntity
-*/
-func (a *VersionsApiService) DeleteRevertRequest(ctx _context.Context, id string, localVarOptionals *VersionsApiDeleteRevertRequestOpts) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiDeleteRevertRequestRequest
+ */
+func (a *VersionsApiService) DeleteRevertRequest(ctx _context.Context, id string) VersionsApiApiDeleteRevertRequestRequest {
+	return VersionsApiApiDeleteRevertRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowUpdateRequestEntity
+ */
+func (a *VersionsApiService) DeleteRevertRequestExecute(r VersionsApiApiDeleteRevertRequestRequest) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -130,16 +185,20 @@ func (a *VersionsApiService) DeleteRevertRequest(ctx _context.Context, id string
 		localVarReturnValue  VersionedFlowUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/revert-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.DeleteRevertRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/revert-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -158,18 +217,19 @@ func (a *VersionsApiService) DeleteRevertRequest(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -194,21 +254,42 @@ func (a *VersionsApiService) DeleteRevertRequest(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// VersionsApiDeleteUpdateRequestOpts Optional parameters for the method 'DeleteUpdateRequest'
-type VersionsApiDeleteUpdateRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type VersionsApiApiDeleteUpdateRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *VersionsApiService
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r VersionsApiApiDeleteUpdateRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) VersionsApiApiDeleteUpdateRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r VersionsApiApiDeleteUpdateRequestRequest) Execute() (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteUpdateRequestExecute(r)
 }
 
 /*
-DeleteUpdateRequest Deletes the Update Request with the given ID
-Deletes the Update Request with the given ID. After a request is created via a POST to /versions/update-requests/process-groups/{id}, it is expected that the client will properly clean up the request by DELETE&#39;ing it, once the Update process has completed. If the request is deleted before the request completes, then the Update request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * DeleteUpdateRequest Deletes the Update Request with the given ID
+ * Deletes the Update Request with the given ID. After a request is created via a POST to /versions/update-requests/process-groups/{id}, it is expected that the client will properly clean up the request by DELETE'ing it, once the Update process has completed. If the request is deleted before the request completes, then the Update request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Update Request
- * @param optional nil or *VersionsApiDeleteUpdateRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return VersionedFlowUpdateRequestEntity
-*/
-func (a *VersionsApiService) DeleteUpdateRequest(ctx _context.Context, id string, localVarOptionals *VersionsApiDeleteUpdateRequestOpts) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiDeleteUpdateRequestRequest
+ */
+func (a *VersionsApiService) DeleteUpdateRequest(ctx _context.Context, id string) VersionsApiApiDeleteUpdateRequestRequest {
+	return VersionsApiApiDeleteUpdateRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowUpdateRequestEntity
+ */
+func (a *VersionsApiService) DeleteUpdateRequestExecute(r VersionsApiApiDeleteUpdateRequestRequest) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -218,16 +299,20 @@ func (a *VersionsApiService) DeleteUpdateRequest(ctx _context.Context, id string
 		localVarReturnValue  VersionedFlowUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/update-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.DeleteUpdateRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/update-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -246,18 +331,19 @@ func (a *VersionsApiService) DeleteUpdateRequest(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -282,20 +368,41 @@ func (a *VersionsApiService) DeleteUpdateRequest(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// VersionsApiDeleteVersionControlRequestOpts Optional parameters for the method 'DeleteVersionControlRequest'
-type VersionsApiDeleteVersionControlRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type VersionsApiApiDeleteVersionControlRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *VersionsApiService
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r VersionsApiApiDeleteVersionControlRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) VersionsApiApiDeleteVersionControlRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r VersionsApiApiDeleteVersionControlRequestRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.DeleteVersionControlRequestExecute(r)
 }
 
 /*
-DeleteVersionControlRequest Deletes the version control request with the given ID
-Deletes the Version Control Request with the given ID. This will allow other threads to save flows to the Flow Registry. See also the documentation for POSTing to /versions/active-requests for information regarding why this is done. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * DeleteVersionControlRequest Deletes the version control request with the given ID
+ * Deletes the Version Control Request with the given ID. This will allow other threads to save flows to the Flow Registry. See also the documentation for POSTing to /versions/active-requests for information regarding why this is done. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The request ID.
- * @param optional nil or *VersionsApiDeleteVersionControlRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-*/
-func (a *VersionsApiService) DeleteVersionControlRequest(ctx _context.Context, id string, localVarOptionals *VersionsApiDeleteVersionControlRequestOpts) (*_nethttp.Response, error) {
+ * @return VersionsApiApiDeleteVersionControlRequestRequest
+ */
+func (a *VersionsApiService) DeleteVersionControlRequest(ctx _context.Context, id string) VersionsApiApiDeleteVersionControlRequestRequest {
+	return VersionsApiApiDeleteVersionControlRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *VersionsApiService) DeleteVersionControlRequestExecute(r VersionsApiApiDeleteVersionControlRequestRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -304,16 +411,20 @@ func (a *VersionsApiService) DeleteVersionControlRequest(ctx _context.Context, i
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/active-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.DeleteVersionControlRequest")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/active-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -332,18 +443,19 @@ func (a *VersionsApiService) DeleteVersionControlRequest(ctx _context.Context, i
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -359,13 +471,35 @@ func (a *VersionsApiService) DeleteVersionControlRequest(ctx _context.Context, i
 	return localVarHTTPResponse, nil
 }
 
+type VersionsApiApiExportFlowVersionRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+}
+
+func (r VersionsApiApiExportFlowVersionRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.ExportFlowVersionExecute(r)
+}
+
 /*
-ExportFlowVersion Gets the latest version of a Process Group for download
+ * ExportFlowVersion Gets the latest version of a Process Group for download
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return string
-*/
-func (a *VersionsApiService) ExportFlowVersion(ctx _context.Context, id string) (string, *_nethttp.Response, error) {
+ * @return VersionsApiApiExportFlowVersionRequest
+ */
+func (a *VersionsApiService) ExportFlowVersion(ctx _context.Context, id string) VersionsApiApiExportFlowVersionRequest {
+	return VersionsApiApiExportFlowVersionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *VersionsApiService) ExportFlowVersionExecute(r VersionsApiApiExportFlowVersionRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -375,9 +509,13 @@ func (a *VersionsApiService) ExportFlowVersion(ctx _context.Context, id string) 
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/process-groups/{id}/download"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.ExportFlowVersion")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/process-groups/{id}/download"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -400,18 +538,19 @@ func (a *VersionsApiService) ExportFlowVersion(ctx _context.Context, id string) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -436,14 +575,36 @@ func (a *VersionsApiService) ExportFlowVersion(ctx _context.Context, id string) 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiGetRevertRequestRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+}
+
+func (r VersionsApiApiGetRevertRequestRequest) Execute() (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRevertRequestExecute(r)
+}
+
 /*
-GetRevertRequest Returns the Revert Request with the given ID
-Returns the Revert Request with the given ID. Once a Revert Request has been created by performing a POST to /versions/revert-requests/process-groups/{id}, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetRevertRequest Returns the Revert Request with the given ID
+ * Returns the Revert Request with the given ID. Once a Revert Request has been created by performing a POST to /versions/revert-requests/process-groups/{id}, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Revert Request
-@return VersionedFlowUpdateRequestEntity
-*/
-func (a *VersionsApiService) GetRevertRequest(ctx _context.Context, id string) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiGetRevertRequestRequest
+ */
+func (a *VersionsApiService) GetRevertRequest(ctx _context.Context, id string) VersionsApiApiGetRevertRequestRequest {
+	return VersionsApiApiGetRevertRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowUpdateRequestEntity
+ */
+func (a *VersionsApiService) GetRevertRequestExecute(r VersionsApiApiGetRevertRequestRequest) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -453,9 +614,13 @@ func (a *VersionsApiService) GetRevertRequest(ctx _context.Context, id string) (
 		localVarReturnValue  VersionedFlowUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/revert-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.GetRevertRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/revert-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -478,18 +643,19 @@ func (a *VersionsApiService) GetRevertRequest(ctx _context.Context, id string) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -514,14 +680,36 @@ func (a *VersionsApiService) GetRevertRequest(ctx _context.Context, id string) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiGetUpdateRequestRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+}
+
+func (r VersionsApiApiGetUpdateRequestRequest) Execute() (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetUpdateRequestExecute(r)
+}
+
 /*
-GetUpdateRequest Returns the Update Request with the given ID
-Returns the Update Request with the given ID. Once an Update Request has been created by performing a POST to /versions/update-requests/process-groups/{id}, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetUpdateRequest Returns the Update Request with the given ID
+ * Returns the Update Request with the given ID. Once an Update Request has been created by performing a POST to /versions/update-requests/process-groups/{id}, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Update Request
-@return VersionedFlowUpdateRequestEntity
-*/
-func (a *VersionsApiService) GetUpdateRequest(ctx _context.Context, id string) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiGetUpdateRequestRequest
+ */
+func (a *VersionsApiService) GetUpdateRequest(ctx _context.Context, id string) VersionsApiApiGetUpdateRequestRequest {
+	return VersionsApiApiGetUpdateRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowUpdateRequestEntity
+ */
+func (a *VersionsApiService) GetUpdateRequestExecute(r VersionsApiApiGetUpdateRequestRequest) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -531,9 +719,13 @@ func (a *VersionsApiService) GetUpdateRequest(ctx _context.Context, id string) (
 		localVarReturnValue  VersionedFlowUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/update-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.GetUpdateRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/update-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -556,18 +748,19 @@ func (a *VersionsApiService) GetUpdateRequest(ctx _context.Context, id string) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -592,14 +785,36 @@ func (a *VersionsApiService) GetUpdateRequest(ctx _context.Context, id string) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiGetVersionInformationRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+}
+
+func (r VersionsApiApiGetVersionInformationRequest) Execute() (VersionControlInformationEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetVersionInformationExecute(r)
+}
+
 /*
-GetVersionInformation Gets the Version Control information for a process group
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetVersionInformation Gets the Version Control information for a process group
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return VersionControlInformationEntity
-*/
-func (a *VersionsApiService) GetVersionInformation(ctx _context.Context, id string) (VersionControlInformationEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiGetVersionInformationRequest
+ */
+func (a *VersionsApiService) GetVersionInformation(ctx _context.Context, id string) VersionsApiApiGetVersionInformationRequest {
+	return VersionsApiApiGetVersionInformationRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionControlInformationEntity
+ */
+func (a *VersionsApiService) GetVersionInformationExecute(r VersionsApiApiGetVersionInformationRequest) (VersionControlInformationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -609,9 +824,13 @@ func (a *VersionsApiService) GetVersionInformation(ctx _context.Context, id stri
 		localVarReturnValue  VersionControlInformationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.GetVersionInformation")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -634,18 +853,19 @@ func (a *VersionsApiService) GetVersionInformation(ctx _context.Context, id stri
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -670,15 +890,42 @@ func (a *VersionsApiService) GetVersionInformation(ctx _context.Context, id stri
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiInitiateRevertFlowVersionRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+	body       *VersionControlInformationEntity
+}
+
+func (r VersionsApiApiInitiateRevertFlowVersionRequest) Body(body VersionControlInformationEntity) VersionsApiApiInitiateRevertFlowVersionRequest {
+	r.body = &body
+	return r
+}
+
+func (r VersionsApiApiInitiateRevertFlowVersionRequest) Execute() (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.InitiateRevertFlowVersionExecute(r)
+}
+
 /*
-InitiateRevertFlowVersion Initiate the Revert Request of a Process Group with the given ID
-For a Process Group that is already under Version Control, this will initiate the action of reverting any local changes that have been made to the Process Group since it was last synchronized with the Flow Registry. This will result in the flow matching the Versioned Flow that exists in the Flow Registry. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a VersionedFlowUpdateRequestEntity, and the process of updating the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /versions/revert-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /versions/revert-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * InitiateRevertFlowVersion Initiate the Revert Request of a Process Group with the given ID
+ * For a Process Group that is already under Version Control, this will initiate the action of reverting any local changes that have been made to the Process Group since it was last synchronized with the Flow Registry. This will result in the flow matching the Versioned Flow that exists in the Flow Registry. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a VersionedFlowUpdateRequestEntity, and the process of updating the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /versions/revert-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /versions/revert-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The controller service configuration details.
-@return VersionedFlowUpdateRequestEntity
-*/
-func (a *VersionsApiService) InitiateRevertFlowVersion(ctx _context.Context, id string, body VersionControlInformationEntity) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiInitiateRevertFlowVersionRequest
+ */
+func (a *VersionsApiService) InitiateRevertFlowVersion(ctx _context.Context, id string) VersionsApiApiInitiateRevertFlowVersionRequest {
+	return VersionsApiApiInitiateRevertFlowVersionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowUpdateRequestEntity
+ */
+func (a *VersionsApiService) InitiateRevertFlowVersionExecute(r VersionsApiApiInitiateRevertFlowVersionRequest) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -688,13 +935,20 @@ func (a *VersionsApiService) InitiateRevertFlowVersion(ctx _context.Context, id 
 		localVarReturnValue  VersionedFlowUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/revert-requests/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.InitiateRevertFlowVersion")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/revert-requests/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -714,19 +968,20 @@ func (a *VersionsApiService) InitiateRevertFlowVersion(ctx _context.Context, id 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -751,15 +1006,42 @@ func (a *VersionsApiService) InitiateRevertFlowVersion(ctx _context.Context, id 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiInitiateVersionControlUpdateRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+	body       *VersionControlInformationEntity
+}
+
+func (r VersionsApiApiInitiateVersionControlUpdateRequest) Body(body VersionControlInformationEntity) VersionsApiApiInitiateVersionControlUpdateRequest {
+	r.body = &body
+	return r
+}
+
+func (r VersionsApiApiInitiateVersionControlUpdateRequest) Execute() (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.InitiateVersionControlUpdateExecute(r)
+}
+
 /*
-InitiateVersionControlUpdate Initiate the Update Request of a Process Group with the given ID
-For a Process Group that is already under Version Control, this will initiate the action of changing from a specific version of the flow in the Flow Registry to a different version of the flow. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a VersionedFlowUpdateRequestEntity, and the process of updating the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /versions/update-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /versions/update-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * InitiateVersionControlUpdate Initiate the Update Request of a Process Group with the given ID
+ * For a Process Group that is already under Version Control, this will initiate the action of changing from a specific version of the flow in the Flow Registry to a different version of the flow. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a VersionedFlowUpdateRequestEntity, and the process of updating the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /versions/update-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /versions/update-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The controller service configuration details.
-@return VersionedFlowUpdateRequestEntity
-*/
-func (a *VersionsApiService) InitiateVersionControlUpdate(ctx _context.Context, id string, body VersionControlInformationEntity) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiInitiateVersionControlUpdateRequest
+ */
+func (a *VersionsApiService) InitiateVersionControlUpdate(ctx _context.Context, id string) VersionsApiApiInitiateVersionControlUpdateRequest {
+	return VersionsApiApiInitiateVersionControlUpdateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowUpdateRequestEntity
+ */
+func (a *VersionsApiService) InitiateVersionControlUpdateExecute(r VersionsApiApiInitiateVersionControlUpdateRequest) (VersionedFlowUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -769,13 +1051,20 @@ func (a *VersionsApiService) InitiateVersionControlUpdate(ctx _context.Context, 
 		localVarReturnValue  VersionedFlowUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/update-requests/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.InitiateVersionControlUpdate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/update-requests/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -795,19 +1084,20 @@ func (a *VersionsApiService) InitiateVersionControlUpdate(ctx _context.Context, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -832,15 +1122,42 @@ func (a *VersionsApiService) InitiateVersionControlUpdate(ctx _context.Context, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiSaveToFlowRegistryRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+	body       *StartVersionControlRequestEntity
+}
+
+func (r VersionsApiApiSaveToFlowRegistryRequest) Body(body StartVersionControlRequestEntity) VersionsApiApiSaveToFlowRegistryRequest {
+	r.body = &body
+	return r
+}
+
+func (r VersionsApiApiSaveToFlowRegistryRequest) Execute() (VersionControlInformationEntity, *_nethttp.Response, error) {
+	return r.ApiService.SaveToFlowRegistryExecute(r)
+}
+
 /*
-SaveToFlowRegistry Save the Process Group with the given ID
-Begins version controlling the Process Group with the given ID or commits changes to the Versioned Flow, depending on if the provided VersionControlInformation includes a flowId. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * SaveToFlowRegistry Save the Process Group with the given ID
+ * Begins version controlling the Process Group with the given ID or commits changes to the Versioned Flow, depending on if the provided VersionControlInformation includes a flowId. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The versioned flow details.
-@return VersionControlInformationEntity
-*/
-func (a *VersionsApiService) SaveToFlowRegistry(ctx _context.Context, id string, body StartVersionControlRequestEntity) (VersionControlInformationEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiSaveToFlowRegistryRequest
+ */
+func (a *VersionsApiService) SaveToFlowRegistry(ctx _context.Context, id string) VersionsApiApiSaveToFlowRegistryRequest {
+	return VersionsApiApiSaveToFlowRegistryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionControlInformationEntity
+ */
+func (a *VersionsApiService) SaveToFlowRegistryExecute(r VersionsApiApiSaveToFlowRegistryRequest) (VersionControlInformationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -850,13 +1167,20 @@ func (a *VersionsApiService) SaveToFlowRegistry(ctx _context.Context, id string,
 		localVarReturnValue  VersionControlInformationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.SaveToFlowRegistry")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -876,19 +1200,20 @@ func (a *VersionsApiService) SaveToFlowRegistry(ctx _context.Context, id string,
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -913,25 +1238,52 @@ func (a *VersionsApiService) SaveToFlowRegistry(ctx _context.Context, id string,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// VersionsApiStopVersionControlOpts Optional parameters for the method 'StopVersionControl'
-type VersionsApiStopVersionControlOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type VersionsApiApiStopVersionControlRequest struct {
+	ctx                          _context.Context
+	ApiService                   *VersionsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r VersionsApiApiStopVersionControlRequest) Version(version string) VersionsApiApiStopVersionControlRequest {
+	r.version = &version
+	return r
+}
+func (r VersionsApiApiStopVersionControlRequest) ClientId(clientId string) VersionsApiApiStopVersionControlRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r VersionsApiApiStopVersionControlRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) VersionsApiApiStopVersionControlRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r VersionsApiApiStopVersionControlRequest) Execute() (VersionControlInformationEntity, *_nethttp.Response, error) {
+	return r.ApiService.StopVersionControlExecute(r)
 }
 
 /*
-StopVersionControl Stops version controlling the Process Group with the given ID
-Stops version controlling the Process Group with the given ID. The Process Group will no longer track to any Versioned Flow. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * StopVersionControl Stops version controlling the Process Group with the given ID
+ * Stops version controlling the Process Group with the given ID. The Process Group will no longer track to any Versioned Flow. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param optional nil or *VersionsApiStopVersionControlOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The version is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return VersionControlInformationEntity
-*/
-func (a *VersionsApiService) StopVersionControl(ctx _context.Context, id string, localVarOptionals *VersionsApiStopVersionControlOpts) (VersionControlInformationEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiStopVersionControlRequest
+ */
+func (a *VersionsApiService) StopVersionControl(ctx _context.Context, id string) VersionsApiApiStopVersionControlRequest {
+	return VersionsApiApiStopVersionControlRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionControlInformationEntity
+ */
+func (a *VersionsApiService) StopVersionControlExecute(r VersionsApiApiStopVersionControlRequest) (VersionControlInformationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -941,22 +1293,26 @@ func (a *VersionsApiService) StopVersionControl(ctx _context.Context, id string,
 		localVarReturnValue  VersionControlInformationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.StopVersionControl")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -975,18 +1331,19 @@ func (a *VersionsApiService) StopVersionControl(ctx _context.Context, id string,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1011,15 +1368,42 @@ func (a *VersionsApiService) StopVersionControl(ctx _context.Context, id string,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiUpdateFlowVersionRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+	body       *VersionedFlowSnapshotEntity
+}
+
+func (r VersionsApiApiUpdateFlowVersionRequest) Body(body VersionedFlowSnapshotEntity) VersionsApiApiUpdateFlowVersionRequest {
+	r.body = &body
+	return r
+}
+
+func (r VersionsApiApiUpdateFlowVersionRequest) Execute() (VersionControlInformationEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateFlowVersionExecute(r)
+}
+
 /*
-UpdateFlowVersion Update the version of a Process Group with the given ID
-For a Process Group that is already under Version Control, this will update the version of the flow to a different version. This endpoint expects that the given snapshot will not modify any Processor that is currently running or any Controller Service that is enabled. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateFlowVersion Update the version of a Process Group with the given ID
+ * For a Process Group that is already under Version Control, this will update the version of the flow to a different version. This endpoint expects that the given snapshot will not modify any Processor that is currently running or any Controller Service that is enabled. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The controller service configuration details.
-@return VersionControlInformationEntity
-*/
-func (a *VersionsApiService) UpdateFlowVersion(ctx _context.Context, id string, body VersionedFlowSnapshotEntity) (VersionControlInformationEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiUpdateFlowVersionRequest
+ */
+func (a *VersionsApiService) UpdateFlowVersion(ctx _context.Context, id string) VersionsApiApiUpdateFlowVersionRequest {
+	return VersionsApiApiUpdateFlowVersionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionControlInformationEntity
+ */
+func (a *VersionsApiService) UpdateFlowVersionExecute(r VersionsApiApiUpdateFlowVersionRequest) (VersionControlInformationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1029,13 +1413,20 @@ func (a *VersionsApiService) UpdateFlowVersion(ctx _context.Context, id string, 
 		localVarReturnValue  VersionControlInformationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.UpdateFlowVersion")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1055,19 +1446,20 @@ func (a *VersionsApiService) UpdateFlowVersion(ctx _context.Context, id string, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1092,15 +1484,42 @@ func (a *VersionsApiService) UpdateFlowVersion(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type VersionsApiApiUpdateVersionControlRequestRequest struct {
+	ctx        _context.Context
+	ApiService *VersionsApiService
+	id         string
+	body       *VersionControlComponentMappingEntity
+}
+
+func (r VersionsApiApiUpdateVersionControlRequestRequest) Body(body VersionControlComponentMappingEntity) VersionsApiApiUpdateVersionControlRequestRequest {
+	r.body = &body
+	return r
+}
+
+func (r VersionsApiApiUpdateVersionControlRequestRequest) Execute() (VersionControlInformationEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateVersionControlRequestExecute(r)
+}
+
 /*
-UpdateVersionControlRequest Updates the request with the given ID
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateVersionControlRequest Updates the request with the given ID
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The request ID.
- * @param body The version control component mapping.
-@return VersionControlInformationEntity
-*/
-func (a *VersionsApiService) UpdateVersionControlRequest(ctx _context.Context, id string, body VersionControlComponentMappingEntity) (VersionControlInformationEntity, *_nethttp.Response, error) {
+ * @return VersionsApiApiUpdateVersionControlRequestRequest
+ */
+func (a *VersionsApiService) UpdateVersionControlRequest(ctx _context.Context, id string) VersionsApiApiUpdateVersionControlRequestRequest {
+	return VersionsApiApiUpdateVersionControlRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionControlInformationEntity
+ */
+func (a *VersionsApiService) UpdateVersionControlRequestExecute(r VersionsApiApiUpdateVersionControlRequestRequest) (VersionControlInformationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1110,13 +1529,20 @@ func (a *VersionsApiService) UpdateVersionControlRequest(ctx _context.Context, i
 		localVarReturnValue  VersionControlInformationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/versions/active-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersionsApiService.UpdateVersionControlRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/versions/active-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1136,19 +1562,20 @@ func (a *VersionsApiService) UpdateVersionControlRequest(ctx _context.Context, i
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

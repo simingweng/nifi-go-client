@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// VariableDto struct for VariableDto
-type VariableDto struct {
+import (
+	"encoding/json"
+)
+
+// VariableDTO struct for VariableDTO
+type VariableDTO struct {
 	// The name of the variable
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The value of the variable
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
 	// The ID of the Process Group where this Variable is defined
-	ProcessGroupId string `json:"processGroupId,omitempty"`
+	ProcessGroupId *string `json:"processGroupId,omitempty"`
 	// A set of all components that will be affected if the value of this variable is changed
-	AffectedComponents []AffectedComponentEntity `json:"affectedComponents,omitempty"`
+	AffectedComponents *[]AffectedComponentEntity `json:"affectedComponents,omitempty"`
+}
+
+// NewVariableDTO instantiates a new VariableDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVariableDTO() *VariableDTO {
+	this := VariableDTO{}
+	return &this
+}
+
+// NewVariableDTOWithDefaults instantiates a new VariableDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVariableDTOWithDefaults() *VariableDTO {
+	this := VariableDTO{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VariableDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VariableDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VariableDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetValue returns the Value field value if set, zero value otherwise.
+func (o *VariableDTO) GetValue() string {
+	if o == nil || o.Value == nil {
+		var ret string
+		return ret
+	}
+	return *o.Value
+}
+
+// GetValueOk returns a tuple with the Value field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableDTO) GetValueOk() (*string, bool) {
+	if o == nil || o.Value == nil {
+		return nil, false
+	}
+	return o.Value, true
+}
+
+// HasValue returns a boolean if a field has been set.
+func (o *VariableDTO) HasValue() bool {
+	if o != nil && o.Value != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValue gets a reference to the given string and assigns it to the Value field.
+func (o *VariableDTO) SetValue(v string) {
+	o.Value = &v
+}
+
+// GetProcessGroupId returns the ProcessGroupId field value if set, zero value otherwise.
+func (o *VariableDTO) GetProcessGroupId() string {
+	if o == nil || o.ProcessGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProcessGroupId
+}
+
+// GetProcessGroupIdOk returns a tuple with the ProcessGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableDTO) GetProcessGroupIdOk() (*string, bool) {
+	if o == nil || o.ProcessGroupId == nil {
+		return nil, false
+	}
+	return o.ProcessGroupId, true
+}
+
+// HasProcessGroupId returns a boolean if a field has been set.
+func (o *VariableDTO) HasProcessGroupId() bool {
+	if o != nil && o.ProcessGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupId gets a reference to the given string and assigns it to the ProcessGroupId field.
+func (o *VariableDTO) SetProcessGroupId(v string) {
+	o.ProcessGroupId = &v
+}
+
+// GetAffectedComponents returns the AffectedComponents field value if set, zero value otherwise.
+func (o *VariableDTO) GetAffectedComponents() []AffectedComponentEntity {
+	if o == nil || o.AffectedComponents == nil {
+		var ret []AffectedComponentEntity
+		return ret
+	}
+	return *o.AffectedComponents
+}
+
+// GetAffectedComponentsOk returns a tuple with the AffectedComponents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableDTO) GetAffectedComponentsOk() (*[]AffectedComponentEntity, bool) {
+	if o == nil || o.AffectedComponents == nil {
+		return nil, false
+	}
+	return o.AffectedComponents, true
+}
+
+// HasAffectedComponents returns a boolean if a field has been set.
+func (o *VariableDTO) HasAffectedComponents() bool {
+	if o != nil && o.AffectedComponents != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAffectedComponents gets a reference to the given []AffectedComponentEntity and assigns it to the AffectedComponents field.
+func (o *VariableDTO) SetAffectedComponents(v []AffectedComponentEntity) {
+	o.AffectedComponents = &v
+}
+
+func (o VariableDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Value != nil {
+		toSerialize["value"] = o.Value
+	}
+	if o.ProcessGroupId != nil {
+		toSerialize["processGroupId"] = o.ProcessGroupId
+	}
+	if o.AffectedComponents != nil {
+		toSerialize["affectedComponents"] = o.AffectedComponents
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVariableDTO struct {
+	value *VariableDTO
+	isSet bool
+}
+
+func (v NullableVariableDTO) Get() *VariableDTO {
+	return v.value
+}
+
+func (v *NullableVariableDTO) Set(val *VariableDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVariableDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVariableDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVariableDTO(val *VariableDTO) *NullableVariableDTO {
+	return &NullableVariableDTO{value: val, isSet: true}
+}
+
+func (v NullableVariableDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVariableDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

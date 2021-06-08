@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// RevisionDto struct for RevisionDto
-type RevisionDto struct {
+import (
+	"encoding/json"
+)
+
+// RevisionDTO struct for RevisionDTO
+type RevisionDTO struct {
 	// A client identifier used to make a request. By including a client identifier, the API can allow multiple requests without needing the current revision. Due to the asynchronous nature of requests/responses this was implemented to allow the client to make numerous requests without having to wait for the previous response to come back
-	ClientId string `json:"clientId,omitempty"`
+	ClientId *string `json:"clientId,omitempty"`
 	// NiFi employs an optimistic locking strategy where the client must include a revision in their request when performing an update. In a response to a mutable flow request, this field represents the updated base version.
-	Version int64 `json:"version,omitempty"`
+	Version *int64 `json:"version,omitempty"`
 	// The user that last modified the flow.
-	LastModifier string `json:"lastModifier,omitempty"`
+	LastModifier *string `json:"lastModifier,omitempty"`
+}
+
+// NewRevisionDTO instantiates a new RevisionDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRevisionDTO() *RevisionDTO {
+	this := RevisionDTO{}
+	return &this
+}
+
+// NewRevisionDTOWithDefaults instantiates a new RevisionDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRevisionDTOWithDefaults() *RevisionDTO {
+	this := RevisionDTO{}
+	return &this
+}
+
+// GetClientId returns the ClientId field value if set, zero value otherwise.
+func (o *RevisionDTO) GetClientId() string {
+	if o == nil || o.ClientId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClientId
+}
+
+// GetClientIdOk returns a tuple with the ClientId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RevisionDTO) GetClientIdOk() (*string, bool) {
+	if o == nil || o.ClientId == nil {
+		return nil, false
+	}
+	return o.ClientId, true
+}
+
+// HasClientId returns a boolean if a field has been set.
+func (o *RevisionDTO) HasClientId() bool {
+	if o != nil && o.ClientId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClientId gets a reference to the given string and assigns it to the ClientId field.
+func (o *RevisionDTO) SetClientId(v string) {
+	o.ClientId = &v
+}
+
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *RevisionDTO) GetVersion() int64 {
+	if o == nil || o.Version == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RevisionDTO) GetVersionOk() (*int64, bool) {
+	if o == nil || o.Version == nil {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *RevisionDTO) HasVersion() bool {
+	if o != nil && o.Version != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given int64 and assigns it to the Version field.
+func (o *RevisionDTO) SetVersion(v int64) {
+	o.Version = &v
+}
+
+// GetLastModifier returns the LastModifier field value if set, zero value otherwise.
+func (o *RevisionDTO) GetLastModifier() string {
+	if o == nil || o.LastModifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.LastModifier
+}
+
+// GetLastModifierOk returns a tuple with the LastModifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RevisionDTO) GetLastModifierOk() (*string, bool) {
+	if o == nil || o.LastModifier == nil {
+		return nil, false
+	}
+	return o.LastModifier, true
+}
+
+// HasLastModifier returns a boolean if a field has been set.
+func (o *RevisionDTO) HasLastModifier() bool {
+	if o != nil && o.LastModifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLastModifier gets a reference to the given string and assigns it to the LastModifier field.
+func (o *RevisionDTO) SetLastModifier(v string) {
+	o.LastModifier = &v
+}
+
+func (o RevisionDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ClientId != nil {
+		toSerialize["clientId"] = o.ClientId
+	}
+	if o.Version != nil {
+		toSerialize["version"] = o.Version
+	}
+	if o.LastModifier != nil {
+		toSerialize["lastModifier"] = o.LastModifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRevisionDTO struct {
+	value *RevisionDTO
+	isSet bool
+}
+
+func (v NullableRevisionDTO) Get() *RevisionDTO {
+	return v.value
+}
+
+func (v *NullableRevisionDTO) Set(val *RevisionDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRevisionDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRevisionDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRevisionDTO(val *RevisionDTO) *NullableRevisionDTO {
+	return &NullableRevisionDTO{value: val, isSet: true}
+}
+
+func (v NullableRevisionDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRevisionDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

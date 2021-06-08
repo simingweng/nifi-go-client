@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ControllerBulletinsEntity struct for ControllerBulletinsEntity
 type ControllerBulletinsEntity struct {
 	// System level bulletins to be reported to the user.
-	Bulletins []BulletinEntity `json:"bulletins,omitempty"`
+	Bulletins *[]BulletinEntity `json:"bulletins,omitempty"`
 	// Controller service bulletins to be reported to the user.
-	ControllerServiceBulletins []BulletinEntity `json:"controllerServiceBulletins,omitempty"`
+	ControllerServiceBulletins *[]BulletinEntity `json:"controllerServiceBulletins,omitempty"`
 	// Reporting task bulletins to be reported to the user.
-	ReportingTaskBulletins []BulletinEntity `json:"reportingTaskBulletins,omitempty"`
+	ReportingTaskBulletins *[]BulletinEntity `json:"reportingTaskBulletins,omitempty"`
+}
+
+// NewControllerBulletinsEntity instantiates a new ControllerBulletinsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerBulletinsEntity() *ControllerBulletinsEntity {
+	this := ControllerBulletinsEntity{}
+	return &this
+}
+
+// NewControllerBulletinsEntityWithDefaults instantiates a new ControllerBulletinsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerBulletinsEntityWithDefaults() *ControllerBulletinsEntity {
+	this := ControllerBulletinsEntity{}
+	return &this
+}
+
+// GetBulletins returns the Bulletins field value if set, zero value otherwise.
+func (o *ControllerBulletinsEntity) GetBulletins() []BulletinEntity {
+	if o == nil || o.Bulletins == nil {
+		var ret []BulletinEntity
+		return ret
+	}
+	return *o.Bulletins
+}
+
+// GetBulletinsOk returns a tuple with the Bulletins field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerBulletinsEntity) GetBulletinsOk() (*[]BulletinEntity, bool) {
+	if o == nil || o.Bulletins == nil {
+		return nil, false
+	}
+	return o.Bulletins, true
+}
+
+// HasBulletins returns a boolean if a field has been set.
+func (o *ControllerBulletinsEntity) HasBulletins() bool {
+	if o != nil && o.Bulletins != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBulletins gets a reference to the given []BulletinEntity and assigns it to the Bulletins field.
+func (o *ControllerBulletinsEntity) SetBulletins(v []BulletinEntity) {
+	o.Bulletins = &v
+}
+
+// GetControllerServiceBulletins returns the ControllerServiceBulletins field value if set, zero value otherwise.
+func (o *ControllerBulletinsEntity) GetControllerServiceBulletins() []BulletinEntity {
+	if o == nil || o.ControllerServiceBulletins == nil {
+		var ret []BulletinEntity
+		return ret
+	}
+	return *o.ControllerServiceBulletins
+}
+
+// GetControllerServiceBulletinsOk returns a tuple with the ControllerServiceBulletins field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerBulletinsEntity) GetControllerServiceBulletinsOk() (*[]BulletinEntity, bool) {
+	if o == nil || o.ControllerServiceBulletins == nil {
+		return nil, false
+	}
+	return o.ControllerServiceBulletins, true
+}
+
+// HasControllerServiceBulletins returns a boolean if a field has been set.
+func (o *ControllerBulletinsEntity) HasControllerServiceBulletins() bool {
+	if o != nil && o.ControllerServiceBulletins != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServiceBulletins gets a reference to the given []BulletinEntity and assigns it to the ControllerServiceBulletins field.
+func (o *ControllerBulletinsEntity) SetControllerServiceBulletins(v []BulletinEntity) {
+	o.ControllerServiceBulletins = &v
+}
+
+// GetReportingTaskBulletins returns the ReportingTaskBulletins field value if set, zero value otherwise.
+func (o *ControllerBulletinsEntity) GetReportingTaskBulletins() []BulletinEntity {
+	if o == nil || o.ReportingTaskBulletins == nil {
+		var ret []BulletinEntity
+		return ret
+	}
+	return *o.ReportingTaskBulletins
+}
+
+// GetReportingTaskBulletinsOk returns a tuple with the ReportingTaskBulletins field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerBulletinsEntity) GetReportingTaskBulletinsOk() (*[]BulletinEntity, bool) {
+	if o == nil || o.ReportingTaskBulletins == nil {
+		return nil, false
+	}
+	return o.ReportingTaskBulletins, true
+}
+
+// HasReportingTaskBulletins returns a boolean if a field has been set.
+func (o *ControllerBulletinsEntity) HasReportingTaskBulletins() bool {
+	if o != nil && o.ReportingTaskBulletins != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReportingTaskBulletins gets a reference to the given []BulletinEntity and assigns it to the ReportingTaskBulletins field.
+func (o *ControllerBulletinsEntity) SetReportingTaskBulletins(v []BulletinEntity) {
+	o.ReportingTaskBulletins = &v
+}
+
+func (o ControllerBulletinsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Bulletins != nil {
+		toSerialize["bulletins"] = o.Bulletins
+	}
+	if o.ControllerServiceBulletins != nil {
+		toSerialize["controllerServiceBulletins"] = o.ControllerServiceBulletins
+	}
+	if o.ReportingTaskBulletins != nil {
+		toSerialize["reportingTaskBulletins"] = o.ReportingTaskBulletins
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerBulletinsEntity struct {
+	value *ControllerBulletinsEntity
+	isSet bool
+}
+
+func (v NullableControllerBulletinsEntity) Get() *ControllerBulletinsEntity {
+	return v.value
+}
+
+func (v *NullableControllerBulletinsEntity) Set(val *ControllerBulletinsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerBulletinsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerBulletinsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerBulletinsEntity(val *ControllerBulletinsEntity) *NullableControllerBulletinsEntity {
+	return &NullableControllerBulletinsEntity{value: val, isSet: true}
+}
+
+func (v NullableControllerBulletinsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerBulletinsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

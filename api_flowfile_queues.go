@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // FlowfileQueuesApiService FlowfileQueuesApi service
 type FlowfileQueuesApiService service
 
+type FlowfileQueuesApiApiCreateDropRequestRequest struct {
+	ctx        _context.Context
+	ApiService *FlowfileQueuesApiService
+	id         string
+}
+
+func (r FlowfileQueuesApiApiCreateDropRequestRequest) Execute() (DropRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateDropRequestExecute(r)
+}
+
 /*
-CreateDropRequest Creates a request to drop the contents of the queue in this connection.
+ * CreateDropRequest Creates a request to drop the contents of the queue in this connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
-@return DropRequestEntity
-*/
-func (a *FlowfileQueuesApiService) CreateDropRequest(ctx _context.Context, id string) (DropRequestEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiCreateDropRequestRequest
+ */
+func (a *FlowfileQueuesApiService) CreateDropRequest(ctx _context.Context, id string) FlowfileQueuesApiApiCreateDropRequestRequest {
+	return FlowfileQueuesApiApiCreateDropRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return DropRequestEntity
+ */
+func (a *FlowfileQueuesApiService) CreateDropRequestExecute(r FlowfileQueuesApiApiCreateDropRequestRequest) (DropRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *FlowfileQueuesApiService) CreateDropRequest(ctx _context.Context, id st
 		localVarReturnValue  DropRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/drop-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.CreateDropRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flowfile-queues/{id}/drop-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *FlowfileQueuesApiService) CreateDropRequest(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,13 +132,35 @@ func (a *FlowfileQueuesApiService) CreateDropRequest(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowfileQueuesApiApiCreateFlowFileListingRequest struct {
+	ctx        _context.Context
+	ApiService *FlowfileQueuesApiService
+	id         string
+}
+
+func (r FlowfileQueuesApiApiCreateFlowFileListingRequest) Execute() (ListingRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateFlowFileListingExecute(r)
+}
+
 /*
-CreateFlowFileListing Lists the contents of the queue in this connection.
+ * CreateFlowFileListing Lists the contents of the queue in this connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
-@return ListingRequestEntity
-*/
-func (a *FlowfileQueuesApiService) CreateFlowFileListing(ctx _context.Context, id string) (ListingRequestEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiCreateFlowFileListingRequest
+ */
+func (a *FlowfileQueuesApiService) CreateFlowFileListing(ctx _context.Context, id string) FlowfileQueuesApiApiCreateFlowFileListingRequest {
+	return FlowfileQueuesApiApiCreateFlowFileListingRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ListingRequestEntity
+ */
+func (a *FlowfileQueuesApiService) CreateFlowFileListingExecute(r FlowfileQueuesApiApiCreateFlowFileListingRequest) (ListingRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -121,9 +170,13 @@ func (a *FlowfileQueuesApiService) CreateFlowFileListing(ctx _context.Context, i
 		localVarReturnValue  ListingRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/listing-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.CreateFlowFileListing")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flowfile-queues/{id}/listing-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -146,18 +199,19 @@ func (a *FlowfileQueuesApiService) CreateFlowFileListing(ctx _context.Context, i
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -182,14 +236,38 @@ func (a *FlowfileQueuesApiService) CreateFlowFileListing(ctx _context.Context, i
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowfileQueuesApiApiDeleteListingRequestRequest struct {
+	ctx              _context.Context
+	ApiService       *FlowfileQueuesApiService
+	id               string
+	listingRequestId string
+}
+
+func (r FlowfileQueuesApiApiDeleteListingRequestRequest) Execute() (ListingRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteListingRequestExecute(r)
+}
+
 /*
-DeleteListingRequest Cancels and/or removes a request to list the contents of this connection.
+ * DeleteListingRequest Cancels and/or removes a request to list the contents of this connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
  * @param listingRequestId The listing request id.
-@return ListingRequestEntity
-*/
-func (a *FlowfileQueuesApiService) DeleteListingRequest(ctx _context.Context, id string, listingRequestId string) (ListingRequestEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiDeleteListingRequestRequest
+ */
+func (a *FlowfileQueuesApiService) DeleteListingRequest(ctx _context.Context, id string, listingRequestId string) FlowfileQueuesApiApiDeleteListingRequestRequest {
+	return FlowfileQueuesApiApiDeleteListingRequestRequest{
+		ApiService:       a,
+		ctx:              ctx,
+		id:               id,
+		listingRequestId: listingRequestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ListingRequestEntity
+ */
+func (a *FlowfileQueuesApiService) DeleteListingRequestExecute(r FlowfileQueuesApiApiDeleteListingRequestRequest) (ListingRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -199,11 +277,14 @@ func (a *FlowfileQueuesApiService) DeleteListingRequest(ctx _context.Context, id
 		localVarReturnValue  ListingRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/listing-requests/{listing-request-id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.DeleteListingRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"listing-request-id"+"}", _neturl.QueryEscape(parameterToString(listingRequestId, "")), -1)
+	localVarPath := localBasePath + "/flowfile-queues/{id}/listing-requests/{listing-request-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"listing-request-id"+"}", _neturl.PathEscape(parameterToString(r.listingRequestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -226,18 +307,19 @@ func (a *FlowfileQueuesApiService) DeleteListingRequest(ctx _context.Context, id
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -262,23 +344,49 @@ func (a *FlowfileQueuesApiService) DeleteListingRequest(ctx _context.Context, id
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowfileQueuesApiDownloadFlowFileContentOpts Optional parameters for the method 'DownloadFlowFileContent'
-type FlowfileQueuesApiDownloadFlowFileContentOpts struct {
-	ClientId      optional.String
-	ClusterNodeId optional.String
+type FlowfileQueuesApiApiDownloadFlowFileContentRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowfileQueuesApiService
+	id            string
+	flowfileUuid  string
+	clientId      *string
+	clusterNodeId *string
+}
+
+func (r FlowfileQueuesApiApiDownloadFlowFileContentRequest) ClientId(clientId string) FlowfileQueuesApiApiDownloadFlowFileContentRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r FlowfileQueuesApiApiDownloadFlowFileContentRequest) ClusterNodeId(clusterNodeId string) FlowfileQueuesApiApiDownloadFlowFileContentRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowfileQueuesApiApiDownloadFlowFileContentRequest) Execute() (map[string]interface{}, *_nethttp.Response, error) {
+	return r.ApiService.DownloadFlowFileContentExecute(r)
 }
 
 /*
-DownloadFlowFileContent Gets the content for a FlowFile in a Connection.
+ * DownloadFlowFileContent Gets the content for a FlowFile in a Connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
  * @param flowfileUuid The flowfile uuid.
- * @param optional nil or *FlowfileQueuesApiDownloadFlowFileContentOpts - Optional Parameters:
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "ClusterNodeId" (optional.String) -  The id of the node where the content exists if clustered.
-@return map[string]interface{}
-*/
-func (a *FlowfileQueuesApiService) DownloadFlowFileContent(ctx _context.Context, id string, flowfileUuid string, localVarOptionals *FlowfileQueuesApiDownloadFlowFileContentOpts) (map[string]interface{}, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiDownloadFlowFileContentRequest
+ */
+func (a *FlowfileQueuesApiService) DownloadFlowFileContent(ctx _context.Context, id string, flowfileUuid string) FlowfileQueuesApiApiDownloadFlowFileContentRequest {
+	return FlowfileQueuesApiApiDownloadFlowFileContentRequest{
+		ApiService:   a,
+		ctx:          ctx,
+		id:           id,
+		flowfileUuid: flowfileUuid,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return map[string]interface{}
+ */
+func (a *FlowfileQueuesApiService) DownloadFlowFileContentExecute(r FlowfileQueuesApiApiDownloadFlowFileContentRequest) (map[string]interface{}, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -288,21 +396,24 @@ func (a *FlowfileQueuesApiService) DownloadFlowFileContent(ctx _context.Context,
 		localVarReturnValue  map[string]interface{}
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/flowfiles/{flowfile-uuid}/content"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.DownloadFlowFileContent")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"flowfile-uuid"+"}", _neturl.QueryEscape(parameterToString(flowfileUuid, "")), -1)
+	localVarPath := localBasePath + "/flowfile-queues/{id}/flowfiles/{flowfile-uuid}/content"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"flowfile-uuid"+"}", _neturl.PathEscape(parameterToString(r.flowfileUuid, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -321,18 +432,19 @@ func (a *FlowfileQueuesApiService) DownloadFlowFileContent(ctx _context.Context,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -357,14 +469,38 @@ func (a *FlowfileQueuesApiService) DownloadFlowFileContent(ctx _context.Context,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowfileQueuesApiApiGetDropRequestRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowfileQueuesApiService
+	id            string
+	dropRequestId string
+}
+
+func (r FlowfileQueuesApiApiGetDropRequestRequest) Execute() (DropRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetDropRequestExecute(r)
+}
+
 /*
-GetDropRequest Gets the current status of a drop request for the specified connection.
+ * GetDropRequest Gets the current status of a drop request for the specified connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
  * @param dropRequestId The drop request id.
-@return DropRequestEntity
-*/
-func (a *FlowfileQueuesApiService) GetDropRequest(ctx _context.Context, id string, dropRequestId string) (DropRequestEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiGetDropRequestRequest
+ */
+func (a *FlowfileQueuesApiService) GetDropRequest(ctx _context.Context, id string, dropRequestId string) FlowfileQueuesApiApiGetDropRequestRequest {
+	return FlowfileQueuesApiApiGetDropRequestRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		id:            id,
+		dropRequestId: dropRequestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return DropRequestEntity
+ */
+func (a *FlowfileQueuesApiService) GetDropRequestExecute(r FlowfileQueuesApiApiGetDropRequestRequest) (DropRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -374,11 +510,14 @@ func (a *FlowfileQueuesApiService) GetDropRequest(ctx _context.Context, id strin
 		localVarReturnValue  DropRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/drop-requests/{drop-request-id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.GetDropRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"drop-request-id"+"}", _neturl.QueryEscape(parameterToString(dropRequestId, "")), -1)
+	localVarPath := localBasePath + "/flowfile-queues/{id}/drop-requests/{drop-request-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"drop-request-id"+"}", _neturl.PathEscape(parameterToString(r.dropRequestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -401,18 +540,19 @@ func (a *FlowfileQueuesApiService) GetDropRequest(ctx _context.Context, id strin
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -437,21 +577,44 @@ func (a *FlowfileQueuesApiService) GetDropRequest(ctx _context.Context, id strin
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowfileQueuesApiGetFlowFileOpts Optional parameters for the method 'GetFlowFile'
-type FlowfileQueuesApiGetFlowFileOpts struct {
-	ClusterNodeId optional.String
+type FlowfileQueuesApiApiGetFlowFileRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowfileQueuesApiService
+	id            string
+	flowfileUuid  string
+	clusterNodeId *string
+}
+
+func (r FlowfileQueuesApiApiGetFlowFileRequest) ClusterNodeId(clusterNodeId string) FlowfileQueuesApiApiGetFlowFileRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowfileQueuesApiApiGetFlowFileRequest) Execute() (FlowFileEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetFlowFileExecute(r)
 }
 
 /*
-GetFlowFile Gets a FlowFile from a Connection.
+ * GetFlowFile Gets a FlowFile from a Connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
  * @param flowfileUuid The flowfile uuid.
- * @param optional nil or *FlowfileQueuesApiGetFlowFileOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where the content exists if clustered.
-@return FlowFileEntity
-*/
-func (a *FlowfileQueuesApiService) GetFlowFile(ctx _context.Context, id string, flowfileUuid string, localVarOptionals *FlowfileQueuesApiGetFlowFileOpts) (FlowFileEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiGetFlowFileRequest
+ */
+func (a *FlowfileQueuesApiService) GetFlowFile(ctx _context.Context, id string, flowfileUuid string) FlowfileQueuesApiApiGetFlowFileRequest {
+	return FlowfileQueuesApiApiGetFlowFileRequest{
+		ApiService:   a,
+		ctx:          ctx,
+		id:           id,
+		flowfileUuid: flowfileUuid,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FlowFileEntity
+ */
+func (a *FlowfileQueuesApiService) GetFlowFileExecute(r FlowfileQueuesApiApiGetFlowFileRequest) (FlowFileEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -461,18 +624,21 @@ func (a *FlowfileQueuesApiService) GetFlowFile(ctx _context.Context, id string, 
 		localVarReturnValue  FlowFileEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/flowfiles/{flowfile-uuid}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.GetFlowFile")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"flowfile-uuid"+"}", _neturl.QueryEscape(parameterToString(flowfileUuid, "")), -1)
+	localVarPath := localBasePath + "/flowfile-queues/{id}/flowfiles/{flowfile-uuid}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"flowfile-uuid"+"}", _neturl.PathEscape(parameterToString(r.flowfileUuid, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -491,18 +657,19 @@ func (a *FlowfileQueuesApiService) GetFlowFile(ctx _context.Context, id string, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -527,14 +694,38 @@ func (a *FlowfileQueuesApiService) GetFlowFile(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowfileQueuesApiApiGetListingRequestRequest struct {
+	ctx              _context.Context
+	ApiService       *FlowfileQueuesApiService
+	id               string
+	listingRequestId string
+}
+
+func (r FlowfileQueuesApiApiGetListingRequestRequest) Execute() (ListingRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetListingRequestExecute(r)
+}
+
 /*
-GetListingRequest Gets the current status of a listing request for the specified connection.
+ * GetListingRequest Gets the current status of a listing request for the specified connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
  * @param listingRequestId The listing request id.
-@return ListingRequestEntity
-*/
-func (a *FlowfileQueuesApiService) GetListingRequest(ctx _context.Context, id string, listingRequestId string) (ListingRequestEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiGetListingRequestRequest
+ */
+func (a *FlowfileQueuesApiService) GetListingRequest(ctx _context.Context, id string, listingRequestId string) FlowfileQueuesApiApiGetListingRequestRequest {
+	return FlowfileQueuesApiApiGetListingRequestRequest{
+		ApiService:       a,
+		ctx:              ctx,
+		id:               id,
+		listingRequestId: listingRequestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ListingRequestEntity
+ */
+func (a *FlowfileQueuesApiService) GetListingRequestExecute(r FlowfileQueuesApiApiGetListingRequestRequest) (ListingRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -544,11 +735,14 @@ func (a *FlowfileQueuesApiService) GetListingRequest(ctx _context.Context, id st
 		localVarReturnValue  ListingRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/listing-requests/{listing-request-id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.GetListingRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"listing-request-id"+"}", _neturl.QueryEscape(parameterToString(listingRequestId, "")), -1)
+	localVarPath := localBasePath + "/flowfile-queues/{id}/listing-requests/{listing-request-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"listing-request-id"+"}", _neturl.PathEscape(parameterToString(r.listingRequestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -571,18 +765,19 @@ func (a *FlowfileQueuesApiService) GetListingRequest(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -607,14 +802,38 @@ func (a *FlowfileQueuesApiService) GetListingRequest(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowfileQueuesApiApiRemoveDropRequestRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowfileQueuesApiService
+	id            string
+	dropRequestId string
+}
+
+func (r FlowfileQueuesApiApiRemoveDropRequestRequest) Execute() (DropRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveDropRequestExecute(r)
+}
+
 /*
-RemoveDropRequest Cancels and/or removes a request to drop the contents of this connection.
+ * RemoveDropRequest Cancels and/or removes a request to drop the contents of this connection.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
  * @param dropRequestId The drop request id.
-@return DropRequestEntity
-*/
-func (a *FlowfileQueuesApiService) RemoveDropRequest(ctx _context.Context, id string, dropRequestId string) (DropRequestEntity, *_nethttp.Response, error) {
+ * @return FlowfileQueuesApiApiRemoveDropRequestRequest
+ */
+func (a *FlowfileQueuesApiService) RemoveDropRequest(ctx _context.Context, id string, dropRequestId string) FlowfileQueuesApiApiRemoveDropRequestRequest {
+	return FlowfileQueuesApiApiRemoveDropRequestRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		id:            id,
+		dropRequestId: dropRequestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return DropRequestEntity
+ */
+func (a *FlowfileQueuesApiService) RemoveDropRequestExecute(r FlowfileQueuesApiApiRemoveDropRequestRequest) (DropRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -624,11 +843,14 @@ func (a *FlowfileQueuesApiService) RemoveDropRequest(ctx _context.Context, id st
 		localVarReturnValue  DropRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flowfile-queues/{id}/drop-requests/{drop-request-id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowfileQueuesApiService.RemoveDropRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"drop-request-id"+"}", _neturl.QueryEscape(parameterToString(dropRequestId, "")), -1)
+	localVarPath := localBasePath + "/flowfile-queues/{id}/drop-requests/{drop-request-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"drop-request-id"+"}", _neturl.PathEscape(parameterToString(r.dropRequestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -651,18 +873,19 @@ func (a *FlowfileQueuesApiService) RemoveDropRequest(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

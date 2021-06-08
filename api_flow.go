@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,14 +28,41 @@ var (
 // FlowApiService FlowApi service
 type FlowApiService service
 
+type FlowApiApiActivateControllerServicesRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+	body       *ActivateControllerServicesEntity
+}
+
+func (r FlowApiApiActivateControllerServicesRequest) Body(body ActivateControllerServicesEntity) FlowApiApiActivateControllerServicesRequest {
+	r.body = &body
+	return r
+}
+
+func (r FlowApiApiActivateControllerServicesRequest) Execute() (ActivateControllerServicesEntity, *_nethttp.Response, error) {
+	return r.ApiService.ActivateControllerServicesExecute(r)
+}
+
 /*
-ActivateControllerServices Enable or disable Controller Services in the specified Process Group.
+ * ActivateControllerServices Enable or disable Controller Services in the specified Process Group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered.
-@return ActivateControllerServicesEntity
-*/
-func (a *FlowApiService) ActivateControllerServices(ctx _context.Context, id string, body ActivateControllerServicesEntity) (ActivateControllerServicesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiActivateControllerServicesRequest
+ */
+func (a *FlowApiService) ActivateControllerServices(ctx _context.Context, id string) FlowApiApiActivateControllerServicesRequest {
+	return FlowApiApiActivateControllerServicesRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ActivateControllerServicesEntity
+ */
+func (a *FlowApiService) ActivateControllerServicesExecute(r FlowApiApiActivateControllerServicesRequest) (ActivateControllerServicesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -45,13 +72,20 @@ func (a *FlowApiService) ActivateControllerServices(ctx _context.Context, id str
 		localVarReturnValue  ActivateControllerServicesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/process-groups/{id}/controller-services"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.ActivateControllerServices")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/process-groups/{id}/controller-services"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -71,19 +105,20 @@ func (a *FlowApiService) ActivateControllerServices(ctx _context.Context, id str
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -108,12 +143,32 @@ func (a *FlowApiService) ActivateControllerServices(ctx _context.Context, id str
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGenerateClientIdRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGenerateClientIdRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.GenerateClientIdExecute(r)
+}
+
 /*
-GenerateClientId Generates a client id.
+ * GenerateClientId Generates a client id.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return string
-*/
-func (a *FlowApiService) GenerateClientId(ctx _context.Context) (string, *_nethttp.Response, error) {
+ * @return FlowApiApiGenerateClientIdRequest
+ */
+func (a *FlowApiService) GenerateClientId(ctx _context.Context) FlowApiApiGenerateClientIdRequest {
+	return FlowApiApiGenerateClientIdRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *FlowApiService) GenerateClientIdExecute(r FlowApiApiGenerateClientIdRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -123,8 +178,13 @@ func (a *FlowApiService) GenerateClientId(ctx _context.Context) (string, *_netht
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/client-id"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GenerateClientId")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/client-id"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -146,18 +206,19 @@ func (a *FlowApiService) GenerateClientId(ctx _context.Context) (string, *_netht
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -182,12 +243,32 @@ func (a *FlowApiService) GenerateClientId(ctx _context.Context) (string, *_netht
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetAboutInfoRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetAboutInfoRequest) Execute() (AboutEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetAboutInfoExecute(r)
+}
+
 /*
-GetAboutInfo Retrieves details about this NiFi to put in the About dialog
+ * GetAboutInfo Retrieves details about this NiFi to put in the About dialog
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return AboutEntity
-*/
-func (a *FlowApiService) GetAboutInfo(ctx _context.Context) (AboutEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetAboutInfoRequest
+ */
+func (a *FlowApiService) GetAboutInfo(ctx _context.Context) FlowApiApiGetAboutInfoRequest {
+	return FlowApiApiGetAboutInfoRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AboutEntity
+ */
+func (a *FlowApiService) GetAboutInfoExecute(r FlowApiApiGetAboutInfoRequest) (AboutEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -197,8 +278,13 @@ func (a *FlowApiService) GetAboutInfo(ctx _context.Context) (AboutEntity, *_neth
 		localVarReturnValue  AboutEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/about"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetAboutInfo")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/about"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -220,18 +306,19 @@ func (a *FlowApiService) GetAboutInfo(ctx _context.Context) (AboutEntity, *_neth
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -256,14 +343,36 @@ func (a *FlowApiService) GetAboutInfo(ctx _context.Context) (AboutEntity, *_neth
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetActionRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetActionRequest) Execute() (ActionEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetActionExecute(r)
+}
+
 /*
-GetAction Gets an action
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetAction Gets an action
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The action id.
-@return ActionEntity
-*/
-func (a *FlowApiService) GetAction(ctx _context.Context, id string) (ActionEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetActionRequest
+ */
+func (a *FlowApiService) GetAction(ctx _context.Context, id string) FlowApiApiGetActionRequest {
+	return FlowApiApiGetActionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ActionEntity
+ */
+func (a *FlowApiService) GetActionExecute(r FlowApiApiGetActionRequest) (ActionEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -273,9 +382,13 @@ func (a *FlowApiService) GetAction(ctx _context.Context, id string) (ActionEntit
 		localVarReturnValue  ActionEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/history/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetAction")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/history/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -298,18 +411,19 @@ func (a *FlowApiService) GetAction(ctx _context.Context, id string) (ActionEntit
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -334,12 +448,32 @@ func (a *FlowApiService) GetAction(ctx _context.Context, id string) (ActionEntit
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetBannersRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetBannersRequest) Execute() (BannerEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetBannersExecute(r)
+}
+
 /*
-GetBanners Retrieves the banners for this NiFi
+ * GetBanners Retrieves the banners for this NiFi
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return BannerEntity
-*/
-func (a *FlowApiService) GetBanners(ctx _context.Context) (BannerEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetBannersRequest
+ */
+func (a *FlowApiService) GetBanners(ctx _context.Context) FlowApiApiGetBannersRequest {
+	return FlowApiApiGetBannersRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return BannerEntity
+ */
+func (a *FlowApiService) GetBannersExecute(r FlowApiApiGetBannersRequest) (BannerEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -349,8 +483,13 @@ func (a *FlowApiService) GetBanners(ctx _context.Context) (BannerEntity, *_netht
 		localVarReturnValue  BannerEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/banners"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetBanners")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/banners"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -372,18 +511,19 @@ func (a *FlowApiService) GetBanners(ctx _context.Context) (BannerEntity, *_netht
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -408,13 +548,35 @@ func (a *FlowApiService) GetBanners(ctx _context.Context) (BannerEntity, *_netht
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetBucketsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetBucketsRequest) Execute() (BucketsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetBucketsExecute(r)
+}
+
 /*
-GetBuckets Gets the buckets from the specified registry for the current user
+ * GetBuckets Gets the buckets from the specified registry for the current user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The registry id.
-@return BucketsEntity
-*/
-func (a *FlowApiService) GetBuckets(ctx _context.Context, id string) (BucketsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetBucketsRequest
+ */
+func (a *FlowApiService) GetBuckets(ctx _context.Context, id string) FlowApiApiGetBucketsRequest {
+	return FlowApiApiGetBucketsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return BucketsEntity
+ */
+func (a *FlowApiService) GetBucketsExecute(r FlowApiApiGetBucketsRequest) (BucketsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -424,9 +586,13 @@ func (a *FlowApiService) GetBuckets(ctx _context.Context, id string) (BucketsEnt
 		localVarReturnValue  BucketsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/registries/{id}/buckets"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetBuckets")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/registries/{id}/buckets"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -449,18 +615,19 @@ func (a *FlowApiService) GetBuckets(ctx _context.Context, id string) (BucketsEnt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -485,29 +652,63 @@ func (a *FlowApiService) GetBuckets(ctx _context.Context, id string) (BucketsEnt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetBulletinBoardOpts Optional parameters for the method 'GetBulletinBoard'
-type FlowApiGetBulletinBoardOpts struct {
-	After      optional.String
-	SourceName optional.String
-	Message    optional.String
-	SourceId   optional.String
-	GroupId    optional.String
-	Limit      optional.String
+type FlowApiApiGetBulletinBoardRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	after      *string
+	sourceName *string
+	message    *string
+	sourceId   *string
+	groupId    *string
+	limit      *string
+}
+
+func (r FlowApiApiGetBulletinBoardRequest) After(after string) FlowApiApiGetBulletinBoardRequest {
+	r.after = &after
+	return r
+}
+func (r FlowApiApiGetBulletinBoardRequest) SourceName(sourceName string) FlowApiApiGetBulletinBoardRequest {
+	r.sourceName = &sourceName
+	return r
+}
+func (r FlowApiApiGetBulletinBoardRequest) Message(message string) FlowApiApiGetBulletinBoardRequest {
+	r.message = &message
+	return r
+}
+func (r FlowApiApiGetBulletinBoardRequest) SourceId(sourceId string) FlowApiApiGetBulletinBoardRequest {
+	r.sourceId = &sourceId
+	return r
+}
+func (r FlowApiApiGetBulletinBoardRequest) GroupId(groupId string) FlowApiApiGetBulletinBoardRequest {
+	r.groupId = &groupId
+	return r
+}
+func (r FlowApiApiGetBulletinBoardRequest) Limit(limit string) FlowApiApiGetBulletinBoardRequest {
+	r.limit = &limit
+	return r
+}
+
+func (r FlowApiApiGetBulletinBoardRequest) Execute() (BulletinBoardEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetBulletinBoardExecute(r)
 }
 
 /*
-GetBulletinBoard Gets current bulletins
+ * GetBulletinBoard Gets current bulletins
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *FlowApiGetBulletinBoardOpts - Optional Parameters:
- * @param "After" (optional.String) -  Includes bulletins with an id after this value.
- * @param "SourceName" (optional.String) -  Includes bulletins originating from this sources whose name match this regular expression.
- * @param "Message" (optional.String) -  Includes bulletins whose message that match this regular expression.
- * @param "SourceId" (optional.String) -  Includes bulletins originating from this sources whose id match this regular expression.
- * @param "GroupId" (optional.String) -  Includes bulletins originating from this sources whose group id match this regular expression.
- * @param "Limit" (optional.String) -  The number of bulletins to limit the response to.
-@return BulletinBoardEntity
-*/
-func (a *FlowApiService) GetBulletinBoard(ctx _context.Context, localVarOptionals *FlowApiGetBulletinBoardOpts) (BulletinBoardEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetBulletinBoardRequest
+ */
+func (a *FlowApiService) GetBulletinBoard(ctx _context.Context) FlowApiApiGetBulletinBoardRequest {
+	return FlowApiApiGetBulletinBoardRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return BulletinBoardEntity
+ */
+func (a *FlowApiService) GetBulletinBoardExecute(r FlowApiApiGetBulletinBoardRequest) (BulletinBoardEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -517,29 +718,34 @@ func (a *FlowApiService) GetBulletinBoard(ctx _context.Context, localVarOptional
 		localVarReturnValue  BulletinBoardEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/bulletin-board"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetBulletinBoard")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/bulletin-board"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.After.IsSet() {
-		localVarQueryParams.Add("after", parameterToString(localVarOptionals.After.Value(), ""))
+	if r.after != nil {
+		localVarQueryParams.Add("after", parameterToString(*r.after, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.SourceName.IsSet() {
-		localVarQueryParams.Add("sourceName", parameterToString(localVarOptionals.SourceName.Value(), ""))
+	if r.sourceName != nil {
+		localVarQueryParams.Add("sourceName", parameterToString(*r.sourceName, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Message.IsSet() {
-		localVarQueryParams.Add("message", parameterToString(localVarOptionals.Message.Value(), ""))
+	if r.message != nil {
+		localVarQueryParams.Add("message", parameterToString(*r.message, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.SourceId.IsSet() {
-		localVarQueryParams.Add("sourceId", parameterToString(localVarOptionals.SourceId.Value(), ""))
+	if r.sourceId != nil {
+		localVarQueryParams.Add("sourceId", parameterToString(*r.sourceId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.GroupId.IsSet() {
-		localVarQueryParams.Add("groupId", parameterToString(localVarOptionals.GroupId.Value(), ""))
+	if r.groupId != nil {
+		localVarQueryParams.Add("groupId", parameterToString(*r.groupId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Limit.IsSet() {
-		localVarQueryParams.Add("limit", parameterToString(localVarOptionals.Limit.Value(), ""))
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -558,18 +764,19 @@ func (a *FlowApiService) GetBulletinBoard(ctx _context.Context, localVarOptional
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -594,12 +801,32 @@ func (a *FlowApiService) GetBulletinBoard(ctx _context.Context, localVarOptional
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetBulletinsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetBulletinsRequest) Execute() (ControllerBulletinsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetBulletinsExecute(r)
+}
+
 /*
-GetBulletins Retrieves Controller level bulletins
+ * GetBulletins Retrieves Controller level bulletins
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ControllerBulletinsEntity
-*/
-func (a *FlowApiService) GetBulletins(ctx _context.Context) (ControllerBulletinsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetBulletinsRequest
+ */
+func (a *FlowApiService) GetBulletins(ctx _context.Context) FlowApiApiGetBulletinsRequest {
+	return FlowApiApiGetBulletinsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerBulletinsEntity
+ */
+func (a *FlowApiService) GetBulletinsExecute(r FlowApiApiGetBulletinsRequest) (ControllerBulletinsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -609,8 +836,13 @@ func (a *FlowApiService) GetBulletins(ctx _context.Context) (ControllerBulletins
 		localVarReturnValue  ControllerBulletinsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/controller/bulletins"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetBulletins")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/controller/bulletins"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -632,18 +864,19 @@ func (a *FlowApiService) GetBulletins(ctx _context.Context) (ControllerBulletins
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -668,12 +901,32 @@ func (a *FlowApiService) GetBulletins(ctx _context.Context) (ControllerBulletins
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetClusterSummaryRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetClusterSummaryRequest) Execute() (ClusteSummaryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetClusterSummaryExecute(r)
+}
+
 /*
-GetClusterSummary The cluster summary for this NiFi
+ * GetClusterSummary The cluster summary for this NiFi
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ClusteSummaryEntity
-*/
-func (a *FlowApiService) GetClusterSummary(ctx _context.Context) (ClusteSummaryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetClusterSummaryRequest
+ */
+func (a *FlowApiService) GetClusterSummary(ctx _context.Context) FlowApiApiGetClusterSummaryRequest {
+	return FlowApiApiGetClusterSummaryRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ClusteSummaryEntity
+ */
+func (a *FlowApiService) GetClusterSummaryExecute(r FlowApiApiGetClusterSummaryRequest) (ClusteSummaryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -683,8 +936,13 @@ func (a *FlowApiService) GetClusterSummary(ctx _context.Context) (ClusteSummaryE
 		localVarReturnValue  ClusteSummaryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/cluster/summary"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetClusterSummary")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/cluster/summary"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -706,18 +964,19 @@ func (a *FlowApiService) GetClusterSummary(ctx _context.Context) (ClusteSummaryE
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -742,14 +1001,36 @@ func (a *FlowApiService) GetClusterSummary(ctx _context.Context) (ClusteSummaryE
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetComponentHistoryRequest struct {
+	ctx         _context.Context
+	ApiService  *FlowApiService
+	componentId string
+}
+
+func (r FlowApiApiGetComponentHistoryRequest) Execute() (ComponentHistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetComponentHistoryExecute(r)
+}
+
 /*
-GetComponentHistory Gets configuration history for a component
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetComponentHistory Gets configuration history for a component
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param componentId The component id.
-@return ComponentHistoryEntity
-*/
-func (a *FlowApiService) GetComponentHistory(ctx _context.Context, componentId string) (ComponentHistoryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetComponentHistoryRequest
+ */
+func (a *FlowApiService) GetComponentHistory(ctx _context.Context, componentId string) FlowApiApiGetComponentHistoryRequest {
+	return FlowApiApiGetComponentHistoryRequest{
+		ApiService:  a,
+		ctx:         ctx,
+		componentId: componentId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ComponentHistoryEntity
+ */
+func (a *FlowApiService) GetComponentHistoryExecute(r FlowApiApiGetComponentHistoryRequest) (ComponentHistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -759,9 +1040,13 @@ func (a *FlowApiService) GetComponentHistory(ctx _context.Context, componentId s
 		localVarReturnValue  ComponentHistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/history/components/{componentId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"componentId"+"}", _neturl.QueryEscape(parameterToString(componentId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetComponentHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/history/components/{componentId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"componentId"+"}", _neturl.PathEscape(parameterToString(r.componentId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -784,18 +1069,19 @@ func (a *FlowApiService) GetComponentHistory(ctx _context.Context, componentId s
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -820,22 +1106,46 @@ func (a *FlowApiService) GetComponentHistory(ctx _context.Context, componentId s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetConnectionStatisticsOpts Optional parameters for the method 'GetConnectionStatistics'
-type FlowApiGetConnectionStatisticsOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetConnectionStatisticsRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetConnectionStatisticsRequest) Nodewise(nodewise bool) FlowApiApiGetConnectionStatisticsRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetConnectionStatisticsRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetConnectionStatisticsRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetConnectionStatisticsRequest) Execute() (ConnectionStatisticsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetConnectionStatisticsExecute(r)
 }
 
 /*
-GetConnectionStatistics Gets statistics for a connection
+ * GetConnectionStatistics Gets statistics for a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
- * @param optional nil or *FlowApiGetConnectionStatisticsOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the statistics.
-@return ConnectionStatisticsEntity
-*/
-func (a *FlowApiService) GetConnectionStatistics(ctx _context.Context, id string, localVarOptionals *FlowApiGetConnectionStatisticsOpts) (ConnectionStatisticsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetConnectionStatisticsRequest
+ */
+func (a *FlowApiService) GetConnectionStatistics(ctx _context.Context, id string) FlowApiApiGetConnectionStatisticsRequest {
+	return FlowApiApiGetConnectionStatisticsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionStatisticsEntity
+ */
+func (a *FlowApiService) GetConnectionStatisticsExecute(r FlowApiApiGetConnectionStatisticsRequest) (ConnectionStatisticsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -845,19 +1155,23 @@ func (a *FlowApiService) GetConnectionStatistics(ctx _context.Context, id string
 		localVarReturnValue  ConnectionStatisticsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/connections/{id}/statistics"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetConnectionStatistics")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/connections/{id}/statistics"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -876,18 +1190,19 @@ func (a *FlowApiService) GetConnectionStatistics(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -912,22 +1227,46 @@ func (a *FlowApiService) GetConnectionStatistics(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetConnectionStatusOpts Optional parameters for the method 'GetConnectionStatus'
-type FlowApiGetConnectionStatusOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetConnectionStatusRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetConnectionStatusRequest) Nodewise(nodewise bool) FlowApiApiGetConnectionStatusRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetConnectionStatusRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetConnectionStatusRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetConnectionStatusRequest) Execute() (ConnectionStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetConnectionStatusExecute(r)
 }
 
 /*
-GetConnectionStatus Gets status for a connection
+ * GetConnectionStatus Gets status for a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
- * @param optional nil or *FlowApiGetConnectionStatusOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return ConnectionStatusEntity
-*/
-func (a *FlowApiService) GetConnectionStatus(ctx _context.Context, id string, localVarOptionals *FlowApiGetConnectionStatusOpts) (ConnectionStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetConnectionStatusRequest
+ */
+func (a *FlowApiService) GetConnectionStatus(ctx _context.Context, id string) FlowApiApiGetConnectionStatusRequest {
+	return FlowApiApiGetConnectionStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionStatusEntity
+ */
+func (a *FlowApiService) GetConnectionStatusExecute(r FlowApiApiGetConnectionStatusRequest) (ConnectionStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -937,19 +1276,23 @@ func (a *FlowApiService) GetConnectionStatus(ctx _context.Context, id string, lo
 		localVarReturnValue  ConnectionStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/connections/{id}/status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetConnectionStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/connections/{id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -968,18 +1311,19 @@ func (a *FlowApiService) GetConnectionStatus(ctx _context.Context, id string, lo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1004,13 +1348,35 @@ func (a *FlowApiService) GetConnectionStatus(ctx _context.Context, id string, lo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetConnectionStatusHistoryRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetConnectionStatusHistoryRequest) Execute() (StatusHistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetConnectionStatusHistoryExecute(r)
+}
+
 /*
-GetConnectionStatusHistory Gets the status history for a connection
+ * GetConnectionStatusHistory Gets the status history for a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
-@return StatusHistoryEntity
-*/
-func (a *FlowApiService) GetConnectionStatusHistory(ctx _context.Context, id string) (StatusHistoryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetConnectionStatusHistoryRequest
+ */
+func (a *FlowApiService) GetConnectionStatusHistory(ctx _context.Context, id string) FlowApiApiGetConnectionStatusHistoryRequest {
+	return FlowApiApiGetConnectionStatusHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return StatusHistoryEntity
+ */
+func (a *FlowApiService) GetConnectionStatusHistoryExecute(r FlowApiApiGetConnectionStatusHistoryRequest) (StatusHistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1020,9 +1386,13 @@ func (a *FlowApiService) GetConnectionStatusHistory(ctx _context.Context, id str
 		localVarReturnValue  StatusHistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/connections/{id}/status/history"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetConnectionStatusHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/connections/{id}/status/history"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1045,18 +1415,19 @@ func (a *FlowApiService) GetConnectionStatusHistory(ctx _context.Context, id str
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1081,32 +1452,69 @@ func (a *FlowApiService) GetConnectionStatusHistory(ctx _context.Context, id str
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetControllerServiceTypesOpts Optional parameters for the method 'GetControllerServiceTypes'
-type FlowApiGetControllerServiceTypesOpts struct {
-	ServiceType           optional.String
-	ServiceBundleGroup    optional.String
-	ServiceBundleArtifact optional.String
-	ServiceBundleVersion  optional.String
-	BundleGroupFilter     optional.String
-	BundleArtifactFilter  optional.String
-	TypeFilter            optional.String
+type FlowApiApiGetControllerServiceTypesRequest struct {
+	ctx                   _context.Context
+	ApiService            *FlowApiService
+	serviceType           *string
+	serviceBundleGroup    *string
+	serviceBundleArtifact *string
+	serviceBundleVersion  *string
+	bundleGroupFilter     *string
+	bundleArtifactFilter  *string
+	typeFilter            *string
+}
+
+func (r FlowApiApiGetControllerServiceTypesRequest) ServiceType(serviceType string) FlowApiApiGetControllerServiceTypesRequest {
+	r.serviceType = &serviceType
+	return r
+}
+func (r FlowApiApiGetControllerServiceTypesRequest) ServiceBundleGroup(serviceBundleGroup string) FlowApiApiGetControllerServiceTypesRequest {
+	r.serviceBundleGroup = &serviceBundleGroup
+	return r
+}
+func (r FlowApiApiGetControllerServiceTypesRequest) ServiceBundleArtifact(serviceBundleArtifact string) FlowApiApiGetControllerServiceTypesRequest {
+	r.serviceBundleArtifact = &serviceBundleArtifact
+	return r
+}
+func (r FlowApiApiGetControllerServiceTypesRequest) ServiceBundleVersion(serviceBundleVersion string) FlowApiApiGetControllerServiceTypesRequest {
+	r.serviceBundleVersion = &serviceBundleVersion
+	return r
+}
+func (r FlowApiApiGetControllerServiceTypesRequest) BundleGroupFilter(bundleGroupFilter string) FlowApiApiGetControllerServiceTypesRequest {
+	r.bundleGroupFilter = &bundleGroupFilter
+	return r
+}
+func (r FlowApiApiGetControllerServiceTypesRequest) BundleArtifactFilter(bundleArtifactFilter string) FlowApiApiGetControllerServiceTypesRequest {
+	r.bundleArtifactFilter = &bundleArtifactFilter
+	return r
+}
+func (r FlowApiApiGetControllerServiceTypesRequest) TypeFilter(typeFilter string) FlowApiApiGetControllerServiceTypesRequest {
+	r.typeFilter = &typeFilter
+	return r
+}
+
+func (r FlowApiApiGetControllerServiceTypesRequest) Execute() (ControllerServiceTypesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetControllerServiceTypesExecute(r)
 }
 
 /*
-GetControllerServiceTypes Retrieves the types of controller services that this NiFi supports
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetControllerServiceTypes Retrieves the types of controller services that this NiFi supports
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *FlowApiGetControllerServiceTypesOpts - Optional Parameters:
- * @param "ServiceType" (optional.String) -  If specified, will only return controller services that are compatible with this type of service.
- * @param "ServiceBundleGroup" (optional.String) -  If serviceType specified, is the bundle group of the serviceType.
- * @param "ServiceBundleArtifact" (optional.String) -  If serviceType specified, is the bundle artifact of the serviceType.
- * @param "ServiceBundleVersion" (optional.String) -  If serviceType specified, is the bundle version of the serviceType.
- * @param "BundleGroupFilter" (optional.String) -  If specified, will only return types that are a member of this bundle group.
- * @param "BundleArtifactFilter" (optional.String) -  If specified, will only return types that are a member of this bundle artifact.
- * @param "TypeFilter" (optional.String) -  If specified, will only return types whose fully qualified classname matches.
-@return ControllerServiceTypesEntity
-*/
-func (a *FlowApiService) GetControllerServiceTypes(ctx _context.Context, localVarOptionals *FlowApiGetControllerServiceTypesOpts) (ControllerServiceTypesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetControllerServiceTypesRequest
+ */
+func (a *FlowApiService) GetControllerServiceTypes(ctx _context.Context) FlowApiApiGetControllerServiceTypesRequest {
+	return FlowApiApiGetControllerServiceTypesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerServiceTypesEntity
+ */
+func (a *FlowApiService) GetControllerServiceTypesExecute(r FlowApiApiGetControllerServiceTypesRequest) (ControllerServiceTypesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1116,32 +1524,37 @@ func (a *FlowApiService) GetControllerServiceTypes(ctx _context.Context, localVa
 		localVarReturnValue  ControllerServiceTypesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/controller-service-types"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetControllerServiceTypes")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/controller-service-types"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ServiceType.IsSet() {
-		localVarQueryParams.Add("serviceType", parameterToString(localVarOptionals.ServiceType.Value(), ""))
+	if r.serviceType != nil {
+		localVarQueryParams.Add("serviceType", parameterToString(*r.serviceType, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ServiceBundleGroup.IsSet() {
-		localVarQueryParams.Add("serviceBundleGroup", parameterToString(localVarOptionals.ServiceBundleGroup.Value(), ""))
+	if r.serviceBundleGroup != nil {
+		localVarQueryParams.Add("serviceBundleGroup", parameterToString(*r.serviceBundleGroup, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ServiceBundleArtifact.IsSet() {
-		localVarQueryParams.Add("serviceBundleArtifact", parameterToString(localVarOptionals.ServiceBundleArtifact.Value(), ""))
+	if r.serviceBundleArtifact != nil {
+		localVarQueryParams.Add("serviceBundleArtifact", parameterToString(*r.serviceBundleArtifact, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ServiceBundleVersion.IsSet() {
-		localVarQueryParams.Add("serviceBundleVersion", parameterToString(localVarOptionals.ServiceBundleVersion.Value(), ""))
+	if r.serviceBundleVersion != nil {
+		localVarQueryParams.Add("serviceBundleVersion", parameterToString(*r.serviceBundleVersion, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.BundleGroupFilter.IsSet() {
-		localVarQueryParams.Add("bundleGroupFilter", parameterToString(localVarOptionals.BundleGroupFilter.Value(), ""))
+	if r.bundleGroupFilter != nil {
+		localVarQueryParams.Add("bundleGroupFilter", parameterToString(*r.bundleGroupFilter, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.BundleArtifactFilter.IsSet() {
-		localVarQueryParams.Add("bundleArtifactFilter", parameterToString(localVarOptionals.BundleArtifactFilter.Value(), ""))
+	if r.bundleArtifactFilter != nil {
+		localVarQueryParams.Add("bundleArtifactFilter", parameterToString(*r.bundleArtifactFilter, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.TypeFilter.IsSet() {
-		localVarQueryParams.Add("typeFilter", parameterToString(localVarOptionals.TypeFilter.Value(), ""))
+	if r.typeFilter != nil {
+		localVarQueryParams.Add("typeFilter", parameterToString(*r.typeFilter, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1160,18 +1573,19 @@ func (a *FlowApiService) GetControllerServiceTypes(ctx _context.Context, localVa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1196,12 +1610,32 @@ func (a *FlowApiService) GetControllerServiceTypes(ctx _context.Context, localVa
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetControllerServicesFromControllerRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetControllerServicesFromControllerRequest) Execute() (ControllerServicesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetControllerServicesFromControllerExecute(r)
+}
+
 /*
-GetControllerServicesFromController Gets controller services for reporting tasks
+ * GetControllerServicesFromController Gets controller services for reporting tasks
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ControllerServicesEntity
-*/
-func (a *FlowApiService) GetControllerServicesFromController(ctx _context.Context) (ControllerServicesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetControllerServicesFromControllerRequest
+ */
+func (a *FlowApiService) GetControllerServicesFromController(ctx _context.Context) FlowApiApiGetControllerServicesFromControllerRequest {
+	return FlowApiApiGetControllerServicesFromControllerRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerServicesEntity
+ */
+func (a *FlowApiService) GetControllerServicesFromControllerExecute(r FlowApiApiGetControllerServicesFromControllerRequest) (ControllerServicesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1211,8 +1645,13 @@ func (a *FlowApiService) GetControllerServicesFromController(ctx _context.Contex
 		localVarReturnValue  ControllerServicesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/controller/controller-services"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetControllerServicesFromController")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/controller/controller-services"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1234,18 +1673,19 @@ func (a *FlowApiService) GetControllerServicesFromController(ctx _context.Contex
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1270,22 +1710,46 @@ func (a *FlowApiService) GetControllerServicesFromController(ctx _context.Contex
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetControllerServicesFromGroupOpts Optional parameters for the method 'GetControllerServicesFromGroup'
-type FlowApiGetControllerServicesFromGroupOpts struct {
-	IncludeAncestorGroups   optional.Bool
-	IncludeDescendantGroups optional.Bool
+type FlowApiApiGetControllerServicesFromGroupRequest struct {
+	ctx                     _context.Context
+	ApiService              *FlowApiService
+	id                      string
+	includeAncestorGroups   *bool
+	includeDescendantGroups *bool
+}
+
+func (r FlowApiApiGetControllerServicesFromGroupRequest) IncludeAncestorGroups(includeAncestorGroups bool) FlowApiApiGetControllerServicesFromGroupRequest {
+	r.includeAncestorGroups = &includeAncestorGroups
+	return r
+}
+func (r FlowApiApiGetControllerServicesFromGroupRequest) IncludeDescendantGroups(includeDescendantGroups bool) FlowApiApiGetControllerServicesFromGroupRequest {
+	r.includeDescendantGroups = &includeDescendantGroups
+	return r
+}
+
+func (r FlowApiApiGetControllerServicesFromGroupRequest) Execute() (ControllerServicesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetControllerServicesFromGroupExecute(r)
 }
 
 /*
-GetControllerServicesFromGroup Gets all controller services
+ * GetControllerServicesFromGroup Gets all controller services
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param optional nil or *FlowApiGetControllerServicesFromGroupOpts - Optional Parameters:
- * @param "IncludeAncestorGroups" (optional.Bool) -  Whether or not to include parent/ancestory process groups
- * @param "IncludeDescendantGroups" (optional.Bool) -  Whether or not to include descendant process groups
-@return ControllerServicesEntity
-*/
-func (a *FlowApiService) GetControllerServicesFromGroup(ctx _context.Context, id string, localVarOptionals *FlowApiGetControllerServicesFromGroupOpts) (ControllerServicesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetControllerServicesFromGroupRequest
+ */
+func (a *FlowApiService) GetControllerServicesFromGroup(ctx _context.Context, id string) FlowApiApiGetControllerServicesFromGroupRequest {
+	return FlowApiApiGetControllerServicesFromGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerServicesEntity
+ */
+func (a *FlowApiService) GetControllerServicesFromGroupExecute(r FlowApiApiGetControllerServicesFromGroupRequest) (ControllerServicesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1295,19 +1759,23 @@ func (a *FlowApiService) GetControllerServicesFromGroup(ctx _context.Context, id
 		localVarReturnValue  ControllerServicesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/process-groups/{id}/controller-services"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetControllerServicesFromGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/process-groups/{id}/controller-services"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.IncludeAncestorGroups.IsSet() {
-		localVarQueryParams.Add("includeAncestorGroups", parameterToString(localVarOptionals.IncludeAncestorGroups.Value(), ""))
+	if r.includeAncestorGroups != nil {
+		localVarQueryParams.Add("includeAncestorGroups", parameterToString(*r.includeAncestorGroups, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.IncludeDescendantGroups.IsSet() {
-		localVarQueryParams.Add("includeDescendantGroups", parameterToString(localVarOptionals.IncludeDescendantGroups.Value(), ""))
+	if r.includeDescendantGroups != nil {
+		localVarQueryParams.Add("includeDescendantGroups", parameterToString(*r.includeDescendantGroups, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1326,18 +1794,19 @@ func (a *FlowApiService) GetControllerServicesFromGroup(ctx _context.Context, id
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1362,12 +1831,32 @@ func (a *FlowApiService) GetControllerServicesFromGroup(ctx _context.Context, id
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetControllerStatusRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetControllerStatusRequest) Execute() (ControllerStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetControllerStatusExecute(r)
+}
+
 /*
-GetControllerStatus Gets the current status of this NiFi
+ * GetControllerStatus Gets the current status of this NiFi
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ControllerStatusEntity
-*/
-func (a *FlowApiService) GetControllerStatus(ctx _context.Context) (ControllerStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetControllerStatusRequest
+ */
+func (a *FlowApiService) GetControllerStatus(ctx _context.Context) FlowApiApiGetControllerStatusRequest {
+	return FlowApiApiGetControllerStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerStatusEntity
+ */
+func (a *FlowApiService) GetControllerStatusExecute(r FlowApiApiGetControllerStatusRequest) (ControllerStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1377,8 +1866,13 @@ func (a *FlowApiService) GetControllerStatus(ctx _context.Context) (ControllerSt
 		localVarReturnValue  ControllerStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/status"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetControllerStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/status"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1400,18 +1894,19 @@ func (a *FlowApiService) GetControllerStatus(ctx _context.Context) (ControllerSt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1436,12 +1931,32 @@ func (a *FlowApiService) GetControllerStatus(ctx _context.Context) (ControllerSt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetCurrentUserRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetCurrentUserRequest) Execute() (CurrentUserEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetCurrentUserExecute(r)
+}
+
 /*
-GetCurrentUser Retrieves the user identity of the user making the request
+ * GetCurrentUser Retrieves the user identity of the user making the request
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return CurrentUserEntity
-*/
-func (a *FlowApiService) GetCurrentUser(ctx _context.Context) (CurrentUserEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetCurrentUserRequest
+ */
+func (a *FlowApiService) GetCurrentUser(ctx _context.Context) FlowApiApiGetCurrentUserRequest {
+	return FlowApiApiGetCurrentUserRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return CurrentUserEntity
+ */
+func (a *FlowApiService) GetCurrentUserExecute(r FlowApiApiGetCurrentUserRequest) (CurrentUserEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1451,8 +1966,13 @@ func (a *FlowApiService) GetCurrentUser(ctx _context.Context) (CurrentUserEntity
 		localVarReturnValue  CurrentUserEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/current-user"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetCurrentUser")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/current-user"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1474,18 +1994,19 @@ func (a *FlowApiService) GetCurrentUser(ctx _context.Context) (CurrentUserEntity
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1510,13 +2031,35 @@ func (a *FlowApiService) GetCurrentUser(ctx _context.Context) (CurrentUserEntity
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetFlowRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetFlowRequest) Execute() (ProcessGroupFlowEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetFlowExecute(r)
+}
+
 /*
-GetFlow Gets a process group
+ * GetFlow Gets a process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return ProcessGroupFlowEntity
-*/
-func (a *FlowApiService) GetFlow(ctx _context.Context, id string) (ProcessGroupFlowEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetFlowRequest
+ */
+func (a *FlowApiService) GetFlow(ctx _context.Context, id string) FlowApiApiGetFlowRequest {
+	return FlowApiApiGetFlowRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupFlowEntity
+ */
+func (a *FlowApiService) GetFlowExecute(r FlowApiApiGetFlowRequest) (ProcessGroupFlowEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1526,9 +2069,13 @@ func (a *FlowApiService) GetFlow(ctx _context.Context, id string) (ProcessGroupF
 		localVarReturnValue  ProcessGroupFlowEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetFlow")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1551,18 +2098,19 @@ func (a *FlowApiService) GetFlow(ctx _context.Context, id string) (ProcessGroupF
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1587,12 +2135,32 @@ func (a *FlowApiService) GetFlow(ctx _context.Context, id string) (ProcessGroupF
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetFlowConfigRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetFlowConfigRequest) Execute() (FlowConfigurationEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetFlowConfigExecute(r)
+}
+
 /*
-GetFlowConfig Retrieves the configuration for this NiFi flow
+ * GetFlowConfig Retrieves the configuration for this NiFi flow
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return FlowConfigurationEntity
-*/
-func (a *FlowApiService) GetFlowConfig(ctx _context.Context) (FlowConfigurationEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetFlowConfigRequest
+ */
+func (a *FlowApiService) GetFlowConfig(ctx _context.Context) FlowApiApiGetFlowConfigRequest {
+	return FlowApiApiGetFlowConfigRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FlowConfigurationEntity
+ */
+func (a *FlowApiService) GetFlowConfigExecute(r FlowApiApiGetFlowConfigRequest) (FlowConfigurationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1602,8 +2170,13 @@ func (a *FlowApiService) GetFlowConfig(ctx _context.Context) (FlowConfigurationE
 		localVarReturnValue  FlowConfigurationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/config"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetFlowConfig")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/config"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1625,18 +2198,19 @@ func (a *FlowApiService) GetFlowConfig(ctx _context.Context) (FlowConfigurationE
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1661,13 +2235,35 @@ func (a *FlowApiService) GetFlowConfig(ctx _context.Context) (FlowConfigurationE
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetFlowMetricsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	producer   string
+}
+
+func (r FlowApiApiGetFlowMetricsRequest) Execute() (map[string]interface{}, *_nethttp.Response, error) {
+	return r.ApiService.GetFlowMetricsExecute(r)
+}
+
 /*
-GetFlowMetrics Gets all metrics for the flow from a particular node
+ * GetFlowMetrics Gets all metrics for the flow from a particular node
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param producer The producer for flow file metrics. Each producer may have its own output format.
-@return map[string]interface{}
-*/
-func (a *FlowApiService) GetFlowMetrics(ctx _context.Context, producer string) (map[string]interface{}, *_nethttp.Response, error) {
+ * @return FlowApiApiGetFlowMetricsRequest
+ */
+func (a *FlowApiService) GetFlowMetrics(ctx _context.Context, producer string) FlowApiApiGetFlowMetricsRequest {
+	return FlowApiApiGetFlowMetricsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		producer:   producer,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return map[string]interface{}
+ */
+func (a *FlowApiService) GetFlowMetricsExecute(r FlowApiApiGetFlowMetricsRequest) (map[string]interface{}, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1677,9 +2273,13 @@ func (a *FlowApiService) GetFlowMetrics(ctx _context.Context, producer string) (
 		localVarReturnValue  map[string]interface{}
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/metrics/{producer}"
-	localVarPath = strings.Replace(localVarPath, "{"+"producer"+"}", _neturl.QueryEscape(parameterToString(producer, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetFlowMetrics")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/metrics/{producer}"
+	localVarPath = strings.Replace(localVarPath, "{"+"producer"+"}", _neturl.PathEscape(parameterToString(r.producer, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1702,18 +2302,19 @@ func (a *FlowApiService) GetFlowMetrics(ctx _context.Context, producer string) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1738,14 +2339,38 @@ func (a *FlowApiService) GetFlowMetrics(ctx _context.Context, producer string) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetFlowsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	registryId string
+	bucketId   string
+}
+
+func (r FlowApiApiGetFlowsRequest) Execute() (VersionedFlowsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetFlowsExecute(r)
+}
+
 /*
-GetFlows Gets the flows from the specified registry and bucket for the current user
+ * GetFlows Gets the flows from the specified registry and bucket for the current user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param registryId The registry id.
  * @param bucketId The bucket id.
-@return VersionedFlowsEntity
-*/
-func (a *FlowApiService) GetFlows(ctx _context.Context, registryId string, bucketId string) (VersionedFlowsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetFlowsRequest
+ */
+func (a *FlowApiService) GetFlows(ctx _context.Context, registryId string, bucketId string) FlowApiApiGetFlowsRequest {
+	return FlowApiApiGetFlowsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		registryId: registryId,
+		bucketId:   bucketId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowsEntity
+ */
+func (a *FlowApiService) GetFlowsExecute(r FlowApiApiGetFlowsRequest) (VersionedFlowsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1755,11 +2380,14 @@ func (a *FlowApiService) GetFlows(ctx _context.Context, registryId string, bucke
 		localVarReturnValue  VersionedFlowsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/registries/{registry-id}/buckets/{bucket-id}/flows"
-	localVarPath = strings.Replace(localVarPath, "{"+"registry-id"+"}", _neturl.QueryEscape(parameterToString(registryId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetFlows")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"bucket-id"+"}", _neturl.QueryEscape(parameterToString(bucketId, "")), -1)
+	localVarPath := localBasePath + "/flow/registries/{registry-id}/buckets/{bucket-id}/flows"
+	localVarPath = strings.Replace(localVarPath, "{"+"registry-id"+"}", _neturl.PathEscape(parameterToString(r.registryId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"bucket-id"+"}", _neturl.PathEscape(parameterToString(r.bucketId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1782,18 +2410,19 @@ func (a *FlowApiService) GetFlows(ctx _context.Context, registryId string, bucke
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1818,22 +2447,46 @@ func (a *FlowApiService) GetFlows(ctx _context.Context, registryId string, bucke
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetInputPortStatusOpts Optional parameters for the method 'GetInputPortStatus'
-type FlowApiGetInputPortStatusOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetInputPortStatusRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetInputPortStatusRequest) Nodewise(nodewise bool) FlowApiApiGetInputPortStatusRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetInputPortStatusRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetInputPortStatusRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetInputPortStatusRequest) Execute() (PortStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetInputPortStatusExecute(r)
 }
 
 /*
-GetInputPortStatus Gets status for an input port
+ * GetInputPortStatus Gets status for an input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The input port id.
- * @param optional nil or *FlowApiGetInputPortStatusOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return PortStatusEntity
-*/
-func (a *FlowApiService) GetInputPortStatus(ctx _context.Context, id string, localVarOptionals *FlowApiGetInputPortStatusOpts) (PortStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetInputPortStatusRequest
+ */
+func (a *FlowApiService) GetInputPortStatus(ctx _context.Context, id string) FlowApiApiGetInputPortStatusRequest {
+	return FlowApiApiGetInputPortStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortStatusEntity
+ */
+func (a *FlowApiService) GetInputPortStatusExecute(r FlowApiApiGetInputPortStatusRequest) (PortStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1843,19 +2496,23 @@ func (a *FlowApiService) GetInputPortStatus(ctx _context.Context, id string, loc
 		localVarReturnValue  PortStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/input-ports/{id}/status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetInputPortStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/input-ports/{id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1874,18 +2531,19 @@ func (a *FlowApiService) GetInputPortStatus(ctx _context.Context, id string, loc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1910,22 +2568,46 @@ func (a *FlowApiService) GetInputPortStatus(ctx _context.Context, id string, loc
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetOutputPortStatusOpts Optional parameters for the method 'GetOutputPortStatus'
-type FlowApiGetOutputPortStatusOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetOutputPortStatusRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetOutputPortStatusRequest) Nodewise(nodewise bool) FlowApiApiGetOutputPortStatusRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetOutputPortStatusRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetOutputPortStatusRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetOutputPortStatusRequest) Execute() (PortStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetOutputPortStatusExecute(r)
 }
 
 /*
-GetOutputPortStatus Gets status for an output port
+ * GetOutputPortStatus Gets status for an output port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The output port id.
- * @param optional nil or *FlowApiGetOutputPortStatusOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return PortStatusEntity
-*/
-func (a *FlowApiService) GetOutputPortStatus(ctx _context.Context, id string, localVarOptionals *FlowApiGetOutputPortStatusOpts) (PortStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetOutputPortStatusRequest
+ */
+func (a *FlowApiService) GetOutputPortStatus(ctx _context.Context, id string) FlowApiApiGetOutputPortStatusRequest {
+	return FlowApiApiGetOutputPortStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortStatusEntity
+ */
+func (a *FlowApiService) GetOutputPortStatusExecute(r FlowApiApiGetOutputPortStatusRequest) (PortStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1935,19 +2617,23 @@ func (a *FlowApiService) GetOutputPortStatus(ctx _context.Context, id string, lo
 		localVarReturnValue  PortStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/output-ports/{id}/status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetOutputPortStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/output-ports/{id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1966,18 +2652,19 @@ func (a *FlowApiService) GetOutputPortStatus(ctx _context.Context, id string, lo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2002,12 +2689,32 @@ func (a *FlowApiService) GetOutputPortStatus(ctx _context.Context, id string, lo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetParameterContextsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetParameterContextsRequest) Execute() (ParameterContextsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetParameterContextsExecute(r)
+}
+
 /*
-GetParameterContexts Gets all Parameter Contexts
+ * GetParameterContexts Gets all Parameter Contexts
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ParameterContextsEntity
-*/
-func (a *FlowApiService) GetParameterContexts(ctx _context.Context) (ParameterContextsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetParameterContextsRequest
+ */
+func (a *FlowApiService) GetParameterContexts(ctx _context.Context) FlowApiApiGetParameterContextsRequest {
+	return FlowApiApiGetParameterContextsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ParameterContextsEntity
+ */
+func (a *FlowApiService) GetParameterContextsExecute(r FlowApiApiGetParameterContextsRequest) (ParameterContextsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2017,8 +2724,13 @@ func (a *FlowApiService) GetParameterContexts(ctx _context.Context) (ParameterCo
 		localVarReturnValue  ParameterContextsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/parameter-contexts"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetParameterContexts")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/parameter-contexts"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -2040,18 +2752,19 @@ func (a *FlowApiService) GetParameterContexts(ctx _context.Context) (ParameterCo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2076,13 +2789,33 @@ func (a *FlowApiService) GetParameterContexts(ctx _context.Context) (ParameterCo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetPrioritizersRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetPrioritizersRequest) Execute() (PrioritizerTypesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetPrioritizersExecute(r)
+}
+
 /*
-GetPrioritizers Retrieves the types of prioritizers that this NiFi supports
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetPrioritizers Retrieves the types of prioritizers that this NiFi supports
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return PrioritizerTypesEntity
-*/
-func (a *FlowApiService) GetPrioritizers(ctx _context.Context) (PrioritizerTypesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetPrioritizersRequest
+ */
+func (a *FlowApiService) GetPrioritizers(ctx _context.Context) FlowApiApiGetPrioritizersRequest {
+	return FlowApiApiGetPrioritizersRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PrioritizerTypesEntity
+ */
+func (a *FlowApiService) GetPrioritizersExecute(r FlowApiApiGetPrioritizersRequest) (PrioritizerTypesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2092,8 +2825,13 @@ func (a *FlowApiService) GetPrioritizers(ctx _context.Context) (PrioritizerTypes
 		localVarReturnValue  PrioritizerTypesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/prioritizers"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetPrioritizers")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/prioritizers"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -2115,18 +2853,19 @@ func (a *FlowApiService) GetPrioritizers(ctx _context.Context) (PrioritizerTypes
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2151,25 +2890,52 @@ func (a *FlowApiService) GetPrioritizers(ctx _context.Context) (PrioritizerTypes
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetProcessGroupStatusOpts Optional parameters for the method 'GetProcessGroupStatus'
-type FlowApiGetProcessGroupStatusOpts struct {
-	Recursive     optional.Bool
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetProcessGroupStatusRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	recursive     *bool
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetProcessGroupStatusRequest) Recursive(recursive bool) FlowApiApiGetProcessGroupStatusRequest {
+	r.recursive = &recursive
+	return r
+}
+func (r FlowApiApiGetProcessGroupStatusRequest) Nodewise(nodewise bool) FlowApiApiGetProcessGroupStatusRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetProcessGroupStatusRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetProcessGroupStatusRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetProcessGroupStatusRequest) Execute() (ProcessGroupStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessGroupStatusExecute(r)
 }
 
 /*
-GetProcessGroupStatus Gets the status for a process group
-The status for a process group includes status for all descendent components. When invoked on the root group with recursive set to true, it will return the current status of every component in the flow.
+ * GetProcessGroupStatus Gets the status for a process group
+ * The status for a process group includes status for all descendent components. When invoked on the root group with recursive set to true, it will return the current status of every component in the flow.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param optional nil or *FlowApiGetProcessGroupStatusOpts - Optional Parameters:
- * @param "Recursive" (optional.Bool) -  Whether all descendant groups and the status of their content will be included. Optional, defaults to false
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return ProcessGroupStatusEntity
-*/
-func (a *FlowApiService) GetProcessGroupStatus(ctx _context.Context, id string, localVarOptionals *FlowApiGetProcessGroupStatusOpts) (ProcessGroupStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetProcessGroupStatusRequest
+ */
+func (a *FlowApiService) GetProcessGroupStatus(ctx _context.Context, id string) FlowApiApiGetProcessGroupStatusRequest {
+	return FlowApiApiGetProcessGroupStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupStatusEntity
+ */
+func (a *FlowApiService) GetProcessGroupStatusExecute(r FlowApiApiGetProcessGroupStatusRequest) (ProcessGroupStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2179,22 +2945,26 @@ func (a *FlowApiService) GetProcessGroupStatus(ctx _context.Context, id string, 
 		localVarReturnValue  ProcessGroupStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/process-groups/{id}/status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetProcessGroupStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/process-groups/{id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Recursive.IsSet() {
-		localVarQueryParams.Add("recursive", parameterToString(localVarOptionals.Recursive.Value(), ""))
+	if r.recursive != nil {
+		localVarQueryParams.Add("recursive", parameterToString(*r.recursive, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2213,18 +2983,19 @@ func (a *FlowApiService) GetProcessGroupStatus(ctx _context.Context, id string, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2249,13 +3020,35 @@ func (a *FlowApiService) GetProcessGroupStatus(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetProcessGroupStatusHistoryRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetProcessGroupStatusHistoryRequest) Execute() (StatusHistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessGroupStatusHistoryExecute(r)
+}
+
 /*
-GetProcessGroupStatusHistory Gets status history for a remote process group
+ * GetProcessGroupStatusHistory Gets status history for a remote process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return StatusHistoryEntity
-*/
-func (a *FlowApiService) GetProcessGroupStatusHistory(ctx _context.Context, id string) (StatusHistoryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetProcessGroupStatusHistoryRequest
+ */
+func (a *FlowApiService) GetProcessGroupStatusHistory(ctx _context.Context, id string) FlowApiApiGetProcessGroupStatusHistoryRequest {
+	return FlowApiApiGetProcessGroupStatusHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return StatusHistoryEntity
+ */
+func (a *FlowApiService) GetProcessGroupStatusHistoryExecute(r FlowApiApiGetProcessGroupStatusHistoryRequest) (StatusHistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2265,9 +3058,13 @@ func (a *FlowApiService) GetProcessGroupStatusHistory(ctx _context.Context, id s
 		localVarReturnValue  StatusHistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/process-groups/{id}/status/history"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetProcessGroupStatusHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/process-groups/{id}/status/history"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2290,18 +3087,19 @@ func (a *FlowApiService) GetProcessGroupStatusHistory(ctx _context.Context, id s
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2326,22 +3124,46 @@ func (a *FlowApiService) GetProcessGroupStatusHistory(ctx _context.Context, id s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetProcessorStatusOpts Optional parameters for the method 'GetProcessorStatus'
-type FlowApiGetProcessorStatusOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetProcessorStatusRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetProcessorStatusRequest) Nodewise(nodewise bool) FlowApiApiGetProcessorStatusRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetProcessorStatusRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetProcessorStatusRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetProcessorStatusRequest) Execute() (ProcessorStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorStatusExecute(r)
 }
 
 /*
-GetProcessorStatus Gets status for a processor
+ * GetProcessorStatus Gets status for a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
- * @param optional nil or *FlowApiGetProcessorStatusOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return ProcessorStatusEntity
-*/
-func (a *FlowApiService) GetProcessorStatus(ctx _context.Context, id string, localVarOptionals *FlowApiGetProcessorStatusOpts) (ProcessorStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetProcessorStatusRequest
+ */
+func (a *FlowApiService) GetProcessorStatus(ctx _context.Context, id string) FlowApiApiGetProcessorStatusRequest {
+	return FlowApiApiGetProcessorStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorStatusEntity
+ */
+func (a *FlowApiService) GetProcessorStatusExecute(r FlowApiApiGetProcessorStatusRequest) (ProcessorStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2351,19 +3173,23 @@ func (a *FlowApiService) GetProcessorStatus(ctx _context.Context, id string, loc
 		localVarReturnValue  ProcessorStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/processors/{id}/status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetProcessorStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/processors/{id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2382,18 +3208,19 @@ func (a *FlowApiService) GetProcessorStatus(ctx _context.Context, id string, loc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2418,13 +3245,35 @@ func (a *FlowApiService) GetProcessorStatus(ctx _context.Context, id string, loc
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetProcessorStatusHistoryRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetProcessorStatusHistoryRequest) Execute() (StatusHistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorStatusHistoryExecute(r)
+}
+
 /*
-GetProcessorStatusHistory Gets status history for a processor
+ * GetProcessorStatusHistory Gets status history for a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return StatusHistoryEntity
-*/
-func (a *FlowApiService) GetProcessorStatusHistory(ctx _context.Context, id string) (StatusHistoryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetProcessorStatusHistoryRequest
+ */
+func (a *FlowApiService) GetProcessorStatusHistory(ctx _context.Context, id string) FlowApiApiGetProcessorStatusHistoryRequest {
+	return FlowApiApiGetProcessorStatusHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return StatusHistoryEntity
+ */
+func (a *FlowApiService) GetProcessorStatusHistoryExecute(r FlowApiApiGetProcessorStatusHistoryRequest) (StatusHistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2434,9 +3283,13 @@ func (a *FlowApiService) GetProcessorStatusHistory(ctx _context.Context, id stri
 		localVarReturnValue  StatusHistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/processors/{id}/status/history"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetProcessorStatusHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/processors/{id}/status/history"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2459,18 +3312,19 @@ func (a *FlowApiService) GetProcessorStatusHistory(ctx _context.Context, id stri
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2495,24 +3349,49 @@ func (a *FlowApiService) GetProcessorStatusHistory(ctx _context.Context, id stri
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetProcessorTypesOpts Optional parameters for the method 'GetProcessorTypes'
-type FlowApiGetProcessorTypesOpts struct {
-	BundleGroupFilter    optional.String
-	BundleArtifactFilter optional.String
-	Type_                optional.String
+type FlowApiApiGetProcessorTypesRequest struct {
+	ctx                  _context.Context
+	ApiService           *FlowApiService
+	bundleGroupFilter    *string
+	bundleArtifactFilter *string
+	type_                *string
+}
+
+func (r FlowApiApiGetProcessorTypesRequest) BundleGroupFilter(bundleGroupFilter string) FlowApiApiGetProcessorTypesRequest {
+	r.bundleGroupFilter = &bundleGroupFilter
+	return r
+}
+func (r FlowApiApiGetProcessorTypesRequest) BundleArtifactFilter(bundleArtifactFilter string) FlowApiApiGetProcessorTypesRequest {
+	r.bundleArtifactFilter = &bundleArtifactFilter
+	return r
+}
+func (r FlowApiApiGetProcessorTypesRequest) Type_(type_ string) FlowApiApiGetProcessorTypesRequest {
+	r.type_ = &type_
+	return r
+}
+
+func (r FlowApiApiGetProcessorTypesRequest) Execute() (ProcessorTypesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorTypesExecute(r)
 }
 
 /*
-GetProcessorTypes Retrieves the types of processors that this NiFi supports
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetProcessorTypes Retrieves the types of processors that this NiFi supports
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *FlowApiGetProcessorTypesOpts - Optional Parameters:
- * @param "BundleGroupFilter" (optional.String) -  If specified, will only return types that are a member of this bundle group.
- * @param "BundleArtifactFilter" (optional.String) -  If specified, will only return types that are a member of this bundle artifact.
- * @param "Type_" (optional.String) -  If specified, will only return types whose fully qualified classname matches.
-@return ProcessorTypesEntity
-*/
-func (a *FlowApiService) GetProcessorTypes(ctx _context.Context, localVarOptionals *FlowApiGetProcessorTypesOpts) (ProcessorTypesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetProcessorTypesRequest
+ */
+func (a *FlowApiService) GetProcessorTypes(ctx _context.Context) FlowApiApiGetProcessorTypesRequest {
+	return FlowApiApiGetProcessorTypesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorTypesEntity
+ */
+func (a *FlowApiService) GetProcessorTypesExecute(r FlowApiApiGetProcessorTypesRequest) (ProcessorTypesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2522,20 +3401,25 @@ func (a *FlowApiService) GetProcessorTypes(ctx _context.Context, localVarOptiona
 		localVarReturnValue  ProcessorTypesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/processor-types"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetProcessorTypes")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/processor-types"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.BundleGroupFilter.IsSet() {
-		localVarQueryParams.Add("bundleGroupFilter", parameterToString(localVarOptionals.BundleGroupFilter.Value(), ""))
+	if r.bundleGroupFilter != nil {
+		localVarQueryParams.Add("bundleGroupFilter", parameterToString(*r.bundleGroupFilter, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.BundleArtifactFilter.IsSet() {
-		localVarQueryParams.Add("bundleArtifactFilter", parameterToString(localVarOptionals.BundleArtifactFilter.Value(), ""))
+	if r.bundleArtifactFilter != nil {
+		localVarQueryParams.Add("bundleArtifactFilter", parameterToString(*r.bundleArtifactFilter, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Type_.IsSet() {
-		localVarQueryParams.Add("type", parameterToString(localVarOptionals.Type_.Value(), ""))
+	if r.type_ != nil {
+		localVarQueryParams.Add("type", parameterToString(*r.type_, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2554,18 +3438,19 @@ func (a *FlowApiService) GetProcessorTypes(ctx _context.Context, localVarOptiona
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2590,12 +3475,32 @@ func (a *FlowApiService) GetProcessorTypes(ctx _context.Context, localVarOptiona
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetRegistriesRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetRegistriesRequest) Execute() (RegistryClientsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRegistriesExecute(r)
+}
+
 /*
-GetRegistries Gets the listing of available registries
+ * GetRegistries Gets the listing of available registries
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return RegistryClientsEntity
-*/
-func (a *FlowApiService) GetRegistries(ctx _context.Context) (RegistryClientsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetRegistriesRequest
+ */
+func (a *FlowApiService) GetRegistries(ctx _context.Context) FlowApiApiGetRegistriesRequest {
+	return FlowApiApiGetRegistriesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RegistryClientsEntity
+ */
+func (a *FlowApiService) GetRegistriesExecute(r FlowApiApiGetRegistriesRequest) (RegistryClientsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2605,8 +3510,13 @@ func (a *FlowApiService) GetRegistries(ctx _context.Context) (RegistryClientsEnt
 		localVarReturnValue  RegistryClientsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/registries"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetRegistries")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/registries"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -2628,18 +3538,19 @@ func (a *FlowApiService) GetRegistries(ctx _context.Context) (RegistryClientsEnt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2664,22 +3575,46 @@ func (a *FlowApiService) GetRegistries(ctx _context.Context) (RegistryClientsEnt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetRemoteProcessGroupStatusOpts Optional parameters for the method 'GetRemoteProcessGroupStatus'
-type FlowApiGetRemoteProcessGroupStatusOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type FlowApiApiGetRemoteProcessGroupStatusRequest struct {
+	ctx           _context.Context
+	ApiService    *FlowApiService
+	id            string
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r FlowApiApiGetRemoteProcessGroupStatusRequest) Nodewise(nodewise bool) FlowApiApiGetRemoteProcessGroupStatusRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r FlowApiApiGetRemoteProcessGroupStatusRequest) ClusterNodeId(clusterNodeId string) FlowApiApiGetRemoteProcessGroupStatusRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r FlowApiApiGetRemoteProcessGroupStatusRequest) Execute() (RemoteProcessGroupStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRemoteProcessGroupStatusExecute(r)
 }
 
 /*
-GetRemoteProcessGroupStatus Gets status for a remote process group
+ * GetRemoteProcessGroupStatus Gets status for a remote process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
- * @param optional nil or *FlowApiGetRemoteProcessGroupStatusOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return RemoteProcessGroupStatusEntity
-*/
-func (a *FlowApiService) GetRemoteProcessGroupStatus(ctx _context.Context, id string, localVarOptionals *FlowApiGetRemoteProcessGroupStatusOpts) (RemoteProcessGroupStatusEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetRemoteProcessGroupStatusRequest
+ */
+func (a *FlowApiService) GetRemoteProcessGroupStatus(ctx _context.Context, id string) FlowApiApiGetRemoteProcessGroupStatusRequest {
+	return FlowApiApiGetRemoteProcessGroupStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupStatusEntity
+ */
+func (a *FlowApiService) GetRemoteProcessGroupStatusExecute(r FlowApiApiGetRemoteProcessGroupStatusRequest) (RemoteProcessGroupStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2689,19 +3624,23 @@ func (a *FlowApiService) GetRemoteProcessGroupStatus(ctx _context.Context, id st
 		localVarReturnValue  RemoteProcessGroupStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/remote-process-groups/{id}/status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetRemoteProcessGroupStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/remote-process-groups/{id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2720,18 +3659,19 @@ func (a *FlowApiService) GetRemoteProcessGroupStatus(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2756,13 +3696,35 @@ func (a *FlowApiService) GetRemoteProcessGroupStatus(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetRemoteProcessGroupStatusHistoryRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+}
+
+func (r FlowApiApiGetRemoteProcessGroupStatusHistoryRequest) Execute() (StatusHistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRemoteProcessGroupStatusHistoryExecute(r)
+}
+
 /*
-GetRemoteProcessGroupStatusHistory Gets the status history
+ * GetRemoteProcessGroupStatusHistory Gets the status history
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
-@return StatusHistoryEntity
-*/
-func (a *FlowApiService) GetRemoteProcessGroupStatusHistory(ctx _context.Context, id string) (StatusHistoryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetRemoteProcessGroupStatusHistoryRequest
+ */
+func (a *FlowApiService) GetRemoteProcessGroupStatusHistory(ctx _context.Context, id string) FlowApiApiGetRemoteProcessGroupStatusHistoryRequest {
+	return FlowApiApiGetRemoteProcessGroupStatusHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return StatusHistoryEntity
+ */
+func (a *FlowApiService) GetRemoteProcessGroupStatusHistoryExecute(r FlowApiApiGetRemoteProcessGroupStatusHistoryRequest) (StatusHistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2772,9 +3734,13 @@ func (a *FlowApiService) GetRemoteProcessGroupStatusHistory(ctx _context.Context
 		localVarReturnValue  StatusHistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/remote-process-groups/{id}/status/history"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetRemoteProcessGroupStatusHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/remote-process-groups/{id}/status/history"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2797,18 +3763,19 @@ func (a *FlowApiService) GetRemoteProcessGroupStatusHistory(ctx _context.Context
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2833,24 +3800,49 @@ func (a *FlowApiService) GetRemoteProcessGroupStatusHistory(ctx _context.Context
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiGetReportingTaskTypesOpts Optional parameters for the method 'GetReportingTaskTypes'
-type FlowApiGetReportingTaskTypesOpts struct {
-	BundleGroupFilter    optional.String
-	BundleArtifactFilter optional.String
-	Type_                optional.String
+type FlowApiApiGetReportingTaskTypesRequest struct {
+	ctx                  _context.Context
+	ApiService           *FlowApiService
+	bundleGroupFilter    *string
+	bundleArtifactFilter *string
+	type_                *string
+}
+
+func (r FlowApiApiGetReportingTaskTypesRequest) BundleGroupFilter(bundleGroupFilter string) FlowApiApiGetReportingTaskTypesRequest {
+	r.bundleGroupFilter = &bundleGroupFilter
+	return r
+}
+func (r FlowApiApiGetReportingTaskTypesRequest) BundleArtifactFilter(bundleArtifactFilter string) FlowApiApiGetReportingTaskTypesRequest {
+	r.bundleArtifactFilter = &bundleArtifactFilter
+	return r
+}
+func (r FlowApiApiGetReportingTaskTypesRequest) Type_(type_ string) FlowApiApiGetReportingTaskTypesRequest {
+	r.type_ = &type_
+	return r
+}
+
+func (r FlowApiApiGetReportingTaskTypesRequest) Execute() (ReportingTaskTypesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetReportingTaskTypesExecute(r)
 }
 
 /*
-GetReportingTaskTypes Retrieves the types of reporting tasks that this NiFi supports
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetReportingTaskTypes Retrieves the types of reporting tasks that this NiFi supports
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *FlowApiGetReportingTaskTypesOpts - Optional Parameters:
- * @param "BundleGroupFilter" (optional.String) -  If specified, will only return types that are a member of this bundle group.
- * @param "BundleArtifactFilter" (optional.String) -  If specified, will only return types that are a member of this bundle artifact.
- * @param "Type_" (optional.String) -  If specified, will only return types whose fully qualified classname matches.
-@return ReportingTaskTypesEntity
-*/
-func (a *FlowApiService) GetReportingTaskTypes(ctx _context.Context, localVarOptionals *FlowApiGetReportingTaskTypesOpts) (ReportingTaskTypesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetReportingTaskTypesRequest
+ */
+func (a *FlowApiService) GetReportingTaskTypes(ctx _context.Context) FlowApiApiGetReportingTaskTypesRequest {
+	return FlowApiApiGetReportingTaskTypesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ReportingTaskTypesEntity
+ */
+func (a *FlowApiService) GetReportingTaskTypesExecute(r FlowApiApiGetReportingTaskTypesRequest) (ReportingTaskTypesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2860,20 +3852,25 @@ func (a *FlowApiService) GetReportingTaskTypes(ctx _context.Context, localVarOpt
 		localVarReturnValue  ReportingTaskTypesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/reporting-task-types"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetReportingTaskTypes")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/reporting-task-types"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.BundleGroupFilter.IsSet() {
-		localVarQueryParams.Add("bundleGroupFilter", parameterToString(localVarOptionals.BundleGroupFilter.Value(), ""))
+	if r.bundleGroupFilter != nil {
+		localVarQueryParams.Add("bundleGroupFilter", parameterToString(*r.bundleGroupFilter, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.BundleArtifactFilter.IsSet() {
-		localVarQueryParams.Add("bundleArtifactFilter", parameterToString(localVarOptionals.BundleArtifactFilter.Value(), ""))
+	if r.bundleArtifactFilter != nil {
+		localVarQueryParams.Add("bundleArtifactFilter", parameterToString(*r.bundleArtifactFilter, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Type_.IsSet() {
-		localVarQueryParams.Add("type", parameterToString(localVarOptionals.Type_.Value(), ""))
+	if r.type_ != nil {
+		localVarQueryParams.Add("type", parameterToString(*r.type_, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2892,18 +3889,19 @@ func (a *FlowApiService) GetReportingTaskTypes(ctx _context.Context, localVarOpt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2928,12 +3926,32 @@ func (a *FlowApiService) GetReportingTaskTypes(ctx _context.Context, localVarOpt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetReportingTasksRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetReportingTasksRequest) Execute() (ReportingTasksEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetReportingTasksExecute(r)
+}
+
 /*
-GetReportingTasks Gets all reporting tasks
+ * GetReportingTasks Gets all reporting tasks
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ReportingTasksEntity
-*/
-func (a *FlowApiService) GetReportingTasks(ctx _context.Context) (ReportingTasksEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetReportingTasksRequest
+ */
+func (a *FlowApiService) GetReportingTasks(ctx _context.Context) FlowApiApiGetReportingTasksRequest {
+	return FlowApiApiGetReportingTasksRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ReportingTasksEntity
+ */
+func (a *FlowApiService) GetReportingTasksExecute(r FlowApiApiGetReportingTasksRequest) (ReportingTasksEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2943,8 +3961,13 @@ func (a *FlowApiService) GetReportingTasks(ctx _context.Context) (ReportingTasks
 		localVarReturnValue  ReportingTasksEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/reporting-tasks"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetReportingTasks")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/reporting-tasks"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -2966,18 +3989,19 @@ func (a *FlowApiService) GetReportingTasks(ctx _context.Context) (ReportingTasks
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -3002,12 +4026,32 @@ func (a *FlowApiService) GetReportingTasks(ctx _context.Context) (ReportingTasks
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetTemplatesRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+}
+
+func (r FlowApiApiGetTemplatesRequest) Execute() (TemplatesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetTemplatesExecute(r)
+}
+
 /*
-GetTemplates Gets all templates
+ * GetTemplates Gets all templates
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return TemplatesEntity
-*/
-func (a *FlowApiService) GetTemplates(ctx _context.Context) (TemplatesEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetTemplatesRequest
+ */
+func (a *FlowApiService) GetTemplates(ctx _context.Context) FlowApiApiGetTemplatesRequest {
+	return FlowApiApiGetTemplatesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TemplatesEntity
+ */
+func (a *FlowApiService) GetTemplatesExecute(r FlowApiApiGetTemplatesRequest) (TemplatesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3017,8 +4061,13 @@ func (a *FlowApiService) GetTemplates(ctx _context.Context) (TemplatesEntity, *_
 		localVarReturnValue  TemplatesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/templates"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetTemplates")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/templates"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -3040,18 +4089,19 @@ func (a *FlowApiService) GetTemplates(ctx _context.Context) (TemplatesEntity, *_
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -3076,15 +4126,41 @@ func (a *FlowApiService) GetTemplates(ctx _context.Context) (TemplatesEntity, *_
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiGetVersionsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	registryId string
+	bucketId   string
+	flowId     string
+}
+
+func (r FlowApiApiGetVersionsRequest) Execute() (VersionedFlowSnapshotMetadataSetEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetVersionsExecute(r)
+}
+
 /*
-GetVersions Gets the flow versions from the specified registry and bucket for the specified flow for the current user
+ * GetVersions Gets the flow versions from the specified registry and bucket for the specified flow for the current user
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param registryId The registry id.
  * @param bucketId The bucket id.
  * @param flowId The flow id.
-@return VersionedFlowSnapshotMetadataSetEntity
-*/
-func (a *FlowApiService) GetVersions(ctx _context.Context, registryId string, bucketId string, flowId string) (VersionedFlowSnapshotMetadataSetEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiGetVersionsRequest
+ */
+func (a *FlowApiService) GetVersions(ctx _context.Context, registryId string, bucketId string, flowId string) FlowApiApiGetVersionsRequest {
+	return FlowApiApiGetVersionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		registryId: registryId,
+		bucketId:   bucketId,
+		flowId:     flowId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VersionedFlowSnapshotMetadataSetEntity
+ */
+func (a *FlowApiService) GetVersionsExecute(r FlowApiApiGetVersionsRequest) (VersionedFlowSnapshotMetadataSetEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3094,13 +4170,15 @@ func (a *FlowApiService) GetVersions(ctx _context.Context, registryId string, bu
 		localVarReturnValue  VersionedFlowSnapshotMetadataSetEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/registries/{registry-id}/buckets/{bucket-id}/flows/{flow-id}/versions"
-	localVarPath = strings.Replace(localVarPath, "{"+"registry-id"+"}", _neturl.QueryEscape(parameterToString(registryId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.GetVersions")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"bucket-id"+"}", _neturl.QueryEscape(parameterToString(bucketId, "")), -1)
-
-	localVarPath = strings.Replace(localVarPath, "{"+"flow-id"+"}", _neturl.QueryEscape(parameterToString(flowId, "")), -1)
+	localVarPath := localBasePath + "/flow/registries/{registry-id}/buckets/{bucket-id}/flows/{flow-id}/versions"
+	localVarPath = strings.Replace(localVarPath, "{"+"registry-id"+"}", _neturl.PathEscape(parameterToString(r.registryId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"bucket-id"+"}", _neturl.PathEscape(parameterToString(r.bucketId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"flow-id"+"}", _neturl.PathEscape(parameterToString(r.flowId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3123,18 +4201,19 @@ func (a *FlowApiService) GetVersions(ctx _context.Context, registryId string, bu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -3159,32 +4238,74 @@ func (a *FlowApiService) GetVersions(ctx _context.Context, registryId string, bu
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiQueryHistoryOpts Optional parameters for the method 'QueryHistory'
-type FlowApiQueryHistoryOpts struct {
-	SortColumn   optional.String
-	SortOrder    optional.String
-	StartDate    optional.String
-	EndDate      optional.String
-	UserIdentity optional.String
-	SourceId     optional.String
+type FlowApiApiQueryHistoryRequest struct {
+	ctx          _context.Context
+	ApiService   *FlowApiService
+	offset       *string
+	count        *string
+	sortColumn   *string
+	sortOrder    *string
+	startDate    *string
+	endDate      *string
+	userIdentity *string
+	sourceId     *string
+}
+
+func (r FlowApiApiQueryHistoryRequest) Offset(offset string) FlowApiApiQueryHistoryRequest {
+	r.offset = &offset
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) Count(count string) FlowApiApiQueryHistoryRequest {
+	r.count = &count
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) SortColumn(sortColumn string) FlowApiApiQueryHistoryRequest {
+	r.sortColumn = &sortColumn
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) SortOrder(sortOrder string) FlowApiApiQueryHistoryRequest {
+	r.sortOrder = &sortOrder
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) StartDate(startDate string) FlowApiApiQueryHistoryRequest {
+	r.startDate = &startDate
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) EndDate(endDate string) FlowApiApiQueryHistoryRequest {
+	r.endDate = &endDate
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) UserIdentity(userIdentity string) FlowApiApiQueryHistoryRequest {
+	r.userIdentity = &userIdentity
+	return r
+}
+func (r FlowApiApiQueryHistoryRequest) SourceId(sourceId string) FlowApiApiQueryHistoryRequest {
+	r.sourceId = &sourceId
+	return r
+}
+
+func (r FlowApiApiQueryHistoryRequest) Execute() (HistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.QueryHistoryExecute(r)
 }
 
 /*
-QueryHistory Gets configuration history
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * QueryHistory Gets configuration history
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param offset The offset into the result set.
- * @param count The number of actions to return.
- * @param optional nil or *FlowApiQueryHistoryOpts - Optional Parameters:
- * @param "SortColumn" (optional.String) -  The field to sort on.
- * @param "SortOrder" (optional.String) -  The direction to sort.
- * @param "StartDate" (optional.String) -  Include actions after this date.
- * @param "EndDate" (optional.String) -  Include actions before this date.
- * @param "UserIdentity" (optional.String) -  Include actions performed by this user.
- * @param "SourceId" (optional.String) -  Include actions on this component.
-@return HistoryEntity
-*/
-func (a *FlowApiService) QueryHistory(ctx _context.Context, offset string, count string, localVarOptionals *FlowApiQueryHistoryOpts) (HistoryEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiQueryHistoryRequest
+ */
+func (a *FlowApiService) QueryHistory(ctx _context.Context) FlowApiApiQueryHistoryRequest {
+	return FlowApiApiQueryHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return HistoryEntity
+ */
+func (a *FlowApiService) QueryHistoryExecute(r FlowApiApiQueryHistoryRequest) (HistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3194,31 +4315,42 @@ func (a *FlowApiService) QueryHistory(ctx _context.Context, offset string, count
 		localVarReturnValue  HistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/history"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.QueryHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/history"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.offset == nil {
+		return localVarReturnValue, nil, reportError("offset is required and must be specified")
+	}
+	if r.count == nil {
+		return localVarReturnValue, nil, reportError("count is required and must be specified")
+	}
 
-	localVarQueryParams.Add("offset", parameterToString(offset, ""))
-	localVarQueryParams.Add("count", parameterToString(count, ""))
-	if localVarOptionals != nil && localVarOptionals.SortColumn.IsSet() {
-		localVarQueryParams.Add("sortColumn", parameterToString(localVarOptionals.SortColumn.Value(), ""))
+	localVarQueryParams.Add("offset", parameterToString(*r.offset, ""))
+	localVarQueryParams.Add("count", parameterToString(*r.count, ""))
+	if r.sortColumn != nil {
+		localVarQueryParams.Add("sortColumn", parameterToString(*r.sortColumn, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.SortOrder.IsSet() {
-		localVarQueryParams.Add("sortOrder", parameterToString(localVarOptionals.SortOrder.Value(), ""))
+	if r.sortOrder != nil {
+		localVarQueryParams.Add("sortOrder", parameterToString(*r.sortOrder, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.StartDate.IsSet() {
-		localVarQueryParams.Add("startDate", parameterToString(localVarOptionals.StartDate.Value(), ""))
+	if r.startDate != nil {
+		localVarQueryParams.Add("startDate", parameterToString(*r.startDate, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.EndDate.IsSet() {
-		localVarQueryParams.Add("endDate", parameterToString(localVarOptionals.EndDate.Value(), ""))
+	if r.endDate != nil {
+		localVarQueryParams.Add("endDate", parameterToString(*r.endDate, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.UserIdentity.IsSet() {
-		localVarQueryParams.Add("userIdentity", parameterToString(localVarOptionals.UserIdentity.Value(), ""))
+	if r.userIdentity != nil {
+		localVarQueryParams.Add("userIdentity", parameterToString(*r.userIdentity, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.SourceId.IsSet() {
-		localVarQueryParams.Add("sourceId", parameterToString(localVarOptionals.SourceId.Value(), ""))
+	if r.sourceId != nil {
+		localVarQueryParams.Add("sourceId", parameterToString(*r.sourceId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3237,18 +4369,19 @@ func (a *FlowApiService) QueryHistory(ctx _context.Context, offset string, count
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -3273,14 +4406,41 @@ func (a *FlowApiService) QueryHistory(ctx _context.Context, offset string, count
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiScheduleComponentsRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	id         string
+	body       *ScheduleComponentsEntity
+}
+
+func (r FlowApiApiScheduleComponentsRequest) Body(body ScheduleComponentsEntity) FlowApiApiScheduleComponentsRequest {
+	r.body = &body
+	return r
+}
+
+func (r FlowApiApiScheduleComponentsRequest) Execute() (ScheduleComponentsEntity, *_nethttp.Response, error) {
+	return r.ApiService.ScheduleComponentsExecute(r)
+}
+
 /*
-ScheduleComponents Schedule or unschedule components in the specified Process Group.
+ * ScheduleComponents Schedule or unschedule components in the specified Process Group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered.
-@return ScheduleComponentsEntity
-*/
-func (a *FlowApiService) ScheduleComponents(ctx _context.Context, id string, body ScheduleComponentsEntity) (ScheduleComponentsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiScheduleComponentsRequest
+ */
+func (a *FlowApiService) ScheduleComponents(ctx _context.Context, id string) FlowApiApiScheduleComponentsRequest {
+	return FlowApiApiScheduleComponentsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ScheduleComponentsEntity
+ */
+func (a *FlowApiService) ScheduleComponentsExecute(r FlowApiApiScheduleComponentsRequest) (ScheduleComponentsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -3290,13 +4450,20 @@ func (a *FlowApiService) ScheduleComponents(ctx _context.Context, id string, bod
 		localVarReturnValue  ScheduleComponentsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.ScheduleComponents")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3316,19 +4483,20 @@ func (a *FlowApiService) ScheduleComponents(ctx _context.Context, id string, bod
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -3353,14 +4521,39 @@ func (a *FlowApiService) ScheduleComponents(ctx _context.Context, id string, bod
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FlowApiApiSearchClusterRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	q          *string
+}
+
+func (r FlowApiApiSearchClusterRequest) Q(q string) FlowApiApiSearchClusterRequest {
+	r.q = &q
+	return r
+}
+
+func (r FlowApiApiSearchClusterRequest) Execute() (ClusterSearchResultsEntity, *_nethttp.Response, error) {
+	return r.ApiService.SearchClusterExecute(r)
+}
+
 /*
-SearchCluster Searches the cluster for a node with the specified address
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * SearchCluster Searches the cluster for a node with the specified address
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param q Node address to search for.
-@return ClusterSearchResultsEntity
-*/
-func (a *FlowApiService) SearchCluster(ctx _context.Context, q string) (ClusterSearchResultsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiSearchClusterRequest
+ */
+func (a *FlowApiService) SearchCluster(ctx _context.Context) FlowApiApiSearchClusterRequest {
+	return FlowApiApiSearchClusterRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ClusterSearchResultsEntity
+ */
+func (a *FlowApiService) SearchClusterExecute(r FlowApiApiSearchClusterRequest) (ClusterSearchResultsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3370,13 +4563,21 @@ func (a *FlowApiService) SearchCluster(ctx _context.Context, q string) (ClusterS
 		localVarReturnValue  ClusterSearchResultsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/cluster/search-results"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.SearchCluster")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/cluster/search-results"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.q == nil {
+		return localVarReturnValue, nil, reportError("q is required and must be specified")
+	}
 
-	localVarQueryParams.Add("q", parameterToString(q, ""))
+	localVarQueryParams.Add("q", parameterToString(*r.q, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3394,18 +4595,19 @@ func (a *FlowApiService) SearchCluster(ctx _context.Context, q string) (ClusterS
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -3430,22 +4632,44 @@ func (a *FlowApiService) SearchCluster(ctx _context.Context, q string) (ClusterS
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FlowApiSearchFlowOpts Optional parameters for the method 'SearchFlow'
-type FlowApiSearchFlowOpts struct {
-	Q optional.String
-	A optional.String
+type FlowApiApiSearchFlowRequest struct {
+	ctx        _context.Context
+	ApiService *FlowApiService
+	q          *string
+	a          *string
+}
+
+func (r FlowApiApiSearchFlowRequest) Q(q string) FlowApiApiSearchFlowRequest {
+	r.q = &q
+	return r
+}
+func (r FlowApiApiSearchFlowRequest) A(a string) FlowApiApiSearchFlowRequest {
+	r.a = &a
+	return r
+}
+
+func (r FlowApiApiSearchFlowRequest) Execute() (SearchResultsEntity, *_nethttp.Response, error) {
+	return r.ApiService.SearchFlowExecute(r)
 }
 
 /*
-SearchFlow Performs a search against this NiFi using the specified search term
-Only search results from authorized components will be returned.
+ * SearchFlow Performs a search against this NiFi using the specified search term
+ * Only search results from authorized components will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *FlowApiSearchFlowOpts - Optional Parameters:
- * @param "Q" (optional.String) -
- * @param "A" (optional.String) -
-@return SearchResultsEntity
-*/
-func (a *FlowApiService) SearchFlow(ctx _context.Context, localVarOptionals *FlowApiSearchFlowOpts) (SearchResultsEntity, *_nethttp.Response, error) {
+ * @return FlowApiApiSearchFlowRequest
+ */
+func (a *FlowApiService) SearchFlow(ctx _context.Context) FlowApiApiSearchFlowRequest {
+	return FlowApiApiSearchFlowRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return SearchResultsEntity
+ */
+func (a *FlowApiService) SearchFlowExecute(r FlowApiApiSearchFlowRequest) (SearchResultsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3455,17 +4679,22 @@ func (a *FlowApiService) SearchFlow(ctx _context.Context, localVarOptionals *Flo
 		localVarReturnValue  SearchResultsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/flow/search-results"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FlowApiService.SearchFlow")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/flow/search-results"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Q.IsSet() {
-		localVarQueryParams.Add("q", parameterToString(localVarOptionals.Q.Value(), ""))
+	if r.q != nil {
+		localVarQueryParams.Add("q", parameterToString(*r.q, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.A.IsSet() {
-		localVarQueryParams.Add("a", parameterToString(localVarOptionals.A.Value(), ""))
+	if r.a != nil {
+		localVarQueryParams.Add("a", parameterToString(*r.a, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3484,18 +4713,19 @@ func (a *FlowApiService) SearchFlow(ctx _context.Context, localVarOptionals *Flo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

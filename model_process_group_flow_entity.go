@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,8 +11,140 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessGroupFlowEntity struct for ProcessGroupFlowEntity
 type ProcessGroupFlowEntity struct {
-	Permissions      PermissionsDto      `json:"permissions,omitempty"`
-	ProcessGroupFlow ProcessGroupFlowDto `json:"processGroupFlow,omitempty"`
+	Permissions      *PermissionsDTO      `json:"permissions,omitempty"`
+	ProcessGroupFlow *ProcessGroupFlowDTO `json:"processGroupFlow,omitempty"`
+}
+
+// NewProcessGroupFlowEntity instantiates a new ProcessGroupFlowEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupFlowEntity() *ProcessGroupFlowEntity {
+	this := ProcessGroupFlowEntity{}
+	return &this
+}
+
+// NewProcessGroupFlowEntityWithDefaults instantiates a new ProcessGroupFlowEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupFlowEntityWithDefaults() *ProcessGroupFlowEntity {
+	this := ProcessGroupFlowEntity{}
+	return &this
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *ProcessGroupFlowEntity) GetPermissions() PermissionsDTO {
+	if o == nil || o.Permissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupFlowEntity) GetPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.Permissions == nil {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *ProcessGroupFlowEntity) HasPermissions() bool {
+	if o != nil && o.Permissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given PermissionsDTO and assigns it to the Permissions field.
+func (o *ProcessGroupFlowEntity) SetPermissions(v PermissionsDTO) {
+	o.Permissions = &v
+}
+
+// GetProcessGroupFlow returns the ProcessGroupFlow field value if set, zero value otherwise.
+func (o *ProcessGroupFlowEntity) GetProcessGroupFlow() ProcessGroupFlowDTO {
+	if o == nil || o.ProcessGroupFlow == nil {
+		var ret ProcessGroupFlowDTO
+		return ret
+	}
+	return *o.ProcessGroupFlow
+}
+
+// GetProcessGroupFlowOk returns a tuple with the ProcessGroupFlow field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupFlowEntity) GetProcessGroupFlowOk() (*ProcessGroupFlowDTO, bool) {
+	if o == nil || o.ProcessGroupFlow == nil {
+		return nil, false
+	}
+	return o.ProcessGroupFlow, true
+}
+
+// HasProcessGroupFlow returns a boolean if a field has been set.
+func (o *ProcessGroupFlowEntity) HasProcessGroupFlow() bool {
+	if o != nil && o.ProcessGroupFlow != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupFlow gets a reference to the given ProcessGroupFlowDTO and assigns it to the ProcessGroupFlow field.
+func (o *ProcessGroupFlowEntity) SetProcessGroupFlow(v ProcessGroupFlowDTO) {
+	o.ProcessGroupFlow = &v
+}
+
+func (o ProcessGroupFlowEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Permissions != nil {
+		toSerialize["permissions"] = o.Permissions
+	}
+	if o.ProcessGroupFlow != nil {
+		toSerialize["processGroupFlow"] = o.ProcessGroupFlow
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupFlowEntity struct {
+	value *ProcessGroupFlowEntity
+	isSet bool
+}
+
+func (v NullableProcessGroupFlowEntity) Get() *ProcessGroupFlowEntity {
+	return v.value
+}
+
+func (v *NullableProcessGroupFlowEntity) Set(val *ProcessGroupFlowEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupFlowEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupFlowEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupFlowEntity(val *ProcessGroupFlowEntity) *NullableProcessGroupFlowEntity {
+	return &NullableProcessGroupFlowEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupFlowEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupFlowEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

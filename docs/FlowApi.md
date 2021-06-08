@@ -51,18 +51,55 @@ Method | HTTP request | Description
 
 ## ActivateControllerServices
 
-> ActivateControllerServicesEntity ActivateControllerServices(ctx, id, body)
+> ActivateControllerServicesEntity ActivateControllerServices(ctx, id).Body(body).Execute()
 
 Enable or disable Controller Services in the specified Process Group.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    body := *openapiclient.NewActivateControllerServicesEntity() // ActivateControllerServicesEntity | The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.ActivateControllerServices(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.ActivateControllerServices``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ActivateControllerServices`: ActivateControllerServicesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.ActivateControllerServices`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
-**body** | [**ActivateControllerServicesEntity**](ActivateControllerServicesEntity.md)| The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiActivateControllerServicesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ActivateControllerServicesEntity**](ActivateControllerServicesEntity.md) | The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered. | 
 
 ### Return type
 
@@ -84,13 +121,44 @@ No authorization required
 
 ## GenerateClientId
 
-> string GenerateClientId(ctx, )
+> string GenerateClientId(ctx).Execute()
 
 Generates a client id.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GenerateClientId(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GenerateClientId``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GenerateClientId`: string
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GenerateClientId`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGenerateClientIdRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -112,13 +180,44 @@ No authorization required
 
 ## GetAboutInfo
 
-> AboutEntity GetAboutInfo(ctx, )
+> AboutEntity GetAboutInfo(ctx).Execute()
 
 Retrieves details about this NiFi to put in the About dialog
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetAboutInfo(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetAboutInfo``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetAboutInfo`: AboutEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetAboutInfo`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetAboutInfoRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -140,19 +239,55 @@ No authorization required
 
 ## GetAction
 
-> ActionEntity GetAction(ctx, id)
+> ActionEntity GetAction(ctx, id).Execute()
 
 Gets an action
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The action id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetAction(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetAction``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetAction`: ActionEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetAction`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The action id. | 
+**id** | **string** | The action id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetActionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -174,13 +309,44 @@ No authorization required
 
 ## GetBanners
 
-> BannerEntity GetBanners(ctx, )
+> BannerEntity GetBanners(ctx).Execute()
 
 Retrieves the banners for this NiFi
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetBanners(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetBanners``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetBanners`: BannerEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetBanners`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetBannersRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -202,17 +368,53 @@ No authorization required
 
 ## GetBuckets
 
-> BucketsEntity GetBuckets(ctx, id)
+> BucketsEntity GetBuckets(ctx, id).Execute()
 
 Gets the buckets from the specified registry for the current user
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The registry id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetBuckets(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetBuckets``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetBuckets`: BucketsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetBuckets`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The registry id. | 
+**id** | **string** | The registry id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetBucketsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -234,31 +436,59 @@ No authorization required
 
 ## GetBulletinBoard
 
-> BulletinBoardEntity GetBulletinBoard(ctx, optional)
+> BulletinBoardEntity GetBulletinBoard(ctx).After(after).SourceName(sourceName).Message(message).SourceId(sourceId).GroupId(groupId).Limit(limit).Execute()
 
 Gets current bulletins
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    after := "after_example" // string | Includes bulletins with an id after this value. (optional)
+    sourceName := "sourceName_example" // string | Includes bulletins originating from this sources whose name match this regular expression. (optional)
+    message := "message_example" // string | Includes bulletins whose message that match this regular expression. (optional)
+    sourceId := "sourceId_example" // string | Includes bulletins originating from this sources whose id match this regular expression. (optional)
+    groupId := "groupId_example" // string | Includes bulletins originating from this sources whose group id match this regular expression. (optional)
+    limit := "limit_example" // string | The number of bulletins to limit the response to. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetBulletinBoard(context.Background()).After(after).SourceName(sourceName).Message(message).SourceId(sourceId).GroupId(groupId).Limit(limit).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetBulletinBoard``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetBulletinBoard`: BulletinBoardEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetBulletinBoard`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetBulletinBoardRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetBulletinBoardOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetBulletinBoardOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **after** | **optional.String**| Includes bulletins with an id after this value. | 
- **sourceName** | **optional.String**| Includes bulletins originating from this sources whose name match this regular expression. | 
- **message** | **optional.String**| Includes bulletins whose message that match this regular expression. | 
- **sourceId** | **optional.String**| Includes bulletins originating from this sources whose id match this regular expression. | 
- **groupId** | **optional.String**| Includes bulletins originating from this sources whose group id match this regular expression. | 
- **limit** | **optional.String**| The number of bulletins to limit the response to. | 
+ **after** | **string** | Includes bulletins with an id after this value. | 
+ **sourceName** | **string** | Includes bulletins originating from this sources whose name match this regular expression. | 
+ **message** | **string** | Includes bulletins whose message that match this regular expression. | 
+ **sourceId** | **string** | Includes bulletins originating from this sources whose id match this regular expression. | 
+ **groupId** | **string** | Includes bulletins originating from this sources whose group id match this regular expression. | 
+ **limit** | **string** | The number of bulletins to limit the response to. | 
 
 ### Return type
 
@@ -280,13 +510,44 @@ No authorization required
 
 ## GetBulletins
 
-> ControllerBulletinsEntity GetBulletins(ctx, )
+> ControllerBulletinsEntity GetBulletins(ctx).Execute()
 
 Retrieves Controller level bulletins
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetBulletins(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetBulletins``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetBulletins`: ControllerBulletinsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetBulletins`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetBulletinsRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -308,13 +569,44 @@ No authorization required
 
 ## GetClusterSummary
 
-> ClusteSummaryEntity GetClusterSummary(ctx, )
+> ClusteSummaryEntity GetClusterSummary(ctx).Execute()
 
 The cluster summary for this NiFi
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetClusterSummary(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetClusterSummary``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetClusterSummary`: ClusteSummaryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetClusterSummary`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetClusterSummaryRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -336,19 +628,55 @@ No authorization required
 
 ## GetComponentHistory
 
-> ComponentHistoryEntity GetComponentHistory(ctx, componentId)
+> ComponentHistoryEntity GetComponentHistory(ctx, componentId).Execute()
 
 Gets configuration history for a component
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    componentId := "componentId_example" // string | The component id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetComponentHistory(context.Background(), componentId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetComponentHistory``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetComponentHistory`: ComponentHistoryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetComponentHistory`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**componentId** | **string**| The component id. | 
+**componentId** | **string** | The component id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetComponentHistoryRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -370,29 +698,57 @@ No authorization required
 
 ## GetConnectionStatistics
 
-> ConnectionStatisticsEntity GetConnectionStatistics(ctx, id, optional)
+> ConnectionStatisticsEntity GetConnectionStatistics(ctx, id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets statistics for a connection
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the statistics. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetConnectionStatistics(context.Background(), id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetConnectionStatistics``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetConnectionStatistics`: ConnectionStatisticsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetConnectionStatistics`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
- **optional** | ***GetConnectionStatisticsOpts** | optional parameters | nil if no parameters
+**id** | **string** | The connection id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetConnectionStatisticsOpts struct
+Other parameters are passed through a pointer to a apiGetConnectionStatisticsRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the statistics. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the statistics. | 
 
 ### Return type
 
@@ -414,29 +770,57 @@ No authorization required
 
 ## GetConnectionStatus
 
-> ConnectionStatusEntity GetConnectionStatus(ctx, id, optional)
+> ConnectionStatusEntity GetConnectionStatus(ctx, id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets status for a connection
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetConnectionStatus(context.Background(), id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetConnectionStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetConnectionStatus`: ConnectionStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetConnectionStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
- **optional** | ***GetConnectionStatusOpts** | optional parameters | nil if no parameters
+**id** | **string** | The connection id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetConnectionStatusOpts struct
+Other parameters are passed through a pointer to a apiGetConnectionStatusRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -458,17 +842,53 @@ No authorization required
 
 ## GetConnectionStatusHistory
 
-> StatusHistoryEntity GetConnectionStatusHistory(ctx, id)
+> StatusHistoryEntity GetConnectionStatusHistory(ctx, id).Execute()
 
 Gets the status history for a connection
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetConnectionStatusHistory(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetConnectionStatusHistory``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetConnectionStatusHistory`: StatusHistoryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetConnectionStatusHistory`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
+**id** | **string** | The connection id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetConnectionStatusHistoryRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -490,34 +910,63 @@ No authorization required
 
 ## GetControllerServiceTypes
 
-> ControllerServiceTypesEntity GetControllerServiceTypes(ctx, optional)
+> ControllerServiceTypesEntity GetControllerServiceTypes(ctx).ServiceType(serviceType).ServiceBundleGroup(serviceBundleGroup).ServiceBundleArtifact(serviceBundleArtifact).ServiceBundleVersion(serviceBundleVersion).BundleGroupFilter(bundleGroupFilter).BundleArtifactFilter(bundleArtifactFilter).TypeFilter(typeFilter).Execute()
 
 Retrieves the types of controller services that this NiFi supports
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    serviceType := "serviceType_example" // string | If specified, will only return controller services that are compatible with this type of service. (optional)
+    serviceBundleGroup := "serviceBundleGroup_example" // string | If serviceType specified, is the bundle group of the serviceType. (optional)
+    serviceBundleArtifact := "serviceBundleArtifact_example" // string | If serviceType specified, is the bundle artifact of the serviceType. (optional)
+    serviceBundleVersion := "serviceBundleVersion_example" // string | If serviceType specified, is the bundle version of the serviceType. (optional)
+    bundleGroupFilter := "bundleGroupFilter_example" // string | If specified, will only return types that are a member of this bundle group. (optional)
+    bundleArtifactFilter := "bundleArtifactFilter_example" // string | If specified, will only return types that are a member of this bundle artifact. (optional)
+    typeFilter := "typeFilter_example" // string | If specified, will only return types whose fully qualified classname matches. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetControllerServiceTypes(context.Background()).ServiceType(serviceType).ServiceBundleGroup(serviceBundleGroup).ServiceBundleArtifact(serviceBundleArtifact).ServiceBundleVersion(serviceBundleVersion).BundleGroupFilter(bundleGroupFilter).BundleArtifactFilter(bundleArtifactFilter).TypeFilter(typeFilter).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetControllerServiceTypes``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetControllerServiceTypes`: ControllerServiceTypesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetControllerServiceTypes`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetControllerServiceTypesRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetControllerServiceTypesOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetControllerServiceTypesOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **serviceType** | **optional.String**| If specified, will only return controller services that are compatible with this type of service. | 
- **serviceBundleGroup** | **optional.String**| If serviceType specified, is the bundle group of the serviceType. | 
- **serviceBundleArtifact** | **optional.String**| If serviceType specified, is the bundle artifact of the serviceType. | 
- **serviceBundleVersion** | **optional.String**| If serviceType specified, is the bundle version of the serviceType. | 
- **bundleGroupFilter** | **optional.String**| If specified, will only return types that are a member of this bundle group. | 
- **bundleArtifactFilter** | **optional.String**| If specified, will only return types that are a member of this bundle artifact. | 
- **typeFilter** | **optional.String**| If specified, will only return types whose fully qualified classname matches. | 
+ **serviceType** | **string** | If specified, will only return controller services that are compatible with this type of service. | 
+ **serviceBundleGroup** | **string** | If serviceType specified, is the bundle group of the serviceType. | 
+ **serviceBundleArtifact** | **string** | If serviceType specified, is the bundle artifact of the serviceType. | 
+ **serviceBundleVersion** | **string** | If serviceType specified, is the bundle version of the serviceType. | 
+ **bundleGroupFilter** | **string** | If specified, will only return types that are a member of this bundle group. | 
+ **bundleArtifactFilter** | **string** | If specified, will only return types that are a member of this bundle artifact. | 
+ **typeFilter** | **string** | If specified, will only return types whose fully qualified classname matches. | 
 
 ### Return type
 
@@ -539,13 +988,44 @@ No authorization required
 
 ## GetControllerServicesFromController
 
-> ControllerServicesEntity GetControllerServicesFromController(ctx, )
+> ControllerServicesEntity GetControllerServicesFromController(ctx).Execute()
 
 Gets controller services for reporting tasks
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetControllerServicesFromController(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetControllerServicesFromController``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetControllerServicesFromController`: ControllerServicesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetControllerServicesFromController`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetControllerServicesFromControllerRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -567,29 +1047,57 @@ No authorization required
 
 ## GetControllerServicesFromGroup
 
-> ControllerServicesEntity GetControllerServicesFromGroup(ctx, id, optional)
+> ControllerServicesEntity GetControllerServicesFromGroup(ctx, id).IncludeAncestorGroups(includeAncestorGroups).IncludeDescendantGroups(includeDescendantGroups).Execute()
 
 Gets all controller services
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    includeAncestorGroups := true // bool | Whether or not to include parent/ancestory process groups (optional) (default to true)
+    includeDescendantGroups := true // bool | Whether or not to include descendant process groups (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetControllerServicesFromGroup(context.Background(), id).IncludeAncestorGroups(includeAncestorGroups).IncludeDescendantGroups(includeDescendantGroups).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetControllerServicesFromGroup``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetControllerServicesFromGroup`: ControllerServicesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetControllerServicesFromGroup`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
- **optional** | ***GetControllerServicesFromGroupOpts** | optional parameters | nil if no parameters
+**id** | **string** | The process group id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetControllerServicesFromGroupOpts struct
+Other parameters are passed through a pointer to a apiGetControllerServicesFromGroupRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **includeAncestorGroups** | **optional.Bool**| Whether or not to include parent/ancestory process groups | [default to true]
- **includeDescendantGroups** | **optional.Bool**| Whether or not to include descendant process groups | [default to false]
+ **includeAncestorGroups** | **bool** | Whether or not to include parent/ancestory process groups | [default to true]
+ **includeDescendantGroups** | **bool** | Whether or not to include descendant process groups | [default to false]
 
 ### Return type
 
@@ -611,13 +1119,44 @@ No authorization required
 
 ## GetControllerStatus
 
-> ControllerStatusEntity GetControllerStatus(ctx, )
+> ControllerStatusEntity GetControllerStatus(ctx).Execute()
 
 Gets the current status of this NiFi
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetControllerStatus(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetControllerStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetControllerStatus`: ControllerStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetControllerStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetControllerStatusRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -639,13 +1178,44 @@ No authorization required
 
 ## GetCurrentUser
 
-> CurrentUserEntity GetCurrentUser(ctx, )
+> CurrentUserEntity GetCurrentUser(ctx).Execute()
 
 Retrieves the user identity of the user making the request
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetCurrentUser(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetCurrentUser``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetCurrentUser`: CurrentUserEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetCurrentUser`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetCurrentUserRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -667,17 +1237,53 @@ No authorization required
 
 ## GetFlow
 
-> ProcessGroupFlowEntity GetFlow(ctx, id)
+> ProcessGroupFlowEntity GetFlow(ctx, id).Execute()
 
 Gets a process group
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetFlow(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetFlow``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetFlow`: ProcessGroupFlowEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetFlow`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetFlowRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -699,13 +1305,44 @@ No authorization required
 
 ## GetFlowConfig
 
-> FlowConfigurationEntity GetFlowConfig(ctx, )
+> FlowConfigurationEntity GetFlowConfig(ctx).Execute()
 
 Retrieves the configuration for this NiFi flow
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetFlowConfig(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetFlowConfig``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetFlowConfig`: FlowConfigurationEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetFlowConfig`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetFlowConfigRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -727,17 +1364,53 @@ No authorization required
 
 ## GetFlowMetrics
 
-> map[string]interface{} GetFlowMetrics(ctx, producer)
+> map[string]interface{} GetFlowMetrics(ctx, producer).Execute()
 
 Gets all metrics for the flow from a particular node
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    producer := "producer_example" // string | The producer for flow file metrics. Each producer may have its own output format.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetFlowMetrics(context.Background(), producer).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetFlowMetrics``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetFlowMetrics`: map[string]interface{}
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetFlowMetrics`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**producer** | **string**| The producer for flow file metrics. Each producer may have its own output format. | 
+**producer** | **string** | The producer for flow file metrics. Each producer may have its own output format. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetFlowMetricsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -759,18 +1432,56 @@ No authorization required
 
 ## GetFlows
 
-> VersionedFlowsEntity GetFlows(ctx, registryId, bucketId)
+> VersionedFlowsEntity GetFlows(ctx, registryId, bucketId).Execute()
 
 Gets the flows from the specified registry and bucket for the current user
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    registryId := "registryId_example" // string | The registry id.
+    bucketId := "bucketId_example" // string | The bucket id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetFlows(context.Background(), registryId, bucketId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetFlows``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetFlows`: VersionedFlowsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetFlows`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**registryId** | **string**| The registry id. | 
-**bucketId** | **string**| The bucket id. | 
+**registryId** | **string** | The registry id. | 
+**bucketId** | **string** | The bucket id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetFlowsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -792,29 +1503,57 @@ No authorization required
 
 ## GetInputPortStatus
 
-> PortStatusEntity GetInputPortStatus(ctx, id, optional)
+> PortStatusEntity GetInputPortStatus(ctx, id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets status for an input port
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The input port id.
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetInputPortStatus(context.Background(), id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetInputPortStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetInputPortStatus`: PortStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetInputPortStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The input port id. | 
- **optional** | ***GetInputPortStatusOpts** | optional parameters | nil if no parameters
+**id** | **string** | The input port id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetInputPortStatusOpts struct
+Other parameters are passed through a pointer to a apiGetInputPortStatusRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -836,29 +1575,57 @@ No authorization required
 
 ## GetOutputPortStatus
 
-> PortStatusEntity GetOutputPortStatus(ctx, id, optional)
+> PortStatusEntity GetOutputPortStatus(ctx, id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets status for an output port
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The output port id.
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetOutputPortStatus(context.Background(), id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetOutputPortStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetOutputPortStatus`: PortStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetOutputPortStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The output port id. | 
- **optional** | ***GetOutputPortStatusOpts** | optional parameters | nil if no parameters
+**id** | **string** | The output port id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetOutputPortStatusOpts struct
+Other parameters are passed through a pointer to a apiGetOutputPortStatusRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -880,13 +1647,44 @@ No authorization required
 
 ## GetParameterContexts
 
-> ParameterContextsEntity GetParameterContexts(ctx, )
+> ParameterContextsEntity GetParameterContexts(ctx).Execute()
 
 Gets all Parameter Contexts
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetParameterContexts(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetParameterContexts``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetParameterContexts`: ParameterContextsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetParameterContexts`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetParameterContextsRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -908,15 +1706,46 @@ No authorization required
 
 ## GetPrioritizers
 
-> PrioritizerTypesEntity GetPrioritizers(ctx, )
+> PrioritizerTypesEntity GetPrioritizers(ctx).Execute()
 
 Retrieves the types of prioritizers that this NiFi supports
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetPrioritizers(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetPrioritizers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetPrioritizers`: PrioritizerTypesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetPrioritizers`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetPrioritizersRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -938,32 +1767,61 @@ No authorization required
 
 ## GetProcessGroupStatus
 
-> ProcessGroupStatusEntity GetProcessGroupStatus(ctx, id, optional)
+> ProcessGroupStatusEntity GetProcessGroupStatus(ctx, id).Recursive(recursive).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets the status for a process group
 
-The status for a process group includes status for all descendent components. When invoked on the root group with recursive set to true, it will return the current status of every component in the flow.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    recursive := true // bool | Whether all descendant groups and the status of their content will be included. Optional, defaults to false (optional) (default to false)
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetProcessGroupStatus(context.Background(), id).Recursive(recursive).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetProcessGroupStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetProcessGroupStatus`: ProcessGroupStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetProcessGroupStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
- **optional** | ***GetProcessGroupStatusOpts** | optional parameters | nil if no parameters
+**id** | **string** | The process group id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetProcessGroupStatusOpts struct
+Other parameters are passed through a pointer to a apiGetProcessGroupStatusRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **recursive** | **optional.Bool**| Whether all descendant groups and the status of their content will be included. Optional, defaults to false | [default to false]
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **recursive** | **bool** | Whether all descendant groups and the status of their content will be included. Optional, defaults to false | [default to false]
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -985,17 +1843,53 @@ No authorization required
 
 ## GetProcessGroupStatusHistory
 
-> StatusHistoryEntity GetProcessGroupStatusHistory(ctx, id)
+> StatusHistoryEntity GetProcessGroupStatusHistory(ctx, id).Execute()
 
 Gets status history for a remote process group
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetProcessGroupStatusHistory(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetProcessGroupStatusHistory``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetProcessGroupStatusHistory`: StatusHistoryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetProcessGroupStatusHistory`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetProcessGroupStatusHistoryRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -1017,29 +1911,57 @@ No authorization required
 
 ## GetProcessorStatus
 
-> ProcessorStatusEntity GetProcessorStatus(ctx, id, optional)
+> ProcessorStatusEntity GetProcessorStatus(ctx, id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets status for a processor
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The processor id.
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetProcessorStatus(context.Background(), id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetProcessorStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetProcessorStatus`: ProcessorStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetProcessorStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The processor id. | 
- **optional** | ***GetProcessorStatusOpts** | optional parameters | nil if no parameters
+**id** | **string** | The processor id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetProcessorStatusOpts struct
+Other parameters are passed through a pointer to a apiGetProcessorStatusRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -1061,17 +1983,53 @@ No authorization required
 
 ## GetProcessorStatusHistory
 
-> StatusHistoryEntity GetProcessorStatusHistory(ctx, id)
+> StatusHistoryEntity GetProcessorStatusHistory(ctx, id).Execute()
 
 Gets status history for a processor
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The processor id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetProcessorStatusHistory(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetProcessorStatusHistory``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetProcessorStatusHistory`: StatusHistoryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetProcessorStatusHistory`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The processor id. | 
+**id** | **string** | The processor id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetProcessorStatusHistoryRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -1093,30 +2051,55 @@ No authorization required
 
 ## GetProcessorTypes
 
-> ProcessorTypesEntity GetProcessorTypes(ctx, optional)
+> ProcessorTypesEntity GetProcessorTypes(ctx).BundleGroupFilter(bundleGroupFilter).BundleArtifactFilter(bundleArtifactFilter).Type_(type_).Execute()
 
 Retrieves the types of processors that this NiFi supports
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    bundleGroupFilter := "bundleGroupFilter_example" // string | If specified, will only return types that are a member of this bundle group. (optional)
+    bundleArtifactFilter := "bundleArtifactFilter_example" // string | If specified, will only return types that are a member of this bundle artifact. (optional)
+    type_ := "type__example" // string | If specified, will only return types whose fully qualified classname matches. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetProcessorTypes(context.Background()).BundleGroupFilter(bundleGroupFilter).BundleArtifactFilter(bundleArtifactFilter).Type_(type_).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetProcessorTypes``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetProcessorTypes`: ProcessorTypesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetProcessorTypes`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetProcessorTypesRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetProcessorTypesOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetProcessorTypesOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **bundleGroupFilter** | **optional.String**| If specified, will only return types that are a member of this bundle group. | 
- **bundleArtifactFilter** | **optional.String**| If specified, will only return types that are a member of this bundle artifact. | 
- **type_** | **optional.String**| If specified, will only return types whose fully qualified classname matches. | 
+ **bundleGroupFilter** | **string** | If specified, will only return types that are a member of this bundle group. | 
+ **bundleArtifactFilter** | **string** | If specified, will only return types that are a member of this bundle artifact. | 
+ **type_** | **string** | If specified, will only return types whose fully qualified classname matches. | 
 
 ### Return type
 
@@ -1138,13 +2121,44 @@ No authorization required
 
 ## GetRegistries
 
-> RegistryClientsEntity GetRegistries(ctx, )
+> RegistryClientsEntity GetRegistries(ctx).Execute()
 
 Gets the listing of available registries
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetRegistries(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetRegistries``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetRegistries`: RegistryClientsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetRegistries`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetRegistriesRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -1166,29 +2180,57 @@ No authorization required
 
 ## GetRemoteProcessGroupStatus
 
-> RemoteProcessGroupStatusEntity GetRemoteProcessGroupStatus(ctx, id, optional)
+> RemoteProcessGroupStatusEntity GetRemoteProcessGroupStatus(ctx, id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets status for a remote process group
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The remote process group id.
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetRemoteProcessGroupStatus(context.Background(), id).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetRemoteProcessGroupStatus``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetRemoteProcessGroupStatus`: RemoteProcessGroupStatusEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetRemoteProcessGroupStatus`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The remote process group id. | 
- **optional** | ***GetRemoteProcessGroupStatusOpts** | optional parameters | nil if no parameters
+**id** | **string** | The remote process group id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetRemoteProcessGroupStatusOpts struct
+Other parameters are passed through a pointer to a apiGetRemoteProcessGroupStatusRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -1210,17 +2252,53 @@ No authorization required
 
 ## GetRemoteProcessGroupStatusHistory
 
-> StatusHistoryEntity GetRemoteProcessGroupStatusHistory(ctx, id)
+> StatusHistoryEntity GetRemoteProcessGroupStatusHistory(ctx, id).Execute()
 
 Gets the status history
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The remote process group id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetRemoteProcessGroupStatusHistory(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetRemoteProcessGroupStatusHistory``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetRemoteProcessGroupStatusHistory`: StatusHistoryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetRemoteProcessGroupStatusHistory`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The remote process group id. | 
+**id** | **string** | The remote process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetRemoteProcessGroupStatusHistoryRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -1242,30 +2320,55 @@ No authorization required
 
 ## GetReportingTaskTypes
 
-> ReportingTaskTypesEntity GetReportingTaskTypes(ctx, optional)
+> ReportingTaskTypesEntity GetReportingTaskTypes(ctx).BundleGroupFilter(bundleGroupFilter).BundleArtifactFilter(bundleArtifactFilter).Type_(type_).Execute()
 
 Retrieves the types of reporting tasks that this NiFi supports
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    bundleGroupFilter := "bundleGroupFilter_example" // string | If specified, will only return types that are a member of this bundle group. (optional)
+    bundleArtifactFilter := "bundleArtifactFilter_example" // string | If specified, will only return types that are a member of this bundle artifact. (optional)
+    type_ := "type__example" // string | If specified, will only return types whose fully qualified classname matches. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetReportingTaskTypes(context.Background()).BundleGroupFilter(bundleGroupFilter).BundleArtifactFilter(bundleArtifactFilter).Type_(type_).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetReportingTaskTypes``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetReportingTaskTypes`: ReportingTaskTypesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetReportingTaskTypes`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetReportingTaskTypesRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetReportingTaskTypesOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetReportingTaskTypesOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **bundleGroupFilter** | **optional.String**| If specified, will only return types that are a member of this bundle group. | 
- **bundleArtifactFilter** | **optional.String**| If specified, will only return types that are a member of this bundle artifact. | 
- **type_** | **optional.String**| If specified, will only return types whose fully qualified classname matches. | 
+ **bundleGroupFilter** | **string** | If specified, will only return types that are a member of this bundle group. | 
+ **bundleArtifactFilter** | **string** | If specified, will only return types that are a member of this bundle artifact. | 
+ **type_** | **string** | If specified, will only return types whose fully qualified classname matches. | 
 
 ### Return type
 
@@ -1287,13 +2390,44 @@ No authorization required
 
 ## GetReportingTasks
 
-> ReportingTasksEntity GetReportingTasks(ctx, )
+> ReportingTasksEntity GetReportingTasks(ctx).Execute()
 
 Gets all reporting tasks
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetReportingTasks(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetReportingTasks``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetReportingTasks`: ReportingTasksEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetReportingTasks`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetReportingTasksRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -1315,13 +2449,44 @@ No authorization required
 
 ## GetTemplates
 
-> TemplatesEntity GetTemplates(ctx, )
+> TemplatesEntity GetTemplates(ctx).Execute()
 
 Gets all templates
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetTemplates(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetTemplates``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetTemplates`: TemplatesEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetTemplates`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetTemplatesRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -1343,19 +2508,59 @@ No authorization required
 
 ## GetVersions
 
-> VersionedFlowSnapshotMetadataSetEntity GetVersions(ctx, registryId, bucketId, flowId)
+> VersionedFlowSnapshotMetadataSetEntity GetVersions(ctx, registryId, bucketId, flowId).Execute()
 
 Gets the flow versions from the specified registry and bucket for the specified flow for the current user
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    registryId := "registryId_example" // string | The registry id.
+    bucketId := "bucketId_example" // string | The bucket id.
+    flowId := "flowId_example" // string | The flow id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.GetVersions(context.Background(), registryId, bucketId, flowId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.GetVersions``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetVersions`: VersionedFlowSnapshotMetadataSetEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.GetVersions`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**registryId** | **string**| The registry id. | 
-**bucketId** | **string**| The bucket id. | 
-**flowId** | **string**| The flow id. | 
+**registryId** | **string** | The registry id. | 
+**bucketId** | **string** | The bucket id. | 
+**flowId** | **string** | The flow id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetVersionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
 
 ### Return type
 
@@ -1377,37 +2582,65 @@ No authorization required
 
 ## QueryHistory
 
-> HistoryEntity QueryHistory(ctx, offset, count, optional)
+> HistoryEntity QueryHistory(ctx).Offset(offset).Count(count).SortColumn(sortColumn).SortOrder(sortOrder).StartDate(startDate).EndDate(endDate).UserIdentity(userIdentity).SourceId(sourceId).Execute()
 
 Gets configuration history
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    offset := "offset_example" // string | The offset into the result set.
+    count := "count_example" // string | The number of actions to return.
+    sortColumn := "sortColumn_example" // string | The field to sort on. (optional)
+    sortOrder := "sortOrder_example" // string | The direction to sort. (optional)
+    startDate := "startDate_example" // string | Include actions after this date. (optional)
+    endDate := "endDate_example" // string | Include actions before this date. (optional)
+    userIdentity := "userIdentity_example" // string | Include actions performed by this user. (optional)
+    sourceId := "sourceId_example" // string | Include actions on this component. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.QueryHistory(context.Background()).Offset(offset).Count(count).SortColumn(sortColumn).SortOrder(sortOrder).StartDate(startDate).EndDate(endDate).UserIdentity(userIdentity).SourceId(sourceId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.QueryHistory``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `QueryHistory`: HistoryEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.QueryHistory`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiQueryHistoryRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**offset** | **string**| The offset into the result set. | 
-**count** | **string**| The number of actions to return. | 
- **optional** | ***QueryHistoryOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a QueryHistoryOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
- **sortColumn** | **optional.String**| The field to sort on. | 
- **sortOrder** | **optional.String**| The direction to sort. | 
- **startDate** | **optional.String**| Include actions after this date. | 
- **endDate** | **optional.String**| Include actions before this date. | 
- **userIdentity** | **optional.String**| Include actions performed by this user. | 
- **sourceId** | **optional.String**| Include actions on this component. | 
+ **offset** | **string** | The offset into the result set. | 
+ **count** | **string** | The number of actions to return. | 
+ **sortColumn** | **string** | The field to sort on. | 
+ **sortOrder** | **string** | The direction to sort. | 
+ **startDate** | **string** | Include actions after this date. | 
+ **endDate** | **string** | Include actions before this date. | 
+ **userIdentity** | **string** | Include actions performed by this user. | 
+ **sourceId** | **string** | Include actions on this component. | 
 
 ### Return type
 
@@ -1429,18 +2662,55 @@ No authorization required
 
 ## ScheduleComponents
 
-> ScheduleComponentsEntity ScheduleComponents(ctx, id, body)
+> ScheduleComponentsEntity ScheduleComponents(ctx, id).Body(body).Execute()
 
 Schedule or unschedule components in the specified Process Group.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    body := *openapiclient.NewScheduleComponentsEntity() // ScheduleComponentsEntity | The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.ScheduleComponents(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.ScheduleComponents``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ScheduleComponents`: ScheduleComponentsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.ScheduleComponents`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
-**body** | [**ScheduleComponentsEntity**](ScheduleComponentsEntity.md)| The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiScheduleComponentsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ScheduleComponentsEntity**](ScheduleComponentsEntity.md) | The request to schedule or unschedule. If the comopnents in the request are not specified, all authorized components will be considered. | 
 
 ### Return type
 
@@ -1462,19 +2732,51 @@ No authorization required
 
 ## SearchCluster
 
-> ClusterSearchResultsEntity SearchCluster(ctx, q)
+> ClusterSearchResultsEntity SearchCluster(ctx).Q(q).Execute()
 
 Searches the cluster for a node with the specified address
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    q := "q_example" // string | Node address to search for.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.SearchCluster(context.Background()).Q(q).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.SearchCluster``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SearchCluster`: ClusterSearchResultsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.SearchCluster`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSearchClusterRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**q** | **string**| Node address to search for. | 
+ **q** | **string** | Node address to search for. | 
 
 ### Return type
 
@@ -1496,29 +2798,53 @@ No authorization required
 
 ## SearchFlow
 
-> SearchResultsEntity SearchFlow(ctx, optional)
+> SearchResultsEntity SearchFlow(ctx).Q(q).A(a).Execute()
 
 Performs a search against this NiFi using the specified search term
 
-Only search results from authorized components will be returned.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    q := "q_example" // string |  (optional)
+    a := "a_example" // string |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowApi.SearchFlow(context.Background()).Q(q).A(a).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowApi.SearchFlow``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SearchFlow`: SearchResultsEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowApi.SearchFlow`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSearchFlowRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***SearchFlowOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a SearchFlowOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **q** | **optional.String**|  | 
- **a** | **optional.String**|  | 
+ **q** | **string** |  | 
+ **a** | **string** |  | 
 
 ### Return type
 

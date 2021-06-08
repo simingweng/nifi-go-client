@@ -17,17 +17,53 @@ Method | HTTP request | Description
 
 ## CreateDropRequest
 
-> DropRequestEntity CreateDropRequest(ctx, id)
+> DropRequestEntity CreateDropRequest(ctx, id).Execute()
 
 Creates a request to drop the contents of the queue in this connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.CreateDropRequest(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.CreateDropRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateDropRequest`: DropRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.CreateDropRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
+**id** | **string** | The connection id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateDropRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -49,17 +85,53 @@ No authorization required
 
 ## CreateFlowFileListing
 
-> ListingRequestEntity CreateFlowFileListing(ctx, id)
+> ListingRequestEntity CreateFlowFileListing(ctx, id).Execute()
 
 Lists the contents of the queue in this connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.CreateFlowFileListing(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.CreateFlowFileListing``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateFlowFileListing`: ListingRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.CreateFlowFileListing`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
+**id** | **string** | The connection id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateFlowFileListingRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -81,18 +153,56 @@ No authorization required
 
 ## DeleteListingRequest
 
-> ListingRequestEntity DeleteListingRequest(ctx, id, listingRequestId)
+> ListingRequestEntity DeleteListingRequest(ctx, id, listingRequestId).Execute()
 
 Cancels and/or removes a request to list the contents of this connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    listingRequestId := "listingRequestId_example" // string | The listing request id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.DeleteListingRequest(context.Background(), id, listingRequestId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.DeleteListingRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteListingRequest`: ListingRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.DeleteListingRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
-**listingRequestId** | **string**| The listing request id. | 
+**id** | **string** | The connection id. | 
+**listingRequestId** | **string** | The listing request id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteListingRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -114,31 +224,60 @@ No authorization required
 
 ## DownloadFlowFileContent
 
-> map[string]interface{} DownloadFlowFileContent(ctx, id, flowfileUuid, optional)
+> map[string]interface{} DownloadFlowFileContent(ctx, id, flowfileUuid).ClientId(clientId).ClusterNodeId(clusterNodeId).Execute()
 
 Gets the content for a FlowFile in a Connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    flowfileUuid := "flowfileUuid_example" // string | The flowfile uuid.
+    clientId := "clientId_example" // string | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where the content exists if clustered. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.DownloadFlowFileContent(context.Background(), id, flowfileUuid).ClientId(clientId).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.DownloadFlowFileContent``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DownloadFlowFileContent`: map[string]interface{}
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.DownloadFlowFileContent`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
-**flowfileUuid** | **string**| The flowfile uuid. | 
- **optional** | ***DownloadFlowFileContentOpts** | optional parameters | nil if no parameters
+**id** | **string** | The connection id. | 
+**flowfileUuid** | **string** | The flowfile uuid. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DownloadFlowFileContentOpts struct
+Other parameters are passed through a pointer to a apiDownloadFlowFileContentRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **clientId** | **optional.String**| If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
- **clusterNodeId** | **optional.String**| The id of the node where the content exists if clustered. | 
+ **clientId** | **string** | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **clusterNodeId** | **string** | The id of the node where the content exists if clustered. | 
 
 ### Return type
 
@@ -160,18 +299,56 @@ No authorization required
 
 ## GetDropRequest
 
-> DropRequestEntity GetDropRequest(ctx, id, dropRequestId)
+> DropRequestEntity GetDropRequest(ctx, id, dropRequestId).Execute()
 
 Gets the current status of a drop request for the specified connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    dropRequestId := "dropRequestId_example" // string | The drop request id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.GetDropRequest(context.Background(), id, dropRequestId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.GetDropRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetDropRequest`: DropRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.GetDropRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
-**dropRequestId** | **string**| The drop request id. | 
+**id** | **string** | The connection id. | 
+**dropRequestId** | **string** | The drop request id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetDropRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -193,30 +370,58 @@ No authorization required
 
 ## GetFlowFile
 
-> FlowFileEntity GetFlowFile(ctx, id, flowfileUuid, optional)
+> FlowFileEntity GetFlowFile(ctx, id, flowfileUuid).ClusterNodeId(clusterNodeId).Execute()
 
 Gets a FlowFile from a Connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    flowfileUuid := "flowfileUuid_example" // string | The flowfile uuid.
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where the content exists if clustered. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.GetFlowFile(context.Background(), id, flowfileUuid).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.GetFlowFile``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetFlowFile`: FlowFileEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.GetFlowFile`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
-**flowfileUuid** | **string**| The flowfile uuid. | 
- **optional** | ***GetFlowFileOpts** | optional parameters | nil if no parameters
+**id** | **string** | The connection id. | 
+**flowfileUuid** | **string** | The flowfile uuid. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetFlowFileOpts struct
+Other parameters are passed through a pointer to a apiGetFlowFileRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **clusterNodeId** | **optional.String**| The id of the node where the content exists if clustered. | 
+ **clusterNodeId** | **string** | The id of the node where the content exists if clustered. | 
 
 ### Return type
 
@@ -238,18 +443,56 @@ No authorization required
 
 ## GetListingRequest
 
-> ListingRequestEntity GetListingRequest(ctx, id, listingRequestId)
+> ListingRequestEntity GetListingRequest(ctx, id, listingRequestId).Execute()
 
 Gets the current status of a listing request for the specified connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    listingRequestId := "listingRequestId_example" // string | The listing request id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.GetListingRequest(context.Background(), id, listingRequestId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.GetListingRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetListingRequest`: ListingRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.GetListingRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
-**listingRequestId** | **string**| The listing request id. | 
+**id** | **string** | The connection id. | 
+**listingRequestId** | **string** | The listing request id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetListingRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -271,18 +514,56 @@ No authorization required
 
 ## RemoveDropRequest
 
-> DropRequestEntity RemoveDropRequest(ctx, id, dropRequestId)
+> DropRequestEntity RemoveDropRequest(ctx, id, dropRequestId).Execute()
 
 Cancels and/or removes a request to drop the contents of this connection.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The connection id.
+    dropRequestId := "dropRequestId_example" // string | The drop request id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.FlowfileQueuesApi.RemoveDropRequest(context.Background(), id, dropRequestId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `FlowfileQueuesApi.RemoveDropRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveDropRequest`: DropRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `FlowfileQueuesApi.RemoveDropRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The connection id. | 
-**dropRequestId** | **string**| The drop request id. | 
+**id** | **string** | The connection id. | 
+**dropRequestId** | **string** | The drop request id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRemoveDropRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 

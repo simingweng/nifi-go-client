@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// AttributeDto struct for AttributeDto
-type AttributeDto struct {
+import (
+	"encoding/json"
+)
+
+// AttributeDTO struct for AttributeDTO
+type AttributeDTO struct {
 	// The attribute name.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The attribute value.
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
 	// The value of the attribute before the event took place.
-	PreviousValue string `json:"previousValue,omitempty"`
+	PreviousValue *string `json:"previousValue,omitempty"`
+}
+
+// NewAttributeDTO instantiates a new AttributeDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAttributeDTO() *AttributeDTO {
+	this := AttributeDTO{}
+	return &this
+}
+
+// NewAttributeDTOWithDefaults instantiates a new AttributeDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAttributeDTOWithDefaults() *AttributeDTO {
+	this := AttributeDTO{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *AttributeDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AttributeDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *AttributeDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *AttributeDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetValue returns the Value field value if set, zero value otherwise.
+func (o *AttributeDTO) GetValue() string {
+	if o == nil || o.Value == nil {
+		var ret string
+		return ret
+	}
+	return *o.Value
+}
+
+// GetValueOk returns a tuple with the Value field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AttributeDTO) GetValueOk() (*string, bool) {
+	if o == nil || o.Value == nil {
+		return nil, false
+	}
+	return o.Value, true
+}
+
+// HasValue returns a boolean if a field has been set.
+func (o *AttributeDTO) HasValue() bool {
+	if o != nil && o.Value != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValue gets a reference to the given string and assigns it to the Value field.
+func (o *AttributeDTO) SetValue(v string) {
+	o.Value = &v
+}
+
+// GetPreviousValue returns the PreviousValue field value if set, zero value otherwise.
+func (o *AttributeDTO) GetPreviousValue() string {
+	if o == nil || o.PreviousValue == nil {
+		var ret string
+		return ret
+	}
+	return *o.PreviousValue
+}
+
+// GetPreviousValueOk returns a tuple with the PreviousValue field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AttributeDTO) GetPreviousValueOk() (*string, bool) {
+	if o == nil || o.PreviousValue == nil {
+		return nil, false
+	}
+	return o.PreviousValue, true
+}
+
+// HasPreviousValue returns a boolean if a field has been set.
+func (o *AttributeDTO) HasPreviousValue() bool {
+	if o != nil && o.PreviousValue != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPreviousValue gets a reference to the given string and assigns it to the PreviousValue field.
+func (o *AttributeDTO) SetPreviousValue(v string) {
+	o.PreviousValue = &v
+}
+
+func (o AttributeDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Value != nil {
+		toSerialize["value"] = o.Value
+	}
+	if o.PreviousValue != nil {
+		toSerialize["previousValue"] = o.PreviousValue
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAttributeDTO struct {
+	value *AttributeDTO
+	isSet bool
+}
+
+func (v NullableAttributeDTO) Get() *AttributeDTO {
+	return v.value
+}
+
+func (v *NullableAttributeDTO) Set(val *AttributeDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAttributeDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAttributeDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAttributeDTO(val *AttributeDTO) *NullableAttributeDTO {
+	return &NullableAttributeDTO{value: val, isSet: true}
+}
+
+func (v NullableAttributeDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAttributeDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

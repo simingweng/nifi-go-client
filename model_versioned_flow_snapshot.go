@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,17 +11,345 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedFlowSnapshot struct for VersionedFlowSnapshot
 type VersionedFlowSnapshot struct {
 	SnapshotMetadata VersionedFlowSnapshotMetadata `json:"snapshotMetadata"`
 	FlowContents     VersionedProcessGroup         `json:"flowContents"`
 	// The information about controller services that exist outside this versioned flow, but are referenced by components within the versioned flow.
-	ExternalControllerServices map[string]ExternalControllerServiceReference `json:"externalControllerServices,omitempty"`
+	ExternalControllerServices *map[string]ExternalControllerServiceReference `json:"externalControllerServices,omitempty"`
 	// The parameter contexts referenced by process groups in the flow contents. The mapping is from the name of the context to the context instance, and it is expected that any context in this map is referenced by at least one process group in this flow.
-	ParameterContexts map[string]VersionedParameterContext `json:"parameterContexts,omitempty"`
+	ParameterContexts *map[string]VersionedParameterContext `json:"parameterContexts,omitempty"`
 	// The optional encoding version of the flow contents.
-	FlowEncodingVersion string        `json:"flowEncodingVersion,omitempty"`
-	Flow                VersionedFlow `json:"flow,omitempty"`
-	Bucket              Bucket        `json:"bucket,omitempty"`
-	Latest              bool          `json:"latest,omitempty"`
+	FlowEncodingVersion *string        `json:"flowEncodingVersion,omitempty"`
+	Flow                *VersionedFlow `json:"flow,omitempty"`
+	Bucket              *Bucket        `json:"bucket,omitempty"`
+	Latest              *bool          `json:"latest,omitempty"`
+}
+
+// NewVersionedFlowSnapshot instantiates a new VersionedFlowSnapshot object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedFlowSnapshot(snapshotMetadata VersionedFlowSnapshotMetadata, flowContents VersionedProcessGroup) *VersionedFlowSnapshot {
+	this := VersionedFlowSnapshot{}
+	this.SnapshotMetadata = snapshotMetadata
+	this.FlowContents = flowContents
+	return &this
+}
+
+// NewVersionedFlowSnapshotWithDefaults instantiates a new VersionedFlowSnapshot object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedFlowSnapshotWithDefaults() *VersionedFlowSnapshot {
+	this := VersionedFlowSnapshot{}
+	return &this
+}
+
+// GetSnapshotMetadata returns the SnapshotMetadata field value
+func (o *VersionedFlowSnapshot) GetSnapshotMetadata() VersionedFlowSnapshotMetadata {
+	if o == nil {
+		var ret VersionedFlowSnapshotMetadata
+		return ret
+	}
+
+	return o.SnapshotMetadata
+}
+
+// GetSnapshotMetadataOk returns a tuple with the SnapshotMetadata field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetSnapshotMetadataOk() (*VersionedFlowSnapshotMetadata, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.SnapshotMetadata, true
+}
+
+// SetSnapshotMetadata sets field value
+func (o *VersionedFlowSnapshot) SetSnapshotMetadata(v VersionedFlowSnapshotMetadata) {
+	o.SnapshotMetadata = v
+}
+
+// GetFlowContents returns the FlowContents field value
+func (o *VersionedFlowSnapshot) GetFlowContents() VersionedProcessGroup {
+	if o == nil {
+		var ret VersionedProcessGroup
+		return ret
+	}
+
+	return o.FlowContents
+}
+
+// GetFlowContentsOk returns a tuple with the FlowContents field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetFlowContentsOk() (*VersionedProcessGroup, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.FlowContents, true
+}
+
+// SetFlowContents sets field value
+func (o *VersionedFlowSnapshot) SetFlowContents(v VersionedProcessGroup) {
+	o.FlowContents = v
+}
+
+// GetExternalControllerServices returns the ExternalControllerServices field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshot) GetExternalControllerServices() map[string]ExternalControllerServiceReference {
+	if o == nil || o.ExternalControllerServices == nil {
+		var ret map[string]ExternalControllerServiceReference
+		return ret
+	}
+	return *o.ExternalControllerServices
+}
+
+// GetExternalControllerServicesOk returns a tuple with the ExternalControllerServices field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetExternalControllerServicesOk() (*map[string]ExternalControllerServiceReference, bool) {
+	if o == nil || o.ExternalControllerServices == nil {
+		return nil, false
+	}
+	return o.ExternalControllerServices, true
+}
+
+// HasExternalControllerServices returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshot) HasExternalControllerServices() bool {
+	if o != nil && o.ExternalControllerServices != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExternalControllerServices gets a reference to the given map[string]ExternalControllerServiceReference and assigns it to the ExternalControllerServices field.
+func (o *VersionedFlowSnapshot) SetExternalControllerServices(v map[string]ExternalControllerServiceReference) {
+	o.ExternalControllerServices = &v
+}
+
+// GetParameterContexts returns the ParameterContexts field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshot) GetParameterContexts() map[string]VersionedParameterContext {
+	if o == nil || o.ParameterContexts == nil {
+		var ret map[string]VersionedParameterContext
+		return ret
+	}
+	return *o.ParameterContexts
+}
+
+// GetParameterContextsOk returns a tuple with the ParameterContexts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetParameterContextsOk() (*map[string]VersionedParameterContext, bool) {
+	if o == nil || o.ParameterContexts == nil {
+		return nil, false
+	}
+	return o.ParameterContexts, true
+}
+
+// HasParameterContexts returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshot) HasParameterContexts() bool {
+	if o != nil && o.ParameterContexts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContexts gets a reference to the given map[string]VersionedParameterContext and assigns it to the ParameterContexts field.
+func (o *VersionedFlowSnapshot) SetParameterContexts(v map[string]VersionedParameterContext) {
+	o.ParameterContexts = &v
+}
+
+// GetFlowEncodingVersion returns the FlowEncodingVersion field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshot) GetFlowEncodingVersion() string {
+	if o == nil || o.FlowEncodingVersion == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowEncodingVersion
+}
+
+// GetFlowEncodingVersionOk returns a tuple with the FlowEncodingVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetFlowEncodingVersionOk() (*string, bool) {
+	if o == nil || o.FlowEncodingVersion == nil {
+		return nil, false
+	}
+	return o.FlowEncodingVersion, true
+}
+
+// HasFlowEncodingVersion returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshot) HasFlowEncodingVersion() bool {
+	if o != nil && o.FlowEncodingVersion != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowEncodingVersion gets a reference to the given string and assigns it to the FlowEncodingVersion field.
+func (o *VersionedFlowSnapshot) SetFlowEncodingVersion(v string) {
+	o.FlowEncodingVersion = &v
+}
+
+// GetFlow returns the Flow field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshot) GetFlow() VersionedFlow {
+	if o == nil || o.Flow == nil {
+		var ret VersionedFlow
+		return ret
+	}
+	return *o.Flow
+}
+
+// GetFlowOk returns a tuple with the Flow field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetFlowOk() (*VersionedFlow, bool) {
+	if o == nil || o.Flow == nil {
+		return nil, false
+	}
+	return o.Flow, true
+}
+
+// HasFlow returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshot) HasFlow() bool {
+	if o != nil && o.Flow != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlow gets a reference to the given VersionedFlow and assigns it to the Flow field.
+func (o *VersionedFlowSnapshot) SetFlow(v VersionedFlow) {
+	o.Flow = &v
+}
+
+// GetBucket returns the Bucket field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshot) GetBucket() Bucket {
+	if o == nil || o.Bucket == nil {
+		var ret Bucket
+		return ret
+	}
+	return *o.Bucket
+}
+
+// GetBucketOk returns a tuple with the Bucket field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetBucketOk() (*Bucket, bool) {
+	if o == nil || o.Bucket == nil {
+		return nil, false
+	}
+	return o.Bucket, true
+}
+
+// HasBucket returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshot) HasBucket() bool {
+	if o != nil && o.Bucket != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBucket gets a reference to the given Bucket and assigns it to the Bucket field.
+func (o *VersionedFlowSnapshot) SetBucket(v Bucket) {
+	o.Bucket = &v
+}
+
+// GetLatest returns the Latest field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshot) GetLatest() bool {
+	if o == nil || o.Latest == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Latest
+}
+
+// GetLatestOk returns a tuple with the Latest field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshot) GetLatestOk() (*bool, bool) {
+	if o == nil || o.Latest == nil {
+		return nil, false
+	}
+	return o.Latest, true
+}
+
+// HasLatest returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshot) HasLatest() bool {
+	if o != nil && o.Latest != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLatest gets a reference to the given bool and assigns it to the Latest field.
+func (o *VersionedFlowSnapshot) SetLatest(v bool) {
+	o.Latest = &v
+}
+
+func (o VersionedFlowSnapshot) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if true {
+		toSerialize["snapshotMetadata"] = o.SnapshotMetadata
+	}
+	if true {
+		toSerialize["flowContents"] = o.FlowContents
+	}
+	if o.ExternalControllerServices != nil {
+		toSerialize["externalControllerServices"] = o.ExternalControllerServices
+	}
+	if o.ParameterContexts != nil {
+		toSerialize["parameterContexts"] = o.ParameterContexts
+	}
+	if o.FlowEncodingVersion != nil {
+		toSerialize["flowEncodingVersion"] = o.FlowEncodingVersion
+	}
+	if o.Flow != nil {
+		toSerialize["flow"] = o.Flow
+	}
+	if o.Bucket != nil {
+		toSerialize["bucket"] = o.Bucket
+	}
+	if o.Latest != nil {
+		toSerialize["latest"] = o.Latest
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedFlowSnapshot struct {
+	value *VersionedFlowSnapshot
+	isSet bool
+}
+
+func (v NullableVersionedFlowSnapshot) Get() *VersionedFlowSnapshot {
+	return v.value
+}
+
+func (v *NullableVersionedFlowSnapshot) Set(val *VersionedFlowSnapshot) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedFlowSnapshot) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedFlowSnapshot) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedFlowSnapshot(val *VersionedFlowSnapshot) *NullableVersionedFlowSnapshot {
+	return &NullableVersionedFlowSnapshot{value: val, isSet: true}
+}
+
+func (v NullableVersionedFlowSnapshot) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedFlowSnapshot) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

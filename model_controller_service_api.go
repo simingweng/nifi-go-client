@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
-// ControllerServiceApi struct for ControllerServiceApi
-type ControllerServiceApi struct {
+import (
+	"encoding/json"
+)
+
+// ControllerServiceAPI struct for ControllerServiceAPI
+type ControllerServiceAPI struct {
 	// The fully qualified name of the service interface.
-	Type   string `json:"type,omitempty"`
-	Bundle Bundle `json:"bundle,omitempty"`
+	Type   *string `json:"type,omitempty"`
+	Bundle *Bundle `json:"bundle,omitempty"`
+}
+
+// NewControllerServiceAPI instantiates a new ControllerServiceAPI object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerServiceAPI() *ControllerServiceAPI {
+	this := ControllerServiceAPI{}
+	return &this
+}
+
+// NewControllerServiceAPIWithDefaults instantiates a new ControllerServiceAPI object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerServiceAPIWithDefaults() *ControllerServiceAPI {
+	this := ControllerServiceAPI{}
+	return &this
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ControllerServiceAPI) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceAPI) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ControllerServiceAPI) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ControllerServiceAPI) SetType(v string) {
+	o.Type = &v
+}
+
+// GetBundle returns the Bundle field value if set, zero value otherwise.
+func (o *ControllerServiceAPI) GetBundle() Bundle {
+	if o == nil || o.Bundle == nil {
+		var ret Bundle
+		return ret
+	}
+	return *o.Bundle
+}
+
+// GetBundleOk returns a tuple with the Bundle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceAPI) GetBundleOk() (*Bundle, bool) {
+	if o == nil || o.Bundle == nil {
+		return nil, false
+	}
+	return o.Bundle, true
+}
+
+// HasBundle returns a boolean if a field has been set.
+func (o *ControllerServiceAPI) HasBundle() bool {
+	if o != nil && o.Bundle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBundle gets a reference to the given Bundle and assigns it to the Bundle field.
+func (o *ControllerServiceAPI) SetBundle(v Bundle) {
+	o.Bundle = &v
+}
+
+func (o ControllerServiceAPI) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Bundle != nil {
+		toSerialize["bundle"] = o.Bundle
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerServiceAPI struct {
+	value *ControllerServiceAPI
+	isSet bool
+}
+
+func (v NullableControllerServiceAPI) Get() *ControllerServiceAPI {
+	return v.value
+}
+
+func (v *NullableControllerServiceAPI) Set(val *ControllerServiceAPI) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerServiceAPI) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerServiceAPI) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerServiceAPI(val *ControllerServiceAPI) *NullableControllerServiceAPI {
+	return &NullableControllerServiceAPI{value: val, isSet: true}
+}
+
+func (v NullableControllerServiceAPI) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerServiceAPI) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -27,22 +27,44 @@ var (
 // AccessApiService AccessApi service
 type AccessApiService service
 
-// AccessApiCreateAccessTokenOpts Optional parameters for the method 'CreateAccessToken'
-type AccessApiCreateAccessTokenOpts struct {
-	Username optional.String
-	Password optional.String
+type AccessApiApiCreateAccessTokenRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+	username   *string
+	password   *string
+}
+
+func (r AccessApiApiCreateAccessTokenRequest) Username(username string) AccessApiApiCreateAccessTokenRequest {
+	r.username = &username
+	return r
+}
+func (r AccessApiApiCreateAccessTokenRequest) Password(password string) AccessApiApiCreateAccessTokenRequest {
+	r.password = &password
+	return r
+}
+
+func (r AccessApiApiCreateAccessTokenRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.CreateAccessTokenExecute(r)
 }
 
 /*
-CreateAccessToken Creates a token for accessing the REST API via username/password
-The token returned is formatted as a JSON Web Token (JWT). The token is base64 encoded and comprised of three parts. The header, the body, and the signature. The expiration of the token is a contained within the body. The token can be used in the Authorization header in the format &#39;Authorization: Bearer &lt;token&gt;&#39;.
+ * CreateAccessToken Creates a token for accessing the REST API via username/password
+ * The token returned is formatted as a JSON Web Token (JWT). The token is base64 encoded and comprised of three parts. The header, the body, and the signature. The expiration of the token is a contained within the body. The token can be used in the Authorization header in the format 'Authorization: Bearer <token>'.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *AccessApiCreateAccessTokenOpts - Optional Parameters:
- * @param "Username" (optional.String) -
- * @param "Password" (optional.String) -
-@return string
-*/
-func (a *AccessApiService) CreateAccessToken(ctx _context.Context, localVarOptionals *AccessApiCreateAccessTokenOpts) (string, *_nethttp.Response, error) {
+ * @return AccessApiApiCreateAccessTokenRequest
+ */
+func (a *AccessApiService) CreateAccessToken(ctx _context.Context) AccessApiApiCreateAccessTokenRequest {
+	return AccessApiApiCreateAccessTokenRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *AccessApiService) CreateAccessTokenExecute(r AccessApiApiCreateAccessTokenRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -52,8 +74,13 @@ func (a *AccessApiService) CreateAccessToken(ctx _context.Context, localVarOptio
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/token"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.CreateAccessToken")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/token"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -75,24 +102,25 @@ func (a *AccessApiService) CreateAccessToken(ctx _context.Context, localVarOptio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.Username.IsSet() {
-		localVarFormParams.Add("username", parameterToString(localVarOptionals.Username.Value(), ""))
+	if r.username != nil {
+		localVarFormParams.Add("username", parameterToString(*r.username, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Password.IsSet() {
-		localVarFormParams.Add("password", parameterToString(localVarOptionals.Password.Value(), ""))
+	if r.password != nil {
+		localVarFormParams.Add("password", parameterToString(*r.password, ""))
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -117,13 +145,33 @@ func (a *AccessApiService) CreateAccessToken(ctx _context.Context, localVarOptio
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiCreateAccessTokenFromTicketRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiCreateAccessTokenFromTicketRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.CreateAccessTokenFromTicketExecute(r)
+}
+
 /*
-CreateAccessTokenFromTicket Creates a token for accessing the REST API via Kerberos ticket exchange / SPNEGO negotiation
-The token returned is formatted as a JSON Web Token (JWT). The token is base64 encoded and comprised of three parts. The header, the body, and the signature. The expiration of the token is a contained within the body. The token can be used in the Authorization header in the format &#39;Authorization: Bearer &lt;token&gt;&#39;.
+ * CreateAccessTokenFromTicket Creates a token for accessing the REST API via Kerberos ticket exchange / SPNEGO negotiation
+ * The token returned is formatted as a JSON Web Token (JWT). The token is base64 encoded and comprised of three parts. The header, the body, and the signature. The expiration of the token is a contained within the body. The token can be used in the Authorization header in the format 'Authorization: Bearer <token>'.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return string
-*/
-func (a *AccessApiService) CreateAccessTokenFromTicket(ctx _context.Context) (string, *_nethttp.Response, error) {
+ * @return AccessApiApiCreateAccessTokenFromTicketRequest
+ */
+func (a *AccessApiService) CreateAccessTokenFromTicket(ctx _context.Context) AccessApiApiCreateAccessTokenFromTicketRequest {
+	return AccessApiApiCreateAccessTokenFromTicketRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *AccessApiService) CreateAccessTokenFromTicketExecute(r AccessApiApiCreateAccessTokenFromTicketRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -133,8 +181,13 @@ func (a *AccessApiService) CreateAccessTokenFromTicket(ctx _context.Context) (st
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/kerberos"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.CreateAccessTokenFromTicket")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/kerberos"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -156,18 +209,19 @@ func (a *AccessApiService) CreateAccessTokenFromTicket(ctx _context.Context) (st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -192,13 +246,33 @@ func (a *AccessApiService) CreateAccessTokenFromTicket(ctx _context.Context) (st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiCreateDownloadTokenRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiCreateDownloadTokenRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.CreateDownloadTokenExecute(r)
+}
+
 /*
-CreateDownloadToken Creates a single use access token for downloading FlowFile content.
-The token returned is a base64 encoded string. It is valid for a single request up to five minutes from being issued. It is used as a query parameter name &#39;access_token&#39;.
+ * CreateDownloadToken Creates a single use access token for downloading FlowFile content.
+ * The token returned is a base64 encoded string. It is valid for a single request up to five minutes from being issued. It is used as a query parameter name 'access_token'.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return string
-*/
-func (a *AccessApiService) CreateDownloadToken(ctx _context.Context) (string, *_nethttp.Response, error) {
+ * @return AccessApiApiCreateDownloadTokenRequest
+ */
+func (a *AccessApiService) CreateDownloadToken(ctx _context.Context) AccessApiApiCreateDownloadTokenRequest {
+	return AccessApiApiCreateDownloadTokenRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *AccessApiService) CreateDownloadTokenExecute(r AccessApiApiCreateDownloadTokenRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -208,8 +282,13 @@ func (a *AccessApiService) CreateDownloadToken(ctx _context.Context) (string, *_
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/download-token"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.CreateDownloadToken")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/download-token"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -231,18 +310,19 @@ func (a *AccessApiService) CreateDownloadToken(ctx _context.Context) (string, *_
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -267,13 +347,33 @@ func (a *AccessApiService) CreateDownloadToken(ctx _context.Context) (string, *_
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiCreateUiExtensionTokenRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiCreateUiExtensionTokenRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.CreateUiExtensionTokenExecute(r)
+}
+
 /*
-CreateUiExtensionToken Creates a single use access token for accessing a NiFi UI extension.
-The token returned is a base64 encoded string. It is valid for a single request up to five minutes from being issued. It is used as a query parameter name &#39;access_token&#39;.
+ * CreateUiExtensionToken Creates a single use access token for accessing a NiFi UI extension.
+ * The token returned is a base64 encoded string. It is valid for a single request up to five minutes from being issued. It is used as a query parameter name 'access_token'.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return string
-*/
-func (a *AccessApiService) CreateUiExtensionToken(ctx _context.Context) (string, *_nethttp.Response, error) {
+ * @return AccessApiApiCreateUiExtensionTokenRequest
+ */
+func (a *AccessApiService) CreateUiExtensionToken(ctx _context.Context) AccessApiApiCreateUiExtensionTokenRequest {
+	return AccessApiApiCreateUiExtensionTokenRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *AccessApiService) CreateUiExtensionTokenExecute(r AccessApiApiCreateUiExtensionTokenRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -283,8 +383,13 @@ func (a *AccessApiService) CreateUiExtensionToken(ctx _context.Context) (string,
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/ui-extension-token"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.CreateUiExtensionToken")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/ui-extension-token"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -306,18 +411,19 @@ func (a *AccessApiService) CreateUiExtensionToken(ctx _context.Context) (string,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -342,13 +448,33 @@ func (a *AccessApiService) CreateUiExtensionToken(ctx _context.Context) (string,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiGetAccessStatusRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiGetAccessStatusRequest) Execute() (AccessStatusEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetAccessStatusExecute(r)
+}
+
 /*
-GetAccessStatus Gets the status the client's access
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetAccessStatus Gets the status the client's access
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return AccessStatusEntity
-*/
-func (a *AccessApiService) GetAccessStatus(ctx _context.Context) (AccessStatusEntity, *_nethttp.Response, error) {
+ * @return AccessApiApiGetAccessStatusRequest
+ */
+func (a *AccessApiService) GetAccessStatus(ctx _context.Context) AccessApiApiGetAccessStatusRequest {
+	return AccessApiApiGetAccessStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessStatusEntity
+ */
+func (a *AccessApiService) GetAccessStatusExecute(r AccessApiApiGetAccessStatusRequest) (AccessStatusEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -358,8 +484,13 @@ func (a *AccessApiService) GetAccessStatus(ctx _context.Context) (AccessStatusEn
 		localVarReturnValue  AccessStatusEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.GetAccessStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -381,18 +512,19 @@ func (a *AccessApiService) GetAccessStatus(ctx _context.Context) (AccessStatusEn
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -417,12 +549,32 @@ func (a *AccessApiService) GetAccessStatus(ctx _context.Context) (AccessStatusEn
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiGetLoginConfigRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiGetLoginConfigRequest) Execute() (AccessConfigurationEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetLoginConfigExecute(r)
+}
+
 /*
-GetLoginConfig Retrieves the access configuration for this NiFi
+ * GetLoginConfig Retrieves the access configuration for this NiFi
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return AccessConfigurationEntity
-*/
-func (a *AccessApiService) GetLoginConfig(ctx _context.Context) (AccessConfigurationEntity, *_nethttp.Response, error) {
+ * @return AccessApiApiGetLoginConfigRequest
+ */
+func (a *AccessApiService) GetLoginConfig(ctx _context.Context) AccessApiApiGetLoginConfigRequest {
+	return AccessApiApiGetLoginConfigRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessConfigurationEntity
+ */
+func (a *AccessApiService) GetLoginConfigExecute(r AccessApiApiGetLoginConfigRequest) (AccessConfigurationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -432,8 +584,13 @@ func (a *AccessApiService) GetLoginConfig(ctx _context.Context) (AccessConfigura
 		localVarReturnValue  AccessConfigurationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/config"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.GetLoginConfig")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/config"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -455,18 +612,19 @@ func (a *AccessApiService) GetLoginConfig(ctx _context.Context) (AccessConfigura
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -491,12 +649,32 @@ func (a *AccessApiService) GetLoginConfig(ctx _context.Context) (AccessConfigura
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiKnoxCallbackRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiKnoxCallbackRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.KnoxCallbackExecute(r)
+}
+
 /*
-KnoxCallback Redirect/callback URI for processing the result of the Apache Knox login sequence.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * KnoxCallback Redirect/callback URI for processing the result of the Apache Knox login sequence.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) KnoxCallback(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiKnoxCallbackRequest
+ */
+func (a *AccessApiService) KnoxCallback(ctx _context.Context) AccessApiApiKnoxCallbackRequest {
+	return AccessApiApiKnoxCallbackRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) KnoxCallbackExecute(r AccessApiApiKnoxCallbackRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -505,8 +683,13 @@ func (a *AccessApiService) KnoxCallback(ctx _context.Context) (*_nethttp.Respons
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/knox/callback"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.KnoxCallback")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/knox/callback"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -528,18 +711,19 @@ func (a *AccessApiService) KnoxCallback(ctx _context.Context) (*_nethttp.Respons
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -555,12 +739,32 @@ func (a *AccessApiService) KnoxCallback(ctx _context.Context) (*_nethttp.Respons
 	return localVarHTTPResponse, nil
 }
 
+type AccessApiApiKnoxLogoutRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiKnoxLogoutRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.KnoxLogoutExecute(r)
+}
+
 /*
-KnoxLogout Performs a logout in the Apache Knox.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * KnoxLogout Performs a logout in the Apache Knox.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) KnoxLogout(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiKnoxLogoutRequest
+ */
+func (a *AccessApiService) KnoxLogout(ctx _context.Context) AccessApiApiKnoxLogoutRequest {
+	return AccessApiApiKnoxLogoutRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) KnoxLogoutExecute(r AccessApiApiKnoxLogoutRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -569,8 +773,13 @@ func (a *AccessApiService) KnoxLogout(ctx _context.Context) (*_nethttp.Response,
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/knox/logout"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.KnoxLogout")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/knox/logout"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -592,18 +801,19 @@ func (a *AccessApiService) KnoxLogout(ctx _context.Context) (*_nethttp.Response,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -619,12 +829,32 @@ func (a *AccessApiService) KnoxLogout(ctx _context.Context) (*_nethttp.Response,
 	return localVarHTTPResponse, nil
 }
 
+type AccessApiApiKnoxRequestRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiKnoxRequestRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.KnoxRequestExecute(r)
+}
+
 /*
-KnoxRequest Initiates a request to authenticate through Apache Knox.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * KnoxRequest Initiates a request to authenticate through Apache Knox.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) KnoxRequest(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiKnoxRequestRequest
+ */
+func (a *AccessApiService) KnoxRequest(ctx _context.Context) AccessApiApiKnoxRequestRequest {
+	return AccessApiApiKnoxRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) KnoxRequestExecute(r AccessApiApiKnoxRequestRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -633,8 +863,13 @@ func (a *AccessApiService) KnoxRequest(ctx _context.Context) (*_nethttp.Response
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/knox/request"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.KnoxRequest")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/knox/request"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -656,18 +891,19 @@ func (a *AccessApiService) KnoxRequest(ctx _context.Context) (*_nethttp.Response
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -683,12 +919,32 @@ func (a *AccessApiService) KnoxRequest(ctx _context.Context) (*_nethttp.Response
 	return localVarHTTPResponse, nil
 }
 
+type AccessApiApiLogOutRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiLogOutRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.LogOutExecute(r)
+}
+
 /*
-LogOut Performs a logout for other providers that have been issued a JWT.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * LogOut Performs a logout for other providers that have been issued a JWT.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) LogOut(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiLogOutRequest
+ */
+func (a *AccessApiService) LogOut(ctx _context.Context) AccessApiApiLogOutRequest {
+	return AccessApiApiLogOutRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) LogOutExecute(r AccessApiApiLogOutRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -697,8 +953,13 @@ func (a *AccessApiService) LogOut(ctx _context.Context) (*_nethttp.Response, err
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/logout"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.LogOut")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/logout"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -720,18 +981,19 @@ func (a *AccessApiService) LogOut(ctx _context.Context) (*_nethttp.Response, err
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -747,12 +1009,32 @@ func (a *AccessApiService) LogOut(ctx _context.Context) (*_nethttp.Response, err
 	return localVarHTTPResponse, nil
 }
 
+type AccessApiApiLogOutCompleteRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiLogOutCompleteRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.LogOutCompleteExecute(r)
+}
+
 /*
-OidcCallback Redirect/callback URI for processing the result of the OpenId Connect login sequence.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * LogOutComplete Completes the logout sequence by removing the cached Logout Request and Cookie if they existed and redirects to /nifi/login.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) OidcCallback(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiLogOutCompleteRequest
+ */
+func (a *AccessApiService) LogOutComplete(ctx _context.Context) AccessApiApiLogOutCompleteRequest {
+	return AccessApiApiLogOutCompleteRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) LogOutCompleteExecute(r AccessApiApiLogOutCompleteRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -761,8 +1043,13 @@ func (a *AccessApiService) OidcCallback(ctx _context.Context) (*_nethttp.Respons
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/oidc/callback"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.LogOutComplete")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/logout/complete"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -784,18 +1071,19 @@ func (a *AccessApiService) OidcCallback(ctx _context.Context) (*_nethttp.Respons
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -811,13 +1099,123 @@ func (a *AccessApiService) OidcCallback(ctx _context.Context) (*_nethttp.Respons
 	return localVarHTTPResponse, nil
 }
 
+type AccessApiApiOidcCallbackRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiOidcCallbackRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.OidcCallbackExecute(r)
+}
+
 /*
-OidcExchange Retrieves a JWT following a successful login sequence using the configured OpenId Connect provider.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * OidcCallback Redirect/callback URI for processing the result of the OpenId Connect login sequence.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return string
-*/
-func (a *AccessApiService) OidcExchange(ctx _context.Context) (string, *_nethttp.Response, error) {
+ * @return AccessApiApiOidcCallbackRequest
+ */
+func (a *AccessApiService) OidcCallback(ctx _context.Context) AccessApiApiOidcCallbackRequest {
+	return AccessApiApiOidcCallbackRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) OidcCallbackExecute(r AccessApiApiOidcCallbackRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.OidcCallback")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/oidc/callback"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiOidcExchangeRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiOidcExchangeRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.OidcExchangeExecute(r)
+}
+
+/*
+ * OidcExchange Retrieves a JWT following a successful login sequence using the configured OpenId Connect provider.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiOidcExchangeRequest
+ */
+func (a *AccessApiService) OidcExchange(ctx _context.Context) AccessApiApiOidcExchangeRequest {
+	return AccessApiApiOidcExchangeRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *AccessApiService) OidcExchangeExecute(r AccessApiApiOidcExchangeRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -827,8 +1225,13 @@ func (a *AccessApiService) OidcExchange(ctx _context.Context) (string, *_nethttp
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/oidc/exchange"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.OidcExchange")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/oidc/exchange"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -850,18 +1253,19 @@ func (a *AccessApiService) OidcExchange(ctx _context.Context) (string, *_nethttp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -886,12 +1290,32 @@ func (a *AccessApiService) OidcExchange(ctx _context.Context) (string, *_nethttp
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type AccessApiApiOidcLogoutRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiOidcLogoutRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.OidcLogoutExecute(r)
+}
+
 /*
-OidcLogout Performs a logout in the OpenId Provider.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * OidcLogout Performs a logout in the OpenId Provider.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) OidcLogout(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiOidcLogoutRequest
+ */
+func (a *AccessApiService) OidcLogout(ctx _context.Context) AccessApiApiOidcLogoutRequest {
+	return AccessApiApiOidcLogoutRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) OidcLogoutExecute(r AccessApiApiOidcLogoutRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -900,8 +1324,13 @@ func (a *AccessApiService) OidcLogout(ctx _context.Context) (*_nethttp.Response,
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/oidc/logout"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.OidcLogout")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/oidc/logout"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -923,18 +1352,19 @@ func (a *AccessApiService) OidcLogout(ctx _context.Context) (*_nethttp.Response,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -950,12 +1380,32 @@ func (a *AccessApiService) OidcLogout(ctx _context.Context) (*_nethttp.Response,
 	return localVarHTTPResponse, nil
 }
 
+type AccessApiApiOidcLogoutCallbackRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiOidcLogoutCallbackRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.OidcLogoutCallbackExecute(r)
+}
+
 /*
-OidcRequest Initiates a request to authenticate through the configured OpenId Connect provider.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * OidcLogoutCallback Redirect/callback URI for processing the result of the OpenId Connect logout sequence.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-*/
-func (a *AccessApiService) OidcRequest(ctx _context.Context) (*_nethttp.Response, error) {
+ * @return AccessApiApiOidcLogoutCallbackRequest
+ */
+func (a *AccessApiService) OidcLogoutCallback(ctx _context.Context) AccessApiApiOidcLogoutCallbackRequest {
+	return AccessApiApiOidcLogoutCallbackRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) OidcLogoutCallbackExecute(r AccessApiApiOidcLogoutCallbackRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -964,8 +1414,13 @@ func (a *AccessApiService) OidcRequest(ctx _context.Context) (*_nethttp.Response
 		localVarFileBytes    []byte
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/access/oidc/request"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.OidcLogoutCallback")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/oidc/logoutCallback"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -987,18 +1442,930 @@ func (a *AccessApiService) OidcRequest(ctx _context.Context) (*_nethttp.Response
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiOidcRequestRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiOidcRequestRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.OidcRequestExecute(r)
+}
+
+/*
+ * OidcRequest Initiates a request to authenticate through the configured OpenId Connect provider.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiOidcRequestRequest
+ */
+func (a *AccessApiService) OidcRequest(ctx _context.Context) AccessApiApiOidcRequestRequest {
+	return AccessApiApiOidcRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) OidcRequestExecute(r AccessApiApiOidcRequestRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.OidcRequest")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/oidc/request"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlLocalLogoutRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlLocalLogoutRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlLocalLogoutExecute(r)
+}
+
+/*
+ * SamlLocalLogout Local logout when SAML is enabled, does not communicate with the IDP.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlLocalLogoutRequest
+ */
+func (a *AccessApiService) SamlLocalLogout(ctx _context.Context) AccessApiApiSamlLocalLogoutRequest {
+	return AccessApiApiSamlLocalLogoutRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlLocalLogoutExecute(r AccessApiApiSamlLocalLogoutRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlLocalLogout")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/local-logout"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlLoginExchangeRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlLoginExchangeRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.SamlLoginExchangeExecute(r)
+}
+
+/*
+ * SamlLoginExchange Retrieves a JWT following a successful login sequence using the configured SAML identity provider.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlLoginExchangeRequest
+ */
+func (a *AccessApiService) SamlLoginExchange(ctx _context.Context) AccessApiApiSamlLoginExchangeRequest {
+	return AccessApiApiSamlLoginExchangeRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *AccessApiService) SamlLoginExchangeExecute(r AccessApiApiSamlLoginExchangeRequest) (string, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  string
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlLoginExchange")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/login/exchange"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"text/plain"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlLoginHttpPostConsumerRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlLoginHttpPostConsumerRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlLoginHttpPostConsumerExecute(r)
+}
+
+/*
+ * SamlLoginHttpPostConsumer Processes the SSO response from the SAML identity provider for HTTP-POST binding.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlLoginHttpPostConsumerRequest
+ */
+func (a *AccessApiService) SamlLoginHttpPostConsumer(ctx _context.Context) AccessApiApiSamlLoginHttpPostConsumerRequest {
+	return AccessApiApiSamlLoginHttpPostConsumerRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlLoginHttpPostConsumerExecute(r AccessApiApiSamlLoginHttpPostConsumerRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlLoginHttpPostConsumer")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/login/consumer"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlLoginHttpRedirectConsumerRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlLoginHttpRedirectConsumerRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlLoginHttpRedirectConsumerExecute(r)
+}
+
+/*
+ * SamlLoginHttpRedirectConsumer Processes the SSO response from the SAML identity provider for HTTP-REDIRECT binding.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlLoginHttpRedirectConsumerRequest
+ */
+func (a *AccessApiService) SamlLoginHttpRedirectConsumer(ctx _context.Context) AccessApiApiSamlLoginHttpRedirectConsumerRequest {
+	return AccessApiApiSamlLoginHttpRedirectConsumerRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlLoginHttpRedirectConsumerExecute(r AccessApiApiSamlLoginHttpRedirectConsumerRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlLoginHttpRedirectConsumer")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/login/consumer"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlLoginRequestRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlLoginRequestRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlLoginRequestExecute(r)
+}
+
+/*
+ * SamlLoginRequest Initiates an SSO request to the configured SAML identity provider.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlLoginRequestRequest
+ */
+func (a *AccessApiService) SamlLoginRequest(ctx _context.Context) AccessApiApiSamlLoginRequestRequest {
+	return AccessApiApiSamlLoginRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlLoginRequestExecute(r AccessApiApiSamlLoginRequestRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlLoginRequest")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/login/request"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlMetadataRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlMetadataRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlMetadataExecute(r)
+}
+
+/*
+ * SamlMetadata Retrieves the service provider metadata.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlMetadataRequest
+ */
+func (a *AccessApiService) SamlMetadata(ctx _context.Context) AccessApiApiSamlMetadataRequest {
+	return AccessApiApiSamlMetadataRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlMetadataExecute(r AccessApiApiSamlMetadataRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlMetadata")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/metadata"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlSingleLogoutHttpPostConsumerRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlSingleLogoutHttpPostConsumerRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlSingleLogoutHttpPostConsumerExecute(r)
+}
+
+/*
+ * SamlSingleLogoutHttpPostConsumer Processes a SingleLogout message from the configured SAML identity provider using the HTTP-POST binding.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlSingleLogoutHttpPostConsumerRequest
+ */
+func (a *AccessApiService) SamlSingleLogoutHttpPostConsumer(ctx _context.Context) AccessApiApiSamlSingleLogoutHttpPostConsumerRequest {
+	return AccessApiApiSamlSingleLogoutHttpPostConsumerRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlSingleLogoutHttpPostConsumerExecute(r AccessApiApiSamlSingleLogoutHttpPostConsumerRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlSingleLogoutHttpPostConsumer")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/single-logout/consumer"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlSingleLogoutHttpRedirectConsumerRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlSingleLogoutHttpRedirectConsumerRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlSingleLogoutHttpRedirectConsumerExecute(r)
+}
+
+/*
+ * SamlSingleLogoutHttpRedirectConsumer Processes a SingleLogout message from the configured SAML identity provider using the HTTP-REDIRECT binding.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlSingleLogoutHttpRedirectConsumerRequest
+ */
+func (a *AccessApiService) SamlSingleLogoutHttpRedirectConsumer(ctx _context.Context) AccessApiApiSamlSingleLogoutHttpRedirectConsumerRequest {
+	return AccessApiApiSamlSingleLogoutHttpRedirectConsumerRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlSingleLogoutHttpRedirectConsumerExecute(r AccessApiApiSamlSingleLogoutHttpRedirectConsumerRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlSingleLogoutHttpRedirectConsumer")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/single-logout/consumer"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type AccessApiApiSamlSingleLogoutRequestRequest struct {
+	ctx        _context.Context
+	ApiService *AccessApiService
+}
+
+func (r AccessApiApiSamlSingleLogoutRequestRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.SamlSingleLogoutRequestExecute(r)
+}
+
+/*
+ * SamlSingleLogoutRequest Initiates a logout request using the SingleLogout service of the configured SAML identity provider.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return AccessApiApiSamlSingleLogoutRequestRequest
+ */
+func (a *AccessApiService) SamlSingleLogoutRequest(ctx _context.Context) AccessApiApiSamlSingleLogoutRequestRequest {
+	return AccessApiApiSamlSingleLogoutRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *AccessApiService) SamlSingleLogoutRequestExecute(r AccessApiApiSamlSingleLogoutRequestRequest) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccessApiService.SamlSingleLogoutRequest")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/access/saml/single-logout/request"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}

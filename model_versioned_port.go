@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,436 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedPort struct for VersionedPort
 type VersionedPort struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments string   `json:"comments,omitempty"`
-	Position Position `json:"position,omitempty"`
+	Comments *string   `json:"comments,omitempty"`
+	Position *Position `json:"position,omitempty"`
 	// The type of port.
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 	// The number of tasks that should be concurrently scheduled for the port.
-	ConcurrentlySchedulableTaskCount int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
+	ConcurrentlySchedulableTaskCount *int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
 	// The scheduled state of the component
-	ScheduledState string `json:"scheduledState,omitempty"`
+	ScheduledState *string `json:"scheduledState,omitempty"`
 	// Whether or not this port allows remote access for site-to-site
-	AllowRemoteAccess bool   `json:"allowRemoteAccess,omitempty"`
-	ComponentType     string `json:"componentType,omitempty"`
+	AllowRemoteAccess *bool   `json:"allowRemoteAccess,omitempty"`
+	ComponentType     *string `json:"componentType,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedPort instantiates a new VersionedPort object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedPort() *VersionedPort {
+	this := VersionedPort{}
+	return &this
+}
+
+// NewVersionedPortWithDefaults instantiates a new VersionedPort object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedPortWithDefaults() *VersionedPort {
+	this := VersionedPort{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedPort) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedPort) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedPort) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedPort) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedPort) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedPort) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedPort) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedPort) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedPort) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedPort) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedPort) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedPort) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *VersionedPort) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *VersionedPort) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *VersionedPort) SetType(v string) {
+	o.Type = &v
+}
+
+// GetConcurrentlySchedulableTaskCount returns the ConcurrentlySchedulableTaskCount field value if set, zero value otherwise.
+func (o *VersionedPort) GetConcurrentlySchedulableTaskCount() int32 {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ConcurrentlySchedulableTaskCount
+}
+
+// GetConcurrentlySchedulableTaskCountOk returns a tuple with the ConcurrentlySchedulableTaskCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetConcurrentlySchedulableTaskCountOk() (*int32, bool) {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		return nil, false
+	}
+	return o.ConcurrentlySchedulableTaskCount, true
+}
+
+// HasConcurrentlySchedulableTaskCount returns a boolean if a field has been set.
+func (o *VersionedPort) HasConcurrentlySchedulableTaskCount() bool {
+	if o != nil && o.ConcurrentlySchedulableTaskCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConcurrentlySchedulableTaskCount gets a reference to the given int32 and assigns it to the ConcurrentlySchedulableTaskCount field.
+func (o *VersionedPort) SetConcurrentlySchedulableTaskCount(v int32) {
+	o.ConcurrentlySchedulableTaskCount = &v
+}
+
+// GetScheduledState returns the ScheduledState field value if set, zero value otherwise.
+func (o *VersionedPort) GetScheduledState() string {
+	if o == nil || o.ScheduledState == nil {
+		var ret string
+		return ret
+	}
+	return *o.ScheduledState
+}
+
+// GetScheduledStateOk returns a tuple with the ScheduledState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetScheduledStateOk() (*string, bool) {
+	if o == nil || o.ScheduledState == nil {
+		return nil, false
+	}
+	return o.ScheduledState, true
+}
+
+// HasScheduledState returns a boolean if a field has been set.
+func (o *VersionedPort) HasScheduledState() bool {
+	if o != nil && o.ScheduledState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetScheduledState gets a reference to the given string and assigns it to the ScheduledState field.
+func (o *VersionedPort) SetScheduledState(v string) {
+	o.ScheduledState = &v
+}
+
+// GetAllowRemoteAccess returns the AllowRemoteAccess field value if set, zero value otherwise.
+func (o *VersionedPort) GetAllowRemoteAccess() bool {
+	if o == nil || o.AllowRemoteAccess == nil {
+		var ret bool
+		return ret
+	}
+	return *o.AllowRemoteAccess
+}
+
+// GetAllowRemoteAccessOk returns a tuple with the AllowRemoteAccess field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetAllowRemoteAccessOk() (*bool, bool) {
+	if o == nil || o.AllowRemoteAccess == nil {
+		return nil, false
+	}
+	return o.AllowRemoteAccess, true
+}
+
+// HasAllowRemoteAccess returns a boolean if a field has been set.
+func (o *VersionedPort) HasAllowRemoteAccess() bool {
+	if o != nil && o.AllowRemoteAccess != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowRemoteAccess gets a reference to the given bool and assigns it to the AllowRemoteAccess field.
+func (o *VersionedPort) SetAllowRemoteAccess(v bool) {
+	o.AllowRemoteAccess = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedPort) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedPort) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedPort) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedPort) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPort) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedPort) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedPort) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedPort) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.ConcurrentlySchedulableTaskCount != nil {
+		toSerialize["concurrentlySchedulableTaskCount"] = o.ConcurrentlySchedulableTaskCount
+	}
+	if o.ScheduledState != nil {
+		toSerialize["scheduledState"] = o.ScheduledState
+	}
+	if o.AllowRemoteAccess != nil {
+		toSerialize["allowRemoteAccess"] = o.AllowRemoteAccess
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedPort struct {
+	value *VersionedPort
+	isSet bool
+}
+
+func (v NullableVersionedPort) Get() *VersionedPort {
+	return v.value
+}
+
+func (v *NullableVersionedPort) Set(val *VersionedPort) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedPort) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedPort) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedPort(val *VersionedPort) *NullableVersionedPort {
+	return &NullableVersionedPort{value: val, isSet: true}
+}
+
+func (v NullableVersionedPort) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedPort) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

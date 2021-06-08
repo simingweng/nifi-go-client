@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,52 +11,954 @@
 
 package nifi
 
-// ReportingTaskDto struct for ReportingTaskDto
-type ReportingTaskDto struct {
+import (
+	"encoding/json"
+)
+
+// ReportingTaskDTO struct for ReportingTaskDTO
+type ReportingTaskDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The name of the reporting task.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The fully qualified type of the reporting task.
-	Type   string    `json:"type,omitempty"`
-	Bundle BundleDto `json:"bundle,omitempty"`
+	Type   *string    `json:"type,omitempty"`
+	Bundle *BundleDTO `json:"bundle,omitempty"`
 	// The state of the reporting task.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// The comments of the reporting task.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
 	// Whether the reporting task persists state.
-	PersistsState bool `json:"persistsState,omitempty"`
+	PersistsState *bool `json:"persistsState,omitempty"`
 	// Whether the reporting task requires elevated privileges.
-	Restricted bool `json:"restricted,omitempty"`
+	Restricted *bool `json:"restricted,omitempty"`
 	// Whether the reporting task has been deprecated.
-	Deprecated bool `json:"deprecated,omitempty"`
+	Deprecated *bool `json:"deprecated,omitempty"`
 	// Whether the reporting task has multiple versions available.
-	MultipleVersionsAvailable bool `json:"multipleVersionsAvailable,omitempty"`
+	MultipleVersionsAvailable *bool `json:"multipleVersionsAvailable,omitempty"`
 	// The frequency with which to schedule the reporting task. The format of the value willd epend on the valud of the schedulingStrategy.
-	SchedulingPeriod string `json:"schedulingPeriod,omitempty"`
+	SchedulingPeriod *string `json:"schedulingPeriod,omitempty"`
 	// The scheduling strategy that determines how the schedulingPeriod value should be interpreted.
-	SchedulingStrategy string `json:"schedulingStrategy,omitempty"`
+	SchedulingStrategy *string `json:"schedulingStrategy,omitempty"`
 	// The default scheduling period for the different scheduling strategies.
-	DefaultSchedulingPeriod map[string]string `json:"defaultSchedulingPeriod,omitempty"`
+	DefaultSchedulingPeriod *map[string]string `json:"defaultSchedulingPeriod,omitempty"`
 	// The properties of the reporting task.
-	Properties map[string]string `json:"properties,omitempty"`
+	Properties *map[string]string `json:"properties,omitempty"`
 	// The descriptors for the reporting tasks properties.
-	Descriptors map[string]PropertyDescriptorDto `json:"descriptors,omitempty"`
+	Descriptors *map[string]PropertyDescriptorDTO `json:"descriptors,omitempty"`
 	// The URL for the custom configuration UI for the reporting task.
-	CustomUiUrl string `json:"customUiUrl,omitempty"`
+	CustomUiUrl *string `json:"customUiUrl,omitempty"`
 	// The annotation data for the repoting task. This is how the custom UI relays configuration to the reporting task.
-	AnnotationData string `json:"annotationData,omitempty"`
+	AnnotationData *string `json:"annotationData,omitempty"`
 	// Gets the validation errors from the reporting task. These validation errors represent the problems with the reporting task that must be resolved before it can be scheduled to run.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
 	// Indicates whether the Processor is valid, invalid, or still in the process of validating (i.e., it is unknown whether or not the Processor is valid)
-	ValidationStatus string `json:"validationStatus,omitempty"`
+	ValidationStatus *string `json:"validationStatus,omitempty"`
 	// The number of active threads for the reporting task.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// Whether the underlying extension is missing.
-	ExtensionMissing bool `json:"extensionMissing,omitempty"`
+	ExtensionMissing *bool `json:"extensionMissing,omitempty"`
+}
+
+// NewReportingTaskDTO instantiates a new ReportingTaskDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewReportingTaskDTO() *ReportingTaskDTO {
+	this := ReportingTaskDTO{}
+	return &this
+}
+
+// NewReportingTaskDTOWithDefaults instantiates a new ReportingTaskDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewReportingTaskDTOWithDefaults() *ReportingTaskDTO {
+	this := ReportingTaskDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ReportingTaskDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *ReportingTaskDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *ReportingTaskDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *ReportingTaskDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ReportingTaskDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ReportingTaskDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetBundle returns the Bundle field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetBundle() BundleDTO {
+	if o == nil || o.Bundle == nil {
+		var ret BundleDTO
+		return ret
+	}
+	return *o.Bundle
+}
+
+// GetBundleOk returns a tuple with the Bundle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetBundleOk() (*BundleDTO, bool) {
+	if o == nil || o.Bundle == nil {
+		return nil, false
+	}
+	return o.Bundle, true
+}
+
+// HasBundle returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasBundle() bool {
+	if o != nil && o.Bundle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBundle gets a reference to the given BundleDTO and assigns it to the Bundle field.
+func (o *ReportingTaskDTO) SetBundle(v BundleDTO) {
+	o.Bundle = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ReportingTaskDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *ReportingTaskDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPersistsState returns the PersistsState field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetPersistsState() bool {
+	if o == nil || o.PersistsState == nil {
+		var ret bool
+		return ret
+	}
+	return *o.PersistsState
+}
+
+// GetPersistsStateOk returns a tuple with the PersistsState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetPersistsStateOk() (*bool, bool) {
+	if o == nil || o.PersistsState == nil {
+		return nil, false
+	}
+	return o.PersistsState, true
+}
+
+// HasPersistsState returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasPersistsState() bool {
+	if o != nil && o.PersistsState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPersistsState gets a reference to the given bool and assigns it to the PersistsState field.
+func (o *ReportingTaskDTO) SetPersistsState(v bool) {
+	o.PersistsState = &v
+}
+
+// GetRestricted returns the Restricted field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetRestricted() bool {
+	if o == nil || o.Restricted == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Restricted
+}
+
+// GetRestrictedOk returns a tuple with the Restricted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetRestrictedOk() (*bool, bool) {
+	if o == nil || o.Restricted == nil {
+		return nil, false
+	}
+	return o.Restricted, true
+}
+
+// HasRestricted returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasRestricted() bool {
+	if o != nil && o.Restricted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRestricted gets a reference to the given bool and assigns it to the Restricted field.
+func (o *ReportingTaskDTO) SetRestricted(v bool) {
+	o.Restricted = &v
+}
+
+// GetDeprecated returns the Deprecated field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetDeprecated() bool {
+	if o == nil || o.Deprecated == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Deprecated
+}
+
+// GetDeprecatedOk returns a tuple with the Deprecated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetDeprecatedOk() (*bool, bool) {
+	if o == nil || o.Deprecated == nil {
+		return nil, false
+	}
+	return o.Deprecated, true
+}
+
+// HasDeprecated returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasDeprecated() bool {
+	if o != nil && o.Deprecated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDeprecated gets a reference to the given bool and assigns it to the Deprecated field.
+func (o *ReportingTaskDTO) SetDeprecated(v bool) {
+	o.Deprecated = &v
+}
+
+// GetMultipleVersionsAvailable returns the MultipleVersionsAvailable field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetMultipleVersionsAvailable() bool {
+	if o == nil || o.MultipleVersionsAvailable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.MultipleVersionsAvailable
+}
+
+// GetMultipleVersionsAvailableOk returns a tuple with the MultipleVersionsAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetMultipleVersionsAvailableOk() (*bool, bool) {
+	if o == nil || o.MultipleVersionsAvailable == nil {
+		return nil, false
+	}
+	return o.MultipleVersionsAvailable, true
+}
+
+// HasMultipleVersionsAvailable returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasMultipleVersionsAvailable() bool {
+	if o != nil && o.MultipleVersionsAvailable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMultipleVersionsAvailable gets a reference to the given bool and assigns it to the MultipleVersionsAvailable field.
+func (o *ReportingTaskDTO) SetMultipleVersionsAvailable(v bool) {
+	o.MultipleVersionsAvailable = &v
+}
+
+// GetSchedulingPeriod returns the SchedulingPeriod field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetSchedulingPeriod() string {
+	if o == nil || o.SchedulingPeriod == nil {
+		var ret string
+		return ret
+	}
+	return *o.SchedulingPeriod
+}
+
+// GetSchedulingPeriodOk returns a tuple with the SchedulingPeriod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetSchedulingPeriodOk() (*string, bool) {
+	if o == nil || o.SchedulingPeriod == nil {
+		return nil, false
+	}
+	return o.SchedulingPeriod, true
+}
+
+// HasSchedulingPeriod returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasSchedulingPeriod() bool {
+	if o != nil && o.SchedulingPeriod != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSchedulingPeriod gets a reference to the given string and assigns it to the SchedulingPeriod field.
+func (o *ReportingTaskDTO) SetSchedulingPeriod(v string) {
+	o.SchedulingPeriod = &v
+}
+
+// GetSchedulingStrategy returns the SchedulingStrategy field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetSchedulingStrategy() string {
+	if o == nil || o.SchedulingStrategy == nil {
+		var ret string
+		return ret
+	}
+	return *o.SchedulingStrategy
+}
+
+// GetSchedulingStrategyOk returns a tuple with the SchedulingStrategy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetSchedulingStrategyOk() (*string, bool) {
+	if o == nil || o.SchedulingStrategy == nil {
+		return nil, false
+	}
+	return o.SchedulingStrategy, true
+}
+
+// HasSchedulingStrategy returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasSchedulingStrategy() bool {
+	if o != nil && o.SchedulingStrategy != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSchedulingStrategy gets a reference to the given string and assigns it to the SchedulingStrategy field.
+func (o *ReportingTaskDTO) SetSchedulingStrategy(v string) {
+	o.SchedulingStrategy = &v
+}
+
+// GetDefaultSchedulingPeriod returns the DefaultSchedulingPeriod field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetDefaultSchedulingPeriod() map[string]string {
+	if o == nil || o.DefaultSchedulingPeriod == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.DefaultSchedulingPeriod
+}
+
+// GetDefaultSchedulingPeriodOk returns a tuple with the DefaultSchedulingPeriod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetDefaultSchedulingPeriodOk() (*map[string]string, bool) {
+	if o == nil || o.DefaultSchedulingPeriod == nil {
+		return nil, false
+	}
+	return o.DefaultSchedulingPeriod, true
+}
+
+// HasDefaultSchedulingPeriod returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasDefaultSchedulingPeriod() bool {
+	if o != nil && o.DefaultSchedulingPeriod != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultSchedulingPeriod gets a reference to the given map[string]string and assigns it to the DefaultSchedulingPeriod field.
+func (o *ReportingTaskDTO) SetDefaultSchedulingPeriod(v map[string]string) {
+	o.DefaultSchedulingPeriod = &v
+}
+
+// GetProperties returns the Properties field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetProperties() map[string]string {
+	if o == nil || o.Properties == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Properties
+}
+
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetPropertiesOk() (*map[string]string, bool) {
+	if o == nil || o.Properties == nil {
+		return nil, false
+	}
+	return o.Properties, true
+}
+
+// HasProperties returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasProperties() bool {
+	if o != nil && o.Properties != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+func (o *ReportingTaskDTO) SetProperties(v map[string]string) {
+	o.Properties = &v
+}
+
+// GetDescriptors returns the Descriptors field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetDescriptors() map[string]PropertyDescriptorDTO {
+	if o == nil || o.Descriptors == nil {
+		var ret map[string]PropertyDescriptorDTO
+		return ret
+	}
+	return *o.Descriptors
+}
+
+// GetDescriptorsOk returns a tuple with the Descriptors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetDescriptorsOk() (*map[string]PropertyDescriptorDTO, bool) {
+	if o == nil || o.Descriptors == nil {
+		return nil, false
+	}
+	return o.Descriptors, true
+}
+
+// HasDescriptors returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasDescriptors() bool {
+	if o != nil && o.Descriptors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescriptors gets a reference to the given map[string]PropertyDescriptorDTO and assigns it to the Descriptors field.
+func (o *ReportingTaskDTO) SetDescriptors(v map[string]PropertyDescriptorDTO) {
+	o.Descriptors = &v
+}
+
+// GetCustomUiUrl returns the CustomUiUrl field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetCustomUiUrl() string {
+	if o == nil || o.CustomUiUrl == nil {
+		var ret string
+		return ret
+	}
+	return *o.CustomUiUrl
+}
+
+// GetCustomUiUrlOk returns a tuple with the CustomUiUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetCustomUiUrlOk() (*string, bool) {
+	if o == nil || o.CustomUiUrl == nil {
+		return nil, false
+	}
+	return o.CustomUiUrl, true
+}
+
+// HasCustomUiUrl returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasCustomUiUrl() bool {
+	if o != nil && o.CustomUiUrl != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCustomUiUrl gets a reference to the given string and assigns it to the CustomUiUrl field.
+func (o *ReportingTaskDTO) SetCustomUiUrl(v string) {
+	o.CustomUiUrl = &v
+}
+
+// GetAnnotationData returns the AnnotationData field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetAnnotationData() string {
+	if o == nil || o.AnnotationData == nil {
+		var ret string
+		return ret
+	}
+	return *o.AnnotationData
+}
+
+// GetAnnotationDataOk returns a tuple with the AnnotationData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetAnnotationDataOk() (*string, bool) {
+	if o == nil || o.AnnotationData == nil {
+		return nil, false
+	}
+	return o.AnnotationData, true
+}
+
+// HasAnnotationData returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasAnnotationData() bool {
+	if o != nil && o.AnnotationData != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAnnotationData gets a reference to the given string and assigns it to the AnnotationData field.
+func (o *ReportingTaskDTO) SetAnnotationData(v string) {
+	o.AnnotationData = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *ReportingTaskDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+// GetValidationStatus returns the ValidationStatus field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetValidationStatus() string {
+	if o == nil || o.ValidationStatus == nil {
+		var ret string
+		return ret
+	}
+	return *o.ValidationStatus
+}
+
+// GetValidationStatusOk returns a tuple with the ValidationStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetValidationStatusOk() (*string, bool) {
+	if o == nil || o.ValidationStatus == nil {
+		return nil, false
+	}
+	return o.ValidationStatus, true
+}
+
+// HasValidationStatus returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasValidationStatus() bool {
+	if o != nil && o.ValidationStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationStatus gets a reference to the given string and assigns it to the ValidationStatus field.
+func (o *ReportingTaskDTO) SetValidationStatus(v string) {
+	o.ValidationStatus = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *ReportingTaskDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetExtensionMissing returns the ExtensionMissing field value if set, zero value otherwise.
+func (o *ReportingTaskDTO) GetExtensionMissing() bool {
+	if o == nil || o.ExtensionMissing == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ExtensionMissing
+}
+
+// GetExtensionMissingOk returns a tuple with the ExtensionMissing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskDTO) GetExtensionMissingOk() (*bool, bool) {
+	if o == nil || o.ExtensionMissing == nil {
+		return nil, false
+	}
+	return o.ExtensionMissing, true
+}
+
+// HasExtensionMissing returns a boolean if a field has been set.
+func (o *ReportingTaskDTO) HasExtensionMissing() bool {
+	if o != nil && o.ExtensionMissing != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExtensionMissing gets a reference to the given bool and assigns it to the ExtensionMissing field.
+func (o *ReportingTaskDTO) SetExtensionMissing(v bool) {
+	o.ExtensionMissing = &v
+}
+
+func (o ReportingTaskDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Bundle != nil {
+		toSerialize["bundle"] = o.Bundle
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.PersistsState != nil {
+		toSerialize["persistsState"] = o.PersistsState
+	}
+	if o.Restricted != nil {
+		toSerialize["restricted"] = o.Restricted
+	}
+	if o.Deprecated != nil {
+		toSerialize["deprecated"] = o.Deprecated
+	}
+	if o.MultipleVersionsAvailable != nil {
+		toSerialize["multipleVersionsAvailable"] = o.MultipleVersionsAvailable
+	}
+	if o.SchedulingPeriod != nil {
+		toSerialize["schedulingPeriod"] = o.SchedulingPeriod
+	}
+	if o.SchedulingStrategy != nil {
+		toSerialize["schedulingStrategy"] = o.SchedulingStrategy
+	}
+	if o.DefaultSchedulingPeriod != nil {
+		toSerialize["defaultSchedulingPeriod"] = o.DefaultSchedulingPeriod
+	}
+	if o.Properties != nil {
+		toSerialize["properties"] = o.Properties
+	}
+	if o.Descriptors != nil {
+		toSerialize["descriptors"] = o.Descriptors
+	}
+	if o.CustomUiUrl != nil {
+		toSerialize["customUiUrl"] = o.CustomUiUrl
+	}
+	if o.AnnotationData != nil {
+		toSerialize["annotationData"] = o.AnnotationData
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	if o.ValidationStatus != nil {
+		toSerialize["validationStatus"] = o.ValidationStatus
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.ExtensionMissing != nil {
+		toSerialize["extensionMissing"] = o.ExtensionMissing
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableReportingTaskDTO struct {
+	value *ReportingTaskDTO
+	isSet bool
+}
+
+func (v NullableReportingTaskDTO) Get() *ReportingTaskDTO {
+	return v.value
+}
+
+func (v *NullableReportingTaskDTO) Set(val *ReportingTaskDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableReportingTaskDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableReportingTaskDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableReportingTaskDTO(val *ReportingTaskDTO) *NullableReportingTaskDTO {
+	return &NullableReportingTaskDTO{value: val, isSet: true}
+}
+
+func (v NullableReportingTaskDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableReportingTaskDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

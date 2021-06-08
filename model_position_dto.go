@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// PositionDto struct for PositionDto
-type PositionDto struct {
+import (
+	"encoding/json"
+)
+
+// PositionDTO struct for PositionDTO
+type PositionDTO struct {
 	// The x coordinate.
-	X float64 `json:"x,omitempty"`
+	X *float64 `json:"x,omitempty"`
 	// The y coordinate.
-	Y float64 `json:"y,omitempty"`
+	Y *float64 `json:"y,omitempty"`
+}
+
+// NewPositionDTO instantiates a new PositionDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPositionDTO() *PositionDTO {
+	this := PositionDTO{}
+	return &this
+}
+
+// NewPositionDTOWithDefaults instantiates a new PositionDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPositionDTOWithDefaults() *PositionDTO {
+	this := PositionDTO{}
+	return &this
+}
+
+// GetX returns the X field value if set, zero value otherwise.
+func (o *PositionDTO) GetX() float64 {
+	if o == nil || o.X == nil {
+		var ret float64
+		return ret
+	}
+	return *o.X
+}
+
+// GetXOk returns a tuple with the X field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PositionDTO) GetXOk() (*float64, bool) {
+	if o == nil || o.X == nil {
+		return nil, false
+	}
+	return o.X, true
+}
+
+// HasX returns a boolean if a field has been set.
+func (o *PositionDTO) HasX() bool {
+	if o != nil && o.X != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetX gets a reference to the given float64 and assigns it to the X field.
+func (o *PositionDTO) SetX(v float64) {
+	o.X = &v
+}
+
+// GetY returns the Y field value if set, zero value otherwise.
+func (o *PositionDTO) GetY() float64 {
+	if o == nil || o.Y == nil {
+		var ret float64
+		return ret
+	}
+	return *o.Y
+}
+
+// GetYOk returns a tuple with the Y field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PositionDTO) GetYOk() (*float64, bool) {
+	if o == nil || o.Y == nil {
+		return nil, false
+	}
+	return o.Y, true
+}
+
+// HasY returns a boolean if a field has been set.
+func (o *PositionDTO) HasY() bool {
+	if o != nil && o.Y != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetY gets a reference to the given float64 and assigns it to the Y field.
+func (o *PositionDTO) SetY(v float64) {
+	o.Y = &v
+}
+
+func (o PositionDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.X != nil {
+		toSerialize["x"] = o.X
+	}
+	if o.Y != nil {
+		toSerialize["y"] = o.Y
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePositionDTO struct {
+	value *PositionDTO
+	isSet bool
+}
+
+func (v NullablePositionDTO) Get() *PositionDTO {
+	return v.value
+}
+
+func (v *NullablePositionDTO) Set(val *PositionDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePositionDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePositionDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePositionDTO(val *PositionDTO) *NullablePositionDTO {
+	return &NullablePositionDTO{value: val, isSet: true}
+}
+
+func (v NullablePositionDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePositionDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

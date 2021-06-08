@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,176 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // BucketEntity struct for BucketEntity
 type BucketEntity struct {
-	Id          string         `json:"id,omitempty"`
-	Bucket      BucketDto      `json:"bucket,omitempty"`
-	Permissions PermissionsDto `json:"permissions,omitempty"`
+	Id          *string         `json:"id,omitempty"`
+	Bucket      *BucketDTO      `json:"bucket,omitempty"`
+	Permissions *PermissionsDTO `json:"permissions,omitempty"`
+}
+
+// NewBucketEntity instantiates a new BucketEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBucketEntity() *BucketEntity {
+	this := BucketEntity{}
+	return &this
+}
+
+// NewBucketEntityWithDefaults instantiates a new BucketEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBucketEntityWithDefaults() *BucketEntity {
+	this := BucketEntity{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *BucketEntity) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketEntity) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *BucketEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *BucketEntity) SetId(v string) {
+	o.Id = &v
+}
+
+// GetBucket returns the Bucket field value if set, zero value otherwise.
+func (o *BucketEntity) GetBucket() BucketDTO {
+	if o == nil || o.Bucket == nil {
+		var ret BucketDTO
+		return ret
+	}
+	return *o.Bucket
+}
+
+// GetBucketOk returns a tuple with the Bucket field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketEntity) GetBucketOk() (*BucketDTO, bool) {
+	if o == nil || o.Bucket == nil {
+		return nil, false
+	}
+	return o.Bucket, true
+}
+
+// HasBucket returns a boolean if a field has been set.
+func (o *BucketEntity) HasBucket() bool {
+	if o != nil && o.Bucket != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBucket gets a reference to the given BucketDTO and assigns it to the Bucket field.
+func (o *BucketEntity) SetBucket(v BucketDTO) {
+	o.Bucket = &v
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *BucketEntity) GetPermissions() PermissionsDTO {
+	if o == nil || o.Permissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketEntity) GetPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.Permissions == nil {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *BucketEntity) HasPermissions() bool {
+	if o != nil && o.Permissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given PermissionsDTO and assigns it to the Permissions field.
+func (o *BucketEntity) SetPermissions(v PermissionsDTO) {
+	o.Permissions = &v
+}
+
+func (o BucketEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Bucket != nil {
+		toSerialize["bucket"] = o.Bucket
+	}
+	if o.Permissions != nil {
+		toSerialize["permissions"] = o.Permissions
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBucketEntity struct {
+	value *BucketEntity
+	isSet bool
+}
+
+func (v NullableBucketEntity) Get() *BucketEntity {
+	return v.value
+}
+
+func (v *NullableBucketEntity) Set(val *BucketEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBucketEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBucketEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBucketEntity(val *BucketEntity) *NullableBucketEntity {
+	return &NullableBucketEntity{value: val, isSet: true}
+}
+
+func (v NullableBucketEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBucketEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

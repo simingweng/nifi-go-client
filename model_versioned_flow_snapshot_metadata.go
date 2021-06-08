@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,13 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedFlowSnapshotMetadata struct for VersionedFlowSnapshotMetadata
 type VersionedFlowSnapshotMetadata struct {
-	Link JaxbLink `json:"link,omitempty"`
+	Link *JaxbLink `json:"link,omitempty"`
 	// The identifier of the bucket this snapshot belongs to.
 	BucketIdentifier string `json:"bucketIdentifier"`
 	// The identifier of the flow this snapshot belongs to.
@@ -21,9 +25,291 @@ type VersionedFlowSnapshotMetadata struct {
 	// The version of this snapshot of the flow.
 	Version int32 `json:"version"`
 	// The timestamp when the flow was saved, as milliseconds since epoch.
-	Timestamp int64 `json:"timestamp,omitempty"`
+	Timestamp *int64 `json:"timestamp,omitempty"`
 	// The user that created this snapshot of the flow.
-	Author string `json:"author,omitempty"`
+	Author *string `json:"author,omitempty"`
 	// The comments provided by the user when creating the snapshot.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
+}
+
+// NewVersionedFlowSnapshotMetadata instantiates a new VersionedFlowSnapshotMetadata object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedFlowSnapshotMetadata(bucketIdentifier string, flowIdentifier string, version int32) *VersionedFlowSnapshotMetadata {
+	this := VersionedFlowSnapshotMetadata{}
+	this.BucketIdentifier = bucketIdentifier
+	this.FlowIdentifier = flowIdentifier
+	this.Version = version
+	return &this
+}
+
+// NewVersionedFlowSnapshotMetadataWithDefaults instantiates a new VersionedFlowSnapshotMetadata object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedFlowSnapshotMetadataWithDefaults() *VersionedFlowSnapshotMetadata {
+	this := VersionedFlowSnapshotMetadata{}
+	return &this
+}
+
+// GetLink returns the Link field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshotMetadata) GetLink() JaxbLink {
+	if o == nil || o.Link == nil {
+		var ret JaxbLink
+		return ret
+	}
+	return *o.Link
+}
+
+// GetLinkOk returns a tuple with the Link field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetLinkOk() (*JaxbLink, bool) {
+	if o == nil || o.Link == nil {
+		return nil, false
+	}
+	return o.Link, true
+}
+
+// HasLink returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshotMetadata) HasLink() bool {
+	if o != nil && o.Link != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLink gets a reference to the given JaxbLink and assigns it to the Link field.
+func (o *VersionedFlowSnapshotMetadata) SetLink(v JaxbLink) {
+	o.Link = &v
+}
+
+// GetBucketIdentifier returns the BucketIdentifier field value
+func (o *VersionedFlowSnapshotMetadata) GetBucketIdentifier() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.BucketIdentifier
+}
+
+// GetBucketIdentifierOk returns a tuple with the BucketIdentifier field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetBucketIdentifierOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.BucketIdentifier, true
+}
+
+// SetBucketIdentifier sets field value
+func (o *VersionedFlowSnapshotMetadata) SetBucketIdentifier(v string) {
+	o.BucketIdentifier = v
+}
+
+// GetFlowIdentifier returns the FlowIdentifier field value
+func (o *VersionedFlowSnapshotMetadata) GetFlowIdentifier() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.FlowIdentifier
+}
+
+// GetFlowIdentifierOk returns a tuple with the FlowIdentifier field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetFlowIdentifierOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.FlowIdentifier, true
+}
+
+// SetFlowIdentifier sets field value
+func (o *VersionedFlowSnapshotMetadata) SetFlowIdentifier(v string) {
+	o.FlowIdentifier = v
+}
+
+// GetVersion returns the Version field value
+func (o *VersionedFlowSnapshotMetadata) GetVersion() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetVersionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Version, true
+}
+
+// SetVersion sets field value
+func (o *VersionedFlowSnapshotMetadata) SetVersion(v int32) {
+	o.Version = v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshotMetadata) GetTimestamp() int64 {
+	if o == nil || o.Timestamp == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetTimestampOk() (*int64, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshotMetadata) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given int64 and assigns it to the Timestamp field.
+func (o *VersionedFlowSnapshotMetadata) SetTimestamp(v int64) {
+	o.Timestamp = &v
+}
+
+// GetAuthor returns the Author field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshotMetadata) GetAuthor() string {
+	if o == nil || o.Author == nil {
+		var ret string
+		return ret
+	}
+	return *o.Author
+}
+
+// GetAuthorOk returns a tuple with the Author field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetAuthorOk() (*string, bool) {
+	if o == nil || o.Author == nil {
+		return nil, false
+	}
+	return o.Author, true
+}
+
+// HasAuthor returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshotMetadata) HasAuthor() bool {
+	if o != nil && o.Author != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthor gets a reference to the given string and assigns it to the Author field.
+func (o *VersionedFlowSnapshotMetadata) SetAuthor(v string) {
+	o.Author = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedFlowSnapshotMetadata) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowSnapshotMetadata) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedFlowSnapshotMetadata) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedFlowSnapshotMetadata) SetComments(v string) {
+	o.Comments = &v
+}
+
+func (o VersionedFlowSnapshotMetadata) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Link != nil {
+		toSerialize["link"] = o.Link
+	}
+	if true {
+		toSerialize["bucketIdentifier"] = o.BucketIdentifier
+	}
+	if true {
+		toSerialize["flowIdentifier"] = o.FlowIdentifier
+	}
+	if true {
+		toSerialize["version"] = o.Version
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.Author != nil {
+		toSerialize["author"] = o.Author
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedFlowSnapshotMetadata struct {
+	value *VersionedFlowSnapshotMetadata
+	isSet bool
+}
+
+func (v NullableVersionedFlowSnapshotMetadata) Get() *VersionedFlowSnapshotMetadata {
+	return v.value
+}
+
+func (v *NullableVersionedFlowSnapshotMetadata) Set(val *VersionedFlowSnapshotMetadata) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedFlowSnapshotMetadata) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedFlowSnapshotMetadata) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedFlowSnapshotMetadata(val *VersionedFlowSnapshotMetadata) *NullableVersionedFlowSnapshotMetadata {
+	return &NullableVersionedFlowSnapshotMetadata{value: val, isSet: true}
+}
+
+func (v NullableVersionedFlowSnapshotMetadata) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedFlowSnapshotMetadata) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,17 +11,289 @@
 
 package nifi
 
-// TenantDto struct for TenantDto
-type TenantDto struct {
+import (
+	"encoding/json"
+)
+
+// TenantDTO struct for TenantDTO
+type TenantDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The identity of the tenant.
-	Identity string `json:"identity,omitempty"`
+	Identity *string `json:"identity,omitempty"`
 	// Whether this tenant is configurable.
-	Configurable bool `json:"configurable,omitempty"`
+	Configurable *bool `json:"configurable,omitempty"`
+}
+
+// NewTenantDTO instantiates a new TenantDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewTenantDTO() *TenantDTO {
+	this := TenantDTO{}
+	return &this
+}
+
+// NewTenantDTOWithDefaults instantiates a new TenantDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewTenantDTOWithDefaults() *TenantDTO {
+	this := TenantDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *TenantDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *TenantDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *TenantDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *TenantDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *TenantDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *TenantDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *TenantDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *TenantDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *TenantDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *TenantDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *TenantDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *TenantDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetIdentity returns the Identity field value if set, zero value otherwise.
+func (o *TenantDTO) GetIdentity() string {
+	if o == nil || o.Identity == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identity
+}
+
+// GetIdentityOk returns a tuple with the Identity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantDTO) GetIdentityOk() (*string, bool) {
+	if o == nil || o.Identity == nil {
+		return nil, false
+	}
+	return o.Identity, true
+}
+
+// HasIdentity returns a boolean if a field has been set.
+func (o *TenantDTO) HasIdentity() bool {
+	if o != nil && o.Identity != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentity gets a reference to the given string and assigns it to the Identity field.
+func (o *TenantDTO) SetIdentity(v string) {
+	o.Identity = &v
+}
+
+// GetConfigurable returns the Configurable field value if set, zero value otherwise.
+func (o *TenantDTO) GetConfigurable() bool {
+	if o == nil || o.Configurable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Configurable
+}
+
+// GetConfigurableOk returns a tuple with the Configurable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantDTO) GetConfigurableOk() (*bool, bool) {
+	if o == nil || o.Configurable == nil {
+		return nil, false
+	}
+	return o.Configurable, true
+}
+
+// HasConfigurable returns a boolean if a field has been set.
+func (o *TenantDTO) HasConfigurable() bool {
+	if o != nil && o.Configurable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConfigurable gets a reference to the given bool and assigns it to the Configurable field.
+func (o *TenantDTO) SetConfigurable(v bool) {
+	o.Configurable = &v
+}
+
+func (o TenantDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Identity != nil {
+		toSerialize["identity"] = o.Identity
+	}
+	if o.Configurable != nil {
+		toSerialize["configurable"] = o.Configurable
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableTenantDTO struct {
+	value *TenantDTO
+	isSet bool
+}
+
+func (v NullableTenantDTO) Get() *TenantDTO {
+	return v.value
+}
+
+func (v *NullableTenantDTO) Set(val *TenantDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableTenantDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableTenantDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableTenantDTO(val *TenantDTO) *NullableTenantDTO {
+	return &NullableTenantDTO{value: val, isSet: true}
+}
+
+func (v NullableTenantDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableTenantDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

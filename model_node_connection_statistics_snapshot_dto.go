@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,13 +11,215 @@
 
 package nifi
 
-// NodeConnectionStatisticsSnapshotDto struct for NodeConnectionStatisticsSnapshotDto
-type NodeConnectionStatisticsSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeConnectionStatisticsSnapshotDTO struct for NodeConnectionStatisticsSnapshotDTO
+type NodeConnectionStatisticsSnapshotDTO struct {
 	// The unique ID that identifies the node
-	NodeId string `json:"nodeId,omitempty"`
+	NodeId *string `json:"nodeId,omitempty"`
 	// The API address of the node
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// The API port used to communicate with the node
-	ApiPort            int32                           `json:"apiPort,omitempty"`
-	StatisticsSnapshot ConnectionStatisticsSnapshotDto `json:"statisticsSnapshot,omitempty"`
+	ApiPort            *int32                           `json:"apiPort,omitempty"`
+	StatisticsSnapshot *ConnectionStatisticsSnapshotDTO `json:"statisticsSnapshot,omitempty"`
+}
+
+// NewNodeConnectionStatisticsSnapshotDTO instantiates a new NodeConnectionStatisticsSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeConnectionStatisticsSnapshotDTO() *NodeConnectionStatisticsSnapshotDTO {
+	this := NodeConnectionStatisticsSnapshotDTO{}
+	return &this
+}
+
+// NewNodeConnectionStatisticsSnapshotDTOWithDefaults instantiates a new NodeConnectionStatisticsSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeConnectionStatisticsSnapshotDTOWithDefaults() *NodeConnectionStatisticsSnapshotDTO {
+	this := NodeConnectionStatisticsSnapshotDTO{}
+	return &this
+}
+
+// GetNodeId returns the NodeId field value if set, zero value otherwise.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetNodeId() string {
+	if o == nil || o.NodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeId
+}
+
+// GetNodeIdOk returns a tuple with the NodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetNodeIdOk() (*string, bool) {
+	if o == nil || o.NodeId == nil {
+		return nil, false
+	}
+	return o.NodeId, true
+}
+
+// HasNodeId returns a boolean if a field has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) HasNodeId() bool {
+	if o != nil && o.NodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeId gets a reference to the given string and assigns it to the NodeId field.
+func (o *NodeConnectionStatisticsSnapshotDTO) SetNodeId(v string) {
+	o.NodeId = &v
+}
+
+// GetAddress returns the Address field value if set, zero value otherwise.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetAddress() string {
+	if o == nil || o.Address == nil {
+		var ret string
+		return ret
+	}
+	return *o.Address
+}
+
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetAddressOk() (*string, bool) {
+	if o == nil || o.Address == nil {
+		return nil, false
+	}
+	return o.Address, true
+}
+
+// HasAddress returns a boolean if a field has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) HasAddress() bool {
+	if o != nil && o.Address != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
+func (o *NodeConnectionStatisticsSnapshotDTO) SetAddress(v string) {
+	o.Address = &v
+}
+
+// GetApiPort returns the ApiPort field value if set, zero value otherwise.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetApiPort() int32 {
+	if o == nil || o.ApiPort == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ApiPort
+}
+
+// GetApiPortOk returns a tuple with the ApiPort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetApiPortOk() (*int32, bool) {
+	if o == nil || o.ApiPort == nil {
+		return nil, false
+	}
+	return o.ApiPort, true
+}
+
+// HasApiPort returns a boolean if a field has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) HasApiPort() bool {
+	if o != nil && o.ApiPort != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetApiPort gets a reference to the given int32 and assigns it to the ApiPort field.
+func (o *NodeConnectionStatisticsSnapshotDTO) SetApiPort(v int32) {
+	o.ApiPort = &v
+}
+
+// GetStatisticsSnapshot returns the StatisticsSnapshot field value if set, zero value otherwise.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetStatisticsSnapshot() ConnectionStatisticsSnapshotDTO {
+	if o == nil || o.StatisticsSnapshot == nil {
+		var ret ConnectionStatisticsSnapshotDTO
+		return ret
+	}
+	return *o.StatisticsSnapshot
+}
+
+// GetStatisticsSnapshotOk returns a tuple with the StatisticsSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) GetStatisticsSnapshotOk() (*ConnectionStatisticsSnapshotDTO, bool) {
+	if o == nil || o.StatisticsSnapshot == nil {
+		return nil, false
+	}
+	return o.StatisticsSnapshot, true
+}
+
+// HasStatisticsSnapshot returns a boolean if a field has been set.
+func (o *NodeConnectionStatisticsSnapshotDTO) HasStatisticsSnapshot() bool {
+	if o != nil && o.StatisticsSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatisticsSnapshot gets a reference to the given ConnectionStatisticsSnapshotDTO and assigns it to the StatisticsSnapshot field.
+func (o *NodeConnectionStatisticsSnapshotDTO) SetStatisticsSnapshot(v ConnectionStatisticsSnapshotDTO) {
+	o.StatisticsSnapshot = &v
+}
+
+func (o NodeConnectionStatisticsSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.NodeId != nil {
+		toSerialize["nodeId"] = o.NodeId
+	}
+	if o.Address != nil {
+		toSerialize["address"] = o.Address
+	}
+	if o.ApiPort != nil {
+		toSerialize["apiPort"] = o.ApiPort
+	}
+	if o.StatisticsSnapshot != nil {
+		toSerialize["statisticsSnapshot"] = o.StatisticsSnapshot
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeConnectionStatisticsSnapshotDTO struct {
+	value *NodeConnectionStatisticsSnapshotDTO
+	isSet bool
+}
+
+func (v NullableNodeConnectionStatisticsSnapshotDTO) Get() *NodeConnectionStatisticsSnapshotDTO {
+	return v.value
+}
+
+func (v *NullableNodeConnectionStatisticsSnapshotDTO) Set(val *NodeConnectionStatisticsSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeConnectionStatisticsSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeConnectionStatisticsSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeConnectionStatisticsSnapshotDTO(val *NodeConnectionStatisticsSnapshotDTO) *NullableNodeConnectionStatisticsSnapshotDTO {
+	return &NullableNodeConnectionStatisticsSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeConnectionStatisticsSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeConnectionStatisticsSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,38 @@ var (
 // SnippetsApiService SnippetsApi service
 type SnippetsApiService service
 
+type SnippetsApiApiCreateSnippetRequest struct {
+	ctx        _context.Context
+	ApiService *SnippetsApiService
+	body       *SnippetEntity
+}
+
+func (r SnippetsApiApiCreateSnippetRequest) Body(body SnippetEntity) SnippetsApiApiCreateSnippetRequest {
+	r.body = &body
+	return r
+}
+
+func (r SnippetsApiApiCreateSnippetRequest) Execute() (SnippetEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateSnippetExecute(r)
+}
+
 /*
-CreateSnippet Creates a snippet. The snippet will be automatically discarded if not used in a subsequent request after 1 minute.
+ * CreateSnippet Creates a snippet. The snippet will be automatically discarded if not used in a subsequent request after 1 minute.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The snippet configuration details.
-@return SnippetEntity
-*/
-func (a *SnippetsApiService) CreateSnippet(ctx _context.Context, body SnippetEntity) (SnippetEntity, *_nethttp.Response, error) {
+ * @return SnippetsApiApiCreateSnippetRequest
+ */
+func (a *SnippetsApiService) CreateSnippet(ctx _context.Context) SnippetsApiApiCreateSnippetRequest {
+	return SnippetsApiApiCreateSnippetRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return SnippetEntity
+ */
+func (a *SnippetsApiService) CreateSnippetExecute(r SnippetsApiApiCreateSnippetRequest) (SnippetEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -44,11 +69,19 @@ func (a *SnippetsApiService) CreateSnippet(ctx _context.Context, body SnippetEnt
 		localVarReturnValue  SnippetEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/snippets"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SnippetsApiService.CreateSnippet")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/snippets"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -68,19 +101,20 @@ func (a *SnippetsApiService) CreateSnippet(ctx _context.Context, body SnippetEnt
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,20 +139,41 @@ func (a *SnippetsApiService) CreateSnippet(ctx _context.Context, body SnippetEnt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// SnippetsApiDeleteSnippetOpts Optional parameters for the method 'DeleteSnippet'
-type SnippetsApiDeleteSnippetOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type SnippetsApiApiDeleteSnippetRequest struct {
+	ctx                          _context.Context
+	ApiService                   *SnippetsApiService
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r SnippetsApiApiDeleteSnippetRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) SnippetsApiApiDeleteSnippetRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r SnippetsApiApiDeleteSnippetRequest) Execute() (SnippetEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteSnippetExecute(r)
 }
 
 /*
-DeleteSnippet Deletes the components in a snippet and discards the snippet
+ * DeleteSnippet Deletes the components in a snippet and discards the snippet
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The snippet id.
- * @param optional nil or *SnippetsApiDeleteSnippetOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return SnippetEntity
-*/
-func (a *SnippetsApiService) DeleteSnippet(ctx _context.Context, id string, localVarOptionals *SnippetsApiDeleteSnippetOpts) (SnippetEntity, *_nethttp.Response, error) {
+ * @return SnippetsApiApiDeleteSnippetRequest
+ */
+func (a *SnippetsApiService) DeleteSnippet(ctx _context.Context, id string) SnippetsApiApiDeleteSnippetRequest {
+	return SnippetsApiApiDeleteSnippetRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return SnippetEntity
+ */
+func (a *SnippetsApiService) DeleteSnippetExecute(r SnippetsApiApiDeleteSnippetRequest) (SnippetEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -128,16 +183,20 @@ func (a *SnippetsApiService) DeleteSnippet(ctx _context.Context, id string, loca
 		localVarReturnValue  SnippetEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/snippets/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SnippetsApiService.DeleteSnippet")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/snippets/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -156,18 +215,19 @@ func (a *SnippetsApiService) DeleteSnippet(ctx _context.Context, id string, loca
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -192,14 +252,41 @@ func (a *SnippetsApiService) DeleteSnippet(ctx _context.Context, id string, loca
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type SnippetsApiApiUpdateSnippetRequest struct {
+	ctx        _context.Context
+	ApiService *SnippetsApiService
+	id         string
+	body       *SnippetEntity
+}
+
+func (r SnippetsApiApiUpdateSnippetRequest) Body(body SnippetEntity) SnippetsApiApiUpdateSnippetRequest {
+	r.body = &body
+	return r
+}
+
+func (r SnippetsApiApiUpdateSnippetRequest) Execute() (SnippetEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateSnippetExecute(r)
+}
+
 /*
-UpdateSnippet Move's the components in this Snippet into a new Process Group and discards the snippet
+ * UpdateSnippet Move's the components in this Snippet into a new Process Group and discards the snippet
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The snippet id.
- * @param body The snippet configuration details.
-@return SnippetEntity
-*/
-func (a *SnippetsApiService) UpdateSnippet(ctx _context.Context, id string, body SnippetEntity) (SnippetEntity, *_nethttp.Response, error) {
+ * @return SnippetsApiApiUpdateSnippetRequest
+ */
+func (a *SnippetsApiService) UpdateSnippet(ctx _context.Context, id string) SnippetsApiApiUpdateSnippetRequest {
+	return SnippetsApiApiUpdateSnippetRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return SnippetEntity
+ */
+func (a *SnippetsApiService) UpdateSnippetExecute(r SnippetsApiApiUpdateSnippetRequest) (SnippetEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -209,13 +296,20 @@ func (a *SnippetsApiService) UpdateSnippet(ctx _context.Context, id string, body
 		localVarReturnValue  SnippetEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/snippets/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SnippetsApiService.UpdateSnippet")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/snippets/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -235,19 +329,20 @@ func (a *SnippetsApiService) UpdateSnippet(ctx _context.Context, id string, body
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

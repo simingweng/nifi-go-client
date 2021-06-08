@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ParameterContextsEntity struct for ParameterContextsEntity
 type ParameterContextsEntity struct {
 	// The Parameter Contexts
-	ParameterContexts []ParameterContextEntity `json:"parameterContexts,omitempty"`
+	ParameterContexts *[]ParameterContextEntity `json:"parameterContexts,omitempty"`
 	// The current time on the system.
-	CurrentTime string `json:"currentTime,omitempty"`
+	CurrentTime *string `json:"currentTime,omitempty"`
+}
+
+// NewParameterContextsEntity instantiates a new ParameterContextsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewParameterContextsEntity() *ParameterContextsEntity {
+	this := ParameterContextsEntity{}
+	return &this
+}
+
+// NewParameterContextsEntityWithDefaults instantiates a new ParameterContextsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewParameterContextsEntityWithDefaults() *ParameterContextsEntity {
+	this := ParameterContextsEntity{}
+	return &this
+}
+
+// GetParameterContexts returns the ParameterContexts field value if set, zero value otherwise.
+func (o *ParameterContextsEntity) GetParameterContexts() []ParameterContextEntity {
+	if o == nil || o.ParameterContexts == nil {
+		var ret []ParameterContextEntity
+		return ret
+	}
+	return *o.ParameterContexts
+}
+
+// GetParameterContextsOk returns a tuple with the ParameterContexts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextsEntity) GetParameterContextsOk() (*[]ParameterContextEntity, bool) {
+	if o == nil || o.ParameterContexts == nil {
+		return nil, false
+	}
+	return o.ParameterContexts, true
+}
+
+// HasParameterContexts returns a boolean if a field has been set.
+func (o *ParameterContextsEntity) HasParameterContexts() bool {
+	if o != nil && o.ParameterContexts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContexts gets a reference to the given []ParameterContextEntity and assigns it to the ParameterContexts field.
+func (o *ParameterContextsEntity) SetParameterContexts(v []ParameterContextEntity) {
+	o.ParameterContexts = &v
+}
+
+// GetCurrentTime returns the CurrentTime field value if set, zero value otherwise.
+func (o *ParameterContextsEntity) GetCurrentTime() string {
+	if o == nil || o.CurrentTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.CurrentTime
+}
+
+// GetCurrentTimeOk returns a tuple with the CurrentTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextsEntity) GetCurrentTimeOk() (*string, bool) {
+	if o == nil || o.CurrentTime == nil {
+		return nil, false
+	}
+	return o.CurrentTime, true
+}
+
+// HasCurrentTime returns a boolean if a field has been set.
+func (o *ParameterContextsEntity) HasCurrentTime() bool {
+	if o != nil && o.CurrentTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCurrentTime gets a reference to the given string and assigns it to the CurrentTime field.
+func (o *ParameterContextsEntity) SetCurrentTime(v string) {
+	o.CurrentTime = &v
+}
+
+func (o ParameterContextsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ParameterContexts != nil {
+		toSerialize["parameterContexts"] = o.ParameterContexts
+	}
+	if o.CurrentTime != nil {
+		toSerialize["currentTime"] = o.CurrentTime
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableParameterContextsEntity struct {
+	value *ParameterContextsEntity
+	isSet bool
+}
+
+func (v NullableParameterContextsEntity) Get() *ParameterContextsEntity {
+	return v.value
+}
+
+func (v *NullableParameterContextsEntity) Set(val *ParameterContextsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableParameterContextsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableParameterContextsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableParameterContextsEntity(val *ParameterContextsEntity) *NullableParameterContextsEntity {
+	return &NullableParameterContextsEntity{value: val, isSet: true}
+}
+
+func (v NullableParameterContextsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableParameterContextsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

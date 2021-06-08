@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ReportingTaskTypesEntity struct for ReportingTaskTypesEntity
 type ReportingTaskTypesEntity struct {
-	ReportingTaskTypes []DocumentedTypeDto `json:"reportingTaskTypes,omitempty"`
+	ReportingTaskTypes *[]DocumentedTypeDTO `json:"reportingTaskTypes,omitempty"`
+}
+
+// NewReportingTaskTypesEntity instantiates a new ReportingTaskTypesEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewReportingTaskTypesEntity() *ReportingTaskTypesEntity {
+	this := ReportingTaskTypesEntity{}
+	return &this
+}
+
+// NewReportingTaskTypesEntityWithDefaults instantiates a new ReportingTaskTypesEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewReportingTaskTypesEntityWithDefaults() *ReportingTaskTypesEntity {
+	this := ReportingTaskTypesEntity{}
+	return &this
+}
+
+// GetReportingTaskTypes returns the ReportingTaskTypes field value if set, zero value otherwise.
+func (o *ReportingTaskTypesEntity) GetReportingTaskTypes() []DocumentedTypeDTO {
+	if o == nil || o.ReportingTaskTypes == nil {
+		var ret []DocumentedTypeDTO
+		return ret
+	}
+	return *o.ReportingTaskTypes
+}
+
+// GetReportingTaskTypesOk returns a tuple with the ReportingTaskTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTaskTypesEntity) GetReportingTaskTypesOk() (*[]DocumentedTypeDTO, bool) {
+	if o == nil || o.ReportingTaskTypes == nil {
+		return nil, false
+	}
+	return o.ReportingTaskTypes, true
+}
+
+// HasReportingTaskTypes returns a boolean if a field has been set.
+func (o *ReportingTaskTypesEntity) HasReportingTaskTypes() bool {
+	if o != nil && o.ReportingTaskTypes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReportingTaskTypes gets a reference to the given []DocumentedTypeDTO and assigns it to the ReportingTaskTypes field.
+func (o *ReportingTaskTypesEntity) SetReportingTaskTypes(v []DocumentedTypeDTO) {
+	o.ReportingTaskTypes = &v
+}
+
+func (o ReportingTaskTypesEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ReportingTaskTypes != nil {
+		toSerialize["reportingTaskTypes"] = o.ReportingTaskTypes
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableReportingTaskTypesEntity struct {
+	value *ReportingTaskTypesEntity
+	isSet bool
+}
+
+func (v NullableReportingTaskTypesEntity) Get() *ReportingTaskTypesEntity {
+	return v.value
+}
+
+func (v *NullableReportingTaskTypesEntity) Set(val *ReportingTaskTypesEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableReportingTaskTypesEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableReportingTaskTypesEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableReportingTaskTypesEntity(val *ReportingTaskTypesEntity) *NullableReportingTaskTypesEntity {
+	return &NullableReportingTaskTypesEntity{value: val, isSet: true}
+}
+
+func (v NullableReportingTaskTypesEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableReportingTaskTypesEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

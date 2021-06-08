@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,20 +28,41 @@ var (
 // ProvenanceEventsApiService ProvenanceEventsApi service
 type ProvenanceEventsApiService service
 
-// ProvenanceEventsApiGetInputContentOpts Optional parameters for the method 'GetInputContent'
-type ProvenanceEventsApiGetInputContentOpts struct {
-	ClusterNodeId optional.String
+type ProvenanceEventsApiApiGetInputContentRequest struct {
+	ctx           _context.Context
+	ApiService    *ProvenanceEventsApiService
+	id            string
+	clusterNodeId *string
+}
+
+func (r ProvenanceEventsApiApiGetInputContentRequest) ClusterNodeId(clusterNodeId string) ProvenanceEventsApiApiGetInputContentRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r ProvenanceEventsApiApiGetInputContentRequest) Execute() (map[string]interface{}, *_nethttp.Response, error) {
+	return r.ApiService.GetInputContentExecute(r)
 }
 
 /*
-GetInputContent Gets the input content for a provenance event
+ * GetInputContent Gets the input content for a provenance event
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The provenance event id.
- * @param optional nil or *ProvenanceEventsApiGetInputContentOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where the content exists if clustered.
-@return map[string]interface{}
-*/
-func (a *ProvenanceEventsApiService) GetInputContent(ctx _context.Context, id string, localVarOptionals *ProvenanceEventsApiGetInputContentOpts) (map[string]interface{}, *_nethttp.Response, error) {
+ * @return ProvenanceEventsApiApiGetInputContentRequest
+ */
+func (a *ProvenanceEventsApiService) GetInputContent(ctx _context.Context, id string) ProvenanceEventsApiApiGetInputContentRequest {
+	return ProvenanceEventsApiApiGetInputContentRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return map[string]interface{}
+ */
+func (a *ProvenanceEventsApiService) GetInputContentExecute(r ProvenanceEventsApiApiGetInputContentRequest) (map[string]interface{}, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -51,16 +72,20 @@ func (a *ProvenanceEventsApiService) GetInputContent(ctx _context.Context, id st
 		localVarReturnValue  map[string]interface{}
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance-events/{id}/content/input"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceEventsApiService.GetInputContent")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance-events/{id}/content/input"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -79,18 +104,19 @@ func (a *ProvenanceEventsApiService) GetInputContent(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -115,20 +141,41 @@ func (a *ProvenanceEventsApiService) GetInputContent(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProvenanceEventsApiGetOutputContentOpts Optional parameters for the method 'GetOutputContent'
-type ProvenanceEventsApiGetOutputContentOpts struct {
-	ClusterNodeId optional.String
+type ProvenanceEventsApiApiGetOutputContentRequest struct {
+	ctx           _context.Context
+	ApiService    *ProvenanceEventsApiService
+	id            string
+	clusterNodeId *string
+}
+
+func (r ProvenanceEventsApiApiGetOutputContentRequest) ClusterNodeId(clusterNodeId string) ProvenanceEventsApiApiGetOutputContentRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r ProvenanceEventsApiApiGetOutputContentRequest) Execute() (map[string]interface{}, *_nethttp.Response, error) {
+	return r.ApiService.GetOutputContentExecute(r)
 }
 
 /*
-GetOutputContent Gets the output content for a provenance event
+ * GetOutputContent Gets the output content for a provenance event
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The provenance event id.
- * @param optional nil or *ProvenanceEventsApiGetOutputContentOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where the content exists if clustered.
-@return map[string]interface{}
-*/
-func (a *ProvenanceEventsApiService) GetOutputContent(ctx _context.Context, id string, localVarOptionals *ProvenanceEventsApiGetOutputContentOpts) (map[string]interface{}, *_nethttp.Response, error) {
+ * @return ProvenanceEventsApiApiGetOutputContentRequest
+ */
+func (a *ProvenanceEventsApiService) GetOutputContent(ctx _context.Context, id string) ProvenanceEventsApiApiGetOutputContentRequest {
+	return ProvenanceEventsApiApiGetOutputContentRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return map[string]interface{}
+ */
+func (a *ProvenanceEventsApiService) GetOutputContentExecute(r ProvenanceEventsApiApiGetOutputContentRequest) (map[string]interface{}, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -138,16 +185,20 @@ func (a *ProvenanceEventsApiService) GetOutputContent(ctx _context.Context, id s
 		localVarReturnValue  map[string]interface{}
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance-events/{id}/content/output"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceEventsApiService.GetOutputContent")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance-events/{id}/content/output"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +217,19 @@ func (a *ProvenanceEventsApiService) GetOutputContent(ctx _context.Context, id s
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,20 +254,41 @@ func (a *ProvenanceEventsApiService) GetOutputContent(ctx _context.Context, id s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProvenanceEventsApiGetProvenanceEventOpts Optional parameters for the method 'GetProvenanceEvent'
-type ProvenanceEventsApiGetProvenanceEventOpts struct {
-	ClusterNodeId optional.String
+type ProvenanceEventsApiApiGetProvenanceEventRequest struct {
+	ctx           _context.Context
+	ApiService    *ProvenanceEventsApiService
+	id            string
+	clusterNodeId *string
+}
+
+func (r ProvenanceEventsApiApiGetProvenanceEventRequest) ClusterNodeId(clusterNodeId string) ProvenanceEventsApiApiGetProvenanceEventRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r ProvenanceEventsApiApiGetProvenanceEventRequest) Execute() (ProvenanceEventEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProvenanceEventExecute(r)
 }
 
 /*
-GetProvenanceEvent Gets a provenance event
+ * GetProvenanceEvent Gets a provenance event
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The provenance event id.
- * @param optional nil or *ProvenanceEventsApiGetProvenanceEventOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where this event exists if clustered.
-@return ProvenanceEventEntity
-*/
-func (a *ProvenanceEventsApiService) GetProvenanceEvent(ctx _context.Context, id string, localVarOptionals *ProvenanceEventsApiGetProvenanceEventOpts) (ProvenanceEventEntity, *_nethttp.Response, error) {
+ * @return ProvenanceEventsApiApiGetProvenanceEventRequest
+ */
+func (a *ProvenanceEventsApiService) GetProvenanceEvent(ctx _context.Context, id string) ProvenanceEventsApiApiGetProvenanceEventRequest {
+	return ProvenanceEventsApiApiGetProvenanceEventRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProvenanceEventEntity
+ */
+func (a *ProvenanceEventsApiService) GetProvenanceEventExecute(r ProvenanceEventsApiApiGetProvenanceEventRequest) (ProvenanceEventEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -225,16 +298,20 @@ func (a *ProvenanceEventsApiService) GetProvenanceEvent(ctx _context.Context, id
 		localVarReturnValue  ProvenanceEventEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance-events/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceEventsApiService.GetProvenanceEvent")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance-events/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -253,18 +330,19 @@ func (a *ProvenanceEventsApiService) GetProvenanceEvent(ctx _context.Context, id
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -289,13 +367,38 @@ func (a *ProvenanceEventsApiService) GetProvenanceEvent(ctx _context.Context, id
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProvenanceEventsApiApiSubmitReplayRequest struct {
+	ctx        _context.Context
+	ApiService *ProvenanceEventsApiService
+	body       *SubmitReplayRequestEntity
+}
+
+func (r ProvenanceEventsApiApiSubmitReplayRequest) Body(body SubmitReplayRequestEntity) ProvenanceEventsApiApiSubmitReplayRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProvenanceEventsApiApiSubmitReplayRequest) Execute() (ProvenanceEventEntity, *_nethttp.Response, error) {
+	return r.ApiService.SubmitReplayExecute(r)
+}
+
 /*
-SubmitReplay Replays content from a provenance event
+ * SubmitReplay Replays content from a provenance event
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The replay request.
-@return ProvenanceEventEntity
-*/
-func (a *ProvenanceEventsApiService) SubmitReplay(ctx _context.Context, body SubmitReplayRequestEntity) (ProvenanceEventEntity, *_nethttp.Response, error) {
+ * @return ProvenanceEventsApiApiSubmitReplayRequest
+ */
+func (a *ProvenanceEventsApiService) SubmitReplay(ctx _context.Context) ProvenanceEventsApiApiSubmitReplayRequest {
+	return ProvenanceEventsApiApiSubmitReplayRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProvenanceEventEntity
+ */
+func (a *ProvenanceEventsApiService) SubmitReplayExecute(r ProvenanceEventsApiApiSubmitReplayRequest) (ProvenanceEventEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -305,11 +408,19 @@ func (a *ProvenanceEventsApiService) SubmitReplay(ctx _context.Context, body Sub
 		localVarReturnValue  ProvenanceEventEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance-events/replays"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceEventsApiService.SubmitReplay")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance-events/replays"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -329,19 +440,20 @@ func (a *ProvenanceEventsApiService) SubmitReplay(ctx _context.Context, body Sub
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

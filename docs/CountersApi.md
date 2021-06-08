@@ -11,29 +11,53 @@ Method | HTTP request | Description
 
 ## GetCounters
 
-> CountersEntity GetCounters(ctx, optional)
+> CountersEntity GetCounters(ctx).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
 
 Gets the current counters for this NiFi
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    nodewise := true // bool | Whether or not to include the breakdown per node. Optional, defaults to false (optional) (default to false)
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where to get the status. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.CountersApi.GetCounters(context.Background()).Nodewise(nodewise).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CountersApi.GetCounters``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetCounters`: CountersEntity
+    fmt.Fprintf(os.Stdout, "Response from `CountersApi.GetCounters`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetCountersRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetCountersOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetCountersOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **nodewise** | **optional.Bool**| Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
- **clusterNodeId** | **optional.String**| The id of the node where to get the status. | 
+ **nodewise** | **bool** | Whether or not to include the breakdown per node. Optional, defaults to false | [default to false]
+ **clusterNodeId** | **string** | The id of the node where to get the status. | 
 
 ### Return type
 
@@ -55,19 +79,55 @@ No authorization required
 
 ## UpdateCounter
 
-> CounterEntity UpdateCounter(ctx, id)
+> CounterEntity UpdateCounter(ctx, id).Execute()
 
 Updates the specified counter. This will reset the counter value to 0
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The id of the counter.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.CountersApi.UpdateCounter(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CountersApi.UpdateCounter``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateCounter`: CounterEntity
+    fmt.Fprintf(os.Stdout, "Response from `CountersApi.UpdateCounter`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The id of the counter. | 
+**id** | **string** | The id of the counter. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateCounterRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 

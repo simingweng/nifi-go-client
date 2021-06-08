@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ConnectionStatusEntity struct for ConnectionStatusEntity
 type ConnectionStatusEntity struct {
-	ConnectionStatus ConnectionStatusDto `json:"connectionStatus,omitempty"`
+	ConnectionStatus *ConnectionStatusDTO `json:"connectionStatus,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewConnectionStatusEntity instantiates a new ConnectionStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewConnectionStatusEntity() *ConnectionStatusEntity {
+	this := ConnectionStatusEntity{}
+	return &this
+}
+
+// NewConnectionStatusEntityWithDefaults instantiates a new ConnectionStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewConnectionStatusEntityWithDefaults() *ConnectionStatusEntity {
+	this := ConnectionStatusEntity{}
+	return &this
+}
+
+// GetConnectionStatus returns the ConnectionStatus field value if set, zero value otherwise.
+func (o *ConnectionStatusEntity) GetConnectionStatus() ConnectionStatusDTO {
+	if o == nil || o.ConnectionStatus == nil {
+		var ret ConnectionStatusDTO
+		return ret
+	}
+	return *o.ConnectionStatus
+}
+
+// GetConnectionStatusOk returns a tuple with the ConnectionStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatusEntity) GetConnectionStatusOk() (*ConnectionStatusDTO, bool) {
+	if o == nil || o.ConnectionStatus == nil {
+		return nil, false
+	}
+	return o.ConnectionStatus, true
+}
+
+// HasConnectionStatus returns a boolean if a field has been set.
+func (o *ConnectionStatusEntity) HasConnectionStatus() bool {
+	if o != nil && o.ConnectionStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectionStatus gets a reference to the given ConnectionStatusDTO and assigns it to the ConnectionStatus field.
+func (o *ConnectionStatusEntity) SetConnectionStatus(v ConnectionStatusDTO) {
+	o.ConnectionStatus = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *ConnectionStatusEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatusEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *ConnectionStatusEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *ConnectionStatusEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o ConnectionStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ConnectionStatus != nil {
+		toSerialize["connectionStatus"] = o.ConnectionStatus
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableConnectionStatusEntity struct {
+	value *ConnectionStatusEntity
+	isSet bool
+}
+
+func (v NullableConnectionStatusEntity) Get() *ConnectionStatusEntity {
+	return v.value
+}
+
+func (v *NullableConnectionStatusEntity) Set(val *ConnectionStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableConnectionStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableConnectionStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableConnectionStatusEntity(val *ConnectionStatusEntity) *NullableConnectionStatusEntity {
+	return &NullableConnectionStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableConnectionStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableConnectionStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

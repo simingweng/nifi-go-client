@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// PreviousValueDto struct for PreviousValueDto
-type PreviousValueDto struct {
+import (
+	"encoding/json"
+)
+
+// PreviousValueDTO struct for PreviousValueDTO
+type PreviousValueDTO struct {
 	// The previous value.
-	PreviousValue string `json:"previousValue,omitempty"`
+	PreviousValue *string `json:"previousValue,omitempty"`
 	// The timestamp when the value was modified.
-	Timestamp string `json:"timestamp,omitempty"`
+	Timestamp *string `json:"timestamp,omitempty"`
 	// The user who changed the previous value.
-	UserIdentity string `json:"userIdentity,omitempty"`
+	UserIdentity *string `json:"userIdentity,omitempty"`
+}
+
+// NewPreviousValueDTO instantiates a new PreviousValueDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPreviousValueDTO() *PreviousValueDTO {
+	this := PreviousValueDTO{}
+	return &this
+}
+
+// NewPreviousValueDTOWithDefaults instantiates a new PreviousValueDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPreviousValueDTOWithDefaults() *PreviousValueDTO {
+	this := PreviousValueDTO{}
+	return &this
+}
+
+// GetPreviousValue returns the PreviousValue field value if set, zero value otherwise.
+func (o *PreviousValueDTO) GetPreviousValue() string {
+	if o == nil || o.PreviousValue == nil {
+		var ret string
+		return ret
+	}
+	return *o.PreviousValue
+}
+
+// GetPreviousValueOk returns a tuple with the PreviousValue field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PreviousValueDTO) GetPreviousValueOk() (*string, bool) {
+	if o == nil || o.PreviousValue == nil {
+		return nil, false
+	}
+	return o.PreviousValue, true
+}
+
+// HasPreviousValue returns a boolean if a field has been set.
+func (o *PreviousValueDTO) HasPreviousValue() bool {
+	if o != nil && o.PreviousValue != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPreviousValue gets a reference to the given string and assigns it to the PreviousValue field.
+func (o *PreviousValueDTO) SetPreviousValue(v string) {
+	o.PreviousValue = &v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *PreviousValueDTO) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PreviousValueDTO) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *PreviousValueDTO) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *PreviousValueDTO) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+// GetUserIdentity returns the UserIdentity field value if set, zero value otherwise.
+func (o *PreviousValueDTO) GetUserIdentity() string {
+	if o == nil || o.UserIdentity == nil {
+		var ret string
+		return ret
+	}
+	return *o.UserIdentity
+}
+
+// GetUserIdentityOk returns a tuple with the UserIdentity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PreviousValueDTO) GetUserIdentityOk() (*string, bool) {
+	if o == nil || o.UserIdentity == nil {
+		return nil, false
+	}
+	return o.UserIdentity, true
+}
+
+// HasUserIdentity returns a boolean if a field has been set.
+func (o *PreviousValueDTO) HasUserIdentity() bool {
+	if o != nil && o.UserIdentity != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUserIdentity gets a reference to the given string and assigns it to the UserIdentity field.
+func (o *PreviousValueDTO) SetUserIdentity(v string) {
+	o.UserIdentity = &v
+}
+
+func (o PreviousValueDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.PreviousValue != nil {
+		toSerialize["previousValue"] = o.PreviousValue
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.UserIdentity != nil {
+		toSerialize["userIdentity"] = o.UserIdentity
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePreviousValueDTO struct {
+	value *PreviousValueDTO
+	isSet bool
+}
+
+func (v NullablePreviousValueDTO) Get() *PreviousValueDTO {
+	return v.value
+}
+
+func (v *NullablePreviousValueDTO) Set(val *PreviousValueDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePreviousValueDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePreviousValueDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePreviousValueDTO(val *PreviousValueDTO) *NullablePreviousValueDTO {
+	return &NullablePreviousValueDTO{value: val, isSet: true}
+}
+
+func (v NullablePreviousValueDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePreviousValueDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

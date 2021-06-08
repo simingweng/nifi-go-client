@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,20 +11,327 @@
 
 package nifi
 
-// ProvenanceResultsDto struct for ProvenanceResultsDto
-type ProvenanceResultsDto struct {
+import (
+	"encoding/json"
+)
+
+// ProvenanceResultsDTO struct for ProvenanceResultsDTO
+type ProvenanceResultsDTO struct {
 	// The provenance events that matched the search criteria.
-	ProvenanceEvents []ProvenanceEventDto `json:"provenanceEvents,omitempty"`
+	ProvenanceEvents *[]ProvenanceEventDTO `json:"provenanceEvents,omitempty"`
 	// The total number of results formatted.
-	Total string `json:"total,omitempty"`
+	Total *string `json:"total,omitempty"`
 	// The total number of results.
-	TotalCount int64 `json:"totalCount,omitempty"`
+	TotalCount *int64 `json:"totalCount,omitempty"`
 	// Then the search was performed.
-	Generated string `json:"generated,omitempty"`
+	Generated *string `json:"generated,omitempty"`
 	// The oldest event available in the provenance repository.
-	OldestEvent string `json:"oldestEvent,omitempty"`
+	OldestEvent *string `json:"oldestEvent,omitempty"`
 	// The time offset of the server that's used for event time.
-	TimeOffset int32 `json:"timeOffset,omitempty"`
+	TimeOffset *int32 `json:"timeOffset,omitempty"`
 	// Any errors that occurred while performing the provenance request.
-	Errors []string `json:"errors,omitempty"`
+	Errors *[]string `json:"errors,omitempty"`
+}
+
+// NewProvenanceResultsDTO instantiates a new ProvenanceResultsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProvenanceResultsDTO() *ProvenanceResultsDTO {
+	this := ProvenanceResultsDTO{}
+	return &this
+}
+
+// NewProvenanceResultsDTOWithDefaults instantiates a new ProvenanceResultsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProvenanceResultsDTOWithDefaults() *ProvenanceResultsDTO {
+	this := ProvenanceResultsDTO{}
+	return &this
+}
+
+// GetProvenanceEvents returns the ProvenanceEvents field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetProvenanceEvents() []ProvenanceEventDTO {
+	if o == nil || o.ProvenanceEvents == nil {
+		var ret []ProvenanceEventDTO
+		return ret
+	}
+	return *o.ProvenanceEvents
+}
+
+// GetProvenanceEventsOk returns a tuple with the ProvenanceEvents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetProvenanceEventsOk() (*[]ProvenanceEventDTO, bool) {
+	if o == nil || o.ProvenanceEvents == nil {
+		return nil, false
+	}
+	return o.ProvenanceEvents, true
+}
+
+// HasProvenanceEvents returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasProvenanceEvents() bool {
+	if o != nil && o.ProvenanceEvents != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProvenanceEvents gets a reference to the given []ProvenanceEventDTO and assigns it to the ProvenanceEvents field.
+func (o *ProvenanceResultsDTO) SetProvenanceEvents(v []ProvenanceEventDTO) {
+	o.ProvenanceEvents = &v
+}
+
+// GetTotal returns the Total field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetTotal() string {
+	if o == nil || o.Total == nil {
+		var ret string
+		return ret
+	}
+	return *o.Total
+}
+
+// GetTotalOk returns a tuple with the Total field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetTotalOk() (*string, bool) {
+	if o == nil || o.Total == nil {
+		return nil, false
+	}
+	return o.Total, true
+}
+
+// HasTotal returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasTotal() bool {
+	if o != nil && o.Total != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTotal gets a reference to the given string and assigns it to the Total field.
+func (o *ProvenanceResultsDTO) SetTotal(v string) {
+	o.Total = &v
+}
+
+// GetTotalCount returns the TotalCount field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetTotalCount() int64 {
+	if o == nil || o.TotalCount == nil {
+		var ret int64
+		return ret
+	}
+	return *o.TotalCount
+}
+
+// GetTotalCountOk returns a tuple with the TotalCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetTotalCountOk() (*int64, bool) {
+	if o == nil || o.TotalCount == nil {
+		return nil, false
+	}
+	return o.TotalCount, true
+}
+
+// HasTotalCount returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasTotalCount() bool {
+	if o != nil && o.TotalCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTotalCount gets a reference to the given int64 and assigns it to the TotalCount field.
+func (o *ProvenanceResultsDTO) SetTotalCount(v int64) {
+	o.TotalCount = &v
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *ProvenanceResultsDTO) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+// GetOldestEvent returns the OldestEvent field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetOldestEvent() string {
+	if o == nil || o.OldestEvent == nil {
+		var ret string
+		return ret
+	}
+	return *o.OldestEvent
+}
+
+// GetOldestEventOk returns a tuple with the OldestEvent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetOldestEventOk() (*string, bool) {
+	if o == nil || o.OldestEvent == nil {
+		return nil, false
+	}
+	return o.OldestEvent, true
+}
+
+// HasOldestEvent returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasOldestEvent() bool {
+	if o != nil && o.OldestEvent != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOldestEvent gets a reference to the given string and assigns it to the OldestEvent field.
+func (o *ProvenanceResultsDTO) SetOldestEvent(v string) {
+	o.OldestEvent = &v
+}
+
+// GetTimeOffset returns the TimeOffset field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetTimeOffset() int32 {
+	if o == nil || o.TimeOffset == nil {
+		var ret int32
+		return ret
+	}
+	return *o.TimeOffset
+}
+
+// GetTimeOffsetOk returns a tuple with the TimeOffset field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetTimeOffsetOk() (*int32, bool) {
+	if o == nil || o.TimeOffset == nil {
+		return nil, false
+	}
+	return o.TimeOffset, true
+}
+
+// HasTimeOffset returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasTimeOffset() bool {
+	if o != nil && o.TimeOffset != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimeOffset gets a reference to the given int32 and assigns it to the TimeOffset field.
+func (o *ProvenanceResultsDTO) SetTimeOffset(v int32) {
+	o.TimeOffset = &v
+}
+
+// GetErrors returns the Errors field value if set, zero value otherwise.
+func (o *ProvenanceResultsDTO) GetErrors() []string {
+	if o == nil || o.Errors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.Errors
+}
+
+// GetErrorsOk returns a tuple with the Errors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceResultsDTO) GetErrorsOk() (*[]string, bool) {
+	if o == nil || o.Errors == nil {
+		return nil, false
+	}
+	return o.Errors, true
+}
+
+// HasErrors returns a boolean if a field has been set.
+func (o *ProvenanceResultsDTO) HasErrors() bool {
+	if o != nil && o.Errors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetErrors gets a reference to the given []string and assigns it to the Errors field.
+func (o *ProvenanceResultsDTO) SetErrors(v []string) {
+	o.Errors = &v
+}
+
+func (o ProvenanceResultsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProvenanceEvents != nil {
+		toSerialize["provenanceEvents"] = o.ProvenanceEvents
+	}
+	if o.Total != nil {
+		toSerialize["total"] = o.Total
+	}
+	if o.TotalCount != nil {
+		toSerialize["totalCount"] = o.TotalCount
+	}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	if o.OldestEvent != nil {
+		toSerialize["oldestEvent"] = o.OldestEvent
+	}
+	if o.TimeOffset != nil {
+		toSerialize["timeOffset"] = o.TimeOffset
+	}
+	if o.Errors != nil {
+		toSerialize["errors"] = o.Errors
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProvenanceResultsDTO struct {
+	value *ProvenanceResultsDTO
+	isSet bool
+}
+
+func (v NullableProvenanceResultsDTO) Get() *ProvenanceResultsDTO {
+	return v.value
+}
+
+func (v *NullableProvenanceResultsDTO) Set(val *ProvenanceResultsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProvenanceResultsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProvenanceResultsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProvenanceResultsDTO(val *ProvenanceResultsDTO) *NullableProvenanceResultsDTO {
+	return &NullableProvenanceResultsDTO{value: val, isSet: true}
+}
+
+func (v NullableProvenanceResultsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProvenanceResultsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

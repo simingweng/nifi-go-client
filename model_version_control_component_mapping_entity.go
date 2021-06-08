@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,214 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionControlComponentMappingEntity struct for VersionControlComponentMappingEntity
 type VersionControlComponentMappingEntity struct {
 	// The mapping of Versioned Component Identifiers to instance ID's
-	VersionControlComponentMapping map[string]string `json:"versionControlComponentMapping,omitempty"`
-	ProcessGroupRevision           RevisionDto       `json:"processGroupRevision,omitempty"`
+	VersionControlComponentMapping *map[string]string `json:"versionControlComponentMapping,omitempty"`
+	ProcessGroupRevision           *RevisionDTO       `json:"processGroupRevision,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool                         `json:"disconnectedNodeAcknowledged,omitempty"`
-	VersionControlInformation    VersionControlInformationDto `json:"versionControlInformation,omitempty"`
+	DisconnectedNodeAcknowledged *bool                         `json:"disconnectedNodeAcknowledged,omitempty"`
+	VersionControlInformation    *VersionControlInformationDTO `json:"versionControlInformation,omitempty"`
+}
+
+// NewVersionControlComponentMappingEntity instantiates a new VersionControlComponentMappingEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionControlComponentMappingEntity() *VersionControlComponentMappingEntity {
+	this := VersionControlComponentMappingEntity{}
+	return &this
+}
+
+// NewVersionControlComponentMappingEntityWithDefaults instantiates a new VersionControlComponentMappingEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionControlComponentMappingEntityWithDefaults() *VersionControlComponentMappingEntity {
+	this := VersionControlComponentMappingEntity{}
+	return &this
+}
+
+// GetVersionControlComponentMapping returns the VersionControlComponentMapping field value if set, zero value otherwise.
+func (o *VersionControlComponentMappingEntity) GetVersionControlComponentMapping() map[string]string {
+	if o == nil || o.VersionControlComponentMapping == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.VersionControlComponentMapping
+}
+
+// GetVersionControlComponentMappingOk returns a tuple with the VersionControlComponentMapping field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlComponentMappingEntity) GetVersionControlComponentMappingOk() (*map[string]string, bool) {
+	if o == nil || o.VersionControlComponentMapping == nil {
+		return nil, false
+	}
+	return o.VersionControlComponentMapping, true
+}
+
+// HasVersionControlComponentMapping returns a boolean if a field has been set.
+func (o *VersionControlComponentMappingEntity) HasVersionControlComponentMapping() bool {
+	if o != nil && o.VersionControlComponentMapping != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionControlComponentMapping gets a reference to the given map[string]string and assigns it to the VersionControlComponentMapping field.
+func (o *VersionControlComponentMappingEntity) SetVersionControlComponentMapping(v map[string]string) {
+	o.VersionControlComponentMapping = &v
+}
+
+// GetProcessGroupRevision returns the ProcessGroupRevision field value if set, zero value otherwise.
+func (o *VersionControlComponentMappingEntity) GetProcessGroupRevision() RevisionDTO {
+	if o == nil || o.ProcessGroupRevision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroupRevision
+}
+
+// GetProcessGroupRevisionOk returns a tuple with the ProcessGroupRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlComponentMappingEntity) GetProcessGroupRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.ProcessGroupRevision == nil {
+		return nil, false
+	}
+	return o.ProcessGroupRevision, true
+}
+
+// HasProcessGroupRevision returns a boolean if a field has been set.
+func (o *VersionControlComponentMappingEntity) HasProcessGroupRevision() bool {
+	if o != nil && o.ProcessGroupRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupRevision gets a reference to the given RevisionDTO and assigns it to the ProcessGroupRevision field.
+func (o *VersionControlComponentMappingEntity) SetProcessGroupRevision(v RevisionDTO) {
+	o.ProcessGroupRevision = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *VersionControlComponentMappingEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlComponentMappingEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *VersionControlComponentMappingEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *VersionControlComponentMappingEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+// GetVersionControlInformation returns the VersionControlInformation field value if set, zero value otherwise.
+func (o *VersionControlComponentMappingEntity) GetVersionControlInformation() VersionControlInformationDTO {
+	if o == nil || o.VersionControlInformation == nil {
+		var ret VersionControlInformationDTO
+		return ret
+	}
+	return *o.VersionControlInformation
+}
+
+// GetVersionControlInformationOk returns a tuple with the VersionControlInformation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlComponentMappingEntity) GetVersionControlInformationOk() (*VersionControlInformationDTO, bool) {
+	if o == nil || o.VersionControlInformation == nil {
+		return nil, false
+	}
+	return o.VersionControlInformation, true
+}
+
+// HasVersionControlInformation returns a boolean if a field has been set.
+func (o *VersionControlComponentMappingEntity) HasVersionControlInformation() bool {
+	if o != nil && o.VersionControlInformation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionControlInformation gets a reference to the given VersionControlInformationDTO and assigns it to the VersionControlInformation field.
+func (o *VersionControlComponentMappingEntity) SetVersionControlInformation(v VersionControlInformationDTO) {
+	o.VersionControlInformation = &v
+}
+
+func (o VersionControlComponentMappingEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.VersionControlComponentMapping != nil {
+		toSerialize["versionControlComponentMapping"] = o.VersionControlComponentMapping
+	}
+	if o.ProcessGroupRevision != nil {
+		toSerialize["processGroupRevision"] = o.ProcessGroupRevision
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	if o.VersionControlInformation != nil {
+		toSerialize["versionControlInformation"] = o.VersionControlInformation
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionControlComponentMappingEntity struct {
+	value *VersionControlComponentMappingEntity
+	isSet bool
+}
+
+func (v NullableVersionControlComponentMappingEntity) Get() *VersionControlComponentMappingEntity {
+	return v.value
+}
+
+func (v *NullableVersionControlComponentMappingEntity) Set(val *VersionControlComponentMappingEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionControlComponentMappingEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionControlComponentMappingEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionControlComponentMappingEntity(val *VersionControlComponentMappingEntity) *NullableVersionControlComponentMappingEntity {
+	return &NullableVersionControlComponentMappingEntity{value: val, isSet: true}
+}
+
+func (v NullableVersionControlComponentMappingEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionControlComponentMappingEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

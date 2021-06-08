@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,38 @@ var (
 // PoliciesApiService PoliciesApi service
 type PoliciesApiService service
 
+type PoliciesApiApiCreateAccessPolicyRequest struct {
+	ctx        _context.Context
+	ApiService *PoliciesApiService
+	body       *AccessPolicyEntity
+}
+
+func (r PoliciesApiApiCreateAccessPolicyRequest) Body(body AccessPolicyEntity) PoliciesApiApiCreateAccessPolicyRequest {
+	r.body = &body
+	return r
+}
+
+func (r PoliciesApiApiCreateAccessPolicyRequest) Execute() (AccessPolicyEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateAccessPolicyExecute(r)
+}
+
 /*
-CreateAccessPolicy Creates an access policy
+ * CreateAccessPolicy Creates an access policy
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The access policy configuration details.
-@return AccessPolicyEntity
-*/
-func (a *PoliciesApiService) CreateAccessPolicy(ctx _context.Context, body AccessPolicyEntity) (AccessPolicyEntity, *_nethttp.Response, error) {
+ * @return PoliciesApiApiCreateAccessPolicyRequest
+ */
+func (a *PoliciesApiService) CreateAccessPolicy(ctx _context.Context) PoliciesApiApiCreateAccessPolicyRequest {
+	return PoliciesApiApiCreateAccessPolicyRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessPolicyEntity
+ */
+func (a *PoliciesApiService) CreateAccessPolicyExecute(r PoliciesApiApiCreateAccessPolicyRequest) (AccessPolicyEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -44,11 +69,19 @@ func (a *PoliciesApiService) CreateAccessPolicy(ctx _context.Context, body Acces
 		localVarReturnValue  AccessPolicyEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/policies"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PoliciesApiService.CreateAccessPolicy")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/policies"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -68,19 +101,20 @@ func (a *PoliciesApiService) CreateAccessPolicy(ctx _context.Context, body Acces
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,13 +139,35 @@ func (a *PoliciesApiService) CreateAccessPolicy(ctx _context.Context, body Acces
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type PoliciesApiApiGetAccessPolicyRequest struct {
+	ctx        _context.Context
+	ApiService *PoliciesApiService
+	id         string
+}
+
+func (r PoliciesApiApiGetAccessPolicyRequest) Execute() (AccessPolicyEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetAccessPolicyExecute(r)
+}
+
 /*
-GetAccessPolicy Gets an access policy
+ * GetAccessPolicy Gets an access policy
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The access policy id.
-@return AccessPolicyEntity
-*/
-func (a *PoliciesApiService) GetAccessPolicy(ctx _context.Context, id string) (AccessPolicyEntity, *_nethttp.Response, error) {
+ * @return PoliciesApiApiGetAccessPolicyRequest
+ */
+func (a *PoliciesApiService) GetAccessPolicy(ctx _context.Context, id string) PoliciesApiApiGetAccessPolicyRequest {
+	return PoliciesApiApiGetAccessPolicyRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessPolicyEntity
+ */
+func (a *PoliciesApiService) GetAccessPolicyExecute(r PoliciesApiApiGetAccessPolicyRequest) (AccessPolicyEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -121,9 +177,13 @@ func (a *PoliciesApiService) GetAccessPolicy(ctx _context.Context, id string) (A
 		localVarReturnValue  AccessPolicyEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/policies/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PoliciesApiService.GetAccessPolicy")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/policies/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -146,18 +206,19 @@ func (a *PoliciesApiService) GetAccessPolicy(ctx _context.Context, id string) (A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -182,15 +243,39 @@ func (a *PoliciesApiService) GetAccessPolicy(ctx _context.Context, id string) (A
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type PoliciesApiApiGetAccessPolicyForResourceRequest struct {
+	ctx        _context.Context
+	ApiService *PoliciesApiService
+	action     string
+	resource   string
+}
+
+func (r PoliciesApiApiGetAccessPolicyForResourceRequest) Execute() (AccessPolicyEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetAccessPolicyForResourceExecute(r)
+}
+
 /*
-GetAccessPolicyForResource Gets an access policy for the specified action and resource
-Will return the effective policy if no component specific policy exists for the specified action and resource. Must have Read permissions to the policy with the desired action and resource. Permissions for the policy that is returned will be indicated in the response. This means the client could be authorized to get the policy for a given component but the effective policy may be inherited from an ancestor Process Group. If the client does not have permissions to that policy, the response will not include the policy and the permissions in the response will be marked accordingly. If the client does not have permissions to the policy of the desired action and resource a 403 response will be returned.
+ * GetAccessPolicyForResource Gets an access policy for the specified action and resource
+ * Will return the effective policy if no component specific policy exists for the specified action and resource. Must have Read permissions to the policy with the desired action and resource. Permissions for the policy that is returned will be indicated in the response. This means the client could be authorized to get the policy for a given component but the effective policy may be inherited from an ancestor Process Group. If the client does not have permissions to that policy, the response will not include the policy and the permissions in the response will be marked accordingly. If the client does not have permissions to the policy of the desired action and resource a 403 response will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param action The request action.
  * @param resource The resource of the policy.
-@return AccessPolicyEntity
-*/
-func (a *PoliciesApiService) GetAccessPolicyForResource(ctx _context.Context, action string, resource string) (AccessPolicyEntity, *_nethttp.Response, error) {
+ * @return PoliciesApiApiGetAccessPolicyForResourceRequest
+ */
+func (a *PoliciesApiService) GetAccessPolicyForResource(ctx _context.Context, action string, resource string) PoliciesApiApiGetAccessPolicyForResourceRequest {
+	return PoliciesApiApiGetAccessPolicyForResourceRequest{
+		ApiService: a,
+		ctx:        ctx,
+		action:     action,
+		resource:   resource,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessPolicyEntity
+ */
+func (a *PoliciesApiService) GetAccessPolicyForResourceExecute(r PoliciesApiApiGetAccessPolicyForResourceRequest) (AccessPolicyEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -200,11 +285,14 @@ func (a *PoliciesApiService) GetAccessPolicyForResource(ctx _context.Context, ac
 		localVarReturnValue  AccessPolicyEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/policies/{action}/{resource}"
-	localVarPath = strings.Replace(localVarPath, "{"+"action"+"}", _neturl.QueryEscape(parameterToString(action, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PoliciesApiService.GetAccessPolicyForResource")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"resource"+"}", _neturl.QueryEscape(parameterToString(resource, "")), -1)
+	localVarPath := localBasePath + "/policies/{action}/{resource}"
+	localVarPath = strings.Replace(localVarPath, "{"+"action"+"}", _neturl.PathEscape(parameterToString(r.action, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"resource"+"}", _neturl.PathEscape(parameterToString(r.resource, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -227,18 +315,19 @@ func (a *PoliciesApiService) GetAccessPolicyForResource(ctx _context.Context, ac
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -263,24 +352,51 @@ func (a *PoliciesApiService) GetAccessPolicyForResource(ctx _context.Context, ac
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// PoliciesApiRemoveAccessPolicyOpts Optional parameters for the method 'RemoveAccessPolicy'
-type PoliciesApiRemoveAccessPolicyOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type PoliciesApiApiRemoveAccessPolicyRequest struct {
+	ctx                          _context.Context
+	ApiService                   *PoliciesApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r PoliciesApiApiRemoveAccessPolicyRequest) Version(version string) PoliciesApiApiRemoveAccessPolicyRequest {
+	r.version = &version
+	return r
+}
+func (r PoliciesApiApiRemoveAccessPolicyRequest) ClientId(clientId string) PoliciesApiApiRemoveAccessPolicyRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r PoliciesApiApiRemoveAccessPolicyRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) PoliciesApiApiRemoveAccessPolicyRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r PoliciesApiApiRemoveAccessPolicyRequest) Execute() (AccessPolicyEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveAccessPolicyExecute(r)
 }
 
 /*
-RemoveAccessPolicy Deletes an access policy
+ * RemoveAccessPolicy Deletes an access policy
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The access policy id.
- * @param optional nil or *PoliciesApiRemoveAccessPolicyOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return AccessPolicyEntity
-*/
-func (a *PoliciesApiService) RemoveAccessPolicy(ctx _context.Context, id string, localVarOptionals *PoliciesApiRemoveAccessPolicyOpts) (AccessPolicyEntity, *_nethttp.Response, error) {
+ * @return PoliciesApiApiRemoveAccessPolicyRequest
+ */
+func (a *PoliciesApiService) RemoveAccessPolicy(ctx _context.Context, id string) PoliciesApiApiRemoveAccessPolicyRequest {
+	return PoliciesApiApiRemoveAccessPolicyRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessPolicyEntity
+ */
+func (a *PoliciesApiService) RemoveAccessPolicyExecute(r PoliciesApiApiRemoveAccessPolicyRequest) (AccessPolicyEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -290,22 +406,26 @@ func (a *PoliciesApiService) RemoveAccessPolicy(ctx _context.Context, id string,
 		localVarReturnValue  AccessPolicyEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/policies/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PoliciesApiService.RemoveAccessPolicy")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/policies/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -324,18 +444,19 @@ func (a *PoliciesApiService) RemoveAccessPolicy(ctx _context.Context, id string,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -360,14 +481,41 @@ func (a *PoliciesApiService) RemoveAccessPolicy(ctx _context.Context, id string,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type PoliciesApiApiUpdateAccessPolicyRequest struct {
+	ctx        _context.Context
+	ApiService *PoliciesApiService
+	id         string
+	body       *AccessPolicyEntity
+}
+
+func (r PoliciesApiApiUpdateAccessPolicyRequest) Body(body AccessPolicyEntity) PoliciesApiApiUpdateAccessPolicyRequest {
+	r.body = &body
+	return r
+}
+
+func (r PoliciesApiApiUpdateAccessPolicyRequest) Execute() (AccessPolicyEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateAccessPolicyExecute(r)
+}
+
 /*
-UpdateAccessPolicy Updates a access policy
+ * UpdateAccessPolicy Updates a access policy
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The access policy id.
- * @param body The access policy configuration details.
-@return AccessPolicyEntity
-*/
-func (a *PoliciesApiService) UpdateAccessPolicy(ctx _context.Context, id string, body AccessPolicyEntity) (AccessPolicyEntity, *_nethttp.Response, error) {
+ * @return PoliciesApiApiUpdateAccessPolicyRequest
+ */
+func (a *PoliciesApiService) UpdateAccessPolicy(ctx _context.Context, id string) PoliciesApiApiUpdateAccessPolicyRequest {
+	return PoliciesApiApiUpdateAccessPolicyRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return AccessPolicyEntity
+ */
+func (a *PoliciesApiService) UpdateAccessPolicyExecute(r PoliciesApiApiUpdateAccessPolicyRequest) (AccessPolicyEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -377,13 +525,20 @@ func (a *PoliciesApiService) UpdateAccessPolicy(ctx _context.Context, id string,
 		localVarReturnValue  AccessPolicyEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/policies/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PoliciesApiService.UpdateAccessPolicy")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/policies/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -403,19 +558,20 @@ func (a *PoliciesApiService) UpdateAccessPolicy(ctx _context.Context, id string,
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

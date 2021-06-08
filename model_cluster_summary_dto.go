@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,253 @@
 
 package nifi
 
-// ClusterSummaryDto struct for ClusterSummaryDto
-type ClusterSummaryDto struct {
+import (
+	"encoding/json"
+)
+
+// ClusterSummaryDTO struct for ClusterSummaryDTO
+type ClusterSummaryDTO struct {
 	// When clustered, reports the number of nodes connected vs the number of nodes in the cluster.
-	ConnectedNodes string `json:"connectedNodes,omitempty"`
+	ConnectedNodes *string `json:"connectedNodes,omitempty"`
 	// The number of nodes that are currently connected to the cluster
-	ConnectedNodeCount int32 `json:"connectedNodeCount,omitempty"`
+	ConnectedNodeCount *int32 `json:"connectedNodeCount,omitempty"`
 	// The number of nodes in the cluster, regardless of whether or not they are connected
-	TotalNodeCount int32 `json:"totalNodeCount,omitempty"`
-	// Whether this NiFi instance is clustered.
-	Clustered bool `json:"clustered,omitempty"`
+	TotalNodeCount *int32 `json:"totalNodeCount,omitempty"`
 	// Whether this NiFi instance is connected to a cluster.
-	ConnectedToCluster bool `json:"connectedToCluster,omitempty"`
+	ConnectedToCluster *bool `json:"connectedToCluster,omitempty"`
+	// Whether this NiFi instance is clustered.
+	Clustered *bool `json:"clustered,omitempty"`
+}
+
+// NewClusterSummaryDTO instantiates a new ClusterSummaryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewClusterSummaryDTO() *ClusterSummaryDTO {
+	this := ClusterSummaryDTO{}
+	return &this
+}
+
+// NewClusterSummaryDTOWithDefaults instantiates a new ClusterSummaryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewClusterSummaryDTOWithDefaults() *ClusterSummaryDTO {
+	this := ClusterSummaryDTO{}
+	return &this
+}
+
+// GetConnectedNodes returns the ConnectedNodes field value if set, zero value otherwise.
+func (o *ClusterSummaryDTO) GetConnectedNodes() string {
+	if o == nil || o.ConnectedNodes == nil {
+		var ret string
+		return ret
+	}
+	return *o.ConnectedNodes
+}
+
+// GetConnectedNodesOk returns a tuple with the ConnectedNodes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterSummaryDTO) GetConnectedNodesOk() (*string, bool) {
+	if o == nil || o.ConnectedNodes == nil {
+		return nil, false
+	}
+	return o.ConnectedNodes, true
+}
+
+// HasConnectedNodes returns a boolean if a field has been set.
+func (o *ClusterSummaryDTO) HasConnectedNodes() bool {
+	if o != nil && o.ConnectedNodes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectedNodes gets a reference to the given string and assigns it to the ConnectedNodes field.
+func (o *ClusterSummaryDTO) SetConnectedNodes(v string) {
+	o.ConnectedNodes = &v
+}
+
+// GetConnectedNodeCount returns the ConnectedNodeCount field value if set, zero value otherwise.
+func (o *ClusterSummaryDTO) GetConnectedNodeCount() int32 {
+	if o == nil || o.ConnectedNodeCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ConnectedNodeCount
+}
+
+// GetConnectedNodeCountOk returns a tuple with the ConnectedNodeCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterSummaryDTO) GetConnectedNodeCountOk() (*int32, bool) {
+	if o == nil || o.ConnectedNodeCount == nil {
+		return nil, false
+	}
+	return o.ConnectedNodeCount, true
+}
+
+// HasConnectedNodeCount returns a boolean if a field has been set.
+func (o *ClusterSummaryDTO) HasConnectedNodeCount() bool {
+	if o != nil && o.ConnectedNodeCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectedNodeCount gets a reference to the given int32 and assigns it to the ConnectedNodeCount field.
+func (o *ClusterSummaryDTO) SetConnectedNodeCount(v int32) {
+	o.ConnectedNodeCount = &v
+}
+
+// GetTotalNodeCount returns the TotalNodeCount field value if set, zero value otherwise.
+func (o *ClusterSummaryDTO) GetTotalNodeCount() int32 {
+	if o == nil || o.TotalNodeCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.TotalNodeCount
+}
+
+// GetTotalNodeCountOk returns a tuple with the TotalNodeCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterSummaryDTO) GetTotalNodeCountOk() (*int32, bool) {
+	if o == nil || o.TotalNodeCount == nil {
+		return nil, false
+	}
+	return o.TotalNodeCount, true
+}
+
+// HasTotalNodeCount returns a boolean if a field has been set.
+func (o *ClusterSummaryDTO) HasTotalNodeCount() bool {
+	if o != nil && o.TotalNodeCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTotalNodeCount gets a reference to the given int32 and assigns it to the TotalNodeCount field.
+func (o *ClusterSummaryDTO) SetTotalNodeCount(v int32) {
+	o.TotalNodeCount = &v
+}
+
+// GetConnectedToCluster returns the ConnectedToCluster field value if set, zero value otherwise.
+func (o *ClusterSummaryDTO) GetConnectedToCluster() bool {
+	if o == nil || o.ConnectedToCluster == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ConnectedToCluster
+}
+
+// GetConnectedToClusterOk returns a tuple with the ConnectedToCluster field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterSummaryDTO) GetConnectedToClusterOk() (*bool, bool) {
+	if o == nil || o.ConnectedToCluster == nil {
+		return nil, false
+	}
+	return o.ConnectedToCluster, true
+}
+
+// HasConnectedToCluster returns a boolean if a field has been set.
+func (o *ClusterSummaryDTO) HasConnectedToCluster() bool {
+	if o != nil && o.ConnectedToCluster != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectedToCluster gets a reference to the given bool and assigns it to the ConnectedToCluster field.
+func (o *ClusterSummaryDTO) SetConnectedToCluster(v bool) {
+	o.ConnectedToCluster = &v
+}
+
+// GetClustered returns the Clustered field value if set, zero value otherwise.
+func (o *ClusterSummaryDTO) GetClustered() bool {
+	if o == nil || o.Clustered == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Clustered
+}
+
+// GetClusteredOk returns a tuple with the Clustered field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterSummaryDTO) GetClusteredOk() (*bool, bool) {
+	if o == nil || o.Clustered == nil {
+		return nil, false
+	}
+	return o.Clustered, true
+}
+
+// HasClustered returns a boolean if a field has been set.
+func (o *ClusterSummaryDTO) HasClustered() bool {
+	if o != nil && o.Clustered != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClustered gets a reference to the given bool and assigns it to the Clustered field.
+func (o *ClusterSummaryDTO) SetClustered(v bool) {
+	o.Clustered = &v
+}
+
+func (o ClusterSummaryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ConnectedNodes != nil {
+		toSerialize["connectedNodes"] = o.ConnectedNodes
+	}
+	if o.ConnectedNodeCount != nil {
+		toSerialize["connectedNodeCount"] = o.ConnectedNodeCount
+	}
+	if o.TotalNodeCount != nil {
+		toSerialize["totalNodeCount"] = o.TotalNodeCount
+	}
+	if o.ConnectedToCluster != nil {
+		toSerialize["connectedToCluster"] = o.ConnectedToCluster
+	}
+	if o.Clustered != nil {
+		toSerialize["clustered"] = o.Clustered
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableClusterSummaryDTO struct {
+	value *ClusterSummaryDTO
+	isSet bool
+}
+
+func (v NullableClusterSummaryDTO) Get() *ClusterSummaryDTO {
+	return v.value
+}
+
+func (v *NullableClusterSummaryDTO) Set(val *ClusterSummaryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableClusterSummaryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableClusterSummaryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableClusterSummaryDTO(val *ClusterSummaryDTO) *NullableClusterSummaryDTO {
+	return &NullableClusterSummaryDTO{value: val, isSet: true}
+}
+
+func (v NullableClusterSummaryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableClusterSummaryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

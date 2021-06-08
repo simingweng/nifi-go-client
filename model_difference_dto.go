@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// DifferenceDto struct for DifferenceDto
-type DifferenceDto struct {
+import (
+	"encoding/json"
+)
+
+// DifferenceDTO struct for DifferenceDTO
+type DifferenceDTO struct {
 	// The type of difference
-	DifferenceType string `json:"differenceType,omitempty"`
+	DifferenceType *string `json:"differenceType,omitempty"`
 	// Description of the difference
-	Difference string `json:"difference,omitempty"`
+	Difference *string `json:"difference,omitempty"`
+}
+
+// NewDifferenceDTO instantiates a new DifferenceDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewDifferenceDTO() *DifferenceDTO {
+	this := DifferenceDTO{}
+	return &this
+}
+
+// NewDifferenceDTOWithDefaults instantiates a new DifferenceDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewDifferenceDTOWithDefaults() *DifferenceDTO {
+	this := DifferenceDTO{}
+	return &this
+}
+
+// GetDifferenceType returns the DifferenceType field value if set, zero value otherwise.
+func (o *DifferenceDTO) GetDifferenceType() string {
+	if o == nil || o.DifferenceType == nil {
+		var ret string
+		return ret
+	}
+	return *o.DifferenceType
+}
+
+// GetDifferenceTypeOk returns a tuple with the DifferenceType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DifferenceDTO) GetDifferenceTypeOk() (*string, bool) {
+	if o == nil || o.DifferenceType == nil {
+		return nil, false
+	}
+	return o.DifferenceType, true
+}
+
+// HasDifferenceType returns a boolean if a field has been set.
+func (o *DifferenceDTO) HasDifferenceType() bool {
+	if o != nil && o.DifferenceType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDifferenceType gets a reference to the given string and assigns it to the DifferenceType field.
+func (o *DifferenceDTO) SetDifferenceType(v string) {
+	o.DifferenceType = &v
+}
+
+// GetDifference returns the Difference field value if set, zero value otherwise.
+func (o *DifferenceDTO) GetDifference() string {
+	if o == nil || o.Difference == nil {
+		var ret string
+		return ret
+	}
+	return *o.Difference
+}
+
+// GetDifferenceOk returns a tuple with the Difference field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DifferenceDTO) GetDifferenceOk() (*string, bool) {
+	if o == nil || o.Difference == nil {
+		return nil, false
+	}
+	return o.Difference, true
+}
+
+// HasDifference returns a boolean if a field has been set.
+func (o *DifferenceDTO) HasDifference() bool {
+	if o != nil && o.Difference != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDifference gets a reference to the given string and assigns it to the Difference field.
+func (o *DifferenceDTO) SetDifference(v string) {
+	o.Difference = &v
+}
+
+func (o DifferenceDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.DifferenceType != nil {
+		toSerialize["differenceType"] = o.DifferenceType
+	}
+	if o.Difference != nil {
+		toSerialize["difference"] = o.Difference
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableDifferenceDTO struct {
+	value *DifferenceDTO
+	isSet bool
+}
+
+func (v NullableDifferenceDTO) Get() *DifferenceDTO {
+	return v.value
+}
+
+func (v *NullableDifferenceDTO) Set(val *DifferenceDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableDifferenceDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableDifferenceDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableDifferenceDTO(val *DifferenceDTO) *NullableDifferenceDTO {
+	return &NullableDifferenceDTO{value: val, isSet: true}
+}
+
+func (v NullableDifferenceDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableDifferenceDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,290 @@
 
 package nifi
 
-// ParameterDto struct for ParameterDto
-type ParameterDto struct {
+import (
+	"encoding/json"
+)
+
+// ParameterDTO struct for ParameterDTO
+type ParameterDTO struct {
 	// The name of the Parameter
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The description of the Parameter
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Whether or not the Parameter is sensitive
-	Sensitive bool `json:"sensitive,omitempty"`
+	Sensitive *bool `json:"sensitive,omitempty"`
 	// The value of the Parameter
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
+	// Whether or not the value of the Parameter was removed. When a request is made to change a parameter, the value may be null. The absence of the value may be used either to indicate that the value is not to be changed, or that the value is to be set to null (i.e., removed). This denotes which of the two scenarios is being encountered.
+	ValueRemoved *bool `json:"valueRemoved,omitempty"`
 	// The set of all components in the flow that are referencing this Parameter
-	ReferencingComponents []AffectedComponentEntity `json:"referencingComponents,omitempty"`
+	ReferencingComponents *[]AffectedComponentEntity `json:"referencingComponents,omitempty"`
+}
+
+// NewParameterDTO instantiates a new ParameterDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewParameterDTO() *ParameterDTO {
+	this := ParameterDTO{}
+	return &this
+}
+
+// NewParameterDTOWithDefaults instantiates a new ParameterDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewParameterDTOWithDefaults() *ParameterDTO {
+	this := ParameterDTO{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ParameterDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ParameterDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ParameterDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *ParameterDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *ParameterDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *ParameterDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetSensitive returns the Sensitive field value if set, zero value otherwise.
+func (o *ParameterDTO) GetSensitive() bool {
+	if o == nil || o.Sensitive == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Sensitive
+}
+
+// GetSensitiveOk returns a tuple with the Sensitive field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterDTO) GetSensitiveOk() (*bool, bool) {
+	if o == nil || o.Sensitive == nil {
+		return nil, false
+	}
+	return o.Sensitive, true
+}
+
+// HasSensitive returns a boolean if a field has been set.
+func (o *ParameterDTO) HasSensitive() bool {
+	if o != nil && o.Sensitive != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSensitive gets a reference to the given bool and assigns it to the Sensitive field.
+func (o *ParameterDTO) SetSensitive(v bool) {
+	o.Sensitive = &v
+}
+
+// GetValue returns the Value field value if set, zero value otherwise.
+func (o *ParameterDTO) GetValue() string {
+	if o == nil || o.Value == nil {
+		var ret string
+		return ret
+	}
+	return *o.Value
+}
+
+// GetValueOk returns a tuple with the Value field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterDTO) GetValueOk() (*string, bool) {
+	if o == nil || o.Value == nil {
+		return nil, false
+	}
+	return o.Value, true
+}
+
+// HasValue returns a boolean if a field has been set.
+func (o *ParameterDTO) HasValue() bool {
+	if o != nil && o.Value != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValue gets a reference to the given string and assigns it to the Value field.
+func (o *ParameterDTO) SetValue(v string) {
+	o.Value = &v
+}
+
+// GetValueRemoved returns the ValueRemoved field value if set, zero value otherwise.
+func (o *ParameterDTO) GetValueRemoved() bool {
+	if o == nil || o.ValueRemoved == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ValueRemoved
+}
+
+// GetValueRemovedOk returns a tuple with the ValueRemoved field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterDTO) GetValueRemovedOk() (*bool, bool) {
+	if o == nil || o.ValueRemoved == nil {
+		return nil, false
+	}
+	return o.ValueRemoved, true
+}
+
+// HasValueRemoved returns a boolean if a field has been set.
+func (o *ParameterDTO) HasValueRemoved() bool {
+	if o != nil && o.ValueRemoved != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValueRemoved gets a reference to the given bool and assigns it to the ValueRemoved field.
+func (o *ParameterDTO) SetValueRemoved(v bool) {
+	o.ValueRemoved = &v
+}
+
+// GetReferencingComponents returns the ReferencingComponents field value if set, zero value otherwise.
+func (o *ParameterDTO) GetReferencingComponents() []AffectedComponentEntity {
+	if o == nil || o.ReferencingComponents == nil {
+		var ret []AffectedComponentEntity
+		return ret
+	}
+	return *o.ReferencingComponents
+}
+
+// GetReferencingComponentsOk returns a tuple with the ReferencingComponents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterDTO) GetReferencingComponentsOk() (*[]AffectedComponentEntity, bool) {
+	if o == nil || o.ReferencingComponents == nil {
+		return nil, false
+	}
+	return o.ReferencingComponents, true
+}
+
+// HasReferencingComponents returns a boolean if a field has been set.
+func (o *ParameterDTO) HasReferencingComponents() bool {
+	if o != nil && o.ReferencingComponents != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferencingComponents gets a reference to the given []AffectedComponentEntity and assigns it to the ReferencingComponents field.
+func (o *ParameterDTO) SetReferencingComponents(v []AffectedComponentEntity) {
+	o.ReferencingComponents = &v
+}
+
+func (o ParameterDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Sensitive != nil {
+		toSerialize["sensitive"] = o.Sensitive
+	}
+	if o.Value != nil {
+		toSerialize["value"] = o.Value
+	}
+	if o.ValueRemoved != nil {
+		toSerialize["valueRemoved"] = o.ValueRemoved
+	}
+	if o.ReferencingComponents != nil {
+		toSerialize["referencingComponents"] = o.ReferencingComponents
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableParameterDTO struct {
+	value *ParameterDTO
+	isSet bool
+}
+
+func (v NullableParameterDTO) Get() *ParameterDTO {
+	return v.value
+}
+
+func (v *NullableParameterDTO) Set(val *ParameterDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableParameterDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableParameterDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableParameterDTO(val *ParameterDTO) *NullableParameterDTO {
+	return &NullableParameterDTO{value: val, isSet: true}
+}
+
+func (v NullableParameterDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableParameterDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,13 +11,250 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // FlowBreadcrumbEntity struct for FlowBreadcrumbEntity
 type FlowBreadcrumbEntity struct {
 	// The id of this ancestor ProcessGroup.
-	Id          string         `json:"id,omitempty"`
-	Permissions PermissionsDto `json:"permissions,omitempty"`
+	Id          *string         `json:"id,omitempty"`
+	Permissions *PermissionsDTO `json:"permissions,omitempty"`
 	// The current state of the Process Group, as it relates to the Versioned Flow
-	VersionedFlowState string                `json:"versionedFlowState,omitempty"`
-	Breadcrumb         FlowBreadcrumbDto     `json:"breadcrumb,omitempty"`
+	VersionedFlowState *string               `json:"versionedFlowState,omitempty"`
+	Breadcrumb         *FlowBreadcrumbDTO    `json:"breadcrumb,omitempty"`
 	ParentBreadcrumb   *FlowBreadcrumbEntity `json:"parentBreadcrumb,omitempty"`
+}
+
+// NewFlowBreadcrumbEntity instantiates a new FlowBreadcrumbEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewFlowBreadcrumbEntity() *FlowBreadcrumbEntity {
+	this := FlowBreadcrumbEntity{}
+	return &this
+}
+
+// NewFlowBreadcrumbEntityWithDefaults instantiates a new FlowBreadcrumbEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewFlowBreadcrumbEntityWithDefaults() *FlowBreadcrumbEntity {
+	this := FlowBreadcrumbEntity{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *FlowBreadcrumbEntity) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowBreadcrumbEntity) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *FlowBreadcrumbEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *FlowBreadcrumbEntity) SetId(v string) {
+	o.Id = &v
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *FlowBreadcrumbEntity) GetPermissions() PermissionsDTO {
+	if o == nil || o.Permissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowBreadcrumbEntity) GetPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.Permissions == nil {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *FlowBreadcrumbEntity) HasPermissions() bool {
+	if o != nil && o.Permissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given PermissionsDTO and assigns it to the Permissions field.
+func (o *FlowBreadcrumbEntity) SetPermissions(v PermissionsDTO) {
+	o.Permissions = &v
+}
+
+// GetVersionedFlowState returns the VersionedFlowState field value if set, zero value otherwise.
+func (o *FlowBreadcrumbEntity) GetVersionedFlowState() string {
+	if o == nil || o.VersionedFlowState == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedFlowState
+}
+
+// GetVersionedFlowStateOk returns a tuple with the VersionedFlowState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowBreadcrumbEntity) GetVersionedFlowStateOk() (*string, bool) {
+	if o == nil || o.VersionedFlowState == nil {
+		return nil, false
+	}
+	return o.VersionedFlowState, true
+}
+
+// HasVersionedFlowState returns a boolean if a field has been set.
+func (o *FlowBreadcrumbEntity) HasVersionedFlowState() bool {
+	if o != nil && o.VersionedFlowState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlowState gets a reference to the given string and assigns it to the VersionedFlowState field.
+func (o *FlowBreadcrumbEntity) SetVersionedFlowState(v string) {
+	o.VersionedFlowState = &v
+}
+
+// GetBreadcrumb returns the Breadcrumb field value if set, zero value otherwise.
+func (o *FlowBreadcrumbEntity) GetBreadcrumb() FlowBreadcrumbDTO {
+	if o == nil || o.Breadcrumb == nil {
+		var ret FlowBreadcrumbDTO
+		return ret
+	}
+	return *o.Breadcrumb
+}
+
+// GetBreadcrumbOk returns a tuple with the Breadcrumb field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowBreadcrumbEntity) GetBreadcrumbOk() (*FlowBreadcrumbDTO, bool) {
+	if o == nil || o.Breadcrumb == nil {
+		return nil, false
+	}
+	return o.Breadcrumb, true
+}
+
+// HasBreadcrumb returns a boolean if a field has been set.
+func (o *FlowBreadcrumbEntity) HasBreadcrumb() bool {
+	if o != nil && o.Breadcrumb != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBreadcrumb gets a reference to the given FlowBreadcrumbDTO and assigns it to the Breadcrumb field.
+func (o *FlowBreadcrumbEntity) SetBreadcrumb(v FlowBreadcrumbDTO) {
+	o.Breadcrumb = &v
+}
+
+// GetParentBreadcrumb returns the ParentBreadcrumb field value if set, zero value otherwise.
+func (o *FlowBreadcrumbEntity) GetParentBreadcrumb() FlowBreadcrumbEntity {
+	if o == nil || o.ParentBreadcrumb == nil {
+		var ret FlowBreadcrumbEntity
+		return ret
+	}
+	return *o.ParentBreadcrumb
+}
+
+// GetParentBreadcrumbOk returns a tuple with the ParentBreadcrumb field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowBreadcrumbEntity) GetParentBreadcrumbOk() (*FlowBreadcrumbEntity, bool) {
+	if o == nil || o.ParentBreadcrumb == nil {
+		return nil, false
+	}
+	return o.ParentBreadcrumb, true
+}
+
+// HasParentBreadcrumb returns a boolean if a field has been set.
+func (o *FlowBreadcrumbEntity) HasParentBreadcrumb() bool {
+	if o != nil && o.ParentBreadcrumb != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentBreadcrumb gets a reference to the given FlowBreadcrumbEntity and assigns it to the ParentBreadcrumb field.
+func (o *FlowBreadcrumbEntity) SetParentBreadcrumb(v FlowBreadcrumbEntity) {
+	o.ParentBreadcrumb = &v
+}
+
+func (o FlowBreadcrumbEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Permissions != nil {
+		toSerialize["permissions"] = o.Permissions
+	}
+	if o.VersionedFlowState != nil {
+		toSerialize["versionedFlowState"] = o.VersionedFlowState
+	}
+	if o.Breadcrumb != nil {
+		toSerialize["breadcrumb"] = o.Breadcrumb
+	}
+	if o.ParentBreadcrumb != nil {
+		toSerialize["parentBreadcrumb"] = o.ParentBreadcrumb
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableFlowBreadcrumbEntity struct {
+	value *FlowBreadcrumbEntity
+	isSet bool
+}
+
+func (v NullableFlowBreadcrumbEntity) Get() *FlowBreadcrumbEntity {
+	return v.value
+}
+
+func (v *NullableFlowBreadcrumbEntity) Set(val *FlowBreadcrumbEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableFlowBreadcrumbEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableFlowBreadcrumbEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableFlowBreadcrumbEntity(val *FlowBreadcrumbEntity) *NullableFlowBreadcrumbEntity {
+	return &NullableFlowBreadcrumbEntity{value: val, isSet: true}
+}
+
+func (v NullableFlowBreadcrumbEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableFlowBreadcrumbEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

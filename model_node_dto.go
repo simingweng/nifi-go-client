@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,28 +11,475 @@
 
 package nifi
 
-// NodeDto struct for NodeDto
-type NodeDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeDTO struct for NodeDTO
+type NodeDTO struct {
 	// The id of the node.
-	NodeId string `json:"nodeId,omitempty"`
+	NodeId *string `json:"nodeId,omitempty"`
 	// The node's host/ip address.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// The port the node is listening for API requests.
-	ApiPort int32 `json:"apiPort,omitempty"`
+	ApiPort *int32 `json:"apiPort,omitempty"`
 	// The node's status.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 	// the time of the nodes's last heartbeat.
-	Heartbeat string `json:"heartbeat,omitempty"`
+	Heartbeat *string `json:"heartbeat,omitempty"`
 	// The time of the node's last connection request.
-	ConnectionRequested string `json:"connectionRequested,omitempty"`
+	ConnectionRequested *string `json:"connectionRequested,omitempty"`
 	// The roles of this node.
-	Roles []string `json:"roles,omitempty"`
+	Roles *[]string `json:"roles,omitempty"`
 	// The active threads for the NiFi on the node.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// The queue the NiFi on the node.
-	Queued string `json:"queued,omitempty"`
+	Queued *string `json:"queued,omitempty"`
 	// The node's events.
-	Events []NodeEventDto `json:"events,omitempty"`
+	Events *[]NodeEventDTO `json:"events,omitempty"`
 	// The time at which this Node was last refreshed.
-	NodeStartTime string `json:"nodeStartTime,omitempty"`
+	NodeStartTime *string `json:"nodeStartTime,omitempty"`
+}
+
+// NewNodeDTO instantiates a new NodeDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeDTO() *NodeDTO {
+	this := NodeDTO{}
+	return &this
+}
+
+// NewNodeDTOWithDefaults instantiates a new NodeDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeDTOWithDefaults() *NodeDTO {
+	this := NodeDTO{}
+	return &this
+}
+
+// GetNodeId returns the NodeId field value if set, zero value otherwise.
+func (o *NodeDTO) GetNodeId() string {
+	if o == nil || o.NodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeId
+}
+
+// GetNodeIdOk returns a tuple with the NodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetNodeIdOk() (*string, bool) {
+	if o == nil || o.NodeId == nil {
+		return nil, false
+	}
+	return o.NodeId, true
+}
+
+// HasNodeId returns a boolean if a field has been set.
+func (o *NodeDTO) HasNodeId() bool {
+	if o != nil && o.NodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeId gets a reference to the given string and assigns it to the NodeId field.
+func (o *NodeDTO) SetNodeId(v string) {
+	o.NodeId = &v
+}
+
+// GetAddress returns the Address field value if set, zero value otherwise.
+func (o *NodeDTO) GetAddress() string {
+	if o == nil || o.Address == nil {
+		var ret string
+		return ret
+	}
+	return *o.Address
+}
+
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetAddressOk() (*string, bool) {
+	if o == nil || o.Address == nil {
+		return nil, false
+	}
+	return o.Address, true
+}
+
+// HasAddress returns a boolean if a field has been set.
+func (o *NodeDTO) HasAddress() bool {
+	if o != nil && o.Address != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
+func (o *NodeDTO) SetAddress(v string) {
+	o.Address = &v
+}
+
+// GetApiPort returns the ApiPort field value if set, zero value otherwise.
+func (o *NodeDTO) GetApiPort() int32 {
+	if o == nil || o.ApiPort == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ApiPort
+}
+
+// GetApiPortOk returns a tuple with the ApiPort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetApiPortOk() (*int32, bool) {
+	if o == nil || o.ApiPort == nil {
+		return nil, false
+	}
+	return o.ApiPort, true
+}
+
+// HasApiPort returns a boolean if a field has been set.
+func (o *NodeDTO) HasApiPort() bool {
+	if o != nil && o.ApiPort != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetApiPort gets a reference to the given int32 and assigns it to the ApiPort field.
+func (o *NodeDTO) SetApiPort(v int32) {
+	o.ApiPort = &v
+}
+
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *NodeDTO) GetStatus() string {
+	if o == nil || o.Status == nil {
+		var ret string
+		return ret
+	}
+	return *o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetStatusOk() (*string, bool) {
+	if o == nil || o.Status == nil {
+		return nil, false
+	}
+	return o.Status, true
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *NodeDTO) HasStatus() bool {
+	if o != nil && o.Status != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given string and assigns it to the Status field.
+func (o *NodeDTO) SetStatus(v string) {
+	o.Status = &v
+}
+
+// GetHeartbeat returns the Heartbeat field value if set, zero value otherwise.
+func (o *NodeDTO) GetHeartbeat() string {
+	if o == nil || o.Heartbeat == nil {
+		var ret string
+		return ret
+	}
+	return *o.Heartbeat
+}
+
+// GetHeartbeatOk returns a tuple with the Heartbeat field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetHeartbeatOk() (*string, bool) {
+	if o == nil || o.Heartbeat == nil {
+		return nil, false
+	}
+	return o.Heartbeat, true
+}
+
+// HasHeartbeat returns a boolean if a field has been set.
+func (o *NodeDTO) HasHeartbeat() bool {
+	if o != nil && o.Heartbeat != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHeartbeat gets a reference to the given string and assigns it to the Heartbeat field.
+func (o *NodeDTO) SetHeartbeat(v string) {
+	o.Heartbeat = &v
+}
+
+// GetConnectionRequested returns the ConnectionRequested field value if set, zero value otherwise.
+func (o *NodeDTO) GetConnectionRequested() string {
+	if o == nil || o.ConnectionRequested == nil {
+		var ret string
+		return ret
+	}
+	return *o.ConnectionRequested
+}
+
+// GetConnectionRequestedOk returns a tuple with the ConnectionRequested field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetConnectionRequestedOk() (*string, bool) {
+	if o == nil || o.ConnectionRequested == nil {
+		return nil, false
+	}
+	return o.ConnectionRequested, true
+}
+
+// HasConnectionRequested returns a boolean if a field has been set.
+func (o *NodeDTO) HasConnectionRequested() bool {
+	if o != nil && o.ConnectionRequested != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectionRequested gets a reference to the given string and assigns it to the ConnectionRequested field.
+func (o *NodeDTO) SetConnectionRequested(v string) {
+	o.ConnectionRequested = &v
+}
+
+// GetRoles returns the Roles field value if set, zero value otherwise.
+func (o *NodeDTO) GetRoles() []string {
+	if o == nil || o.Roles == nil {
+		var ret []string
+		return ret
+	}
+	return *o.Roles
+}
+
+// GetRolesOk returns a tuple with the Roles field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetRolesOk() (*[]string, bool) {
+	if o == nil || o.Roles == nil {
+		return nil, false
+	}
+	return o.Roles, true
+}
+
+// HasRoles returns a boolean if a field has been set.
+func (o *NodeDTO) HasRoles() bool {
+	if o != nil && o.Roles != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRoles gets a reference to the given []string and assigns it to the Roles field.
+func (o *NodeDTO) SetRoles(v []string) {
+	o.Roles = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *NodeDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *NodeDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *NodeDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetQueued returns the Queued field value if set, zero value otherwise.
+func (o *NodeDTO) GetQueued() string {
+	if o == nil || o.Queued == nil {
+		var ret string
+		return ret
+	}
+	return *o.Queued
+}
+
+// GetQueuedOk returns a tuple with the Queued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetQueuedOk() (*string, bool) {
+	if o == nil || o.Queued == nil {
+		return nil, false
+	}
+	return o.Queued, true
+}
+
+// HasQueued returns a boolean if a field has been set.
+func (o *NodeDTO) HasQueued() bool {
+	if o != nil && o.Queued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueued gets a reference to the given string and assigns it to the Queued field.
+func (o *NodeDTO) SetQueued(v string) {
+	o.Queued = &v
+}
+
+// GetEvents returns the Events field value if set, zero value otherwise.
+func (o *NodeDTO) GetEvents() []NodeEventDTO {
+	if o == nil || o.Events == nil {
+		var ret []NodeEventDTO
+		return ret
+	}
+	return *o.Events
+}
+
+// GetEventsOk returns a tuple with the Events field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetEventsOk() (*[]NodeEventDTO, bool) {
+	if o == nil || o.Events == nil {
+		return nil, false
+	}
+	return o.Events, true
+}
+
+// HasEvents returns a boolean if a field has been set.
+func (o *NodeDTO) HasEvents() bool {
+	if o != nil && o.Events != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEvents gets a reference to the given []NodeEventDTO and assigns it to the Events field.
+func (o *NodeDTO) SetEvents(v []NodeEventDTO) {
+	o.Events = &v
+}
+
+// GetNodeStartTime returns the NodeStartTime field value if set, zero value otherwise.
+func (o *NodeDTO) GetNodeStartTime() string {
+	if o == nil || o.NodeStartTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeStartTime
+}
+
+// GetNodeStartTimeOk returns a tuple with the NodeStartTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDTO) GetNodeStartTimeOk() (*string, bool) {
+	if o == nil || o.NodeStartTime == nil {
+		return nil, false
+	}
+	return o.NodeStartTime, true
+}
+
+// HasNodeStartTime returns a boolean if a field has been set.
+func (o *NodeDTO) HasNodeStartTime() bool {
+	if o != nil && o.NodeStartTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeStartTime gets a reference to the given string and assigns it to the NodeStartTime field.
+func (o *NodeDTO) SetNodeStartTime(v string) {
+	o.NodeStartTime = &v
+}
+
+func (o NodeDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.NodeId != nil {
+		toSerialize["nodeId"] = o.NodeId
+	}
+	if o.Address != nil {
+		toSerialize["address"] = o.Address
+	}
+	if o.ApiPort != nil {
+		toSerialize["apiPort"] = o.ApiPort
+	}
+	if o.Status != nil {
+		toSerialize["status"] = o.Status
+	}
+	if o.Heartbeat != nil {
+		toSerialize["heartbeat"] = o.Heartbeat
+	}
+	if o.ConnectionRequested != nil {
+		toSerialize["connectionRequested"] = o.ConnectionRequested
+	}
+	if o.Roles != nil {
+		toSerialize["roles"] = o.Roles
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.Queued != nil {
+		toSerialize["queued"] = o.Queued
+	}
+	if o.Events != nil {
+		toSerialize["events"] = o.Events
+	}
+	if o.NodeStartTime != nil {
+		toSerialize["nodeStartTime"] = o.NodeStartTime
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeDTO struct {
+	value *NodeDTO
+	isSet bool
+}
+
+func (v NullableNodeDTO) Get() *NodeDTO {
+	return v.value
+}
+
+func (v *NullableNodeDTO) Set(val *NodeDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeDTO(val *NodeDTO) *NullableNodeDTO {
+	return &NullableNodeDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

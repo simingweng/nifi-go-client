@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,20 +28,41 @@ var (
 // ProvenanceApiService ProvenanceApi service
 type ProvenanceApiService service
 
-// ProvenanceApiDeleteLineageOpts Optional parameters for the method 'DeleteLineage'
-type ProvenanceApiDeleteLineageOpts struct {
-	ClusterNodeId optional.String
+type ProvenanceApiApiDeleteLineageRequest struct {
+	ctx           _context.Context
+	ApiService    *ProvenanceApiService
+	id            string
+	clusterNodeId *string
+}
+
+func (r ProvenanceApiApiDeleteLineageRequest) ClusterNodeId(clusterNodeId string) ProvenanceApiApiDeleteLineageRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r ProvenanceApiApiDeleteLineageRequest) Execute() (LineageEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteLineageExecute(r)
 }
 
 /*
-DeleteLineage Deletes a lineage query
+ * DeleteLineage Deletes a lineage query
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The id of the lineage query.
- * @param optional nil or *ProvenanceApiDeleteLineageOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where this query exists if clustered.
-@return LineageEntity
-*/
-func (a *ProvenanceApiService) DeleteLineage(ctx _context.Context, id string, localVarOptionals *ProvenanceApiDeleteLineageOpts) (LineageEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiDeleteLineageRequest
+ */
+func (a *ProvenanceApiService) DeleteLineage(ctx _context.Context, id string) ProvenanceApiApiDeleteLineageRequest {
+	return ProvenanceApiApiDeleteLineageRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LineageEntity
+ */
+func (a *ProvenanceApiService) DeleteLineageExecute(r ProvenanceApiApiDeleteLineageRequest) (LineageEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -51,16 +72,20 @@ func (a *ProvenanceApiService) DeleteLineage(ctx _context.Context, id string, lo
 		localVarReturnValue  LineageEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance/lineage/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.DeleteLineage")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance/lineage/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -79,18 +104,19 @@ func (a *ProvenanceApiService) DeleteLineage(ctx _context.Context, id string, lo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -115,20 +141,41 @@ func (a *ProvenanceApiService) DeleteLineage(ctx _context.Context, id string, lo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProvenanceApiDeleteProvenanceOpts Optional parameters for the method 'DeleteProvenance'
-type ProvenanceApiDeleteProvenanceOpts struct {
-	ClusterNodeId optional.String
+type ProvenanceApiApiDeleteProvenanceRequest struct {
+	ctx           _context.Context
+	ApiService    *ProvenanceApiService
+	id            string
+	clusterNodeId *string
+}
+
+func (r ProvenanceApiApiDeleteProvenanceRequest) ClusterNodeId(clusterNodeId string) ProvenanceApiApiDeleteProvenanceRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r ProvenanceApiApiDeleteProvenanceRequest) Execute() (ProvenanceEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteProvenanceExecute(r)
 }
 
 /*
-DeleteProvenance Deletes a provenance query
+ * DeleteProvenance Deletes a provenance query
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The id of the provenance query.
- * @param optional nil or *ProvenanceApiDeleteProvenanceOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where this query exists if clustered.
-@return ProvenanceEntity
-*/
-func (a *ProvenanceApiService) DeleteProvenance(ctx _context.Context, id string, localVarOptionals *ProvenanceApiDeleteProvenanceOpts) (ProvenanceEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiDeleteProvenanceRequest
+ */
+func (a *ProvenanceApiService) DeleteProvenance(ctx _context.Context, id string) ProvenanceApiApiDeleteProvenanceRequest {
+	return ProvenanceApiApiDeleteProvenanceRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProvenanceEntity
+ */
+func (a *ProvenanceApiService) DeleteProvenanceExecute(r ProvenanceApiApiDeleteProvenanceRequest) (ProvenanceEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -138,16 +185,20 @@ func (a *ProvenanceApiService) DeleteProvenance(ctx _context.Context, id string,
 		localVarReturnValue  ProvenanceEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.DeleteProvenance")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +217,19 @@ func (a *ProvenanceApiService) DeleteProvenance(ctx _context.Context, id string,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,20 +254,41 @@ func (a *ProvenanceApiService) DeleteProvenance(ctx _context.Context, id string,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProvenanceApiGetLineageOpts Optional parameters for the method 'GetLineage'
-type ProvenanceApiGetLineageOpts struct {
-	ClusterNodeId optional.String
+type ProvenanceApiApiGetLineageRequest struct {
+	ctx           _context.Context
+	ApiService    *ProvenanceApiService
+	id            string
+	clusterNodeId *string
+}
+
+func (r ProvenanceApiApiGetLineageRequest) ClusterNodeId(clusterNodeId string) ProvenanceApiApiGetLineageRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r ProvenanceApiApiGetLineageRequest) Execute() (LineageEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetLineageExecute(r)
 }
 
 /*
-GetLineage Gets a lineage query
+ * GetLineage Gets a lineage query
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The id of the lineage query.
- * @param optional nil or *ProvenanceApiGetLineageOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where this query exists if clustered.
-@return LineageEntity
-*/
-func (a *ProvenanceApiService) GetLineage(ctx _context.Context, id string, localVarOptionals *ProvenanceApiGetLineageOpts) (LineageEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiGetLineageRequest
+ */
+func (a *ProvenanceApiService) GetLineage(ctx _context.Context, id string) ProvenanceApiApiGetLineageRequest {
+	return ProvenanceApiApiGetLineageRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LineageEntity
+ */
+func (a *ProvenanceApiService) GetLineageExecute(r ProvenanceApiApiGetLineageRequest) (LineageEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -225,16 +298,20 @@ func (a *ProvenanceApiService) GetLineage(ctx _context.Context, id string, local
 		localVarReturnValue  LineageEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance/lineage/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.GetLineage")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance/lineage/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -253,18 +330,19 @@ func (a *ProvenanceApiService) GetLineage(ctx _context.Context, id string, local
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -289,24 +367,51 @@ func (a *ProvenanceApiService) GetLineage(ctx _context.Context, id string, local
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProvenanceApiGetProvenanceOpts Optional parameters for the method 'GetProvenance'
-type ProvenanceApiGetProvenanceOpts struct {
-	ClusterNodeId      optional.String
-	Summarize          optional.Bool
-	IncrementalResults optional.Bool
+type ProvenanceApiApiGetProvenanceRequest struct {
+	ctx                _context.Context
+	ApiService         *ProvenanceApiService
+	id                 string
+	clusterNodeId      *string
+	summarize          *bool
+	incrementalResults *bool
+}
+
+func (r ProvenanceApiApiGetProvenanceRequest) ClusterNodeId(clusterNodeId string) ProvenanceApiApiGetProvenanceRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+func (r ProvenanceApiApiGetProvenanceRequest) Summarize(summarize bool) ProvenanceApiApiGetProvenanceRequest {
+	r.summarize = &summarize
+	return r
+}
+func (r ProvenanceApiApiGetProvenanceRequest) IncrementalResults(incrementalResults bool) ProvenanceApiApiGetProvenanceRequest {
+	r.incrementalResults = &incrementalResults
+	return r
+}
+
+func (r ProvenanceApiApiGetProvenanceRequest) Execute() (ProvenanceEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProvenanceExecute(r)
 }
 
 /*
-GetProvenance Gets a provenance query
+ * GetProvenance Gets a provenance query
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The id of the provenance query.
- * @param optional nil or *ProvenanceApiGetProvenanceOpts - Optional Parameters:
- * @param "ClusterNodeId" (optional.String) -  The id of the node where this query exists if clustered.
- * @param "Summarize" (optional.Bool) -  Whether or not incremental results are returned. If false, provenance events are only returned once the query completes. This property is true by default.
- * @param "IncrementalResults" (optional.Bool) -  Whether or not to summarize provenance events returned. This property is false by default.
-@return ProvenanceEntity
-*/
-func (a *ProvenanceApiService) GetProvenance(ctx _context.Context, id string, localVarOptionals *ProvenanceApiGetProvenanceOpts) (ProvenanceEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiGetProvenanceRequest
+ */
+func (a *ProvenanceApiService) GetProvenance(ctx _context.Context, id string) ProvenanceApiApiGetProvenanceRequest {
+	return ProvenanceApiApiGetProvenanceRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProvenanceEntity
+ */
+func (a *ProvenanceApiService) GetProvenanceExecute(r ProvenanceApiApiGetProvenanceRequest) (ProvenanceEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -316,22 +421,26 @@ func (a *ProvenanceApiService) GetProvenance(ctx _context.Context, id string, lo
 		localVarReturnValue  ProvenanceEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.GetProvenance")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.Summarize.IsSet() {
-		localVarQueryParams.Add("summarize", parameterToString(localVarOptionals.Summarize.Value(), ""))
+	if r.summarize != nil {
+		localVarQueryParams.Add("summarize", parameterToString(*r.summarize, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.IncrementalResults.IsSet() {
-		localVarQueryParams.Add("incrementalResults", parameterToString(localVarOptionals.IncrementalResults.Value(), ""))
+	if r.incrementalResults != nil {
+		localVarQueryParams.Add("incrementalResults", parameterToString(*r.incrementalResults, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -350,18 +459,19 @@ func (a *ProvenanceApiService) GetProvenance(ctx _context.Context, id string, lo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -386,12 +496,32 @@ func (a *ProvenanceApiService) GetProvenance(ctx _context.Context, id string, lo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProvenanceApiApiGetSearchOptionsRequest struct {
+	ctx        _context.Context
+	ApiService *ProvenanceApiService
+}
+
+func (r ProvenanceApiApiGetSearchOptionsRequest) Execute() (ProvenanceOptionsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetSearchOptionsExecute(r)
+}
+
 /*
-GetSearchOptions Gets the searchable attributes for provenance events
+ * GetSearchOptions Gets the searchable attributes for provenance events
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ProvenanceOptionsEntity
-*/
-func (a *ProvenanceApiService) GetSearchOptions(ctx _context.Context) (ProvenanceOptionsEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiGetSearchOptionsRequest
+ */
+func (a *ProvenanceApiService) GetSearchOptions(ctx _context.Context) ProvenanceApiApiGetSearchOptionsRequest {
+	return ProvenanceApiApiGetSearchOptionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProvenanceOptionsEntity
+ */
+func (a *ProvenanceApiService) GetSearchOptionsExecute(r ProvenanceApiApiGetSearchOptionsRequest) (ProvenanceOptionsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -401,8 +531,13 @@ func (a *ProvenanceApiService) GetSearchOptions(ctx _context.Context) (Provenanc
 		localVarReturnValue  ProvenanceOptionsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance/search-options"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.GetSearchOptions")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance/search-options"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -424,18 +559,19 @@ func (a *ProvenanceApiService) GetSearchOptions(ctx _context.Context) (Provenanc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -460,14 +596,39 @@ func (a *ProvenanceApiService) GetSearchOptions(ctx _context.Context) (Provenanc
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProvenanceApiApiSubmitLineageRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ProvenanceApiService
+	body       *LineageEntity
+}
+
+func (r ProvenanceApiApiSubmitLineageRequestRequest) Body(body LineageEntity) ProvenanceApiApiSubmitLineageRequestRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProvenanceApiApiSubmitLineageRequestRequest) Execute() (LineageEntity, *_nethttp.Response, error) {
+	return r.ApiService.SubmitLineageRequestExecute(r)
+}
+
 /*
-SubmitLineageRequest Submits a lineage query
-Lineage queries may be long running so this endpoint submits a request. The response will include the current state of the query. If the request is not completed the URI in the response can be used at a later time to get the updated state of the query. Once the query has completed the lineage request should be deleted by the client who originally submitted it.
+ * SubmitLineageRequest Submits a lineage query
+ * Lineage queries may be long running so this endpoint submits a request. The response will include the current state of the query. If the request is not completed the URI in the response can be used at a later time to get the updated state of the query. Once the query has completed the lineage request should be deleted by the client who originally submitted it.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The lineage query details.
-@return LineageEntity
-*/
-func (a *ProvenanceApiService) SubmitLineageRequest(ctx _context.Context, body LineageEntity) (LineageEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiSubmitLineageRequestRequest
+ */
+func (a *ProvenanceApiService) SubmitLineageRequest(ctx _context.Context) ProvenanceApiApiSubmitLineageRequestRequest {
+	return ProvenanceApiApiSubmitLineageRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LineageEntity
+ */
+func (a *ProvenanceApiService) SubmitLineageRequestExecute(r ProvenanceApiApiSubmitLineageRequestRequest) (LineageEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -477,11 +638,19 @@ func (a *ProvenanceApiService) SubmitLineageRequest(ctx _context.Context, body L
 		localVarReturnValue  LineageEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance/lineage"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.SubmitLineageRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance/lineage"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -501,19 +670,20 @@ func (a *ProvenanceApiService) SubmitLineageRequest(ctx _context.Context, body L
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -538,14 +708,39 @@ func (a *ProvenanceApiService) SubmitLineageRequest(ctx _context.Context, body L
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProvenanceApiApiSubmitProvenanceRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ProvenanceApiService
+	body       *ProvenanceEntity
+}
+
+func (r ProvenanceApiApiSubmitProvenanceRequestRequest) Body(body ProvenanceEntity) ProvenanceApiApiSubmitProvenanceRequestRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProvenanceApiApiSubmitProvenanceRequestRequest) Execute() (ProvenanceEntity, *_nethttp.Response, error) {
+	return r.ApiService.SubmitProvenanceRequestExecute(r)
+}
+
 /*
-SubmitProvenanceRequest Submits a provenance query
-Provenance queries may be long running so this endpoint submits a request. The response will include the current state of the query. If the request is not completed the URI in the response can be used at a later time to get the updated state of the query. Once the query has completed the provenance request should be deleted by the client who originally submitted it.
+ * SubmitProvenanceRequest Submits a provenance query
+ * Provenance queries may be long running so this endpoint submits a request. The response will include the current state of the query. If the request is not completed the URI in the response can be used at a later time to get the updated state of the query. Once the query has completed the provenance request should be deleted by the client who originally submitted it.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The provenance query details.
-@return ProvenanceEntity
-*/
-func (a *ProvenanceApiService) SubmitProvenanceRequest(ctx _context.Context, body ProvenanceEntity) (ProvenanceEntity, *_nethttp.Response, error) {
+ * @return ProvenanceApiApiSubmitProvenanceRequestRequest
+ */
+func (a *ProvenanceApiService) SubmitProvenanceRequest(ctx _context.Context) ProvenanceApiApiSubmitProvenanceRequestRequest {
+	return ProvenanceApiApiSubmitProvenanceRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProvenanceEntity
+ */
+func (a *ProvenanceApiService) SubmitProvenanceRequestExecute(r ProvenanceApiApiSubmitProvenanceRequestRequest) (ProvenanceEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -555,11 +750,19 @@ func (a *ProvenanceApiService) SubmitProvenanceRequest(ctx _context.Context, bod
 		localVarReturnValue  ProvenanceEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/provenance"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProvenanceApiService.SubmitProvenanceRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/provenance"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -579,19 +782,20 @@ func (a *ProvenanceApiService) SubmitProvenanceRequest(ctx _context.Context, bod
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

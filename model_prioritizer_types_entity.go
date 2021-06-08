@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // PrioritizerTypesEntity struct for PrioritizerTypesEntity
 type PrioritizerTypesEntity struct {
-	PrioritizerTypes []DocumentedTypeDto `json:"prioritizerTypes,omitempty"`
+	PrioritizerTypes *[]DocumentedTypeDTO `json:"prioritizerTypes,omitempty"`
+}
+
+// NewPrioritizerTypesEntity instantiates a new PrioritizerTypesEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPrioritizerTypesEntity() *PrioritizerTypesEntity {
+	this := PrioritizerTypesEntity{}
+	return &this
+}
+
+// NewPrioritizerTypesEntityWithDefaults instantiates a new PrioritizerTypesEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPrioritizerTypesEntityWithDefaults() *PrioritizerTypesEntity {
+	this := PrioritizerTypesEntity{}
+	return &this
+}
+
+// GetPrioritizerTypes returns the PrioritizerTypes field value if set, zero value otherwise.
+func (o *PrioritizerTypesEntity) GetPrioritizerTypes() []DocumentedTypeDTO {
+	if o == nil || o.PrioritizerTypes == nil {
+		var ret []DocumentedTypeDTO
+		return ret
+	}
+	return *o.PrioritizerTypes
+}
+
+// GetPrioritizerTypesOk returns a tuple with the PrioritizerTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PrioritizerTypesEntity) GetPrioritizerTypesOk() (*[]DocumentedTypeDTO, bool) {
+	if o == nil || o.PrioritizerTypes == nil {
+		return nil, false
+	}
+	return o.PrioritizerTypes, true
+}
+
+// HasPrioritizerTypes returns a boolean if a field has been set.
+func (o *PrioritizerTypesEntity) HasPrioritizerTypes() bool {
+	if o != nil && o.PrioritizerTypes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPrioritizerTypes gets a reference to the given []DocumentedTypeDTO and assigns it to the PrioritizerTypes field.
+func (o *PrioritizerTypesEntity) SetPrioritizerTypes(v []DocumentedTypeDTO) {
+	o.PrioritizerTypes = &v
+}
+
+func (o PrioritizerTypesEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.PrioritizerTypes != nil {
+		toSerialize["prioritizerTypes"] = o.PrioritizerTypes
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePrioritizerTypesEntity struct {
+	value *PrioritizerTypesEntity
+	isSet bool
+}
+
+func (v NullablePrioritizerTypesEntity) Get() *PrioritizerTypesEntity {
+	return v.value
+}
+
+func (v *NullablePrioritizerTypesEntity) Set(val *PrioritizerTypesEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePrioritizerTypesEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePrioritizerTypesEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePrioritizerTypesEntity(val *PrioritizerTypesEntity) *NullablePrioritizerTypesEntity {
+	return &NullablePrioritizerTypesEntity{value: val, isSet: true}
+}
+
+func (v NullablePrioritizerTypesEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePrioritizerTypesEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

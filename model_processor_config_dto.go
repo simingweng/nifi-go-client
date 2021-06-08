@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,40 +11,697 @@
 
 package nifi
 
-// ProcessorConfigDto struct for ProcessorConfigDto
-type ProcessorConfigDto struct {
+import (
+	"encoding/json"
+)
+
+// ProcessorConfigDTO struct for ProcessorConfigDTO
+type ProcessorConfigDTO struct {
 	// The properties for the processor. Properties whose value is not set will only contain the property name.
-	Properties map[string]string `json:"properties,omitempty"`
+	Properties *map[string]string `json:"properties,omitempty"`
 	// Descriptors for the processor's properties.
-	Descriptors map[string]PropertyDescriptorDto `json:"descriptors,omitempty"`
+	Descriptors *map[string]PropertyDescriptorDTO `json:"descriptors,omitempty"`
 	// The frequency with which to schedule the processor. The format of the value will depend on th value of schedulingStrategy.
-	SchedulingPeriod string `json:"schedulingPeriod,omitempty"`
+	SchedulingPeriod *string `json:"schedulingPeriod,omitempty"`
 	// Indcates whether the prcessor should be scheduled to run in event or timer driven mode.
-	SchedulingStrategy string `json:"schedulingStrategy,omitempty"`
+	SchedulingStrategy *string `json:"schedulingStrategy,omitempty"`
 	// Indicates the node where the process will execute.
-	ExecutionNode string `json:"executionNode,omitempty"`
+	ExecutionNode *string `json:"executionNode,omitempty"`
 	// The amount of time that is used when the process penalizes a flowfile.
-	PenaltyDuration string `json:"penaltyDuration,omitempty"`
+	PenaltyDuration *string `json:"penaltyDuration,omitempty"`
 	// The amount of time that must elapse before this processor is scheduled again after yielding.
-	YieldDuration string `json:"yieldDuration,omitempty"`
+	YieldDuration *string `json:"yieldDuration,omitempty"`
 	// The level at which the processor will report bulletins.
-	BulletinLevel string `json:"bulletinLevel,omitempty"`
+	BulletinLevel *string `json:"bulletinLevel,omitempty"`
 	// The run duration for the processor in milliseconds.
-	RunDurationMillis int64 `json:"runDurationMillis,omitempty"`
+	RunDurationMillis *int64 `json:"runDurationMillis,omitempty"`
 	// The number of tasks that should be concurrently schedule for the processor. If the processor doesn't allow parallol processing then any positive input will be ignored.
-	ConcurrentlySchedulableTaskCount int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
+	ConcurrentlySchedulableTaskCount *int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
 	// The names of all relationships that cause a flow file to be terminated if the relationship is not connected elsewhere. This property differs from the 'isAutoTerminate' property of the RelationshipDTO in that the RelationshipDTO is meant to depict the current configuration, whereas this property can be set in a DTO when updating a Processor in order to change which Relationships should be auto-terminated.
-	AutoTerminatedRelationships []string `json:"autoTerminatedRelationships,omitempty"`
+	AutoTerminatedRelationships *[]string `json:"autoTerminatedRelationships,omitempty"`
 	// The comments for the processor.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
 	// The URL for the processor's custom configuration UI if applicable.
-	CustomUiUrl string `json:"customUiUrl,omitempty"`
+	CustomUiUrl *string `json:"customUiUrl,omitempty"`
 	// Whether the processor is loss tolerant.
-	LossTolerant bool `json:"lossTolerant,omitempty"`
+	LossTolerant *bool `json:"lossTolerant,omitempty"`
 	// The annotation data for the processor used to relay configuration between a custom UI and the procesosr.
-	AnnotationData string `json:"annotationData,omitempty"`
+	AnnotationData *string `json:"annotationData,omitempty"`
 	// Maps default values for concurrent tasks for each applicable scheduling strategy.
-	DefaultConcurrentTasks map[string]string `json:"defaultConcurrentTasks,omitempty"`
+	DefaultConcurrentTasks *map[string]string `json:"defaultConcurrentTasks,omitempty"`
 	// Maps default values for scheduling period for each applicable scheduling strategy.
-	DefaultSchedulingPeriod map[string]string `json:"defaultSchedulingPeriod,omitempty"`
+	DefaultSchedulingPeriod *map[string]string `json:"defaultSchedulingPeriod,omitempty"`
+}
+
+// NewProcessorConfigDTO instantiates a new ProcessorConfigDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorConfigDTO() *ProcessorConfigDTO {
+	this := ProcessorConfigDTO{}
+	return &this
+}
+
+// NewProcessorConfigDTOWithDefaults instantiates a new ProcessorConfigDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorConfigDTOWithDefaults() *ProcessorConfigDTO {
+	this := ProcessorConfigDTO{}
+	return &this
+}
+
+// GetProperties returns the Properties field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetProperties() map[string]string {
+	if o == nil || o.Properties == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Properties
+}
+
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetPropertiesOk() (*map[string]string, bool) {
+	if o == nil || o.Properties == nil {
+		return nil, false
+	}
+	return o.Properties, true
+}
+
+// HasProperties returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasProperties() bool {
+	if o != nil && o.Properties != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+func (o *ProcessorConfigDTO) SetProperties(v map[string]string) {
+	o.Properties = &v
+}
+
+// GetDescriptors returns the Descriptors field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetDescriptors() map[string]PropertyDescriptorDTO {
+	if o == nil || o.Descriptors == nil {
+		var ret map[string]PropertyDescriptorDTO
+		return ret
+	}
+	return *o.Descriptors
+}
+
+// GetDescriptorsOk returns a tuple with the Descriptors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetDescriptorsOk() (*map[string]PropertyDescriptorDTO, bool) {
+	if o == nil || o.Descriptors == nil {
+		return nil, false
+	}
+	return o.Descriptors, true
+}
+
+// HasDescriptors returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasDescriptors() bool {
+	if o != nil && o.Descriptors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescriptors gets a reference to the given map[string]PropertyDescriptorDTO and assigns it to the Descriptors field.
+func (o *ProcessorConfigDTO) SetDescriptors(v map[string]PropertyDescriptorDTO) {
+	o.Descriptors = &v
+}
+
+// GetSchedulingPeriod returns the SchedulingPeriod field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetSchedulingPeriod() string {
+	if o == nil || o.SchedulingPeriod == nil {
+		var ret string
+		return ret
+	}
+	return *o.SchedulingPeriod
+}
+
+// GetSchedulingPeriodOk returns a tuple with the SchedulingPeriod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetSchedulingPeriodOk() (*string, bool) {
+	if o == nil || o.SchedulingPeriod == nil {
+		return nil, false
+	}
+	return o.SchedulingPeriod, true
+}
+
+// HasSchedulingPeriod returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasSchedulingPeriod() bool {
+	if o != nil && o.SchedulingPeriod != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSchedulingPeriod gets a reference to the given string and assigns it to the SchedulingPeriod field.
+func (o *ProcessorConfigDTO) SetSchedulingPeriod(v string) {
+	o.SchedulingPeriod = &v
+}
+
+// GetSchedulingStrategy returns the SchedulingStrategy field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetSchedulingStrategy() string {
+	if o == nil || o.SchedulingStrategy == nil {
+		var ret string
+		return ret
+	}
+	return *o.SchedulingStrategy
+}
+
+// GetSchedulingStrategyOk returns a tuple with the SchedulingStrategy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetSchedulingStrategyOk() (*string, bool) {
+	if o == nil || o.SchedulingStrategy == nil {
+		return nil, false
+	}
+	return o.SchedulingStrategy, true
+}
+
+// HasSchedulingStrategy returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasSchedulingStrategy() bool {
+	if o != nil && o.SchedulingStrategy != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSchedulingStrategy gets a reference to the given string and assigns it to the SchedulingStrategy field.
+func (o *ProcessorConfigDTO) SetSchedulingStrategy(v string) {
+	o.SchedulingStrategy = &v
+}
+
+// GetExecutionNode returns the ExecutionNode field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetExecutionNode() string {
+	if o == nil || o.ExecutionNode == nil {
+		var ret string
+		return ret
+	}
+	return *o.ExecutionNode
+}
+
+// GetExecutionNodeOk returns a tuple with the ExecutionNode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetExecutionNodeOk() (*string, bool) {
+	if o == nil || o.ExecutionNode == nil {
+		return nil, false
+	}
+	return o.ExecutionNode, true
+}
+
+// HasExecutionNode returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasExecutionNode() bool {
+	if o != nil && o.ExecutionNode != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExecutionNode gets a reference to the given string and assigns it to the ExecutionNode field.
+func (o *ProcessorConfigDTO) SetExecutionNode(v string) {
+	o.ExecutionNode = &v
+}
+
+// GetPenaltyDuration returns the PenaltyDuration field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetPenaltyDuration() string {
+	if o == nil || o.PenaltyDuration == nil {
+		var ret string
+		return ret
+	}
+	return *o.PenaltyDuration
+}
+
+// GetPenaltyDurationOk returns a tuple with the PenaltyDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetPenaltyDurationOk() (*string, bool) {
+	if o == nil || o.PenaltyDuration == nil {
+		return nil, false
+	}
+	return o.PenaltyDuration, true
+}
+
+// HasPenaltyDuration returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasPenaltyDuration() bool {
+	if o != nil && o.PenaltyDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPenaltyDuration gets a reference to the given string and assigns it to the PenaltyDuration field.
+func (o *ProcessorConfigDTO) SetPenaltyDuration(v string) {
+	o.PenaltyDuration = &v
+}
+
+// GetYieldDuration returns the YieldDuration field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetYieldDuration() string {
+	if o == nil || o.YieldDuration == nil {
+		var ret string
+		return ret
+	}
+	return *o.YieldDuration
+}
+
+// GetYieldDurationOk returns a tuple with the YieldDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetYieldDurationOk() (*string, bool) {
+	if o == nil || o.YieldDuration == nil {
+		return nil, false
+	}
+	return o.YieldDuration, true
+}
+
+// HasYieldDuration returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasYieldDuration() bool {
+	if o != nil && o.YieldDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetYieldDuration gets a reference to the given string and assigns it to the YieldDuration field.
+func (o *ProcessorConfigDTO) SetYieldDuration(v string) {
+	o.YieldDuration = &v
+}
+
+// GetBulletinLevel returns the BulletinLevel field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetBulletinLevel() string {
+	if o == nil || o.BulletinLevel == nil {
+		var ret string
+		return ret
+	}
+	return *o.BulletinLevel
+}
+
+// GetBulletinLevelOk returns a tuple with the BulletinLevel field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetBulletinLevelOk() (*string, bool) {
+	if o == nil || o.BulletinLevel == nil {
+		return nil, false
+	}
+	return o.BulletinLevel, true
+}
+
+// HasBulletinLevel returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasBulletinLevel() bool {
+	if o != nil && o.BulletinLevel != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBulletinLevel gets a reference to the given string and assigns it to the BulletinLevel field.
+func (o *ProcessorConfigDTO) SetBulletinLevel(v string) {
+	o.BulletinLevel = &v
+}
+
+// GetRunDurationMillis returns the RunDurationMillis field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetRunDurationMillis() int64 {
+	if o == nil || o.RunDurationMillis == nil {
+		var ret int64
+		return ret
+	}
+	return *o.RunDurationMillis
+}
+
+// GetRunDurationMillisOk returns a tuple with the RunDurationMillis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetRunDurationMillisOk() (*int64, bool) {
+	if o == nil || o.RunDurationMillis == nil {
+		return nil, false
+	}
+	return o.RunDurationMillis, true
+}
+
+// HasRunDurationMillis returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasRunDurationMillis() bool {
+	if o != nil && o.RunDurationMillis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRunDurationMillis gets a reference to the given int64 and assigns it to the RunDurationMillis field.
+func (o *ProcessorConfigDTO) SetRunDurationMillis(v int64) {
+	o.RunDurationMillis = &v
+}
+
+// GetConcurrentlySchedulableTaskCount returns the ConcurrentlySchedulableTaskCount field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetConcurrentlySchedulableTaskCount() int32 {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ConcurrentlySchedulableTaskCount
+}
+
+// GetConcurrentlySchedulableTaskCountOk returns a tuple with the ConcurrentlySchedulableTaskCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetConcurrentlySchedulableTaskCountOk() (*int32, bool) {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		return nil, false
+	}
+	return o.ConcurrentlySchedulableTaskCount, true
+}
+
+// HasConcurrentlySchedulableTaskCount returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasConcurrentlySchedulableTaskCount() bool {
+	if o != nil && o.ConcurrentlySchedulableTaskCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConcurrentlySchedulableTaskCount gets a reference to the given int32 and assigns it to the ConcurrentlySchedulableTaskCount field.
+func (o *ProcessorConfigDTO) SetConcurrentlySchedulableTaskCount(v int32) {
+	o.ConcurrentlySchedulableTaskCount = &v
+}
+
+// GetAutoTerminatedRelationships returns the AutoTerminatedRelationships field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetAutoTerminatedRelationships() []string {
+	if o == nil || o.AutoTerminatedRelationships == nil {
+		var ret []string
+		return ret
+	}
+	return *o.AutoTerminatedRelationships
+}
+
+// GetAutoTerminatedRelationshipsOk returns a tuple with the AutoTerminatedRelationships field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetAutoTerminatedRelationshipsOk() (*[]string, bool) {
+	if o == nil || o.AutoTerminatedRelationships == nil {
+		return nil, false
+	}
+	return o.AutoTerminatedRelationships, true
+}
+
+// HasAutoTerminatedRelationships returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasAutoTerminatedRelationships() bool {
+	if o != nil && o.AutoTerminatedRelationships != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAutoTerminatedRelationships gets a reference to the given []string and assigns it to the AutoTerminatedRelationships field.
+func (o *ProcessorConfigDTO) SetAutoTerminatedRelationships(v []string) {
+	o.AutoTerminatedRelationships = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *ProcessorConfigDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetCustomUiUrl returns the CustomUiUrl field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetCustomUiUrl() string {
+	if o == nil || o.CustomUiUrl == nil {
+		var ret string
+		return ret
+	}
+	return *o.CustomUiUrl
+}
+
+// GetCustomUiUrlOk returns a tuple with the CustomUiUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetCustomUiUrlOk() (*string, bool) {
+	if o == nil || o.CustomUiUrl == nil {
+		return nil, false
+	}
+	return o.CustomUiUrl, true
+}
+
+// HasCustomUiUrl returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasCustomUiUrl() bool {
+	if o != nil && o.CustomUiUrl != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCustomUiUrl gets a reference to the given string and assigns it to the CustomUiUrl field.
+func (o *ProcessorConfigDTO) SetCustomUiUrl(v string) {
+	o.CustomUiUrl = &v
+}
+
+// GetLossTolerant returns the LossTolerant field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetLossTolerant() bool {
+	if o == nil || o.LossTolerant == nil {
+		var ret bool
+		return ret
+	}
+	return *o.LossTolerant
+}
+
+// GetLossTolerantOk returns a tuple with the LossTolerant field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetLossTolerantOk() (*bool, bool) {
+	if o == nil || o.LossTolerant == nil {
+		return nil, false
+	}
+	return o.LossTolerant, true
+}
+
+// HasLossTolerant returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasLossTolerant() bool {
+	if o != nil && o.LossTolerant != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLossTolerant gets a reference to the given bool and assigns it to the LossTolerant field.
+func (o *ProcessorConfigDTO) SetLossTolerant(v bool) {
+	o.LossTolerant = &v
+}
+
+// GetAnnotationData returns the AnnotationData field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetAnnotationData() string {
+	if o == nil || o.AnnotationData == nil {
+		var ret string
+		return ret
+	}
+	return *o.AnnotationData
+}
+
+// GetAnnotationDataOk returns a tuple with the AnnotationData field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetAnnotationDataOk() (*string, bool) {
+	if o == nil || o.AnnotationData == nil {
+		return nil, false
+	}
+	return o.AnnotationData, true
+}
+
+// HasAnnotationData returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasAnnotationData() bool {
+	if o != nil && o.AnnotationData != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAnnotationData gets a reference to the given string and assigns it to the AnnotationData field.
+func (o *ProcessorConfigDTO) SetAnnotationData(v string) {
+	o.AnnotationData = &v
+}
+
+// GetDefaultConcurrentTasks returns the DefaultConcurrentTasks field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetDefaultConcurrentTasks() map[string]string {
+	if o == nil || o.DefaultConcurrentTasks == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.DefaultConcurrentTasks
+}
+
+// GetDefaultConcurrentTasksOk returns a tuple with the DefaultConcurrentTasks field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetDefaultConcurrentTasksOk() (*map[string]string, bool) {
+	if o == nil || o.DefaultConcurrentTasks == nil {
+		return nil, false
+	}
+	return o.DefaultConcurrentTasks, true
+}
+
+// HasDefaultConcurrentTasks returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasDefaultConcurrentTasks() bool {
+	if o != nil && o.DefaultConcurrentTasks != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultConcurrentTasks gets a reference to the given map[string]string and assigns it to the DefaultConcurrentTasks field.
+func (o *ProcessorConfigDTO) SetDefaultConcurrentTasks(v map[string]string) {
+	o.DefaultConcurrentTasks = &v
+}
+
+// GetDefaultSchedulingPeriod returns the DefaultSchedulingPeriod field value if set, zero value otherwise.
+func (o *ProcessorConfigDTO) GetDefaultSchedulingPeriod() map[string]string {
+	if o == nil || o.DefaultSchedulingPeriod == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.DefaultSchedulingPeriod
+}
+
+// GetDefaultSchedulingPeriodOk returns a tuple with the DefaultSchedulingPeriod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorConfigDTO) GetDefaultSchedulingPeriodOk() (*map[string]string, bool) {
+	if o == nil || o.DefaultSchedulingPeriod == nil {
+		return nil, false
+	}
+	return o.DefaultSchedulingPeriod, true
+}
+
+// HasDefaultSchedulingPeriod returns a boolean if a field has been set.
+func (o *ProcessorConfigDTO) HasDefaultSchedulingPeriod() bool {
+	if o != nil && o.DefaultSchedulingPeriod != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultSchedulingPeriod gets a reference to the given map[string]string and assigns it to the DefaultSchedulingPeriod field.
+func (o *ProcessorConfigDTO) SetDefaultSchedulingPeriod(v map[string]string) {
+	o.DefaultSchedulingPeriod = &v
+}
+
+func (o ProcessorConfigDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Properties != nil {
+		toSerialize["properties"] = o.Properties
+	}
+	if o.Descriptors != nil {
+		toSerialize["descriptors"] = o.Descriptors
+	}
+	if o.SchedulingPeriod != nil {
+		toSerialize["schedulingPeriod"] = o.SchedulingPeriod
+	}
+	if o.SchedulingStrategy != nil {
+		toSerialize["schedulingStrategy"] = o.SchedulingStrategy
+	}
+	if o.ExecutionNode != nil {
+		toSerialize["executionNode"] = o.ExecutionNode
+	}
+	if o.PenaltyDuration != nil {
+		toSerialize["penaltyDuration"] = o.PenaltyDuration
+	}
+	if o.YieldDuration != nil {
+		toSerialize["yieldDuration"] = o.YieldDuration
+	}
+	if o.BulletinLevel != nil {
+		toSerialize["bulletinLevel"] = o.BulletinLevel
+	}
+	if o.RunDurationMillis != nil {
+		toSerialize["runDurationMillis"] = o.RunDurationMillis
+	}
+	if o.ConcurrentlySchedulableTaskCount != nil {
+		toSerialize["concurrentlySchedulableTaskCount"] = o.ConcurrentlySchedulableTaskCount
+	}
+	if o.AutoTerminatedRelationships != nil {
+		toSerialize["autoTerminatedRelationships"] = o.AutoTerminatedRelationships
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.CustomUiUrl != nil {
+		toSerialize["customUiUrl"] = o.CustomUiUrl
+	}
+	if o.LossTolerant != nil {
+		toSerialize["lossTolerant"] = o.LossTolerant
+	}
+	if o.AnnotationData != nil {
+		toSerialize["annotationData"] = o.AnnotationData
+	}
+	if o.DefaultConcurrentTasks != nil {
+		toSerialize["defaultConcurrentTasks"] = o.DefaultConcurrentTasks
+	}
+	if o.DefaultSchedulingPeriod != nil {
+		toSerialize["defaultSchedulingPeriod"] = o.DefaultSchedulingPeriod
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorConfigDTO struct {
+	value *ProcessorConfigDTO
+	isSet bool
+}
+
+func (v NullableProcessorConfigDTO) Get() *ProcessorConfigDTO {
+	return v.value
+}
+
+func (v *NullableProcessorConfigDTO) Set(val *ProcessorConfigDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorConfigDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorConfigDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorConfigDTO(val *ProcessorConfigDTO) *NullableProcessorConfigDTO {
+	return &NullableProcessorConfigDTO{value: val, isSet: true}
+}
+
+func (v NullableProcessorConfigDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorConfigDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

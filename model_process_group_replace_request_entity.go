@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,176 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessGroupReplaceRequestEntity struct for ProcessGroupReplaceRequestEntity
 type ProcessGroupReplaceRequestEntity struct {
-	ProcessGroupRevision  RevisionDto                   `json:"processGroupRevision,omitempty"`
-	Request               ProcessGroupReplaceRequestDto `json:"request,omitempty"`
-	VersionedFlowSnapshot VersionedFlowSnapshot         `json:"versionedFlowSnapshot,omitempty"`
+	ProcessGroupRevision  *RevisionDTO                   `json:"processGroupRevision,omitempty"`
+	Request               *ProcessGroupReplaceRequestDTO `json:"request,omitempty"`
+	VersionedFlowSnapshot *VersionedFlowSnapshot         `json:"versionedFlowSnapshot,omitempty"`
+}
+
+// NewProcessGroupReplaceRequestEntity instantiates a new ProcessGroupReplaceRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupReplaceRequestEntity() *ProcessGroupReplaceRequestEntity {
+	this := ProcessGroupReplaceRequestEntity{}
+	return &this
+}
+
+// NewProcessGroupReplaceRequestEntityWithDefaults instantiates a new ProcessGroupReplaceRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupReplaceRequestEntityWithDefaults() *ProcessGroupReplaceRequestEntity {
+	this := ProcessGroupReplaceRequestEntity{}
+	return &this
+}
+
+// GetProcessGroupRevision returns the ProcessGroupRevision field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestEntity) GetProcessGroupRevision() RevisionDTO {
+	if o == nil || o.ProcessGroupRevision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroupRevision
+}
+
+// GetProcessGroupRevisionOk returns a tuple with the ProcessGroupRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestEntity) GetProcessGroupRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.ProcessGroupRevision == nil {
+		return nil, false
+	}
+	return o.ProcessGroupRevision, true
+}
+
+// HasProcessGroupRevision returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestEntity) HasProcessGroupRevision() bool {
+	if o != nil && o.ProcessGroupRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupRevision gets a reference to the given RevisionDTO and assigns it to the ProcessGroupRevision field.
+func (o *ProcessGroupReplaceRequestEntity) SetProcessGroupRevision(v RevisionDTO) {
+	o.ProcessGroupRevision = &v
+}
+
+// GetRequest returns the Request field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestEntity) GetRequest() ProcessGroupReplaceRequestDTO {
+	if o == nil || o.Request == nil {
+		var ret ProcessGroupReplaceRequestDTO
+		return ret
+	}
+	return *o.Request
+}
+
+// GetRequestOk returns a tuple with the Request field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestEntity) GetRequestOk() (*ProcessGroupReplaceRequestDTO, bool) {
+	if o == nil || o.Request == nil {
+		return nil, false
+	}
+	return o.Request, true
+}
+
+// HasRequest returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestEntity) HasRequest() bool {
+	if o != nil && o.Request != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequest gets a reference to the given ProcessGroupReplaceRequestDTO and assigns it to the Request field.
+func (o *ProcessGroupReplaceRequestEntity) SetRequest(v ProcessGroupReplaceRequestDTO) {
+	o.Request = &v
+}
+
+// GetVersionedFlowSnapshot returns the VersionedFlowSnapshot field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestEntity) GetVersionedFlowSnapshot() VersionedFlowSnapshot {
+	if o == nil || o.VersionedFlowSnapshot == nil {
+		var ret VersionedFlowSnapshot
+		return ret
+	}
+	return *o.VersionedFlowSnapshot
+}
+
+// GetVersionedFlowSnapshotOk returns a tuple with the VersionedFlowSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestEntity) GetVersionedFlowSnapshotOk() (*VersionedFlowSnapshot, bool) {
+	if o == nil || o.VersionedFlowSnapshot == nil {
+		return nil, false
+	}
+	return o.VersionedFlowSnapshot, true
+}
+
+// HasVersionedFlowSnapshot returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestEntity) HasVersionedFlowSnapshot() bool {
+	if o != nil && o.VersionedFlowSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlowSnapshot gets a reference to the given VersionedFlowSnapshot and assigns it to the VersionedFlowSnapshot field.
+func (o *ProcessGroupReplaceRequestEntity) SetVersionedFlowSnapshot(v VersionedFlowSnapshot) {
+	o.VersionedFlowSnapshot = &v
+}
+
+func (o ProcessGroupReplaceRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupRevision != nil {
+		toSerialize["processGroupRevision"] = o.ProcessGroupRevision
+	}
+	if o.Request != nil {
+		toSerialize["request"] = o.Request
+	}
+	if o.VersionedFlowSnapshot != nil {
+		toSerialize["versionedFlowSnapshot"] = o.VersionedFlowSnapshot
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupReplaceRequestEntity struct {
+	value *ProcessGroupReplaceRequestEntity
+	isSet bool
+}
+
+func (v NullableProcessGroupReplaceRequestEntity) Get() *ProcessGroupReplaceRequestEntity {
+	return v.value
+}
+
+func (v *NullableProcessGroupReplaceRequestEntity) Set(val *ProcessGroupReplaceRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupReplaceRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupReplaceRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupReplaceRequestEntity(val *ProcessGroupReplaceRequestEntity) *NullableProcessGroupReplaceRequestEntity {
+	return &NullableProcessGroupReplaceRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupReplaceRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupReplaceRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

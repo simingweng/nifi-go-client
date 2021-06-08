@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,401 @@
 
 package nifi
 
-// FlowSnippetDto struct for FlowSnippetDto
-type FlowSnippetDto struct {
+import (
+	"encoding/json"
+)
+
+// FlowSnippetDTO struct for FlowSnippetDTO
+type FlowSnippetDTO struct {
 	// The process groups in this flow snippet.
-	ProcessGroups []ProcessGroupDto `json:"processGroups,omitempty"`
+	ProcessGroups *[]ProcessGroupDTO `json:"processGroups,omitempty"`
 	// The remote process groups in this flow snippet.
-	RemoteProcessGroups []RemoteProcessGroupDto `json:"remoteProcessGroups,omitempty"`
+	RemoteProcessGroups *[]RemoteProcessGroupDTO `json:"remoteProcessGroups,omitempty"`
 	// The processors in this flow snippet.
-	Processors []ProcessorDto `json:"processors,omitempty"`
+	Processors *[]ProcessorDTO `json:"processors,omitempty"`
 	// The input ports in this flow snippet.
-	InputPorts []PortDto `json:"inputPorts,omitempty"`
+	InputPorts *[]PortDTO `json:"inputPorts,omitempty"`
 	// The output ports in this flow snippet.
-	OutputPorts []PortDto `json:"outputPorts,omitempty"`
+	OutputPorts *[]PortDTO `json:"outputPorts,omitempty"`
 	// The connections in this flow snippet.
-	Connections []ConnectionDto `json:"connections,omitempty"`
+	Connections *[]ConnectionDTO `json:"connections,omitempty"`
 	// The labels in this flow snippet.
-	Labels []LabelDto `json:"labels,omitempty"`
+	Labels *[]LabelDTO `json:"labels,omitempty"`
 	// The funnels in this flow snippet.
-	Funnels []FunnelDto `json:"funnels,omitempty"`
+	Funnels *[]FunnelDTO `json:"funnels,omitempty"`
 	// The controller services in this flow snippet.
-	ControllerServices []ControllerServiceDto `json:"controllerServices,omitempty"`
+	ControllerServices *[]ControllerServiceDTO `json:"controllerServices,omitempty"`
+}
+
+// NewFlowSnippetDTO instantiates a new FlowSnippetDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewFlowSnippetDTO() *FlowSnippetDTO {
+	this := FlowSnippetDTO{}
+	return &this
+}
+
+// NewFlowSnippetDTOWithDefaults instantiates a new FlowSnippetDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewFlowSnippetDTOWithDefaults() *FlowSnippetDTO {
+	this := FlowSnippetDTO{}
+	return &this
+}
+
+// GetProcessGroups returns the ProcessGroups field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetProcessGroups() []ProcessGroupDTO {
+	if o == nil || o.ProcessGroups == nil {
+		var ret []ProcessGroupDTO
+		return ret
+	}
+	return *o.ProcessGroups
+}
+
+// GetProcessGroupsOk returns a tuple with the ProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetProcessGroupsOk() (*[]ProcessGroupDTO, bool) {
+	if o == nil || o.ProcessGroups == nil {
+		return nil, false
+	}
+	return o.ProcessGroups, true
+}
+
+// HasProcessGroups returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasProcessGroups() bool {
+	if o != nil && o.ProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroups gets a reference to the given []ProcessGroupDTO and assigns it to the ProcessGroups field.
+func (o *FlowSnippetDTO) SetProcessGroups(v []ProcessGroupDTO) {
+	o.ProcessGroups = &v
+}
+
+// GetRemoteProcessGroups returns the RemoteProcessGroups field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetRemoteProcessGroups() []RemoteProcessGroupDTO {
+	if o == nil || o.RemoteProcessGroups == nil {
+		var ret []RemoteProcessGroupDTO
+		return ret
+	}
+	return *o.RemoteProcessGroups
+}
+
+// GetRemoteProcessGroupsOk returns a tuple with the RemoteProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetRemoteProcessGroupsOk() (*[]RemoteProcessGroupDTO, bool) {
+	if o == nil || o.RemoteProcessGroups == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroups, true
+}
+
+// HasRemoteProcessGroups returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasRemoteProcessGroups() bool {
+	if o != nil && o.RemoteProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroups gets a reference to the given []RemoteProcessGroupDTO and assigns it to the RemoteProcessGroups field.
+func (o *FlowSnippetDTO) SetRemoteProcessGroups(v []RemoteProcessGroupDTO) {
+	o.RemoteProcessGroups = &v
+}
+
+// GetProcessors returns the Processors field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetProcessors() []ProcessorDTO {
+	if o == nil || o.Processors == nil {
+		var ret []ProcessorDTO
+		return ret
+	}
+	return *o.Processors
+}
+
+// GetProcessorsOk returns a tuple with the Processors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetProcessorsOk() (*[]ProcessorDTO, bool) {
+	if o == nil || o.Processors == nil {
+		return nil, false
+	}
+	return o.Processors, true
+}
+
+// HasProcessors returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasProcessors() bool {
+	if o != nil && o.Processors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessors gets a reference to the given []ProcessorDTO and assigns it to the Processors field.
+func (o *FlowSnippetDTO) SetProcessors(v []ProcessorDTO) {
+	o.Processors = &v
+}
+
+// GetInputPorts returns the InputPorts field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetInputPorts() []PortDTO {
+	if o == nil || o.InputPorts == nil {
+		var ret []PortDTO
+		return ret
+	}
+	return *o.InputPorts
+}
+
+// GetInputPortsOk returns a tuple with the InputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetInputPortsOk() (*[]PortDTO, bool) {
+	if o == nil || o.InputPorts == nil {
+		return nil, false
+	}
+	return o.InputPorts, true
+}
+
+// HasInputPorts returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasInputPorts() bool {
+	if o != nil && o.InputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPorts gets a reference to the given []PortDTO and assigns it to the InputPorts field.
+func (o *FlowSnippetDTO) SetInputPorts(v []PortDTO) {
+	o.InputPorts = &v
+}
+
+// GetOutputPorts returns the OutputPorts field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetOutputPorts() []PortDTO {
+	if o == nil || o.OutputPorts == nil {
+		var ret []PortDTO
+		return ret
+	}
+	return *o.OutputPorts
+}
+
+// GetOutputPortsOk returns a tuple with the OutputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetOutputPortsOk() (*[]PortDTO, bool) {
+	if o == nil || o.OutputPorts == nil {
+		return nil, false
+	}
+	return o.OutputPorts, true
+}
+
+// HasOutputPorts returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasOutputPorts() bool {
+	if o != nil && o.OutputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPorts gets a reference to the given []PortDTO and assigns it to the OutputPorts field.
+func (o *FlowSnippetDTO) SetOutputPorts(v []PortDTO) {
+	o.OutputPorts = &v
+}
+
+// GetConnections returns the Connections field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetConnections() []ConnectionDTO {
+	if o == nil || o.Connections == nil {
+		var ret []ConnectionDTO
+		return ret
+	}
+	return *o.Connections
+}
+
+// GetConnectionsOk returns a tuple with the Connections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetConnectionsOk() (*[]ConnectionDTO, bool) {
+	if o == nil || o.Connections == nil {
+		return nil, false
+	}
+	return o.Connections, true
+}
+
+// HasConnections returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasConnections() bool {
+	if o != nil && o.Connections != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnections gets a reference to the given []ConnectionDTO and assigns it to the Connections field.
+func (o *FlowSnippetDTO) SetConnections(v []ConnectionDTO) {
+	o.Connections = &v
+}
+
+// GetLabels returns the Labels field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetLabels() []LabelDTO {
+	if o == nil || o.Labels == nil {
+		var ret []LabelDTO
+		return ret
+	}
+	return *o.Labels
+}
+
+// GetLabelsOk returns a tuple with the Labels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetLabelsOk() (*[]LabelDTO, bool) {
+	if o == nil || o.Labels == nil {
+		return nil, false
+	}
+	return o.Labels, true
+}
+
+// HasLabels returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasLabels() bool {
+	if o != nil && o.Labels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabels gets a reference to the given []LabelDTO and assigns it to the Labels field.
+func (o *FlowSnippetDTO) SetLabels(v []LabelDTO) {
+	o.Labels = &v
+}
+
+// GetFunnels returns the Funnels field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetFunnels() []FunnelDTO {
+	if o == nil || o.Funnels == nil {
+		var ret []FunnelDTO
+		return ret
+	}
+	return *o.Funnels
+}
+
+// GetFunnelsOk returns a tuple with the Funnels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetFunnelsOk() (*[]FunnelDTO, bool) {
+	if o == nil || o.Funnels == nil {
+		return nil, false
+	}
+	return o.Funnels, true
+}
+
+// HasFunnels returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasFunnels() bool {
+	if o != nil && o.Funnels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFunnels gets a reference to the given []FunnelDTO and assigns it to the Funnels field.
+func (o *FlowSnippetDTO) SetFunnels(v []FunnelDTO) {
+	o.Funnels = &v
+}
+
+// GetControllerServices returns the ControllerServices field value if set, zero value otherwise.
+func (o *FlowSnippetDTO) GetControllerServices() []ControllerServiceDTO {
+	if o == nil || o.ControllerServices == nil {
+		var ret []ControllerServiceDTO
+		return ret
+	}
+	return *o.ControllerServices
+}
+
+// GetControllerServicesOk returns a tuple with the ControllerServices field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowSnippetDTO) GetControllerServicesOk() (*[]ControllerServiceDTO, bool) {
+	if o == nil || o.ControllerServices == nil {
+		return nil, false
+	}
+	return o.ControllerServices, true
+}
+
+// HasControllerServices returns a boolean if a field has been set.
+func (o *FlowSnippetDTO) HasControllerServices() bool {
+	if o != nil && o.ControllerServices != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServices gets a reference to the given []ControllerServiceDTO and assigns it to the ControllerServices field.
+func (o *FlowSnippetDTO) SetControllerServices(v []ControllerServiceDTO) {
+	o.ControllerServices = &v
+}
+
+func (o FlowSnippetDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroups != nil {
+		toSerialize["processGroups"] = o.ProcessGroups
+	}
+	if o.RemoteProcessGroups != nil {
+		toSerialize["remoteProcessGroups"] = o.RemoteProcessGroups
+	}
+	if o.Processors != nil {
+		toSerialize["processors"] = o.Processors
+	}
+	if o.InputPorts != nil {
+		toSerialize["inputPorts"] = o.InputPorts
+	}
+	if o.OutputPorts != nil {
+		toSerialize["outputPorts"] = o.OutputPorts
+	}
+	if o.Connections != nil {
+		toSerialize["connections"] = o.Connections
+	}
+	if o.Labels != nil {
+		toSerialize["labels"] = o.Labels
+	}
+	if o.Funnels != nil {
+		toSerialize["funnels"] = o.Funnels
+	}
+	if o.ControllerServices != nil {
+		toSerialize["controllerServices"] = o.ControllerServices
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableFlowSnippetDTO struct {
+	value *FlowSnippetDTO
+	isSet bool
+}
+
+func (v NullableFlowSnippetDTO) Get() *FlowSnippetDTO {
+	return v.value
+}
+
+func (v *NullableFlowSnippetDTO) Set(val *FlowSnippetDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableFlowSnippetDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableFlowSnippetDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableFlowSnippetDTO(val *FlowSnippetDTO) *NullableFlowSnippetDTO {
+	return &NullableFlowSnippetDTO{value: val, isSet: true}
+}
+
+func (v NullableFlowSnippetDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableFlowSnippetDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,20 +11,327 @@
 
 package nifi
 
-// AffectedComponentDto struct for AffectedComponentDto
-type AffectedComponentDto struct {
+import (
+	"encoding/json"
+)
+
+// AffectedComponentDTO struct for AffectedComponentDTO
+type AffectedComponentDTO struct {
 	// The UUID of the Process Group that this component is in
-	ProcessGroupId string `json:"processGroupId,omitempty"`
+	ProcessGroupId *string `json:"processGroupId,omitempty"`
 	// The UUID of this component
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The type of this component
-	ReferenceType string `json:"referenceType,omitempty"`
+	ReferenceType *string `json:"referenceType,omitempty"`
 	// The name of this component.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The scheduled state of a processor or reporting task referencing a controller service. If this component is another controller service, this field represents the controller service state.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// The number of active threads for the referencing component.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// The validation errors for the component.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
+}
+
+// NewAffectedComponentDTO instantiates a new AffectedComponentDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAffectedComponentDTO() *AffectedComponentDTO {
+	this := AffectedComponentDTO{}
+	return &this
+}
+
+// NewAffectedComponentDTOWithDefaults instantiates a new AffectedComponentDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAffectedComponentDTOWithDefaults() *AffectedComponentDTO {
+	this := AffectedComponentDTO{}
+	return &this
+}
+
+// GetProcessGroupId returns the ProcessGroupId field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetProcessGroupId() string {
+	if o == nil || o.ProcessGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProcessGroupId
+}
+
+// GetProcessGroupIdOk returns a tuple with the ProcessGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetProcessGroupIdOk() (*string, bool) {
+	if o == nil || o.ProcessGroupId == nil {
+		return nil, false
+	}
+	return o.ProcessGroupId, true
+}
+
+// HasProcessGroupId returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasProcessGroupId() bool {
+	if o != nil && o.ProcessGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupId gets a reference to the given string and assigns it to the ProcessGroupId field.
+func (o *AffectedComponentDTO) SetProcessGroupId(v string) {
+	o.ProcessGroupId = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *AffectedComponentDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetReferenceType returns the ReferenceType field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetReferenceType() string {
+	if o == nil || o.ReferenceType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ReferenceType
+}
+
+// GetReferenceTypeOk returns a tuple with the ReferenceType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetReferenceTypeOk() (*string, bool) {
+	if o == nil || o.ReferenceType == nil {
+		return nil, false
+	}
+	return o.ReferenceType, true
+}
+
+// HasReferenceType returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasReferenceType() bool {
+	if o != nil && o.ReferenceType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferenceType gets a reference to the given string and assigns it to the ReferenceType field.
+func (o *AffectedComponentDTO) SetReferenceType(v string) {
+	o.ReferenceType = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *AffectedComponentDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *AffectedComponentDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *AffectedComponentDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *AffectedComponentDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AffectedComponentDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *AffectedComponentDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *AffectedComponentDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+func (o AffectedComponentDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupId != nil {
+		toSerialize["processGroupId"] = o.ProcessGroupId
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.ReferenceType != nil {
+		toSerialize["referenceType"] = o.ReferenceType
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAffectedComponentDTO struct {
+	value *AffectedComponentDTO
+	isSet bool
+}
+
+func (v NullableAffectedComponentDTO) Get() *AffectedComponentDTO {
+	return v.value
+}
+
+func (v *NullableAffectedComponentDTO) Set(val *AffectedComponentDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAffectedComponentDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAffectedComponentDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAffectedComponentDTO(val *AffectedComponentDTO) *NullableAffectedComponentDTO {
+	return &NullableAffectedComponentDTO{value: val, isSet: true}
+}
+
+func (v NullableAffectedComponentDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAffectedComponentDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

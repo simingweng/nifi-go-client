@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessGroupsEntity struct for ProcessGroupsEntity
 type ProcessGroupsEntity struct {
-	ProcessGroups []ProcessGroupEntity `json:"processGroups,omitempty"`
+	ProcessGroups *[]ProcessGroupEntity `json:"processGroups,omitempty"`
+}
+
+// NewProcessGroupsEntity instantiates a new ProcessGroupsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupsEntity() *ProcessGroupsEntity {
+	this := ProcessGroupsEntity{}
+	return &this
+}
+
+// NewProcessGroupsEntityWithDefaults instantiates a new ProcessGroupsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupsEntityWithDefaults() *ProcessGroupsEntity {
+	this := ProcessGroupsEntity{}
+	return &this
+}
+
+// GetProcessGroups returns the ProcessGroups field value if set, zero value otherwise.
+func (o *ProcessGroupsEntity) GetProcessGroups() []ProcessGroupEntity {
+	if o == nil || o.ProcessGroups == nil {
+		var ret []ProcessGroupEntity
+		return ret
+	}
+	return *o.ProcessGroups
+}
+
+// GetProcessGroupsOk returns a tuple with the ProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupsEntity) GetProcessGroupsOk() (*[]ProcessGroupEntity, bool) {
+	if o == nil || o.ProcessGroups == nil {
+		return nil, false
+	}
+	return o.ProcessGroups, true
+}
+
+// HasProcessGroups returns a boolean if a field has been set.
+func (o *ProcessGroupsEntity) HasProcessGroups() bool {
+	if o != nil && o.ProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroups gets a reference to the given []ProcessGroupEntity and assigns it to the ProcessGroups field.
+func (o *ProcessGroupsEntity) SetProcessGroups(v []ProcessGroupEntity) {
+	o.ProcessGroups = &v
+}
+
+func (o ProcessGroupsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroups != nil {
+		toSerialize["processGroups"] = o.ProcessGroups
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupsEntity struct {
+	value *ProcessGroupsEntity
+	isSet bool
+}
+
+func (v NullableProcessGroupsEntity) Get() *ProcessGroupsEntity {
+	return v.value
+}
+
+func (v *NullableProcessGroupsEntity) Set(val *ProcessGroupsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupsEntity(val *ProcessGroupsEntity) *NullableProcessGroupsEntity {
+	return &NullableProcessGroupsEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

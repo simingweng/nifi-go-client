@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // DropRequestEntity struct for DropRequestEntity
 type DropRequestEntity struct {
-	DropRequest DropRequestDto `json:"dropRequest,omitempty"`
+	DropRequest *DropRequestDTO `json:"dropRequest,omitempty"`
+}
+
+// NewDropRequestEntity instantiates a new DropRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewDropRequestEntity() *DropRequestEntity {
+	this := DropRequestEntity{}
+	return &this
+}
+
+// NewDropRequestEntityWithDefaults instantiates a new DropRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewDropRequestEntityWithDefaults() *DropRequestEntity {
+	this := DropRequestEntity{}
+	return &this
+}
+
+// GetDropRequest returns the DropRequest field value if set, zero value otherwise.
+func (o *DropRequestEntity) GetDropRequest() DropRequestDTO {
+	if o == nil || o.DropRequest == nil {
+		var ret DropRequestDTO
+		return ret
+	}
+	return *o.DropRequest
+}
+
+// GetDropRequestOk returns a tuple with the DropRequest field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DropRequestEntity) GetDropRequestOk() (*DropRequestDTO, bool) {
+	if o == nil || o.DropRequest == nil {
+		return nil, false
+	}
+	return o.DropRequest, true
+}
+
+// HasDropRequest returns a boolean if a field has been set.
+func (o *DropRequestEntity) HasDropRequest() bool {
+	if o != nil && o.DropRequest != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDropRequest gets a reference to the given DropRequestDTO and assigns it to the DropRequest field.
+func (o *DropRequestEntity) SetDropRequest(v DropRequestDTO) {
+	o.DropRequest = &v
+}
+
+func (o DropRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.DropRequest != nil {
+		toSerialize["dropRequest"] = o.DropRequest
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableDropRequestEntity struct {
+	value *DropRequestEntity
+	isSet bool
+}
+
+func (v NullableDropRequestEntity) Get() *DropRequestEntity {
+	return v.value
+}
+
+func (v *NullableDropRequestEntity) Set(val *DropRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableDropRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableDropRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableDropRequestEntity(val *DropRequestEntity) *NullableDropRequestEntity {
+	return &NullableDropRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableDropRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableDropRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

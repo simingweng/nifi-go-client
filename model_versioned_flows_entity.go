@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedFlowsEntity struct for VersionedFlowsEntity
 type VersionedFlowsEntity struct {
-	VersionedFlows []VersionedFlowEntity `json:"versionedFlows,omitempty"`
+	VersionedFlows *[]VersionedFlowEntity `json:"versionedFlows,omitempty"`
+}
+
+// NewVersionedFlowsEntity instantiates a new VersionedFlowsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedFlowsEntity() *VersionedFlowsEntity {
+	this := VersionedFlowsEntity{}
+	return &this
+}
+
+// NewVersionedFlowsEntityWithDefaults instantiates a new VersionedFlowsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedFlowsEntityWithDefaults() *VersionedFlowsEntity {
+	this := VersionedFlowsEntity{}
+	return &this
+}
+
+// GetVersionedFlows returns the VersionedFlows field value if set, zero value otherwise.
+func (o *VersionedFlowsEntity) GetVersionedFlows() []VersionedFlowEntity {
+	if o == nil || o.VersionedFlows == nil {
+		var ret []VersionedFlowEntity
+		return ret
+	}
+	return *o.VersionedFlows
+}
+
+// GetVersionedFlowsOk returns a tuple with the VersionedFlows field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowsEntity) GetVersionedFlowsOk() (*[]VersionedFlowEntity, bool) {
+	if o == nil || o.VersionedFlows == nil {
+		return nil, false
+	}
+	return o.VersionedFlows, true
+}
+
+// HasVersionedFlows returns a boolean if a field has been set.
+func (o *VersionedFlowsEntity) HasVersionedFlows() bool {
+	if o != nil && o.VersionedFlows != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlows gets a reference to the given []VersionedFlowEntity and assigns it to the VersionedFlows field.
+func (o *VersionedFlowsEntity) SetVersionedFlows(v []VersionedFlowEntity) {
+	o.VersionedFlows = &v
+}
+
+func (o VersionedFlowsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.VersionedFlows != nil {
+		toSerialize["versionedFlows"] = o.VersionedFlows
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedFlowsEntity struct {
+	value *VersionedFlowsEntity
+	isSet bool
+}
+
+func (v NullableVersionedFlowsEntity) Get() *VersionedFlowsEntity {
+	return v.value
+}
+
+func (v *NullableVersionedFlowsEntity) Set(val *VersionedFlowsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedFlowsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedFlowsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedFlowsEntity(val *VersionedFlowsEntity) *NullableVersionedFlowsEntity {
+	return &NullableVersionedFlowsEntity{value: val, isSet: true}
+}
+
+func (v NullableVersionedFlowsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedFlowsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

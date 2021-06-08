@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ConnectionStatisticsEntity struct for ConnectionStatisticsEntity
 type ConnectionStatisticsEntity struct {
-	ConnectionStatistics ConnectionStatisticsDto `json:"connectionStatistics,omitempty"`
+	ConnectionStatistics *ConnectionStatisticsDTO `json:"connectionStatistics,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewConnectionStatisticsEntity instantiates a new ConnectionStatisticsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewConnectionStatisticsEntity() *ConnectionStatisticsEntity {
+	this := ConnectionStatisticsEntity{}
+	return &this
+}
+
+// NewConnectionStatisticsEntityWithDefaults instantiates a new ConnectionStatisticsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewConnectionStatisticsEntityWithDefaults() *ConnectionStatisticsEntity {
+	this := ConnectionStatisticsEntity{}
+	return &this
+}
+
+// GetConnectionStatistics returns the ConnectionStatistics field value if set, zero value otherwise.
+func (o *ConnectionStatisticsEntity) GetConnectionStatistics() ConnectionStatisticsDTO {
+	if o == nil || o.ConnectionStatistics == nil {
+		var ret ConnectionStatisticsDTO
+		return ret
+	}
+	return *o.ConnectionStatistics
+}
+
+// GetConnectionStatisticsOk returns a tuple with the ConnectionStatistics field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsEntity) GetConnectionStatisticsOk() (*ConnectionStatisticsDTO, bool) {
+	if o == nil || o.ConnectionStatistics == nil {
+		return nil, false
+	}
+	return o.ConnectionStatistics, true
+}
+
+// HasConnectionStatistics returns a boolean if a field has been set.
+func (o *ConnectionStatisticsEntity) HasConnectionStatistics() bool {
+	if o != nil && o.ConnectionStatistics != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectionStatistics gets a reference to the given ConnectionStatisticsDTO and assigns it to the ConnectionStatistics field.
+func (o *ConnectionStatisticsEntity) SetConnectionStatistics(v ConnectionStatisticsDTO) {
+	o.ConnectionStatistics = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *ConnectionStatisticsEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *ConnectionStatisticsEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *ConnectionStatisticsEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o ConnectionStatisticsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ConnectionStatistics != nil {
+		toSerialize["connectionStatistics"] = o.ConnectionStatistics
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableConnectionStatisticsEntity struct {
+	value *ConnectionStatisticsEntity
+	isSet bool
+}
+
+func (v NullableConnectionStatisticsEntity) Get() *ConnectionStatisticsEntity {
+	return v.value
+}
+
+func (v *NullableConnectionStatisticsEntity) Set(val *ConnectionStatisticsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableConnectionStatisticsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableConnectionStatisticsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableConnectionStatisticsEntity(val *ConnectionStatisticsEntity) *NullableConnectionStatisticsEntity {
+	return &NullableConnectionStatisticsEntity{value: val, isSet: true}
+}
+
+func (v NullableConnectionStatisticsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableConnectionStatisticsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

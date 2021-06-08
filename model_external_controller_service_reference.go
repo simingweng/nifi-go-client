@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ExternalControllerServiceReference struct for ExternalControllerServiceReference
 type ExternalControllerServiceReference struct {
 	// The identifier of the controller service
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The name of the controller service
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// NewExternalControllerServiceReference instantiates a new ExternalControllerServiceReference object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewExternalControllerServiceReference() *ExternalControllerServiceReference {
+	this := ExternalControllerServiceReference{}
+	return &this
+}
+
+// NewExternalControllerServiceReferenceWithDefaults instantiates a new ExternalControllerServiceReference object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewExternalControllerServiceReferenceWithDefaults() *ExternalControllerServiceReference {
+	this := ExternalControllerServiceReference{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *ExternalControllerServiceReference) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExternalControllerServiceReference) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *ExternalControllerServiceReference) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *ExternalControllerServiceReference) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ExternalControllerServiceReference) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExternalControllerServiceReference) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ExternalControllerServiceReference) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ExternalControllerServiceReference) SetName(v string) {
+	o.Name = &v
+}
+
+func (o ExternalControllerServiceReference) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableExternalControllerServiceReference struct {
+	value *ExternalControllerServiceReference
+	isSet bool
+}
+
+func (v NullableExternalControllerServiceReference) Get() *ExternalControllerServiceReference {
+	return v.value
+}
+
+func (v *NullableExternalControllerServiceReference) Set(val *ExternalControllerServiceReference) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableExternalControllerServiceReference) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableExternalControllerServiceReference) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableExternalControllerServiceReference(val *ExternalControllerServiceReference) *NullableExternalControllerServiceReference {
+	return &NullableExternalControllerServiceReference{value: val, isSet: true}
+}
+
+func (v NullableExternalControllerServiceReference) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableExternalControllerServiceReference) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

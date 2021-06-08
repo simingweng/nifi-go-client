@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessGroupStatusEntity struct for ProcessGroupStatusEntity
 type ProcessGroupStatusEntity struct {
-	ProcessGroupStatus ProcessGroupStatusDto `json:"processGroupStatus,omitempty"`
+	ProcessGroupStatus *ProcessGroupStatusDTO `json:"processGroupStatus,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewProcessGroupStatusEntity instantiates a new ProcessGroupStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupStatusEntity() *ProcessGroupStatusEntity {
+	this := ProcessGroupStatusEntity{}
+	return &this
+}
+
+// NewProcessGroupStatusEntityWithDefaults instantiates a new ProcessGroupStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupStatusEntityWithDefaults() *ProcessGroupStatusEntity {
+	this := ProcessGroupStatusEntity{}
+	return &this
+}
+
+// GetProcessGroupStatus returns the ProcessGroupStatus field value if set, zero value otherwise.
+func (o *ProcessGroupStatusEntity) GetProcessGroupStatus() ProcessGroupStatusDTO {
+	if o == nil || o.ProcessGroupStatus == nil {
+		var ret ProcessGroupStatusDTO
+		return ret
+	}
+	return *o.ProcessGroupStatus
+}
+
+// GetProcessGroupStatusOk returns a tuple with the ProcessGroupStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusEntity) GetProcessGroupStatusOk() (*ProcessGroupStatusDTO, bool) {
+	if o == nil || o.ProcessGroupStatus == nil {
+		return nil, false
+	}
+	return o.ProcessGroupStatus, true
+}
+
+// HasProcessGroupStatus returns a boolean if a field has been set.
+func (o *ProcessGroupStatusEntity) HasProcessGroupStatus() bool {
+	if o != nil && o.ProcessGroupStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupStatus gets a reference to the given ProcessGroupStatusDTO and assigns it to the ProcessGroupStatus field.
+func (o *ProcessGroupStatusEntity) SetProcessGroupStatus(v ProcessGroupStatusDTO) {
+	o.ProcessGroupStatus = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *ProcessGroupStatusEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupStatusEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *ProcessGroupStatusEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *ProcessGroupStatusEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o ProcessGroupStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupStatus != nil {
+		toSerialize["processGroupStatus"] = o.ProcessGroupStatus
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupStatusEntity struct {
+	value *ProcessGroupStatusEntity
+	isSet bool
+}
+
+func (v NullableProcessGroupStatusEntity) Get() *ProcessGroupStatusEntity {
+	return v.value
+}
+
+func (v *NullableProcessGroupStatusEntity) Set(val *ProcessGroupStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupStatusEntity(val *ProcessGroupStatusEntity) *NullableProcessGroupStatusEntity {
+	return &NullableProcessGroupStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

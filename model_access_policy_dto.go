@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,436 @@
 
 package nifi
 
-// AccessPolicyDto struct for AccessPolicyDto
-type AccessPolicyDto struct {
+import (
+	"encoding/json"
+)
+
+// AccessPolicyDTO struct for AccessPolicyDTO
+type AccessPolicyDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The resource for this access policy.
-	Resource string `json:"resource,omitempty"`
+	Resource *string `json:"resource,omitempty"`
 	// The action associated with this access policy.
-	Action             string                   `json:"action,omitempty"`
-	ComponentReference ComponentReferenceEntity `json:"componentReference,omitempty"`
+	Action             *string                   `json:"action,omitempty"`
+	ComponentReference *ComponentReferenceEntity `json:"componentReference,omitempty"`
 	// Whether this policy is configurable.
-	Configurable bool `json:"configurable,omitempty"`
+	Configurable *bool `json:"configurable,omitempty"`
 	// The set of user IDs associated with this access policy.
-	Users []TenantEntity `json:"users,omitempty"`
+	Users *[]TenantEntity `json:"users,omitempty"`
 	// The set of user group IDs associated with this access policy.
-	UserGroups []TenantEntity `json:"userGroups,omitempty"`
+	UserGroups *[]TenantEntity `json:"userGroups,omitempty"`
+}
+
+// NewAccessPolicyDTO instantiates a new AccessPolicyDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAccessPolicyDTO() *AccessPolicyDTO {
+	this := AccessPolicyDTO{}
+	return &this
+}
+
+// NewAccessPolicyDTOWithDefaults instantiates a new AccessPolicyDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAccessPolicyDTOWithDefaults() *AccessPolicyDTO {
+	this := AccessPolicyDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *AccessPolicyDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *AccessPolicyDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *AccessPolicyDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *AccessPolicyDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetResource returns the Resource field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetResource() string {
+	if o == nil || o.Resource == nil {
+		var ret string
+		return ret
+	}
+	return *o.Resource
+}
+
+// GetResourceOk returns a tuple with the Resource field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetResourceOk() (*string, bool) {
+	if o == nil || o.Resource == nil {
+		return nil, false
+	}
+	return o.Resource, true
+}
+
+// HasResource returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasResource() bool {
+	if o != nil && o.Resource != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetResource gets a reference to the given string and assigns it to the Resource field.
+func (o *AccessPolicyDTO) SetResource(v string) {
+	o.Resource = &v
+}
+
+// GetAction returns the Action field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetAction() string {
+	if o == nil || o.Action == nil {
+		var ret string
+		return ret
+	}
+	return *o.Action
+}
+
+// GetActionOk returns a tuple with the Action field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetActionOk() (*string, bool) {
+	if o == nil || o.Action == nil {
+		return nil, false
+	}
+	return o.Action, true
+}
+
+// HasAction returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasAction() bool {
+	if o != nil && o.Action != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAction gets a reference to the given string and assigns it to the Action field.
+func (o *AccessPolicyDTO) SetAction(v string) {
+	o.Action = &v
+}
+
+// GetComponentReference returns the ComponentReference field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetComponentReference() ComponentReferenceEntity {
+	if o == nil || o.ComponentReference == nil {
+		var ret ComponentReferenceEntity
+		return ret
+	}
+	return *o.ComponentReference
+}
+
+// GetComponentReferenceOk returns a tuple with the ComponentReference field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetComponentReferenceOk() (*ComponentReferenceEntity, bool) {
+	if o == nil || o.ComponentReference == nil {
+		return nil, false
+	}
+	return o.ComponentReference, true
+}
+
+// HasComponentReference returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasComponentReference() bool {
+	if o != nil && o.ComponentReference != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentReference gets a reference to the given ComponentReferenceEntity and assigns it to the ComponentReference field.
+func (o *AccessPolicyDTO) SetComponentReference(v ComponentReferenceEntity) {
+	o.ComponentReference = &v
+}
+
+// GetConfigurable returns the Configurable field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetConfigurable() bool {
+	if o == nil || o.Configurable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Configurable
+}
+
+// GetConfigurableOk returns a tuple with the Configurable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetConfigurableOk() (*bool, bool) {
+	if o == nil || o.Configurable == nil {
+		return nil, false
+	}
+	return o.Configurable, true
+}
+
+// HasConfigurable returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasConfigurable() bool {
+	if o != nil && o.Configurable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConfigurable gets a reference to the given bool and assigns it to the Configurable field.
+func (o *AccessPolicyDTO) SetConfigurable(v bool) {
+	o.Configurable = &v
+}
+
+// GetUsers returns the Users field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetUsers() []TenantEntity {
+	if o == nil || o.Users == nil {
+		var ret []TenantEntity
+		return ret
+	}
+	return *o.Users
+}
+
+// GetUsersOk returns a tuple with the Users field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetUsersOk() (*[]TenantEntity, bool) {
+	if o == nil || o.Users == nil {
+		return nil, false
+	}
+	return o.Users, true
+}
+
+// HasUsers returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasUsers() bool {
+	if o != nil && o.Users != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUsers gets a reference to the given []TenantEntity and assigns it to the Users field.
+func (o *AccessPolicyDTO) SetUsers(v []TenantEntity) {
+	o.Users = &v
+}
+
+// GetUserGroups returns the UserGroups field value if set, zero value otherwise.
+func (o *AccessPolicyDTO) GetUserGroups() []TenantEntity {
+	if o == nil || o.UserGroups == nil {
+		var ret []TenantEntity
+		return ret
+	}
+	return *o.UserGroups
+}
+
+// GetUserGroupsOk returns a tuple with the UserGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyDTO) GetUserGroupsOk() (*[]TenantEntity, bool) {
+	if o == nil || o.UserGroups == nil {
+		return nil, false
+	}
+	return o.UserGroups, true
+}
+
+// HasUserGroups returns a boolean if a field has been set.
+func (o *AccessPolicyDTO) HasUserGroups() bool {
+	if o != nil && o.UserGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUserGroups gets a reference to the given []TenantEntity and assigns it to the UserGroups field.
+func (o *AccessPolicyDTO) SetUserGroups(v []TenantEntity) {
+	o.UserGroups = &v
+}
+
+func (o AccessPolicyDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Resource != nil {
+		toSerialize["resource"] = o.Resource
+	}
+	if o.Action != nil {
+		toSerialize["action"] = o.Action
+	}
+	if o.ComponentReference != nil {
+		toSerialize["componentReference"] = o.ComponentReference
+	}
+	if o.Configurable != nil {
+		toSerialize["configurable"] = o.Configurable
+	}
+	if o.Users != nil {
+		toSerialize["users"] = o.Users
+	}
+	if o.UserGroups != nil {
+		toSerialize["userGroups"] = o.UserGroups
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAccessPolicyDTO struct {
+	value *AccessPolicyDTO
+	isSet bool
+}
+
+func (v NullableAccessPolicyDTO) Get() *AccessPolicyDTO {
+	return v.value
+}
+
+func (v *NullableAccessPolicyDTO) Set(val *AccessPolicyDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAccessPolicyDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAccessPolicyDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAccessPolicyDTO(val *AccessPolicyDTO) *NullableAccessPolicyDTO {
+	return &NullableAccessPolicyDTO{value: val, isSet: true}
+}
+
+func (v NullableAccessPolicyDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAccessPolicyDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

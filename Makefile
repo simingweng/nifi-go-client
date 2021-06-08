@@ -1,4 +1,4 @@
-NIFI_VERSION ?= 1.11.4
+NIFI_VERSION ?= 1.13.2
 
 all: generate fmt vet
 
@@ -11,7 +11,7 @@ vet:
 	go vet ./...
 
 generate:
-	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v4.3.1 \
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.1.1 \
 	generate \
 	-i /local/api/swagger.json \
 	-g go \

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// ClusterDto struct for ClusterDto
-type ClusterDto struct {
+import (
+	"encoding/json"
+)
+
+// ClusterDTO struct for ClusterDTO
+type ClusterDTO struct {
 	// The collection of nodes that are part of the cluster.
-	Nodes []NodeDto `json:"nodes,omitempty"`
+	Nodes *[]NodeDTO `json:"nodes,omitempty"`
 	// The timestamp the report was generated.
-	Generated string `json:"generated,omitempty"`
+	Generated *string `json:"generated,omitempty"`
+}
+
+// NewClusterDTO instantiates a new ClusterDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewClusterDTO() *ClusterDTO {
+	this := ClusterDTO{}
+	return &this
+}
+
+// NewClusterDTOWithDefaults instantiates a new ClusterDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewClusterDTOWithDefaults() *ClusterDTO {
+	this := ClusterDTO{}
+	return &this
+}
+
+// GetNodes returns the Nodes field value if set, zero value otherwise.
+func (o *ClusterDTO) GetNodes() []NodeDTO {
+	if o == nil || o.Nodes == nil {
+		var ret []NodeDTO
+		return ret
+	}
+	return *o.Nodes
+}
+
+// GetNodesOk returns a tuple with the Nodes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterDTO) GetNodesOk() (*[]NodeDTO, bool) {
+	if o == nil || o.Nodes == nil {
+		return nil, false
+	}
+	return o.Nodes, true
+}
+
+// HasNodes returns a boolean if a field has been set.
+func (o *ClusterDTO) HasNodes() bool {
+	if o != nil && o.Nodes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodes gets a reference to the given []NodeDTO and assigns it to the Nodes field.
+func (o *ClusterDTO) SetNodes(v []NodeDTO) {
+	o.Nodes = &v
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *ClusterDTO) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ClusterDTO) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *ClusterDTO) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *ClusterDTO) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+func (o ClusterDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Nodes != nil {
+		toSerialize["nodes"] = o.Nodes
+	}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableClusterDTO struct {
+	value *ClusterDTO
+	isSet bool
+}
+
+func (v NullableClusterDTO) Get() *ClusterDTO {
+	return v.value
+}
+
+func (v *NullableClusterDTO) Set(val *ClusterDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableClusterDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableClusterDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableClusterDTO(val *ClusterDTO) *NullableClusterDTO {
+	return &NullableClusterDTO{value: val, isSet: true}
+}
+
+func (v NullableClusterDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableClusterDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

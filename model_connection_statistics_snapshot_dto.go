@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,22 +11,364 @@
 
 package nifi
 
-// ConnectionStatisticsSnapshotDto struct for ConnectionStatisticsSnapshotDto
-type ConnectionStatisticsSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// ConnectionStatisticsSnapshotDTO struct for ConnectionStatisticsSnapshotDTO
+type ConnectionStatisticsSnapshotDTO struct {
 	// The id of the connection.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The predicted number of milliseconds before the connection will have backpressure applied, based on the queued count.
-	PredictedMillisUntilCountBackpressure int64 `json:"predictedMillisUntilCountBackpressure,omitempty"`
+	PredictedMillisUntilCountBackpressure *int64 `json:"predictedMillisUntilCountBackpressure,omitempty"`
 	// The predicted number of milliseconds before the connection will have backpressure applied, based on the total number of bytes in the queue.
-	PredictedMillisUntilBytesBackpressure int64 `json:"predictedMillisUntilBytesBackpressure,omitempty"`
+	PredictedMillisUntilBytesBackpressure *int64 `json:"predictedMillisUntilBytesBackpressure,omitempty"`
 	// The predicted number of queued objects at the next configured interval.
-	PredictedCountAtNextInterval int32 `json:"predictedCountAtNextInterval,omitempty"`
+	PredictedCountAtNextInterval *int32 `json:"predictedCountAtNextInterval,omitempty"`
 	// The predicted total number of bytes in the queue at the next configured interval.
-	PredictedBytesAtNextInterval int64 `json:"predictedBytesAtNextInterval,omitempty"`
+	PredictedBytesAtNextInterval *int64 `json:"predictedBytesAtNextInterval,omitempty"`
 	// The predicted percentage of queued objects at the next configured interval.
-	PredictedPercentCount int32 `json:"predictedPercentCount,omitempty"`
+	PredictedPercentCount *int32 `json:"predictedPercentCount,omitempty"`
 	// The predicted percentage of bytes in the queue against current threshold at the next configured interval.
-	PredictedPercentBytes int32 `json:"predictedPercentBytes,omitempty"`
+	PredictedPercentBytes *int32 `json:"predictedPercentBytes,omitempty"`
 	// The prediction interval in seconds
-	PredictionIntervalMillis int64 `json:"predictionIntervalMillis,omitempty"`
+	PredictionIntervalMillis *int64 `json:"predictionIntervalMillis,omitempty"`
+}
+
+// NewConnectionStatisticsSnapshotDTO instantiates a new ConnectionStatisticsSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewConnectionStatisticsSnapshotDTO() *ConnectionStatisticsSnapshotDTO {
+	this := ConnectionStatisticsSnapshotDTO{}
+	return &this
+}
+
+// NewConnectionStatisticsSnapshotDTOWithDefaults instantiates a new ConnectionStatisticsSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewConnectionStatisticsSnapshotDTOWithDefaults() *ConnectionStatisticsSnapshotDTO {
+	this := ConnectionStatisticsSnapshotDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ConnectionStatisticsSnapshotDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetPredictedMillisUntilCountBackpressure returns the PredictedMillisUntilCountBackpressure field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedMillisUntilCountBackpressure() int64 {
+	if o == nil || o.PredictedMillisUntilCountBackpressure == nil {
+		var ret int64
+		return ret
+	}
+	return *o.PredictedMillisUntilCountBackpressure
+}
+
+// GetPredictedMillisUntilCountBackpressureOk returns a tuple with the PredictedMillisUntilCountBackpressure field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedMillisUntilCountBackpressureOk() (*int64, bool) {
+	if o == nil || o.PredictedMillisUntilCountBackpressure == nil {
+		return nil, false
+	}
+	return o.PredictedMillisUntilCountBackpressure, true
+}
+
+// HasPredictedMillisUntilCountBackpressure returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictedMillisUntilCountBackpressure() bool {
+	if o != nil && o.PredictedMillisUntilCountBackpressure != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictedMillisUntilCountBackpressure gets a reference to the given int64 and assigns it to the PredictedMillisUntilCountBackpressure field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictedMillisUntilCountBackpressure(v int64) {
+	o.PredictedMillisUntilCountBackpressure = &v
+}
+
+// GetPredictedMillisUntilBytesBackpressure returns the PredictedMillisUntilBytesBackpressure field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedMillisUntilBytesBackpressure() int64 {
+	if o == nil || o.PredictedMillisUntilBytesBackpressure == nil {
+		var ret int64
+		return ret
+	}
+	return *o.PredictedMillisUntilBytesBackpressure
+}
+
+// GetPredictedMillisUntilBytesBackpressureOk returns a tuple with the PredictedMillisUntilBytesBackpressure field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedMillisUntilBytesBackpressureOk() (*int64, bool) {
+	if o == nil || o.PredictedMillisUntilBytesBackpressure == nil {
+		return nil, false
+	}
+	return o.PredictedMillisUntilBytesBackpressure, true
+}
+
+// HasPredictedMillisUntilBytesBackpressure returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictedMillisUntilBytesBackpressure() bool {
+	if o != nil && o.PredictedMillisUntilBytesBackpressure != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictedMillisUntilBytesBackpressure gets a reference to the given int64 and assigns it to the PredictedMillisUntilBytesBackpressure field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictedMillisUntilBytesBackpressure(v int64) {
+	o.PredictedMillisUntilBytesBackpressure = &v
+}
+
+// GetPredictedCountAtNextInterval returns the PredictedCountAtNextInterval field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedCountAtNextInterval() int32 {
+	if o == nil || o.PredictedCountAtNextInterval == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PredictedCountAtNextInterval
+}
+
+// GetPredictedCountAtNextIntervalOk returns a tuple with the PredictedCountAtNextInterval field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedCountAtNextIntervalOk() (*int32, bool) {
+	if o == nil || o.PredictedCountAtNextInterval == nil {
+		return nil, false
+	}
+	return o.PredictedCountAtNextInterval, true
+}
+
+// HasPredictedCountAtNextInterval returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictedCountAtNextInterval() bool {
+	if o != nil && o.PredictedCountAtNextInterval != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictedCountAtNextInterval gets a reference to the given int32 and assigns it to the PredictedCountAtNextInterval field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictedCountAtNextInterval(v int32) {
+	o.PredictedCountAtNextInterval = &v
+}
+
+// GetPredictedBytesAtNextInterval returns the PredictedBytesAtNextInterval field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedBytesAtNextInterval() int64 {
+	if o == nil || o.PredictedBytesAtNextInterval == nil {
+		var ret int64
+		return ret
+	}
+	return *o.PredictedBytesAtNextInterval
+}
+
+// GetPredictedBytesAtNextIntervalOk returns a tuple with the PredictedBytesAtNextInterval field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedBytesAtNextIntervalOk() (*int64, bool) {
+	if o == nil || o.PredictedBytesAtNextInterval == nil {
+		return nil, false
+	}
+	return o.PredictedBytesAtNextInterval, true
+}
+
+// HasPredictedBytesAtNextInterval returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictedBytesAtNextInterval() bool {
+	if o != nil && o.PredictedBytesAtNextInterval != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictedBytesAtNextInterval gets a reference to the given int64 and assigns it to the PredictedBytesAtNextInterval field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictedBytesAtNextInterval(v int64) {
+	o.PredictedBytesAtNextInterval = &v
+}
+
+// GetPredictedPercentCount returns the PredictedPercentCount field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedPercentCount() int32 {
+	if o == nil || o.PredictedPercentCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PredictedPercentCount
+}
+
+// GetPredictedPercentCountOk returns a tuple with the PredictedPercentCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedPercentCountOk() (*int32, bool) {
+	if o == nil || o.PredictedPercentCount == nil {
+		return nil, false
+	}
+	return o.PredictedPercentCount, true
+}
+
+// HasPredictedPercentCount returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictedPercentCount() bool {
+	if o != nil && o.PredictedPercentCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictedPercentCount gets a reference to the given int32 and assigns it to the PredictedPercentCount field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictedPercentCount(v int32) {
+	o.PredictedPercentCount = &v
+}
+
+// GetPredictedPercentBytes returns the PredictedPercentBytes field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedPercentBytes() int32 {
+	if o == nil || o.PredictedPercentBytes == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PredictedPercentBytes
+}
+
+// GetPredictedPercentBytesOk returns a tuple with the PredictedPercentBytes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictedPercentBytesOk() (*int32, bool) {
+	if o == nil || o.PredictedPercentBytes == nil {
+		return nil, false
+	}
+	return o.PredictedPercentBytes, true
+}
+
+// HasPredictedPercentBytes returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictedPercentBytes() bool {
+	if o != nil && o.PredictedPercentBytes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictedPercentBytes gets a reference to the given int32 and assigns it to the PredictedPercentBytes field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictedPercentBytes(v int32) {
+	o.PredictedPercentBytes = &v
+}
+
+// GetPredictionIntervalMillis returns the PredictionIntervalMillis field value if set, zero value otherwise.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictionIntervalMillis() int64 {
+	if o == nil || o.PredictionIntervalMillis == nil {
+		var ret int64
+		return ret
+	}
+	return *o.PredictionIntervalMillis
+}
+
+// GetPredictionIntervalMillisOk returns a tuple with the PredictionIntervalMillis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatisticsSnapshotDTO) GetPredictionIntervalMillisOk() (*int64, bool) {
+	if o == nil || o.PredictionIntervalMillis == nil {
+		return nil, false
+	}
+	return o.PredictionIntervalMillis, true
+}
+
+// HasPredictionIntervalMillis returns a boolean if a field has been set.
+func (o *ConnectionStatisticsSnapshotDTO) HasPredictionIntervalMillis() bool {
+	if o != nil && o.PredictionIntervalMillis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPredictionIntervalMillis gets a reference to the given int64 and assigns it to the PredictionIntervalMillis field.
+func (o *ConnectionStatisticsSnapshotDTO) SetPredictionIntervalMillis(v int64) {
+	o.PredictionIntervalMillis = &v
+}
+
+func (o ConnectionStatisticsSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.PredictedMillisUntilCountBackpressure != nil {
+		toSerialize["predictedMillisUntilCountBackpressure"] = o.PredictedMillisUntilCountBackpressure
+	}
+	if o.PredictedMillisUntilBytesBackpressure != nil {
+		toSerialize["predictedMillisUntilBytesBackpressure"] = o.PredictedMillisUntilBytesBackpressure
+	}
+	if o.PredictedCountAtNextInterval != nil {
+		toSerialize["predictedCountAtNextInterval"] = o.PredictedCountAtNextInterval
+	}
+	if o.PredictedBytesAtNextInterval != nil {
+		toSerialize["predictedBytesAtNextInterval"] = o.PredictedBytesAtNextInterval
+	}
+	if o.PredictedPercentCount != nil {
+		toSerialize["predictedPercentCount"] = o.PredictedPercentCount
+	}
+	if o.PredictedPercentBytes != nil {
+		toSerialize["predictedPercentBytes"] = o.PredictedPercentBytes
+	}
+	if o.PredictionIntervalMillis != nil {
+		toSerialize["predictionIntervalMillis"] = o.PredictionIntervalMillis
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableConnectionStatisticsSnapshotDTO struct {
+	value *ConnectionStatisticsSnapshotDTO
+	isSet bool
+}
+
+func (v NullableConnectionStatisticsSnapshotDTO) Get() *ConnectionStatisticsSnapshotDTO {
+	return v.value
+}
+
+func (v *NullableConnectionStatisticsSnapshotDTO) Set(val *ConnectionStatisticsSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableConnectionStatisticsSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableConnectionStatisticsSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableConnectionStatisticsSnapshotDTO(val *ConnectionStatisticsSnapshotDTO) *NullableConnectionStatisticsSnapshotDTO {
+	return &NullableConnectionStatisticsSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullableConnectionStatisticsSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableConnectionStatisticsSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

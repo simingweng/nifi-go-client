@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// ComponentHistoryDto struct for ComponentHistoryDto
-type ComponentHistoryDto struct {
+import (
+	"encoding/json"
+)
+
+// ComponentHistoryDTO struct for ComponentHistoryDTO
+type ComponentHistoryDTO struct {
 	// The component id.
-	ComponentId string `json:"componentId,omitempty"`
+	ComponentId *string `json:"componentId,omitempty"`
 	// The history for the properties of the component.
-	PropertyHistory map[string]PropertyHistoryDto `json:"propertyHistory,omitempty"`
+	PropertyHistory *map[string]PropertyHistoryDTO `json:"propertyHistory,omitempty"`
+}
+
+// NewComponentHistoryDTO instantiates a new ComponentHistoryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewComponentHistoryDTO() *ComponentHistoryDTO {
+	this := ComponentHistoryDTO{}
+	return &this
+}
+
+// NewComponentHistoryDTOWithDefaults instantiates a new ComponentHistoryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewComponentHistoryDTOWithDefaults() *ComponentHistoryDTO {
+	this := ComponentHistoryDTO{}
+	return &this
+}
+
+// GetComponentId returns the ComponentId field value if set, zero value otherwise.
+func (o *ComponentHistoryDTO) GetComponentId() string {
+	if o == nil || o.ComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentId
+}
+
+// GetComponentIdOk returns a tuple with the ComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentHistoryDTO) GetComponentIdOk() (*string, bool) {
+	if o == nil || o.ComponentId == nil {
+		return nil, false
+	}
+	return o.ComponentId, true
+}
+
+// HasComponentId returns a boolean if a field has been set.
+func (o *ComponentHistoryDTO) HasComponentId() bool {
+	if o != nil && o.ComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentId gets a reference to the given string and assigns it to the ComponentId field.
+func (o *ComponentHistoryDTO) SetComponentId(v string) {
+	o.ComponentId = &v
+}
+
+// GetPropertyHistory returns the PropertyHistory field value if set, zero value otherwise.
+func (o *ComponentHistoryDTO) GetPropertyHistory() map[string]PropertyHistoryDTO {
+	if o == nil || o.PropertyHistory == nil {
+		var ret map[string]PropertyHistoryDTO
+		return ret
+	}
+	return *o.PropertyHistory
+}
+
+// GetPropertyHistoryOk returns a tuple with the PropertyHistory field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentHistoryDTO) GetPropertyHistoryOk() (*map[string]PropertyHistoryDTO, bool) {
+	if o == nil || o.PropertyHistory == nil {
+		return nil, false
+	}
+	return o.PropertyHistory, true
+}
+
+// HasPropertyHistory returns a boolean if a field has been set.
+func (o *ComponentHistoryDTO) HasPropertyHistory() bool {
+	if o != nil && o.PropertyHistory != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPropertyHistory gets a reference to the given map[string]PropertyHistoryDTO and assigns it to the PropertyHistory field.
+func (o *ComponentHistoryDTO) SetPropertyHistory(v map[string]PropertyHistoryDTO) {
+	o.PropertyHistory = &v
+}
+
+func (o ComponentHistoryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ComponentId != nil {
+		toSerialize["componentId"] = o.ComponentId
+	}
+	if o.PropertyHistory != nil {
+		toSerialize["propertyHistory"] = o.PropertyHistory
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableComponentHistoryDTO struct {
+	value *ComponentHistoryDTO
+	isSet bool
+}
+
+func (v NullableComponentHistoryDTO) Get() *ComponentHistoryDTO {
+	return v.value
+}
+
+func (v *NullableComponentHistoryDTO) Set(val *ComponentHistoryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableComponentHistoryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableComponentHistoryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableComponentHistoryDTO(val *ComponentHistoryDTO) *NullableComponentHistoryDTO {
+	return &NullableComponentHistoryDTO{value: val, isSet: true}
+}
+
+func (v NullableComponentHistoryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableComponentHistoryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

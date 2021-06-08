@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // LabelsApiService LabelsApi service
 type LabelsApiService service
 
+type LabelsApiApiGetLabelRequest struct {
+	ctx        _context.Context
+	ApiService *LabelsApiService
+	id         string
+}
+
+func (r LabelsApiApiGetLabelRequest) Execute() (LabelEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetLabelExecute(r)
+}
+
 /*
-GetLabel Gets a label
+ * GetLabel Gets a label
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The label id.
-@return LabelEntity
-*/
-func (a *LabelsApiService) GetLabel(ctx _context.Context, id string) (LabelEntity, *_nethttp.Response, error) {
+ * @return LabelsApiApiGetLabelRequest
+ */
+func (a *LabelsApiService) GetLabel(ctx _context.Context, id string) LabelsApiApiGetLabelRequest {
+	return LabelsApiApiGetLabelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LabelEntity
+ */
+func (a *LabelsApiService) GetLabelExecute(r LabelsApiApiGetLabelRequest) (LabelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *LabelsApiService) GetLabel(ctx _context.Context, id string) (LabelEntit
 		localVarReturnValue  LabelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/labels/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.GetLabel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/labels/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *LabelsApiService) GetLabel(ctx _context.Context, id string) (LabelEntit
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,24 +132,51 @@ func (a *LabelsApiService) GetLabel(ctx _context.Context, id string) (LabelEntit
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// LabelsApiRemoveLabelOpts Optional parameters for the method 'RemoveLabel'
-type LabelsApiRemoveLabelOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type LabelsApiApiRemoveLabelRequest struct {
+	ctx                          _context.Context
+	ApiService                   *LabelsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r LabelsApiApiRemoveLabelRequest) Version(version string) LabelsApiApiRemoveLabelRequest {
+	r.version = &version
+	return r
+}
+func (r LabelsApiApiRemoveLabelRequest) ClientId(clientId string) LabelsApiApiRemoveLabelRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r LabelsApiApiRemoveLabelRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) LabelsApiApiRemoveLabelRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r LabelsApiApiRemoveLabelRequest) Execute() (LabelEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveLabelExecute(r)
 }
 
 /*
-RemoveLabel Deletes a label
+ * RemoveLabel Deletes a label
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The label id.
- * @param optional nil or *LabelsApiRemoveLabelOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return LabelEntity
-*/
-func (a *LabelsApiService) RemoveLabel(ctx _context.Context, id string, localVarOptionals *LabelsApiRemoveLabelOpts) (LabelEntity, *_nethttp.Response, error) {
+ * @return LabelsApiApiRemoveLabelRequest
+ */
+func (a *LabelsApiService) RemoveLabel(ctx _context.Context, id string) LabelsApiApiRemoveLabelRequest {
+	return LabelsApiApiRemoveLabelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LabelEntity
+ */
+func (a *LabelsApiService) RemoveLabelExecute(r LabelsApiApiRemoveLabelRequest) (LabelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -132,22 +186,26 @@ func (a *LabelsApiService) RemoveLabel(ctx _context.Context, id string, localVar
 		localVarReturnValue  LabelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/labels/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.RemoveLabel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/labels/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +224,19 @@ func (a *LabelsApiService) RemoveLabel(ctx _context.Context, id string, localVar
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,14 +261,41 @@ func (a *LabelsApiService) RemoveLabel(ctx _context.Context, id string, localVar
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type LabelsApiApiUpdateLabelRequest struct {
+	ctx        _context.Context
+	ApiService *LabelsApiService
+	id         string
+	body       *LabelEntity
+}
+
+func (r LabelsApiApiUpdateLabelRequest) Body(body LabelEntity) LabelsApiApiUpdateLabelRequest {
+	r.body = &body
+	return r
+}
+
+func (r LabelsApiApiUpdateLabelRequest) Execute() (LabelEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateLabelExecute(r)
+}
+
 /*
-UpdateLabel Updates a label
+ * UpdateLabel Updates a label
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The label id.
- * @param body The label configuration details.
-@return LabelEntity
-*/
-func (a *LabelsApiService) UpdateLabel(ctx _context.Context, id string, body LabelEntity) (LabelEntity, *_nethttp.Response, error) {
+ * @return LabelsApiApiUpdateLabelRequest
+ */
+func (a *LabelsApiService) UpdateLabel(ctx _context.Context, id string) LabelsApiApiUpdateLabelRequest {
+	return LabelsApiApiUpdateLabelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LabelEntity
+ */
+func (a *LabelsApiService) UpdateLabelExecute(r LabelsApiApiUpdateLabelRequest) (LabelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -219,13 +305,20 @@ func (a *LabelsApiService) UpdateLabel(ctx _context.Context, id string, body Lab
 		localVarReturnValue  LabelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/labels/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.UpdateLabel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/labels/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -245,19 +338,20 @@ func (a *LabelsApiService) UpdateLabel(ctx _context.Context, id string, body Lab
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

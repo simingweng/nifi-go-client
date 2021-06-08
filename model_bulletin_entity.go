@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,15 +11,322 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // BulletinEntity struct for BulletinEntity
 type BulletinEntity struct {
-	Id       int64  `json:"id,omitempty"`
-	GroupId  string `json:"groupId,omitempty"`
-	SourceId string `json:"sourceId,omitempty"`
+	Id       *int64  `json:"id,omitempty"`
+	GroupId  *string `json:"groupId,omitempty"`
+	SourceId *string `json:"sourceId,omitempty"`
 	// When this bulletin was generated.
-	Timestamp   string `json:"timestamp,omitempty"`
-	NodeAddress string `json:"nodeAddress,omitempty"`
+	Timestamp   *string `json:"timestamp,omitempty"`
+	NodeAddress *string `json:"nodeAddress,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead  bool        `json:"canRead,omitempty"`
-	Bulletin BulletinDto `json:"bulletin,omitempty"`
+	CanRead  *bool        `json:"canRead,omitempty"`
+	Bulletin *BulletinDTO `json:"bulletin,omitempty"`
+}
+
+// NewBulletinEntity instantiates a new BulletinEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBulletinEntity() *BulletinEntity {
+	this := BulletinEntity{}
+	return &this
+}
+
+// NewBulletinEntityWithDefaults instantiates a new BulletinEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBulletinEntityWithDefaults() *BulletinEntity {
+	this := BulletinEntity{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *BulletinEntity) GetId() int64 {
+	if o == nil || o.Id == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetIdOk() (*int64, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *BulletinEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given int64 and assigns it to the Id field.
+func (o *BulletinEntity) SetId(v int64) {
+	o.Id = &v
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *BulletinEntity) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *BulletinEntity) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *BulletinEntity) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetSourceId returns the SourceId field value if set, zero value otherwise.
+func (o *BulletinEntity) GetSourceId() string {
+	if o == nil || o.SourceId == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceId
+}
+
+// GetSourceIdOk returns a tuple with the SourceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetSourceIdOk() (*string, bool) {
+	if o == nil || o.SourceId == nil {
+		return nil, false
+	}
+	return o.SourceId, true
+}
+
+// HasSourceId returns a boolean if a field has been set.
+func (o *BulletinEntity) HasSourceId() bool {
+	if o != nil && o.SourceId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceId gets a reference to the given string and assigns it to the SourceId field.
+func (o *BulletinEntity) SetSourceId(v string) {
+	o.SourceId = &v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *BulletinEntity) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *BulletinEntity) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *BulletinEntity) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+// GetNodeAddress returns the NodeAddress field value if set, zero value otherwise.
+func (o *BulletinEntity) GetNodeAddress() string {
+	if o == nil || o.NodeAddress == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeAddress
+}
+
+// GetNodeAddressOk returns a tuple with the NodeAddress field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetNodeAddressOk() (*string, bool) {
+	if o == nil || o.NodeAddress == nil {
+		return nil, false
+	}
+	return o.NodeAddress, true
+}
+
+// HasNodeAddress returns a boolean if a field has been set.
+func (o *BulletinEntity) HasNodeAddress() bool {
+	if o != nil && o.NodeAddress != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeAddress gets a reference to the given string and assigns it to the NodeAddress field.
+func (o *BulletinEntity) SetNodeAddress(v string) {
+	o.NodeAddress = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *BulletinEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *BulletinEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *BulletinEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+// GetBulletin returns the Bulletin field value if set, zero value otherwise.
+func (o *BulletinEntity) GetBulletin() BulletinDTO {
+	if o == nil || o.Bulletin == nil {
+		var ret BulletinDTO
+		return ret
+	}
+	return *o.Bulletin
+}
+
+// GetBulletinOk returns a tuple with the Bulletin field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinEntity) GetBulletinOk() (*BulletinDTO, bool) {
+	if o == nil || o.Bulletin == nil {
+		return nil, false
+	}
+	return o.Bulletin, true
+}
+
+// HasBulletin returns a boolean if a field has been set.
+func (o *BulletinEntity) HasBulletin() bool {
+	if o != nil && o.Bulletin != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBulletin gets a reference to the given BulletinDTO and assigns it to the Bulletin field.
+func (o *BulletinEntity) SetBulletin(v BulletinDTO) {
+	o.Bulletin = &v
+}
+
+func (o BulletinEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.SourceId != nil {
+		toSerialize["sourceId"] = o.SourceId
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.NodeAddress != nil {
+		toSerialize["nodeAddress"] = o.NodeAddress
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	if o.Bulletin != nil {
+		toSerialize["bulletin"] = o.Bulletin
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBulletinEntity struct {
+	value *BulletinEntity
+	isSet bool
+}
+
+func (v NullableBulletinEntity) Get() *BulletinEntity {
+	return v.value
+}
+
+func (v *NullableBulletinEntity) Set(val *BulletinEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBulletinEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBulletinEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBulletinEntity(val *BulletinEntity) *NullableBulletinEntity {
+	return &NullableBulletinEntity{value: val, isSet: true}
+}
+
+func (v NullableBulletinEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBulletinEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

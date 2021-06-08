@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// NodeEventDto struct for NodeEventDto
-type NodeEventDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeEventDTO struct for NodeEventDTO
+type NodeEventDTO struct {
 	// The timestamp of the node event.
-	Timestamp string `json:"timestamp,omitempty"`
+	Timestamp *string `json:"timestamp,omitempty"`
 	// The category of the node event.
-	Category string `json:"category,omitempty"`
+	Category *string `json:"category,omitempty"`
 	// The message in the node event.
-	Message string `json:"message,omitempty"`
+	Message *string `json:"message,omitempty"`
+}
+
+// NewNodeEventDTO instantiates a new NodeEventDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeEventDTO() *NodeEventDTO {
+	this := NodeEventDTO{}
+	return &this
+}
+
+// NewNodeEventDTOWithDefaults instantiates a new NodeEventDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeEventDTOWithDefaults() *NodeEventDTO {
+	this := NodeEventDTO{}
+	return &this
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *NodeEventDTO) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeEventDTO) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *NodeEventDTO) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *NodeEventDTO) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+// GetCategory returns the Category field value if set, zero value otherwise.
+func (o *NodeEventDTO) GetCategory() string {
+	if o == nil || o.Category == nil {
+		var ret string
+		return ret
+	}
+	return *o.Category
+}
+
+// GetCategoryOk returns a tuple with the Category field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeEventDTO) GetCategoryOk() (*string, bool) {
+	if o == nil || o.Category == nil {
+		return nil, false
+	}
+	return o.Category, true
+}
+
+// HasCategory returns a boolean if a field has been set.
+func (o *NodeEventDTO) HasCategory() bool {
+	if o != nil && o.Category != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCategory gets a reference to the given string and assigns it to the Category field.
+func (o *NodeEventDTO) SetCategory(v string) {
+	o.Category = &v
+}
+
+// GetMessage returns the Message field value if set, zero value otherwise.
+func (o *NodeEventDTO) GetMessage() string {
+	if o == nil || o.Message == nil {
+		var ret string
+		return ret
+	}
+	return *o.Message
+}
+
+// GetMessageOk returns a tuple with the Message field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeEventDTO) GetMessageOk() (*string, bool) {
+	if o == nil || o.Message == nil {
+		return nil, false
+	}
+	return o.Message, true
+}
+
+// HasMessage returns a boolean if a field has been set.
+func (o *NodeEventDTO) HasMessage() bool {
+	if o != nil && o.Message != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMessage gets a reference to the given string and assigns it to the Message field.
+func (o *NodeEventDTO) SetMessage(v string) {
+	o.Message = &v
+}
+
+func (o NodeEventDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.Category != nil {
+		toSerialize["category"] = o.Category
+	}
+	if o.Message != nil {
+		toSerialize["message"] = o.Message
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeEventDTO struct {
+	value *NodeEventDTO
+	isSet bool
+}
+
+func (v NullableNodeEventDTO) Get() *NodeEventDTO {
+	return v.value
+}
+
+func (v *NullableNodeEventDTO) Set(val *NodeEventDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeEventDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeEventDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeEventDTO(val *NodeEventDTO) *NullableNodeEventDTO {
+	return &NullableNodeEventDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeEventDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeEventDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

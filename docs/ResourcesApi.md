@@ -10,13 +10,44 @@ Method | HTTP request | Description
 
 ## GetResources
 
-> ResourcesEntity GetResources(ctx, )
+> ResourcesEntity GetResources(ctx).Execute()
 
 Gets the available resources that support access/authorization policies
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ResourcesApi.GetResources(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ResourcesApi.GetResources``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetResources`: ResourcesEntity
+    fmt.Fprintf(os.Stdout, "Response from `ResourcesApi.GetResources`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetResourcesRequest struct via the builder pattern
+
 
 ### Return type
 

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,20 +11,362 @@
 
 package nifi
 
-// LineageDto struct for LineageDto
-type LineageDto struct {
+import (
+	"encoding/json"
+)
+
+// LineageDTO struct for LineageDTO
+type LineageDTO struct {
 	// The id of this lineage query.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The URI for this lineage query for later retrieval and deletion.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// When the lineage query was submitted.
-	SubmissionTime string `json:"submissionTime,omitempty"`
+	SubmissionTime *string `json:"submissionTime,omitempty"`
 	// When the lineage query will expire.
-	Expiration string `json:"expiration,omitempty"`
+	Expiration *string `json:"expiration,omitempty"`
 	// The percent complete for the lineage query.
-	PercentCompleted int32 `json:"percentCompleted,omitempty"`
+	PercentCompleted *int32 `json:"percentCompleted,omitempty"`
 	// Whether the lineage query has finished.
-	Finished bool              `json:"finished,omitempty"`
-	Request  LineageRequestDto `json:"request,omitempty"`
-	Results  LineageResultsDto `json:"results,omitempty"`
+	Finished *bool              `json:"finished,omitempty"`
+	Request  *LineageRequestDTO `json:"request,omitempty"`
+	Results  *LineageResultsDTO `json:"results,omitempty"`
+}
+
+// NewLineageDTO instantiates a new LineageDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewLineageDTO() *LineageDTO {
+	this := LineageDTO{}
+	return &this
+}
+
+// NewLineageDTOWithDefaults instantiates a new LineageDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewLineageDTOWithDefaults() *LineageDTO {
+	this := LineageDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *LineageDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *LineageDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *LineageDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *LineageDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *LineageDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *LineageDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetSubmissionTime returns the SubmissionTime field value if set, zero value otherwise.
+func (o *LineageDTO) GetSubmissionTime() string {
+	if o == nil || o.SubmissionTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.SubmissionTime
+}
+
+// GetSubmissionTimeOk returns a tuple with the SubmissionTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetSubmissionTimeOk() (*string, bool) {
+	if o == nil || o.SubmissionTime == nil {
+		return nil, false
+	}
+	return o.SubmissionTime, true
+}
+
+// HasSubmissionTime returns a boolean if a field has been set.
+func (o *LineageDTO) HasSubmissionTime() bool {
+	if o != nil && o.SubmissionTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSubmissionTime gets a reference to the given string and assigns it to the SubmissionTime field.
+func (o *LineageDTO) SetSubmissionTime(v string) {
+	o.SubmissionTime = &v
+}
+
+// GetExpiration returns the Expiration field value if set, zero value otherwise.
+func (o *LineageDTO) GetExpiration() string {
+	if o == nil || o.Expiration == nil {
+		var ret string
+		return ret
+	}
+	return *o.Expiration
+}
+
+// GetExpirationOk returns a tuple with the Expiration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetExpirationOk() (*string, bool) {
+	if o == nil || o.Expiration == nil {
+		return nil, false
+	}
+	return o.Expiration, true
+}
+
+// HasExpiration returns a boolean if a field has been set.
+func (o *LineageDTO) HasExpiration() bool {
+	if o != nil && o.Expiration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExpiration gets a reference to the given string and assigns it to the Expiration field.
+func (o *LineageDTO) SetExpiration(v string) {
+	o.Expiration = &v
+}
+
+// GetPercentCompleted returns the PercentCompleted field value if set, zero value otherwise.
+func (o *LineageDTO) GetPercentCompleted() int32 {
+	if o == nil || o.PercentCompleted == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PercentCompleted
+}
+
+// GetPercentCompletedOk returns a tuple with the PercentCompleted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetPercentCompletedOk() (*int32, bool) {
+	if o == nil || o.PercentCompleted == nil {
+		return nil, false
+	}
+	return o.PercentCompleted, true
+}
+
+// HasPercentCompleted returns a boolean if a field has been set.
+func (o *LineageDTO) HasPercentCompleted() bool {
+	if o != nil && o.PercentCompleted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPercentCompleted gets a reference to the given int32 and assigns it to the PercentCompleted field.
+func (o *LineageDTO) SetPercentCompleted(v int32) {
+	o.PercentCompleted = &v
+}
+
+// GetFinished returns the Finished field value if set, zero value otherwise.
+func (o *LineageDTO) GetFinished() bool {
+	if o == nil || o.Finished == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Finished
+}
+
+// GetFinishedOk returns a tuple with the Finished field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetFinishedOk() (*bool, bool) {
+	if o == nil || o.Finished == nil {
+		return nil, false
+	}
+	return o.Finished, true
+}
+
+// HasFinished returns a boolean if a field has been set.
+func (o *LineageDTO) HasFinished() bool {
+	if o != nil && o.Finished != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFinished gets a reference to the given bool and assigns it to the Finished field.
+func (o *LineageDTO) SetFinished(v bool) {
+	o.Finished = &v
+}
+
+// GetRequest returns the Request field value if set, zero value otherwise.
+func (o *LineageDTO) GetRequest() LineageRequestDTO {
+	if o == nil || o.Request == nil {
+		var ret LineageRequestDTO
+		return ret
+	}
+	return *o.Request
+}
+
+// GetRequestOk returns a tuple with the Request field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetRequestOk() (*LineageRequestDTO, bool) {
+	if o == nil || o.Request == nil {
+		return nil, false
+	}
+	return o.Request, true
+}
+
+// HasRequest returns a boolean if a field has been set.
+func (o *LineageDTO) HasRequest() bool {
+	if o != nil && o.Request != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequest gets a reference to the given LineageRequestDTO and assigns it to the Request field.
+func (o *LineageDTO) SetRequest(v LineageRequestDTO) {
+	o.Request = &v
+}
+
+// GetResults returns the Results field value if set, zero value otherwise.
+func (o *LineageDTO) GetResults() LineageResultsDTO {
+	if o == nil || o.Results == nil {
+		var ret LineageResultsDTO
+		return ret
+	}
+	return *o.Results
+}
+
+// GetResultsOk returns a tuple with the Results field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageDTO) GetResultsOk() (*LineageResultsDTO, bool) {
+	if o == nil || o.Results == nil {
+		return nil, false
+	}
+	return o.Results, true
+}
+
+// HasResults returns a boolean if a field has been set.
+func (o *LineageDTO) HasResults() bool {
+	if o != nil && o.Results != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetResults gets a reference to the given LineageResultsDTO and assigns it to the Results field.
+func (o *LineageDTO) SetResults(v LineageResultsDTO) {
+	o.Results = &v
+}
+
+func (o LineageDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.SubmissionTime != nil {
+		toSerialize["submissionTime"] = o.SubmissionTime
+	}
+	if o.Expiration != nil {
+		toSerialize["expiration"] = o.Expiration
+	}
+	if o.PercentCompleted != nil {
+		toSerialize["percentCompleted"] = o.PercentCompleted
+	}
+	if o.Finished != nil {
+		toSerialize["finished"] = o.Finished
+	}
+	if o.Request != nil {
+		toSerialize["request"] = o.Request
+	}
+	if o.Results != nil {
+		toSerialize["results"] = o.Results
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableLineageDTO struct {
+	value *LineageDTO
+	isSet bool
+}
+
+func (v NullableLineageDTO) Get() *LineageDTO {
+	return v.value
+}
+
+func (v *NullableLineageDTO) Set(val *LineageDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableLineageDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableLineageDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableLineageDTO(val *LineageDTO) *NullableLineageDTO {
+	return &NullableLineageDTO{value: val, isSet: true}
+}
+
+func (v NullableLineageDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableLineageDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

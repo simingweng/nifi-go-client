@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,176 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // TransactionResultEntity struct for TransactionResultEntity
 type TransactionResultEntity struct {
-	FlowFileSent int32  `json:"flowFileSent,omitempty"`
-	ResponseCode int32  `json:"responseCode,omitempty"`
-	Message      string `json:"message,omitempty"`
+	FlowFileSent *int32  `json:"flowFileSent,omitempty"`
+	ResponseCode *int32  `json:"responseCode,omitempty"`
+	Message      *string `json:"message,omitempty"`
+}
+
+// NewTransactionResultEntity instantiates a new TransactionResultEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewTransactionResultEntity() *TransactionResultEntity {
+	this := TransactionResultEntity{}
+	return &this
+}
+
+// NewTransactionResultEntityWithDefaults instantiates a new TransactionResultEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewTransactionResultEntityWithDefaults() *TransactionResultEntity {
+	this := TransactionResultEntity{}
+	return &this
+}
+
+// GetFlowFileSent returns the FlowFileSent field value if set, zero value otherwise.
+func (o *TransactionResultEntity) GetFlowFileSent() int32 {
+	if o == nil || o.FlowFileSent == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFileSent
+}
+
+// GetFlowFileSentOk returns a tuple with the FlowFileSent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TransactionResultEntity) GetFlowFileSentOk() (*int32, bool) {
+	if o == nil || o.FlowFileSent == nil {
+		return nil, false
+	}
+	return o.FlowFileSent, true
+}
+
+// HasFlowFileSent returns a boolean if a field has been set.
+func (o *TransactionResultEntity) HasFlowFileSent() bool {
+	if o != nil && o.FlowFileSent != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileSent gets a reference to the given int32 and assigns it to the FlowFileSent field.
+func (o *TransactionResultEntity) SetFlowFileSent(v int32) {
+	o.FlowFileSent = &v
+}
+
+// GetResponseCode returns the ResponseCode field value if set, zero value otherwise.
+func (o *TransactionResultEntity) GetResponseCode() int32 {
+	if o == nil || o.ResponseCode == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ResponseCode
+}
+
+// GetResponseCodeOk returns a tuple with the ResponseCode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TransactionResultEntity) GetResponseCodeOk() (*int32, bool) {
+	if o == nil || o.ResponseCode == nil {
+		return nil, false
+	}
+	return o.ResponseCode, true
+}
+
+// HasResponseCode returns a boolean if a field has been set.
+func (o *TransactionResultEntity) HasResponseCode() bool {
+	if o != nil && o.ResponseCode != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetResponseCode gets a reference to the given int32 and assigns it to the ResponseCode field.
+func (o *TransactionResultEntity) SetResponseCode(v int32) {
+	o.ResponseCode = &v
+}
+
+// GetMessage returns the Message field value if set, zero value otherwise.
+func (o *TransactionResultEntity) GetMessage() string {
+	if o == nil || o.Message == nil {
+		var ret string
+		return ret
+	}
+	return *o.Message
+}
+
+// GetMessageOk returns a tuple with the Message field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TransactionResultEntity) GetMessageOk() (*string, bool) {
+	if o == nil || o.Message == nil {
+		return nil, false
+	}
+	return o.Message, true
+}
+
+// HasMessage returns a boolean if a field has been set.
+func (o *TransactionResultEntity) HasMessage() bool {
+	if o != nil && o.Message != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMessage gets a reference to the given string and assigns it to the Message field.
+func (o *TransactionResultEntity) SetMessage(v string) {
+	o.Message = &v
+}
+
+func (o TransactionResultEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.FlowFileSent != nil {
+		toSerialize["flowFileSent"] = o.FlowFileSent
+	}
+	if o.ResponseCode != nil {
+		toSerialize["responseCode"] = o.ResponseCode
+	}
+	if o.Message != nil {
+		toSerialize["message"] = o.Message
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableTransactionResultEntity struct {
+	value *TransactionResultEntity
+	isSet bool
+}
+
+func (v NullableTransactionResultEntity) Get() *TransactionResultEntity {
+	return v.value
+}
+
+func (v *NullableTransactionResultEntity) Set(val *TransactionResultEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableTransactionResultEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableTransactionResultEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableTransactionResultEntity(val *TransactionResultEntity) *NullableTransactionResultEntity {
+	return &NullableTransactionResultEntity{value: val, isSet: true}
+}
+
+func (v NullableTransactionResultEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableTransactionResultEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }
