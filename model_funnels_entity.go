@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // FunnelsEntity struct for FunnelsEntity
 type FunnelsEntity struct {
-	Funnels []FunnelEntity `json:"funnels,omitempty"`
+	Funnels *[]FunnelEntity `json:"funnels,omitempty"`
+}
+
+// NewFunnelsEntity instantiates a new FunnelsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewFunnelsEntity() *FunnelsEntity {
+	this := FunnelsEntity{}
+	return &this
+}
+
+// NewFunnelsEntityWithDefaults instantiates a new FunnelsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewFunnelsEntityWithDefaults() *FunnelsEntity {
+	this := FunnelsEntity{}
+	return &this
+}
+
+// GetFunnels returns the Funnels field value if set, zero value otherwise.
+func (o *FunnelsEntity) GetFunnels() []FunnelEntity {
+	if o == nil || o.Funnels == nil {
+		var ret []FunnelEntity
+		return ret
+	}
+	return *o.Funnels
+}
+
+// GetFunnelsOk returns a tuple with the Funnels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FunnelsEntity) GetFunnelsOk() (*[]FunnelEntity, bool) {
+	if o == nil || o.Funnels == nil {
+		return nil, false
+	}
+	return o.Funnels, true
+}
+
+// HasFunnels returns a boolean if a field has been set.
+func (o *FunnelsEntity) HasFunnels() bool {
+	if o != nil && o.Funnels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFunnels gets a reference to the given []FunnelEntity and assigns it to the Funnels field.
+func (o *FunnelsEntity) SetFunnels(v []FunnelEntity) {
+	o.Funnels = &v
+}
+
+func (o FunnelsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Funnels != nil {
+		toSerialize["funnels"] = o.Funnels
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableFunnelsEntity struct {
+	value *FunnelsEntity
+	isSet bool
+}
+
+func (v NullableFunnelsEntity) Get() *FunnelsEntity {
+	return v.value
+}
+
+func (v *NullableFunnelsEntity) Set(val *FunnelsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableFunnelsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableFunnelsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableFunnelsEntity(val *FunnelsEntity) *NullableFunnelsEntity {
+	return &NullableFunnelsEntity{value: val, isSet: true}
+}
+
+func (v NullableFunnelsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableFunnelsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

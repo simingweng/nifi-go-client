@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,14 +28,39 @@ var (
 // TenantsApiService TenantsApi service
 type TenantsApiService service
 
+type TenantsApiApiCreateUserRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	body       *UserEntity
+}
+
+func (r TenantsApiApiCreateUserRequest) Body(body UserEntity) TenantsApiApiCreateUserRequest {
+	r.body = &body
+	return r
+}
+
+func (r TenantsApiApiCreateUserRequest) Execute() (UserEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateUserExecute(r)
+}
+
 /*
-CreateUser Creates a user
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * CreateUser Creates a user
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The user configuration details.
-@return UserEntity
-*/
-func (a *TenantsApiService) CreateUser(ctx _context.Context, body UserEntity) (UserEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiCreateUserRequest
+ */
+func (a *TenantsApiService) CreateUser(ctx _context.Context) TenantsApiApiCreateUserRequest {
+	return TenantsApiApiCreateUserRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserEntity
+ */
+func (a *TenantsApiService) CreateUserExecute(r TenantsApiApiCreateUserRequest) (UserEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -45,11 +70,19 @@ func (a *TenantsApiService) CreateUser(ctx _context.Context, body UserEntity) (U
 		localVarReturnValue  UserEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/users"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.CreateUser")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/users"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -69,19 +102,20 @@ func (a *TenantsApiService) CreateUser(ctx _context.Context, body UserEntity) (U
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -106,14 +140,39 @@ func (a *TenantsApiService) CreateUser(ctx _context.Context, body UserEntity) (U
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiCreateUserGroupRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	body       *UserGroupEntity
+}
+
+func (r TenantsApiApiCreateUserGroupRequest) Body(body UserGroupEntity) TenantsApiApiCreateUserGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r TenantsApiApiCreateUserGroupRequest) Execute() (UserGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateUserGroupExecute(r)
+}
+
 /*
-CreateUserGroup Creates a user group
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * CreateUserGroup Creates a user group
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The user group configuration details.
-@return UserGroupEntity
-*/
-func (a *TenantsApiService) CreateUserGroup(ctx _context.Context, body UserGroupEntity) (UserGroupEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiCreateUserGroupRequest
+ */
+func (a *TenantsApiService) CreateUserGroup(ctx _context.Context) TenantsApiApiCreateUserGroupRequest {
+	return TenantsApiApiCreateUserGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserGroupEntity
+ */
+func (a *TenantsApiService) CreateUserGroupExecute(r TenantsApiApiCreateUserGroupRequest) (UserGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -123,11 +182,19 @@ func (a *TenantsApiService) CreateUserGroup(ctx _context.Context, body UserGroup
 		localVarReturnValue  UserGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/user-groups"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.CreateUserGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/user-groups"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -147,19 +214,20 @@ func (a *TenantsApiService) CreateUserGroup(ctx _context.Context, body UserGroup
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -184,14 +252,36 @@ func (a *TenantsApiService) CreateUserGroup(ctx _context.Context, body UserGroup
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiGetUserRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	id         string
+}
+
+func (r TenantsApiApiGetUserRequest) Execute() (UserEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetUserExecute(r)
+}
+
 /*
-GetUser Gets a user
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetUser Gets a user
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The user id.
-@return UserEntity
-*/
-func (a *TenantsApiService) GetUser(ctx _context.Context, id string) (UserEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiGetUserRequest
+ */
+func (a *TenantsApiService) GetUser(ctx _context.Context, id string) TenantsApiApiGetUserRequest {
+	return TenantsApiApiGetUserRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserEntity
+ */
+func (a *TenantsApiService) GetUserExecute(r TenantsApiApiGetUserRequest) (UserEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -201,9 +291,13 @@ func (a *TenantsApiService) GetUser(ctx _context.Context, id string) (UserEntity
 		localVarReturnValue  UserEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/users/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.GetUser")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/users/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -226,18 +320,19 @@ func (a *TenantsApiService) GetUser(ctx _context.Context, id string) (UserEntity
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -262,14 +357,36 @@ func (a *TenantsApiService) GetUser(ctx _context.Context, id string) (UserEntity
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiGetUserGroupRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	id         string
+}
+
+func (r TenantsApiApiGetUserGroupRequest) Execute() (UserGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetUserGroupExecute(r)
+}
+
 /*
-GetUserGroup Gets a user group
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetUserGroup Gets a user group
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The user group id.
-@return UserGroupEntity
-*/
-func (a *TenantsApiService) GetUserGroup(ctx _context.Context, id string) (UserGroupEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiGetUserGroupRequest
+ */
+func (a *TenantsApiService) GetUserGroup(ctx _context.Context, id string) TenantsApiApiGetUserGroupRequest {
+	return TenantsApiApiGetUserGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserGroupEntity
+ */
+func (a *TenantsApiService) GetUserGroupExecute(r TenantsApiApiGetUserGroupRequest) (UserGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -279,9 +396,13 @@ func (a *TenantsApiService) GetUserGroup(ctx _context.Context, id string) (UserG
 		localVarReturnValue  UserGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/user-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.GetUserGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/user-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -304,18 +425,19 @@ func (a *TenantsApiService) GetUserGroup(ctx _context.Context, id string) (UserG
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -340,13 +462,33 @@ func (a *TenantsApiService) GetUserGroup(ctx _context.Context, id string) (UserG
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiGetUserGroupsRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+}
+
+func (r TenantsApiApiGetUserGroupsRequest) Execute() (UserGroupsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetUserGroupsExecute(r)
+}
+
 /*
-GetUserGroups Gets all user groups
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetUserGroups Gets all user groups
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return UserGroupsEntity
-*/
-func (a *TenantsApiService) GetUserGroups(ctx _context.Context) (UserGroupsEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiGetUserGroupsRequest
+ */
+func (a *TenantsApiService) GetUserGroups(ctx _context.Context) TenantsApiApiGetUserGroupsRequest {
+	return TenantsApiApiGetUserGroupsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserGroupsEntity
+ */
+func (a *TenantsApiService) GetUserGroupsExecute(r TenantsApiApiGetUserGroupsRequest) (UserGroupsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -356,8 +498,13 @@ func (a *TenantsApiService) GetUserGroups(ctx _context.Context) (UserGroupsEntit
 		localVarReturnValue  UserGroupsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/user-groups"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.GetUserGroups")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/user-groups"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -379,18 +526,19 @@ func (a *TenantsApiService) GetUserGroups(ctx _context.Context) (UserGroupsEntit
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -415,13 +563,33 @@ func (a *TenantsApiService) GetUserGroups(ctx _context.Context) (UserGroupsEntit
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiGetUsersRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+}
+
+func (r TenantsApiApiGetUsersRequest) Execute() (UsersEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetUsersExecute(r)
+}
+
 /*
-GetUsers Gets all users
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetUsers Gets all users
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return UsersEntity
-*/
-func (a *TenantsApiService) GetUsers(ctx _context.Context) (UsersEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiGetUsersRequest
+ */
+func (a *TenantsApiService) GetUsers(ctx _context.Context) TenantsApiApiGetUsersRequest {
+	return TenantsApiApiGetUsersRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UsersEntity
+ */
+func (a *TenantsApiService) GetUsersExecute(r TenantsApiApiGetUsersRequest) (UsersEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -431,8 +599,13 @@ func (a *TenantsApiService) GetUsers(ctx _context.Context) (UsersEntity, *_netht
 		localVarReturnValue  UsersEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/users"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.GetUsers")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/users"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -454,18 +627,19 @@ func (a *TenantsApiService) GetUsers(ctx _context.Context) (UsersEntity, *_netht
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -490,25 +664,52 @@ func (a *TenantsApiService) GetUsers(ctx _context.Context) (UsersEntity, *_netht
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// TenantsApiRemoveUserOpts Optional parameters for the method 'RemoveUser'
-type TenantsApiRemoveUserOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type TenantsApiApiRemoveUserRequest struct {
+	ctx                          _context.Context
+	ApiService                   *TenantsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r TenantsApiApiRemoveUserRequest) Version(version string) TenantsApiApiRemoveUserRequest {
+	r.version = &version
+	return r
+}
+func (r TenantsApiApiRemoveUserRequest) ClientId(clientId string) TenantsApiApiRemoveUserRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r TenantsApiApiRemoveUserRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) TenantsApiApiRemoveUserRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r TenantsApiApiRemoveUserRequest) Execute() (UserEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveUserExecute(r)
 }
 
 /*
-RemoveUser Deletes a user
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * RemoveUser Deletes a user
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The user id.
- * @param optional nil or *TenantsApiRemoveUserOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return UserEntity
-*/
-func (a *TenantsApiService) RemoveUser(ctx _context.Context, id string, localVarOptionals *TenantsApiRemoveUserOpts) (UserEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiRemoveUserRequest
+ */
+func (a *TenantsApiService) RemoveUser(ctx _context.Context, id string) TenantsApiApiRemoveUserRequest {
+	return TenantsApiApiRemoveUserRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserEntity
+ */
+func (a *TenantsApiService) RemoveUserExecute(r TenantsApiApiRemoveUserRequest) (UserEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -518,22 +719,26 @@ func (a *TenantsApiService) RemoveUser(ctx _context.Context, id string, localVar
 		localVarReturnValue  UserEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/users/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.RemoveUser")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/users/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -552,18 +757,19 @@ func (a *TenantsApiService) RemoveUser(ctx _context.Context, id string, localVar
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -588,25 +794,52 @@ func (a *TenantsApiService) RemoveUser(ctx _context.Context, id string, localVar
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// TenantsApiRemoveUserGroupOpts Optional parameters for the method 'RemoveUserGroup'
-type TenantsApiRemoveUserGroupOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type TenantsApiApiRemoveUserGroupRequest struct {
+	ctx                          _context.Context
+	ApiService                   *TenantsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r TenantsApiApiRemoveUserGroupRequest) Version(version string) TenantsApiApiRemoveUserGroupRequest {
+	r.version = &version
+	return r
+}
+func (r TenantsApiApiRemoveUserGroupRequest) ClientId(clientId string) TenantsApiApiRemoveUserGroupRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r TenantsApiApiRemoveUserGroupRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) TenantsApiApiRemoveUserGroupRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r TenantsApiApiRemoveUserGroupRequest) Execute() (UserGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveUserGroupExecute(r)
 }
 
 /*
-RemoveUserGroup Deletes a user group
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * RemoveUserGroup Deletes a user group
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The user group id.
- * @param optional nil or *TenantsApiRemoveUserGroupOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return UserGroupEntity
-*/
-func (a *TenantsApiService) RemoveUserGroup(ctx _context.Context, id string, localVarOptionals *TenantsApiRemoveUserGroupOpts) (UserGroupEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiRemoveUserGroupRequest
+ */
+func (a *TenantsApiService) RemoveUserGroup(ctx _context.Context, id string) TenantsApiApiRemoveUserGroupRequest {
+	return TenantsApiApiRemoveUserGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserGroupEntity
+ */
+func (a *TenantsApiService) RemoveUserGroupExecute(r TenantsApiApiRemoveUserGroupRequest) (UserGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -616,22 +849,26 @@ func (a *TenantsApiService) RemoveUserGroup(ctx _context.Context, id string, loc
 		localVarReturnValue  UserGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/user-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.RemoveUserGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/user-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -650,18 +887,19 @@ func (a *TenantsApiService) RemoveUserGroup(ctx _context.Context, id string, loc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -686,14 +924,39 @@ func (a *TenantsApiService) RemoveUserGroup(ctx _context.Context, id string, loc
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiSearchTenantsRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	q          *string
+}
+
+func (r TenantsApiApiSearchTenantsRequest) Q(q string) TenantsApiApiSearchTenantsRequest {
+	r.q = &q
+	return r
+}
+
+func (r TenantsApiApiSearchTenantsRequest) Execute() (TenantsEntity, *_nethttp.Response, error) {
+	return r.ApiService.SearchTenantsExecute(r)
+}
+
 /*
-SearchTenants Searches for a tenant with the specified identity
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * SearchTenants Searches for a tenant with the specified identity
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param q Identity to search for.
-@return TenantsEntity
-*/
-func (a *TenantsApiService) SearchTenants(ctx _context.Context, q string) (TenantsEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiSearchTenantsRequest
+ */
+func (a *TenantsApiService) SearchTenants(ctx _context.Context) TenantsApiApiSearchTenantsRequest {
+	return TenantsApiApiSearchTenantsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TenantsEntity
+ */
+func (a *TenantsApiService) SearchTenantsExecute(r TenantsApiApiSearchTenantsRequest) (TenantsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -703,13 +966,21 @@ func (a *TenantsApiService) SearchTenants(ctx _context.Context, q string) (Tenan
 		localVarReturnValue  TenantsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/search-results"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.SearchTenants")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/search-results"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.q == nil {
+		return localVarReturnValue, nil, reportError("q is required and must be specified")
+	}
 
-	localVarQueryParams.Add("q", parameterToString(q, ""))
+	localVarQueryParams.Add("q", parameterToString(*r.q, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -727,18 +998,19 @@ func (a *TenantsApiService) SearchTenants(ctx _context.Context, q string) (Tenan
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -763,15 +1035,42 @@ func (a *TenantsApiService) SearchTenants(ctx _context.Context, q string) (Tenan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiUpdateUserRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	id         string
+	body       *UserEntity
+}
+
+func (r TenantsApiApiUpdateUserRequest) Body(body UserEntity) TenantsApiApiUpdateUserRequest {
+	r.body = &body
+	return r
+}
+
+func (r TenantsApiApiUpdateUserRequest) Execute() (UserEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateUserExecute(r)
+}
+
 /*
-UpdateUser Updates a user
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateUser Updates a user
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The user id.
- * @param body The user configuration details.
-@return UserEntity
-*/
-func (a *TenantsApiService) UpdateUser(ctx _context.Context, id string, body UserEntity) (UserEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiUpdateUserRequest
+ */
+func (a *TenantsApiService) UpdateUser(ctx _context.Context, id string) TenantsApiApiUpdateUserRequest {
+	return TenantsApiApiUpdateUserRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserEntity
+ */
+func (a *TenantsApiService) UpdateUserExecute(r TenantsApiApiUpdateUserRequest) (UserEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -781,13 +1080,20 @@ func (a *TenantsApiService) UpdateUser(ctx _context.Context, id string, body Use
 		localVarReturnValue  UserEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/users/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.UpdateUser")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/users/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -807,19 +1113,20 @@ func (a *TenantsApiService) UpdateUser(ctx _context.Context, id string, body Use
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -844,15 +1151,42 @@ func (a *TenantsApiService) UpdateUser(ctx _context.Context, id string, body Use
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type TenantsApiApiUpdateUserGroupRequest struct {
+	ctx        _context.Context
+	ApiService *TenantsApiService
+	id         string
+	body       *UserGroupEntity
+}
+
+func (r TenantsApiApiUpdateUserGroupRequest) Body(body UserGroupEntity) TenantsApiApiUpdateUserGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r TenantsApiApiUpdateUserGroupRequest) Execute() (UserGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateUserGroupExecute(r)
+}
+
 /*
-UpdateUserGroup Updates a user group
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateUserGroup Updates a user group
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The user group id.
- * @param body The user group configuration details.
-@return UserGroupEntity
-*/
-func (a *TenantsApiService) UpdateUserGroup(ctx _context.Context, id string, body UserGroupEntity) (UserGroupEntity, *_nethttp.Response, error) {
+ * @return TenantsApiApiUpdateUserGroupRequest
+ */
+func (a *TenantsApiService) UpdateUserGroup(ctx _context.Context, id string) TenantsApiApiUpdateUserGroupRequest {
+	return TenantsApiApiUpdateUserGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return UserGroupEntity
+ */
+func (a *TenantsApiService) UpdateUserGroupExecute(r TenantsApiApiUpdateUserGroupRequest) (UserGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -862,13 +1196,20 @@ func (a *TenantsApiService) UpdateUserGroup(ctx _context.Context, id string, bod
 		localVarReturnValue  UserGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/tenants/user-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TenantsApiService.UpdateUserGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tenants/user-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -888,19 +1229,20 @@ func (a *TenantsApiService) UpdateUserGroup(ctx _context.Context, id string, bod
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

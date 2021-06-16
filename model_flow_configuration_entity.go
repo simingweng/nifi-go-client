@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // FlowConfigurationEntity struct for FlowConfigurationEntity
 type FlowConfigurationEntity struct {
-	FlowConfiguration FlowConfigurationDto `json:"flowConfiguration,omitempty"`
+	FlowConfiguration *FlowConfigurationDTO `json:"flowConfiguration,omitempty"`
+}
+
+// NewFlowConfigurationEntity instantiates a new FlowConfigurationEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewFlowConfigurationEntity() *FlowConfigurationEntity {
+	this := FlowConfigurationEntity{}
+	return &this
+}
+
+// NewFlowConfigurationEntityWithDefaults instantiates a new FlowConfigurationEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewFlowConfigurationEntityWithDefaults() *FlowConfigurationEntity {
+	this := FlowConfigurationEntity{}
+	return &this
+}
+
+// GetFlowConfiguration returns the FlowConfiguration field value if set, zero value otherwise.
+func (o *FlowConfigurationEntity) GetFlowConfiguration() FlowConfigurationDTO {
+	if o == nil || o.FlowConfiguration == nil {
+		var ret FlowConfigurationDTO
+		return ret
+	}
+	return *o.FlowConfiguration
+}
+
+// GetFlowConfigurationOk returns a tuple with the FlowConfiguration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowConfigurationEntity) GetFlowConfigurationOk() (*FlowConfigurationDTO, bool) {
+	if o == nil || o.FlowConfiguration == nil {
+		return nil, false
+	}
+	return o.FlowConfiguration, true
+}
+
+// HasFlowConfiguration returns a boolean if a field has been set.
+func (o *FlowConfigurationEntity) HasFlowConfiguration() bool {
+	if o != nil && o.FlowConfiguration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowConfiguration gets a reference to the given FlowConfigurationDTO and assigns it to the FlowConfiguration field.
+func (o *FlowConfigurationEntity) SetFlowConfiguration(v FlowConfigurationDTO) {
+	o.FlowConfiguration = &v
+}
+
+func (o FlowConfigurationEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.FlowConfiguration != nil {
+		toSerialize["flowConfiguration"] = o.FlowConfiguration
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableFlowConfigurationEntity struct {
+	value *FlowConfigurationEntity
+	isSet bool
+}
+
+func (v NullableFlowConfigurationEntity) Get() *FlowConfigurationEntity {
+	return v.value
+}
+
+func (v *NullableFlowConfigurationEntity) Set(val *FlowConfigurationEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableFlowConfigurationEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableFlowConfigurationEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableFlowConfigurationEntity(val *FlowConfigurationEntity) *NullableFlowConfigurationEntity {
+	return &NullableFlowConfigurationEntity{value: val, isSet: true}
+}
+
+func (v NullableFlowConfigurationEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableFlowConfigurationEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

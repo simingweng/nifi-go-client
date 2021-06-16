@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,31 +11,548 @@
 
 package nifi
 
-// ListingRequestDto struct for ListingRequestDto
-type ListingRequestDto struct {
+import (
+	"encoding/json"
+)
+
+// ListingRequestDTO struct for ListingRequestDTO
+type ListingRequestDTO struct {
 	// The id for this listing request.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The URI for future requests to this listing request.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The timestamp when the query was submitted.
-	SubmissionTime string `json:"submissionTime,omitempty"`
+	SubmissionTime *string `json:"submissionTime,omitempty"`
 	// The last time this listing request was updated.
-	LastUpdated string `json:"lastUpdated,omitempty"`
+	LastUpdated *string `json:"lastUpdated,omitempty"`
 	// The current percent complete.
-	PercentCompleted int32 `json:"percentCompleted,omitempty"`
+	PercentCompleted *int32 `json:"percentCompleted,omitempty"`
 	// Whether the query has finished.
-	Finished bool `json:"finished,omitempty"`
+	Finished *bool `json:"finished,omitempty"`
 	// The reason, if any, that this listing request failed.
-	FailureReason string `json:"failureReason,omitempty"`
+	FailureReason *string `json:"failureReason,omitempty"`
 	// The maximum number of FlowFileSummary objects to return
-	MaxResults int32 `json:"maxResults,omitempty"`
+	MaxResults *int32 `json:"maxResults,omitempty"`
 	// The current state of the listing request.
-	State     string       `json:"state,omitempty"`
-	QueueSize QueueSizeDto `json:"queueSize,omitempty"`
+	State     *string       `json:"state,omitempty"`
+	QueueSize *QueueSizeDTO `json:"queueSize,omitempty"`
 	// The FlowFile summaries. The summaries will be populated once the request has completed.
-	FlowFileSummaries []FlowFileSummaryDto `json:"flowFileSummaries,omitempty"`
+	FlowFileSummaries *[]FlowFileSummaryDTO `json:"flowFileSummaries,omitempty"`
 	// Whether the source of the connection is running
-	SourceRunning bool `json:"sourceRunning,omitempty"`
+	SourceRunning *bool `json:"sourceRunning,omitempty"`
 	// Whether the destination of the connection is running
-	DestinationRunning bool `json:"destinationRunning,omitempty"`
+	DestinationRunning *bool `json:"destinationRunning,omitempty"`
+}
+
+// NewListingRequestDTO instantiates a new ListingRequestDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewListingRequestDTO() *ListingRequestDTO {
+	this := ListingRequestDTO{}
+	return &this
+}
+
+// NewListingRequestDTOWithDefaults instantiates a new ListingRequestDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewListingRequestDTOWithDefaults() *ListingRequestDTO {
+	this := ListingRequestDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ListingRequestDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *ListingRequestDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetSubmissionTime returns the SubmissionTime field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetSubmissionTime() string {
+	if o == nil || o.SubmissionTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.SubmissionTime
+}
+
+// GetSubmissionTimeOk returns a tuple with the SubmissionTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetSubmissionTimeOk() (*string, bool) {
+	if o == nil || o.SubmissionTime == nil {
+		return nil, false
+	}
+	return o.SubmissionTime, true
+}
+
+// HasSubmissionTime returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasSubmissionTime() bool {
+	if o != nil && o.SubmissionTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSubmissionTime gets a reference to the given string and assigns it to the SubmissionTime field.
+func (o *ListingRequestDTO) SetSubmissionTime(v string) {
+	o.SubmissionTime = &v
+}
+
+// GetLastUpdated returns the LastUpdated field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetLastUpdated() string {
+	if o == nil || o.LastUpdated == nil {
+		var ret string
+		return ret
+	}
+	return *o.LastUpdated
+}
+
+// GetLastUpdatedOk returns a tuple with the LastUpdated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetLastUpdatedOk() (*string, bool) {
+	if o == nil || o.LastUpdated == nil {
+		return nil, false
+	}
+	return o.LastUpdated, true
+}
+
+// HasLastUpdated returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasLastUpdated() bool {
+	if o != nil && o.LastUpdated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLastUpdated gets a reference to the given string and assigns it to the LastUpdated field.
+func (o *ListingRequestDTO) SetLastUpdated(v string) {
+	o.LastUpdated = &v
+}
+
+// GetPercentCompleted returns the PercentCompleted field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetPercentCompleted() int32 {
+	if o == nil || o.PercentCompleted == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PercentCompleted
+}
+
+// GetPercentCompletedOk returns a tuple with the PercentCompleted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetPercentCompletedOk() (*int32, bool) {
+	if o == nil || o.PercentCompleted == nil {
+		return nil, false
+	}
+	return o.PercentCompleted, true
+}
+
+// HasPercentCompleted returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasPercentCompleted() bool {
+	if o != nil && o.PercentCompleted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPercentCompleted gets a reference to the given int32 and assigns it to the PercentCompleted field.
+func (o *ListingRequestDTO) SetPercentCompleted(v int32) {
+	o.PercentCompleted = &v
+}
+
+// GetFinished returns the Finished field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetFinished() bool {
+	if o == nil || o.Finished == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Finished
+}
+
+// GetFinishedOk returns a tuple with the Finished field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetFinishedOk() (*bool, bool) {
+	if o == nil || o.Finished == nil {
+		return nil, false
+	}
+	return o.Finished, true
+}
+
+// HasFinished returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasFinished() bool {
+	if o != nil && o.Finished != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFinished gets a reference to the given bool and assigns it to the Finished field.
+func (o *ListingRequestDTO) SetFinished(v bool) {
+	o.Finished = &v
+}
+
+// GetFailureReason returns the FailureReason field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetFailureReason() string {
+	if o == nil || o.FailureReason == nil {
+		var ret string
+		return ret
+	}
+	return *o.FailureReason
+}
+
+// GetFailureReasonOk returns a tuple with the FailureReason field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetFailureReasonOk() (*string, bool) {
+	if o == nil || o.FailureReason == nil {
+		return nil, false
+	}
+	return o.FailureReason, true
+}
+
+// HasFailureReason returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasFailureReason() bool {
+	if o != nil && o.FailureReason != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFailureReason gets a reference to the given string and assigns it to the FailureReason field.
+func (o *ListingRequestDTO) SetFailureReason(v string) {
+	o.FailureReason = &v
+}
+
+// GetMaxResults returns the MaxResults field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetMaxResults() int32 {
+	if o == nil || o.MaxResults == nil {
+		var ret int32
+		return ret
+	}
+	return *o.MaxResults
+}
+
+// GetMaxResultsOk returns a tuple with the MaxResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetMaxResultsOk() (*int32, bool) {
+	if o == nil || o.MaxResults == nil {
+		return nil, false
+	}
+	return o.MaxResults, true
+}
+
+// HasMaxResults returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasMaxResults() bool {
+	if o != nil && o.MaxResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMaxResults gets a reference to the given int32 and assigns it to the MaxResults field.
+func (o *ListingRequestDTO) SetMaxResults(v int32) {
+	o.MaxResults = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ListingRequestDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetQueueSize returns the QueueSize field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetQueueSize() QueueSizeDTO {
+	if o == nil || o.QueueSize == nil {
+		var ret QueueSizeDTO
+		return ret
+	}
+	return *o.QueueSize
+}
+
+// GetQueueSizeOk returns a tuple with the QueueSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetQueueSizeOk() (*QueueSizeDTO, bool) {
+	if o == nil || o.QueueSize == nil {
+		return nil, false
+	}
+	return o.QueueSize, true
+}
+
+// HasQueueSize returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasQueueSize() bool {
+	if o != nil && o.QueueSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueueSize gets a reference to the given QueueSizeDTO and assigns it to the QueueSize field.
+func (o *ListingRequestDTO) SetQueueSize(v QueueSizeDTO) {
+	o.QueueSize = &v
+}
+
+// GetFlowFileSummaries returns the FlowFileSummaries field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetFlowFileSummaries() []FlowFileSummaryDTO {
+	if o == nil || o.FlowFileSummaries == nil {
+		var ret []FlowFileSummaryDTO
+		return ret
+	}
+	return *o.FlowFileSummaries
+}
+
+// GetFlowFileSummariesOk returns a tuple with the FlowFileSummaries field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetFlowFileSummariesOk() (*[]FlowFileSummaryDTO, bool) {
+	if o == nil || o.FlowFileSummaries == nil {
+		return nil, false
+	}
+	return o.FlowFileSummaries, true
+}
+
+// HasFlowFileSummaries returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasFlowFileSummaries() bool {
+	if o != nil && o.FlowFileSummaries != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileSummaries gets a reference to the given []FlowFileSummaryDTO and assigns it to the FlowFileSummaries field.
+func (o *ListingRequestDTO) SetFlowFileSummaries(v []FlowFileSummaryDTO) {
+	o.FlowFileSummaries = &v
+}
+
+// GetSourceRunning returns the SourceRunning field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetSourceRunning() bool {
+	if o == nil || o.SourceRunning == nil {
+		var ret bool
+		return ret
+	}
+	return *o.SourceRunning
+}
+
+// GetSourceRunningOk returns a tuple with the SourceRunning field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetSourceRunningOk() (*bool, bool) {
+	if o == nil || o.SourceRunning == nil {
+		return nil, false
+	}
+	return o.SourceRunning, true
+}
+
+// HasSourceRunning returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasSourceRunning() bool {
+	if o != nil && o.SourceRunning != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceRunning gets a reference to the given bool and assigns it to the SourceRunning field.
+func (o *ListingRequestDTO) SetSourceRunning(v bool) {
+	o.SourceRunning = &v
+}
+
+// GetDestinationRunning returns the DestinationRunning field value if set, zero value otherwise.
+func (o *ListingRequestDTO) GetDestinationRunning() bool {
+	if o == nil || o.DestinationRunning == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DestinationRunning
+}
+
+// GetDestinationRunningOk returns a tuple with the DestinationRunning field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestDTO) GetDestinationRunningOk() (*bool, bool) {
+	if o == nil || o.DestinationRunning == nil {
+		return nil, false
+	}
+	return o.DestinationRunning, true
+}
+
+// HasDestinationRunning returns a boolean if a field has been set.
+func (o *ListingRequestDTO) HasDestinationRunning() bool {
+	if o != nil && o.DestinationRunning != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDestinationRunning gets a reference to the given bool and assigns it to the DestinationRunning field.
+func (o *ListingRequestDTO) SetDestinationRunning(v bool) {
+	o.DestinationRunning = &v
+}
+
+func (o ListingRequestDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.SubmissionTime != nil {
+		toSerialize["submissionTime"] = o.SubmissionTime
+	}
+	if o.LastUpdated != nil {
+		toSerialize["lastUpdated"] = o.LastUpdated
+	}
+	if o.PercentCompleted != nil {
+		toSerialize["percentCompleted"] = o.PercentCompleted
+	}
+	if o.Finished != nil {
+		toSerialize["finished"] = o.Finished
+	}
+	if o.FailureReason != nil {
+		toSerialize["failureReason"] = o.FailureReason
+	}
+	if o.MaxResults != nil {
+		toSerialize["maxResults"] = o.MaxResults
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.QueueSize != nil {
+		toSerialize["queueSize"] = o.QueueSize
+	}
+	if o.FlowFileSummaries != nil {
+		toSerialize["flowFileSummaries"] = o.FlowFileSummaries
+	}
+	if o.SourceRunning != nil {
+		toSerialize["sourceRunning"] = o.SourceRunning
+	}
+	if o.DestinationRunning != nil {
+		toSerialize["destinationRunning"] = o.DestinationRunning
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableListingRequestDTO struct {
+	value *ListingRequestDTO
+	isSet bool
+}
+
+func (v NullableListingRequestDTO) Get() *ListingRequestDTO {
+	return v.value
+}
+
+func (v *NullableListingRequestDTO) Set(val *ListingRequestDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableListingRequestDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableListingRequestDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableListingRequestDTO(val *ListingRequestDTO) *NullableListingRequestDTO {
+	return &NullableListingRequestDTO{value: val, isSet: true}
+}
+
+func (v NullableListingRequestDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableListingRequestDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

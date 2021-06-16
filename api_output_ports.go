@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // OutputPortsApiService OutputPortsApi service
 type OutputPortsApiService service
 
+type OutputPortsApiApiGetOutputPortRequest struct {
+	ctx        _context.Context
+	ApiService *OutputPortsApiService
+	id         string
+}
+
+func (r OutputPortsApiApiGetOutputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetOutputPortExecute(r)
+}
+
 /*
-GetOutputPort Gets an output port
+ * GetOutputPort Gets an output port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The output port id.
-@return PortEntity
-*/
-func (a *OutputPortsApiService) GetOutputPort(ctx _context.Context, id string) (PortEntity, *_nethttp.Response, error) {
+ * @return OutputPortsApiApiGetOutputPortRequest
+ */
+func (a *OutputPortsApiService) GetOutputPort(ctx _context.Context, id string) OutputPortsApiApiGetOutputPortRequest {
+	return OutputPortsApiApiGetOutputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *OutputPortsApiService) GetOutputPortExecute(r OutputPortsApiApiGetOutputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *OutputPortsApiService) GetOutputPort(ctx _context.Context, id string) (
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/output-ports/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OutputPortsApiService.GetOutputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/output-ports/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *OutputPortsApiService) GetOutputPort(ctx _context.Context, id string) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,24 +132,51 @@ func (a *OutputPortsApiService) GetOutputPort(ctx _context.Context, id string) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// OutputPortsApiRemoveOutputPortOpts Optional parameters for the method 'RemoveOutputPort'
-type OutputPortsApiRemoveOutputPortOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type OutputPortsApiApiRemoveOutputPortRequest struct {
+	ctx                          _context.Context
+	ApiService                   *OutputPortsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r OutputPortsApiApiRemoveOutputPortRequest) Version(version string) OutputPortsApiApiRemoveOutputPortRequest {
+	r.version = &version
+	return r
+}
+func (r OutputPortsApiApiRemoveOutputPortRequest) ClientId(clientId string) OutputPortsApiApiRemoveOutputPortRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r OutputPortsApiApiRemoveOutputPortRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) OutputPortsApiApiRemoveOutputPortRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r OutputPortsApiApiRemoveOutputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveOutputPortExecute(r)
 }
 
 /*
-RemoveOutputPort Deletes an output port
+ * RemoveOutputPort Deletes an output port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The output port id.
- * @param optional nil or *OutputPortsApiRemoveOutputPortOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return PortEntity
-*/
-func (a *OutputPortsApiService) RemoveOutputPort(ctx _context.Context, id string, localVarOptionals *OutputPortsApiRemoveOutputPortOpts) (PortEntity, *_nethttp.Response, error) {
+ * @return OutputPortsApiApiRemoveOutputPortRequest
+ */
+func (a *OutputPortsApiService) RemoveOutputPort(ctx _context.Context, id string) OutputPortsApiApiRemoveOutputPortRequest {
+	return OutputPortsApiApiRemoveOutputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *OutputPortsApiService) RemoveOutputPortExecute(r OutputPortsApiApiRemoveOutputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -132,22 +186,26 @@ func (a *OutputPortsApiService) RemoveOutputPort(ctx _context.Context, id string
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/output-ports/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OutputPortsApiService.RemoveOutputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/output-ports/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +224,19 @@ func (a *OutputPortsApiService) RemoveOutputPort(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,14 +261,41 @@ func (a *OutputPortsApiService) RemoveOutputPort(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type OutputPortsApiApiUpdateOutputPortRequest struct {
+	ctx        _context.Context
+	ApiService *OutputPortsApiService
+	id         string
+	body       *PortEntity
+}
+
+func (r OutputPortsApiApiUpdateOutputPortRequest) Body(body PortEntity) OutputPortsApiApiUpdateOutputPortRequest {
+	r.body = &body
+	return r
+}
+
+func (r OutputPortsApiApiUpdateOutputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateOutputPortExecute(r)
+}
+
 /*
-UpdateOutputPort Updates an output port
+ * UpdateOutputPort Updates an output port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The output port id.
- * @param body The output port configuration details.
-@return PortEntity
-*/
-func (a *OutputPortsApiService) UpdateOutputPort(ctx _context.Context, id string, body PortEntity) (PortEntity, *_nethttp.Response, error) {
+ * @return OutputPortsApiApiUpdateOutputPortRequest
+ */
+func (a *OutputPortsApiService) UpdateOutputPort(ctx _context.Context, id string) OutputPortsApiApiUpdateOutputPortRequest {
+	return OutputPortsApiApiUpdateOutputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *OutputPortsApiService) UpdateOutputPortExecute(r OutputPortsApiApiUpdateOutputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -219,13 +305,20 @@ func (a *OutputPortsApiService) UpdateOutputPort(ctx _context.Context, id string
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/output-ports/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OutputPortsApiService.UpdateOutputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/output-ports/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -245,19 +338,20 @@ func (a *OutputPortsApiService) UpdateOutputPort(ctx _context.Context, id string
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -282,14 +376,41 @@ func (a *OutputPortsApiService) UpdateOutputPort(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type OutputPortsApiApiUpdateRunStatusRequest struct {
+	ctx        _context.Context
+	ApiService *OutputPortsApiService
+	id         string
+	body       *PortRunStatusEntity
+}
+
+func (r OutputPortsApiApiUpdateRunStatusRequest) Body(body PortRunStatusEntity) OutputPortsApiApiUpdateRunStatusRequest {
+	r.body = &body
+	return r
+}
+
+func (r OutputPortsApiApiUpdateRunStatusRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRunStatusExecute(r)
+}
+
 /*
-UpdateRunStatus Updates run status of an output-port
+ * UpdateRunStatus Updates run status of an output-port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The port id.
- * @param body The port run status.
-@return ProcessorEntity
-*/
-func (a *OutputPortsApiService) UpdateRunStatus(ctx _context.Context, id string, body PortRunStatusEntity) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return OutputPortsApiApiUpdateRunStatusRequest
+ */
+func (a *OutputPortsApiService) UpdateRunStatus(ctx _context.Context, id string) OutputPortsApiApiUpdateRunStatusRequest {
+	return OutputPortsApiApiUpdateRunStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *OutputPortsApiService) UpdateRunStatusExecute(r OutputPortsApiApiUpdateRunStatusRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -299,13 +420,20 @@ func (a *OutputPortsApiService) UpdateRunStatus(ctx _context.Context, id string,
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/output-ports/{id}/run-status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OutputPortsApiService.UpdateRunStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/output-ports/{id}/run-status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -325,19 +453,20 @@ func (a *OutputPortsApiService) UpdateRunStatus(ctx _context.Context, id string,
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

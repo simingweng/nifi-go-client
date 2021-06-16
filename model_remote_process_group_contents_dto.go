@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// RemoteProcessGroupContentsDto struct for RemoteProcessGroupContentsDto
-type RemoteProcessGroupContentsDto struct {
+import (
+	"encoding/json"
+)
+
+// RemoteProcessGroupContentsDTO struct for RemoteProcessGroupContentsDTO
+type RemoteProcessGroupContentsDTO struct {
 	// The input ports to which data can be sent.
-	InputPorts []RemoteProcessGroupPortDto `json:"inputPorts,omitempty"`
+	InputPorts *[]RemoteProcessGroupPortDTO `json:"inputPorts,omitempty"`
 	// The output ports from which data can be retrieved.
-	OutputPorts []RemoteProcessGroupPortDto `json:"outputPorts,omitempty"`
+	OutputPorts *[]RemoteProcessGroupPortDTO `json:"outputPorts,omitempty"`
+}
+
+// NewRemoteProcessGroupContentsDTO instantiates a new RemoteProcessGroupContentsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRemoteProcessGroupContentsDTO() *RemoteProcessGroupContentsDTO {
+	this := RemoteProcessGroupContentsDTO{}
+	return &this
+}
+
+// NewRemoteProcessGroupContentsDTOWithDefaults instantiates a new RemoteProcessGroupContentsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRemoteProcessGroupContentsDTOWithDefaults() *RemoteProcessGroupContentsDTO {
+	this := RemoteProcessGroupContentsDTO{}
+	return &this
+}
+
+// GetInputPorts returns the InputPorts field value if set, zero value otherwise.
+func (o *RemoteProcessGroupContentsDTO) GetInputPorts() []RemoteProcessGroupPortDTO {
+	if o == nil || o.InputPorts == nil {
+		var ret []RemoteProcessGroupPortDTO
+		return ret
+	}
+	return *o.InputPorts
+}
+
+// GetInputPortsOk returns a tuple with the InputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupContentsDTO) GetInputPortsOk() (*[]RemoteProcessGroupPortDTO, bool) {
+	if o == nil || o.InputPorts == nil {
+		return nil, false
+	}
+	return o.InputPorts, true
+}
+
+// HasInputPorts returns a boolean if a field has been set.
+func (o *RemoteProcessGroupContentsDTO) HasInputPorts() bool {
+	if o != nil && o.InputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPorts gets a reference to the given []RemoteProcessGroupPortDTO and assigns it to the InputPorts field.
+func (o *RemoteProcessGroupContentsDTO) SetInputPorts(v []RemoteProcessGroupPortDTO) {
+	o.InputPorts = &v
+}
+
+// GetOutputPorts returns the OutputPorts field value if set, zero value otherwise.
+func (o *RemoteProcessGroupContentsDTO) GetOutputPorts() []RemoteProcessGroupPortDTO {
+	if o == nil || o.OutputPorts == nil {
+		var ret []RemoteProcessGroupPortDTO
+		return ret
+	}
+	return *o.OutputPorts
+}
+
+// GetOutputPortsOk returns a tuple with the OutputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupContentsDTO) GetOutputPortsOk() (*[]RemoteProcessGroupPortDTO, bool) {
+	if o == nil || o.OutputPorts == nil {
+		return nil, false
+	}
+	return o.OutputPorts, true
+}
+
+// HasOutputPorts returns a boolean if a field has been set.
+func (o *RemoteProcessGroupContentsDTO) HasOutputPorts() bool {
+	if o != nil && o.OutputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPorts gets a reference to the given []RemoteProcessGroupPortDTO and assigns it to the OutputPorts field.
+func (o *RemoteProcessGroupContentsDTO) SetOutputPorts(v []RemoteProcessGroupPortDTO) {
+	o.OutputPorts = &v
+}
+
+func (o RemoteProcessGroupContentsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.InputPorts != nil {
+		toSerialize["inputPorts"] = o.InputPorts
+	}
+	if o.OutputPorts != nil {
+		toSerialize["outputPorts"] = o.OutputPorts
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRemoteProcessGroupContentsDTO struct {
+	value *RemoteProcessGroupContentsDTO
+	isSet bool
+}
+
+func (v NullableRemoteProcessGroupContentsDTO) Get() *RemoteProcessGroupContentsDTO {
+	return v.value
+}
+
+func (v *NullableRemoteProcessGroupContentsDTO) Set(val *RemoteProcessGroupContentsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRemoteProcessGroupContentsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRemoteProcessGroupContentsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRemoteProcessGroupContentsDTO(val *RemoteProcessGroupContentsDTO) *NullableRemoteProcessGroupContentsDTO {
+	return &NullableRemoteProcessGroupContentsDTO{value: val, isSet: true}
+}
+
+func (v NullableRemoteProcessGroupContentsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRemoteProcessGroupContentsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

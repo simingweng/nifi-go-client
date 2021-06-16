@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // TemplatesEntity struct for TemplatesEntity
 type TemplatesEntity struct {
-	Templates []TemplateEntity `json:"templates,omitempty"`
+	Templates *[]TemplateEntity `json:"templates,omitempty"`
 	// When this content was generated.
-	Generated string `json:"generated,omitempty"`
+	Generated *string `json:"generated,omitempty"`
+}
+
+// NewTemplatesEntity instantiates a new TemplatesEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewTemplatesEntity() *TemplatesEntity {
+	this := TemplatesEntity{}
+	return &this
+}
+
+// NewTemplatesEntityWithDefaults instantiates a new TemplatesEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewTemplatesEntityWithDefaults() *TemplatesEntity {
+	this := TemplatesEntity{}
+	return &this
+}
+
+// GetTemplates returns the Templates field value if set, zero value otherwise.
+func (o *TemplatesEntity) GetTemplates() []TemplateEntity {
+	if o == nil || o.Templates == nil {
+		var ret []TemplateEntity
+		return ret
+	}
+	return *o.Templates
+}
+
+// GetTemplatesOk returns a tuple with the Templates field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplatesEntity) GetTemplatesOk() (*[]TemplateEntity, bool) {
+	if o == nil || o.Templates == nil {
+		return nil, false
+	}
+	return o.Templates, true
+}
+
+// HasTemplates returns a boolean if a field has been set.
+func (o *TemplatesEntity) HasTemplates() bool {
+	if o != nil && o.Templates != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTemplates gets a reference to the given []TemplateEntity and assigns it to the Templates field.
+func (o *TemplatesEntity) SetTemplates(v []TemplateEntity) {
+	o.Templates = &v
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *TemplatesEntity) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplatesEntity) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *TemplatesEntity) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *TemplatesEntity) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+func (o TemplatesEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Templates != nil {
+		toSerialize["templates"] = o.Templates
+	}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableTemplatesEntity struct {
+	value *TemplatesEntity
+	isSet bool
+}
+
+func (v NullableTemplatesEntity) Get() *TemplatesEntity {
+	return v.value
+}
+
+func (v *NullableTemplatesEntity) Set(val *TemplatesEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableTemplatesEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableTemplatesEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableTemplatesEntity(val *TemplatesEntity) *NullableTemplatesEntity {
+	return &NullableTemplatesEntity{value: val, isSet: true}
+}
+
+func (v NullableTemplatesEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableTemplatesEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

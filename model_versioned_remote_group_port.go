@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,27 +11,509 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedRemoteGroupPort struct for VersionedRemoteGroupPort
 type VersionedRemoteGroupPort struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments string   `json:"comments,omitempty"`
-	Position Position `json:"position,omitempty"`
+	Comments *string   `json:"comments,omitempty"`
+	Position *Position `json:"position,omitempty"`
 	// The id of the remote process group that the port resides in.
-	RemoteGroupId string `json:"remoteGroupId,omitempty"`
+	RemoteGroupId *string `json:"remoteGroupId,omitempty"`
 	// The number of task that may transmit flowfiles to the target port concurrently.
-	ConcurrentlySchedulableTaskCount int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
+	ConcurrentlySchedulableTaskCount *int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
 	// Whether the flowfiles are compressed when sent to the target port.
-	UseCompression bool      `json:"useCompression,omitempty"`
-	BatchSize      BatchSize `json:"batchSize,omitempty"`
-	ComponentType  string    `json:"componentType,omitempty"`
+	UseCompression *bool      `json:"useCompression,omitempty"`
+	BatchSize      *BatchSize `json:"batchSize,omitempty"`
+	ComponentType  *string    `json:"componentType,omitempty"`
 	// The ID of the port on the target NiFi instance
-	TargetId string `json:"targetId,omitempty"`
+	TargetId *string `json:"targetId,omitempty"`
 	// The scheduled state of the component
-	ScheduledState string `json:"scheduledState,omitempty"`
+	ScheduledState *string `json:"scheduledState,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedRemoteGroupPort instantiates a new VersionedRemoteGroupPort object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedRemoteGroupPort() *VersionedRemoteGroupPort {
+	this := VersionedRemoteGroupPort{}
+	return &this
+}
+
+// NewVersionedRemoteGroupPortWithDefaults instantiates a new VersionedRemoteGroupPort object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedRemoteGroupPortWithDefaults() *VersionedRemoteGroupPort {
+	this := VersionedRemoteGroupPort{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedRemoteGroupPort) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedRemoteGroupPort) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedRemoteGroupPort) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedRemoteGroupPort) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetRemoteGroupId returns the RemoteGroupId field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetRemoteGroupId() string {
+	if o == nil || o.RemoteGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.RemoteGroupId
+}
+
+// GetRemoteGroupIdOk returns a tuple with the RemoteGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetRemoteGroupIdOk() (*string, bool) {
+	if o == nil || o.RemoteGroupId == nil {
+		return nil, false
+	}
+	return o.RemoteGroupId, true
+}
+
+// HasRemoteGroupId returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasRemoteGroupId() bool {
+	if o != nil && o.RemoteGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteGroupId gets a reference to the given string and assigns it to the RemoteGroupId field.
+func (o *VersionedRemoteGroupPort) SetRemoteGroupId(v string) {
+	o.RemoteGroupId = &v
+}
+
+// GetConcurrentlySchedulableTaskCount returns the ConcurrentlySchedulableTaskCount field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetConcurrentlySchedulableTaskCount() int32 {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ConcurrentlySchedulableTaskCount
+}
+
+// GetConcurrentlySchedulableTaskCountOk returns a tuple with the ConcurrentlySchedulableTaskCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetConcurrentlySchedulableTaskCountOk() (*int32, bool) {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		return nil, false
+	}
+	return o.ConcurrentlySchedulableTaskCount, true
+}
+
+// HasConcurrentlySchedulableTaskCount returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasConcurrentlySchedulableTaskCount() bool {
+	if o != nil && o.ConcurrentlySchedulableTaskCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConcurrentlySchedulableTaskCount gets a reference to the given int32 and assigns it to the ConcurrentlySchedulableTaskCount field.
+func (o *VersionedRemoteGroupPort) SetConcurrentlySchedulableTaskCount(v int32) {
+	o.ConcurrentlySchedulableTaskCount = &v
+}
+
+// GetUseCompression returns the UseCompression field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetUseCompression() bool {
+	if o == nil || o.UseCompression == nil {
+		var ret bool
+		return ret
+	}
+	return *o.UseCompression
+}
+
+// GetUseCompressionOk returns a tuple with the UseCompression field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetUseCompressionOk() (*bool, bool) {
+	if o == nil || o.UseCompression == nil {
+		return nil, false
+	}
+	return o.UseCompression, true
+}
+
+// HasUseCompression returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasUseCompression() bool {
+	if o != nil && o.UseCompression != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUseCompression gets a reference to the given bool and assigns it to the UseCompression field.
+func (o *VersionedRemoteGroupPort) SetUseCompression(v bool) {
+	o.UseCompression = &v
+}
+
+// GetBatchSize returns the BatchSize field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetBatchSize() BatchSize {
+	if o == nil || o.BatchSize == nil {
+		var ret BatchSize
+		return ret
+	}
+	return *o.BatchSize
+}
+
+// GetBatchSizeOk returns a tuple with the BatchSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetBatchSizeOk() (*BatchSize, bool) {
+	if o == nil || o.BatchSize == nil {
+		return nil, false
+	}
+	return o.BatchSize, true
+}
+
+// HasBatchSize returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasBatchSize() bool {
+	if o != nil && o.BatchSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBatchSize gets a reference to the given BatchSize and assigns it to the BatchSize field.
+func (o *VersionedRemoteGroupPort) SetBatchSize(v BatchSize) {
+	o.BatchSize = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedRemoteGroupPort) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetTargetId returns the TargetId field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetTargetId() string {
+	if o == nil || o.TargetId == nil {
+		var ret string
+		return ret
+	}
+	return *o.TargetId
+}
+
+// GetTargetIdOk returns a tuple with the TargetId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetTargetIdOk() (*string, bool) {
+	if o == nil || o.TargetId == nil {
+		return nil, false
+	}
+	return o.TargetId, true
+}
+
+// HasTargetId returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasTargetId() bool {
+	if o != nil && o.TargetId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetId gets a reference to the given string and assigns it to the TargetId field.
+func (o *VersionedRemoteGroupPort) SetTargetId(v string) {
+	o.TargetId = &v
+}
+
+// GetScheduledState returns the ScheduledState field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetScheduledState() string {
+	if o == nil || o.ScheduledState == nil {
+		var ret string
+		return ret
+	}
+	return *o.ScheduledState
+}
+
+// GetScheduledStateOk returns a tuple with the ScheduledState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetScheduledStateOk() (*string, bool) {
+	if o == nil || o.ScheduledState == nil {
+		return nil, false
+	}
+	return o.ScheduledState, true
+}
+
+// HasScheduledState returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasScheduledState() bool {
+	if o != nil && o.ScheduledState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetScheduledState gets a reference to the given string and assigns it to the ScheduledState field.
+func (o *VersionedRemoteGroupPort) SetScheduledState(v string) {
+	o.ScheduledState = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedRemoteGroupPort) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteGroupPort) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedRemoteGroupPort) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedRemoteGroupPort) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedRemoteGroupPort) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.RemoteGroupId != nil {
+		toSerialize["remoteGroupId"] = o.RemoteGroupId
+	}
+	if o.ConcurrentlySchedulableTaskCount != nil {
+		toSerialize["concurrentlySchedulableTaskCount"] = o.ConcurrentlySchedulableTaskCount
+	}
+	if o.UseCompression != nil {
+		toSerialize["useCompression"] = o.UseCompression
+	}
+	if o.BatchSize != nil {
+		toSerialize["batchSize"] = o.BatchSize
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.TargetId != nil {
+		toSerialize["targetId"] = o.TargetId
+	}
+	if o.ScheduledState != nil {
+		toSerialize["scheduledState"] = o.ScheduledState
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedRemoteGroupPort struct {
+	value *VersionedRemoteGroupPort
+	isSet bool
+}
+
+func (v NullableVersionedRemoteGroupPort) Get() *VersionedRemoteGroupPort {
+	return v.value
+}
+
+func (v *NullableVersionedRemoteGroupPort) Set(val *VersionedRemoteGroupPort) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedRemoteGroupPort) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedRemoteGroupPort) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedRemoteGroupPort(val *VersionedRemoteGroupPort) *NullableVersionedRemoteGroupPort {
+	return &NullableVersionedRemoteGroupPort{value: val, isSet: true}
+}
+
+func (v NullableVersionedRemoteGroupPort) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedRemoteGroupPort) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

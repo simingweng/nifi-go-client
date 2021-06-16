@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,401 @@
 
 package nifi
 
-// ProvenanceNodeDto struct for ProvenanceNodeDto
-type ProvenanceNodeDto struct {
+import (
+	"encoding/json"
+)
+
+// ProvenanceNodeDTO struct for ProvenanceNodeDTO
+type ProvenanceNodeDTO struct {
 	// The id of the node.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The uuid of the flowfile associated with the provenance event.
-	FlowFileUuid string `json:"flowFileUuid,omitempty"`
+	FlowFileUuid *string `json:"flowFileUuid,omitempty"`
 	// The uuid of the parent flowfiles of the provenance event.
-	ParentUuids []string `json:"parentUuids,omitempty"`
+	ParentUuids *[]string `json:"parentUuids,omitempty"`
 	// The uuid of the childrent flowfiles of the provenance event.
-	ChildUuids []string `json:"childUuids,omitempty"`
+	ChildUuids *[]string `json:"childUuids,omitempty"`
 	// The identifier of the node that this event/flowfile originated from.
-	ClusterNodeIdentifier string `json:"clusterNodeIdentifier,omitempty"`
+	ClusterNodeIdentifier *string `json:"clusterNodeIdentifier,omitempty"`
 	// The type of the node.
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 	// If the type is EVENT, this is the type of event.
-	EventType string `json:"eventType,omitempty"`
+	EventType *string `json:"eventType,omitempty"`
 	// The timestamp of the node in milliseconds.
-	Millis int64 `json:"millis,omitempty"`
+	Millis *int64 `json:"millis,omitempty"`
 	// The timestamp of the node formatted.
-	Timestamp string `json:"timestamp,omitempty"`
+	Timestamp *string `json:"timestamp,omitempty"`
+}
+
+// NewProvenanceNodeDTO instantiates a new ProvenanceNodeDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProvenanceNodeDTO() *ProvenanceNodeDTO {
+	this := ProvenanceNodeDTO{}
+	return &this
+}
+
+// NewProvenanceNodeDTOWithDefaults instantiates a new ProvenanceNodeDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProvenanceNodeDTOWithDefaults() *ProvenanceNodeDTO {
+	this := ProvenanceNodeDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProvenanceNodeDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetFlowFileUuid returns the FlowFileUuid field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetFlowFileUuid() string {
+	if o == nil || o.FlowFileUuid == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowFileUuid
+}
+
+// GetFlowFileUuidOk returns a tuple with the FlowFileUuid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetFlowFileUuidOk() (*string, bool) {
+	if o == nil || o.FlowFileUuid == nil {
+		return nil, false
+	}
+	return o.FlowFileUuid, true
+}
+
+// HasFlowFileUuid returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasFlowFileUuid() bool {
+	if o != nil && o.FlowFileUuid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileUuid gets a reference to the given string and assigns it to the FlowFileUuid field.
+func (o *ProvenanceNodeDTO) SetFlowFileUuid(v string) {
+	o.FlowFileUuid = &v
+}
+
+// GetParentUuids returns the ParentUuids field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetParentUuids() []string {
+	if o == nil || o.ParentUuids == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ParentUuids
+}
+
+// GetParentUuidsOk returns a tuple with the ParentUuids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetParentUuidsOk() (*[]string, bool) {
+	if o == nil || o.ParentUuids == nil {
+		return nil, false
+	}
+	return o.ParentUuids, true
+}
+
+// HasParentUuids returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasParentUuids() bool {
+	if o != nil && o.ParentUuids != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentUuids gets a reference to the given []string and assigns it to the ParentUuids field.
+func (o *ProvenanceNodeDTO) SetParentUuids(v []string) {
+	o.ParentUuids = &v
+}
+
+// GetChildUuids returns the ChildUuids field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetChildUuids() []string {
+	if o == nil || o.ChildUuids == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ChildUuids
+}
+
+// GetChildUuidsOk returns a tuple with the ChildUuids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetChildUuidsOk() (*[]string, bool) {
+	if o == nil || o.ChildUuids == nil {
+		return nil, false
+	}
+	return o.ChildUuids, true
+}
+
+// HasChildUuids returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasChildUuids() bool {
+	if o != nil && o.ChildUuids != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetChildUuids gets a reference to the given []string and assigns it to the ChildUuids field.
+func (o *ProvenanceNodeDTO) SetChildUuids(v []string) {
+	o.ChildUuids = &v
+}
+
+// GetClusterNodeIdentifier returns the ClusterNodeIdentifier field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetClusterNodeIdentifier() string {
+	if o == nil || o.ClusterNodeIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeIdentifier
+}
+
+// GetClusterNodeIdentifierOk returns a tuple with the ClusterNodeIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetClusterNodeIdentifierOk() (*string, bool) {
+	if o == nil || o.ClusterNodeIdentifier == nil {
+		return nil, false
+	}
+	return o.ClusterNodeIdentifier, true
+}
+
+// HasClusterNodeIdentifier returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasClusterNodeIdentifier() bool {
+	if o != nil && o.ClusterNodeIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeIdentifier gets a reference to the given string and assigns it to the ClusterNodeIdentifier field.
+func (o *ProvenanceNodeDTO) SetClusterNodeIdentifier(v string) {
+	o.ClusterNodeIdentifier = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ProvenanceNodeDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetEventType returns the EventType field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetEventType() string {
+	if o == nil || o.EventType == nil {
+		var ret string
+		return ret
+	}
+	return *o.EventType
+}
+
+// GetEventTypeOk returns a tuple with the EventType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetEventTypeOk() (*string, bool) {
+	if o == nil || o.EventType == nil {
+		return nil, false
+	}
+	return o.EventType, true
+}
+
+// HasEventType returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasEventType() bool {
+	if o != nil && o.EventType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventType gets a reference to the given string and assigns it to the EventType field.
+func (o *ProvenanceNodeDTO) SetEventType(v string) {
+	o.EventType = &v
+}
+
+// GetMillis returns the Millis field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetMillis() int64 {
+	if o == nil || o.Millis == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Millis
+}
+
+// GetMillisOk returns a tuple with the Millis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetMillisOk() (*int64, bool) {
+	if o == nil || o.Millis == nil {
+		return nil, false
+	}
+	return o.Millis, true
+}
+
+// HasMillis returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasMillis() bool {
+	if o != nil && o.Millis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMillis gets a reference to the given int64 and assigns it to the Millis field.
+func (o *ProvenanceNodeDTO) SetMillis(v int64) {
+	o.Millis = &v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *ProvenanceNodeDTO) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceNodeDTO) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *ProvenanceNodeDTO) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *ProvenanceNodeDTO) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+func (o ProvenanceNodeDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.FlowFileUuid != nil {
+		toSerialize["flowFileUuid"] = o.FlowFileUuid
+	}
+	if o.ParentUuids != nil {
+		toSerialize["parentUuids"] = o.ParentUuids
+	}
+	if o.ChildUuids != nil {
+		toSerialize["childUuids"] = o.ChildUuids
+	}
+	if o.ClusterNodeIdentifier != nil {
+		toSerialize["clusterNodeIdentifier"] = o.ClusterNodeIdentifier
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.EventType != nil {
+		toSerialize["eventType"] = o.EventType
+	}
+	if o.Millis != nil {
+		toSerialize["millis"] = o.Millis
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProvenanceNodeDTO struct {
+	value *ProvenanceNodeDTO
+	isSet bool
+}
+
+func (v NullableProvenanceNodeDTO) Get() *ProvenanceNodeDTO {
+	return v.value
+}
+
+func (v *NullableProvenanceNodeDTO) Set(val *ProvenanceNodeDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProvenanceNodeDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProvenanceNodeDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProvenanceNodeDTO(val *ProvenanceNodeDTO) *NullableProvenanceNodeDTO {
+	return &NullableProvenanceNodeDTO{value: val, isSet: true}
+}
+
+func (v NullableProvenanceNodeDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProvenanceNodeDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

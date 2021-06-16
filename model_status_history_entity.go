@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // StatusHistoryEntity struct for StatusHistoryEntity
 type StatusHistoryEntity struct {
-	StatusHistory StatusHistoryDto `json:"statusHistory,omitempty"`
+	StatusHistory *StatusHistoryDTO `json:"statusHistory,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewStatusHistoryEntity instantiates a new StatusHistoryEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewStatusHistoryEntity() *StatusHistoryEntity {
+	this := StatusHistoryEntity{}
+	return &this
+}
+
+// NewStatusHistoryEntityWithDefaults instantiates a new StatusHistoryEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewStatusHistoryEntityWithDefaults() *StatusHistoryEntity {
+	this := StatusHistoryEntity{}
+	return &this
+}
+
+// GetStatusHistory returns the StatusHistory field value if set, zero value otherwise.
+func (o *StatusHistoryEntity) GetStatusHistory() StatusHistoryDTO {
+	if o == nil || o.StatusHistory == nil {
+		var ret StatusHistoryDTO
+		return ret
+	}
+	return *o.StatusHistory
+}
+
+// GetStatusHistoryOk returns a tuple with the StatusHistory field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryEntity) GetStatusHistoryOk() (*StatusHistoryDTO, bool) {
+	if o == nil || o.StatusHistory == nil {
+		return nil, false
+	}
+	return o.StatusHistory, true
+}
+
+// HasStatusHistory returns a boolean if a field has been set.
+func (o *StatusHistoryEntity) HasStatusHistory() bool {
+	if o != nil && o.StatusHistory != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatusHistory gets a reference to the given StatusHistoryDTO and assigns it to the StatusHistory field.
+func (o *StatusHistoryEntity) SetStatusHistory(v StatusHistoryDTO) {
+	o.StatusHistory = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *StatusHistoryEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *StatusHistoryEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *StatusHistoryEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o StatusHistoryEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.StatusHistory != nil {
+		toSerialize["statusHistory"] = o.StatusHistory
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableStatusHistoryEntity struct {
+	value *StatusHistoryEntity
+	isSet bool
+}
+
+func (v NullableStatusHistoryEntity) Get() *StatusHistoryEntity {
+	return v.value
+}
+
+func (v *NullableStatusHistoryEntity) Set(val *StatusHistoryEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableStatusHistoryEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableStatusHistoryEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableStatusHistoryEntity(val *StatusHistoryEntity) *NullableStatusHistoryEntity {
+	return &NullableStatusHistoryEntity{value: val, isSet: true}
+}
+
+func (v NullableStatusHistoryEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableStatusHistoryEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

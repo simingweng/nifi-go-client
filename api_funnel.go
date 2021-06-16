@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // FunnelApiService FunnelApi service
 type FunnelApiService service
 
+type FunnelApiApiGetFunnelRequest struct {
+	ctx        _context.Context
+	ApiService *FunnelApiService
+	id         string
+}
+
+func (r FunnelApiApiGetFunnelRequest) Execute() (FunnelEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetFunnelExecute(r)
+}
+
 /*
-GetFunnel Gets a funnel
+ * GetFunnel Gets a funnel
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The funnel id.
-@return FunnelEntity
-*/
-func (a *FunnelApiService) GetFunnel(ctx _context.Context, id string) (FunnelEntity, *_nethttp.Response, error) {
+ * @return FunnelApiApiGetFunnelRequest
+ */
+func (a *FunnelApiService) GetFunnel(ctx _context.Context, id string) FunnelApiApiGetFunnelRequest {
+	return FunnelApiApiGetFunnelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FunnelEntity
+ */
+func (a *FunnelApiService) GetFunnelExecute(r FunnelApiApiGetFunnelRequest) (FunnelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *FunnelApiService) GetFunnel(ctx _context.Context, id string) (FunnelEnt
 		localVarReturnValue  FunnelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/funnels/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FunnelApiService.GetFunnel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/funnels/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *FunnelApiService) GetFunnel(ctx _context.Context, id string) (FunnelEnt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,24 +132,51 @@ func (a *FunnelApiService) GetFunnel(ctx _context.Context, id string) (FunnelEnt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// FunnelApiRemoveFunnelOpts Optional parameters for the method 'RemoveFunnel'
-type FunnelApiRemoveFunnelOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type FunnelApiApiRemoveFunnelRequest struct {
+	ctx                          _context.Context
+	ApiService                   *FunnelApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r FunnelApiApiRemoveFunnelRequest) Version(version string) FunnelApiApiRemoveFunnelRequest {
+	r.version = &version
+	return r
+}
+func (r FunnelApiApiRemoveFunnelRequest) ClientId(clientId string) FunnelApiApiRemoveFunnelRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r FunnelApiApiRemoveFunnelRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) FunnelApiApiRemoveFunnelRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r FunnelApiApiRemoveFunnelRequest) Execute() (FunnelEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveFunnelExecute(r)
 }
 
 /*
-RemoveFunnel Deletes a funnel
+ * RemoveFunnel Deletes a funnel
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The funnel id.
- * @param optional nil or *FunnelApiRemoveFunnelOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return FunnelEntity
-*/
-func (a *FunnelApiService) RemoveFunnel(ctx _context.Context, id string, localVarOptionals *FunnelApiRemoveFunnelOpts) (FunnelEntity, *_nethttp.Response, error) {
+ * @return FunnelApiApiRemoveFunnelRequest
+ */
+func (a *FunnelApiService) RemoveFunnel(ctx _context.Context, id string) FunnelApiApiRemoveFunnelRequest {
+	return FunnelApiApiRemoveFunnelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FunnelEntity
+ */
+func (a *FunnelApiService) RemoveFunnelExecute(r FunnelApiApiRemoveFunnelRequest) (FunnelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -132,22 +186,26 @@ func (a *FunnelApiService) RemoveFunnel(ctx _context.Context, id string, localVa
 		localVarReturnValue  FunnelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/funnels/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FunnelApiService.RemoveFunnel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/funnels/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +224,19 @@ func (a *FunnelApiService) RemoveFunnel(ctx _context.Context, id string, localVa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,14 +261,41 @@ func (a *FunnelApiService) RemoveFunnel(ctx _context.Context, id string, localVa
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type FunnelApiApiUpdateFunnelRequest struct {
+	ctx        _context.Context
+	ApiService *FunnelApiService
+	id         string
+	body       *FunnelEntity
+}
+
+func (r FunnelApiApiUpdateFunnelRequest) Body(body FunnelEntity) FunnelApiApiUpdateFunnelRequest {
+	r.body = &body
+	return r
+}
+
+func (r FunnelApiApiUpdateFunnelRequest) Execute() (FunnelEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateFunnelExecute(r)
+}
+
 /*
-UpdateFunnel Updates a funnel
+ * UpdateFunnel Updates a funnel
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The funnel id.
- * @param body The funnel configuration details.
-@return FunnelEntity
-*/
-func (a *FunnelApiService) UpdateFunnel(ctx _context.Context, id string, body FunnelEntity) (FunnelEntity, *_nethttp.Response, error) {
+ * @return FunnelApiApiUpdateFunnelRequest
+ */
+func (a *FunnelApiService) UpdateFunnel(ctx _context.Context, id string) FunnelApiApiUpdateFunnelRequest {
+	return FunnelApiApiUpdateFunnelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FunnelEntity
+ */
+func (a *FunnelApiService) UpdateFunnelExecute(r FunnelApiApiUpdateFunnelRequest) (FunnelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -219,13 +305,20 @@ func (a *FunnelApiService) UpdateFunnel(ctx _context.Context, id string, body Fu
 		localVarReturnValue  FunnelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/funnels/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FunnelApiService.UpdateFunnel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/funnels/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -245,19 +338,20 @@ func (a *FunnelApiService) UpdateFunnel(ctx _context.Context, id string, body Fu
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

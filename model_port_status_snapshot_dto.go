@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,30 +11,512 @@
 
 package nifi
 
-// PortStatusSnapshotDto struct for PortStatusSnapshotDto
-type PortStatusSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// PortStatusSnapshotDTO struct for PortStatusSnapshotDTO
+type PortStatusSnapshotDTO struct {
 	// The id of the port.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The id of the parent process group of the port.
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The name of the port.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The active thread count for the port.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// The number of FlowFiles that have been accepted in the last 5 minutes.
-	FlowFilesIn int32 `json:"flowFilesIn,omitempty"`
+	FlowFilesIn *int32 `json:"flowFilesIn,omitempty"`
 	// The size of hte FlowFiles that have been accepted in the last 5 minutes.
-	BytesIn int64 `json:"bytesIn,omitempty"`
+	BytesIn *int64 `json:"bytesIn,omitempty"`
 	// The count/size of flowfiles that have been accepted in the last 5 minutes.
-	Input string `json:"input,omitempty"`
+	Input *string `json:"input,omitempty"`
 	// The number of FlowFiles that have been processed in the last 5 minutes.
-	FlowFilesOut int32 `json:"flowFilesOut,omitempty"`
+	FlowFilesOut *int32 `json:"flowFilesOut,omitempty"`
 	// The number of bytes that have been processed in the last 5 minutes.
-	BytesOut int64 `json:"bytesOut,omitempty"`
+	BytesOut *int64 `json:"bytesOut,omitempty"`
 	// The count/size of flowfiles that have been processed in the last 5 minutes.
-	Output string `json:"output,omitempty"`
+	Output *string `json:"output,omitempty"`
 	// Whether the port has incoming or outgoing connections to a remote NiFi.
-	Transmitting bool `json:"transmitting,omitempty"`
+	Transmitting *bool `json:"transmitting,omitempty"`
 	// The run status of the port.
-	RunStatus string `json:"runStatus,omitempty"`
+	RunStatus *string `json:"runStatus,omitempty"`
+}
+
+// NewPortStatusSnapshotDTO instantiates a new PortStatusSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPortStatusSnapshotDTO() *PortStatusSnapshotDTO {
+	this := PortStatusSnapshotDTO{}
+	return &this
+}
+
+// NewPortStatusSnapshotDTOWithDefaults instantiates a new PortStatusSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPortStatusSnapshotDTOWithDefaults() *PortStatusSnapshotDTO {
+	this := PortStatusSnapshotDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *PortStatusSnapshotDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *PortStatusSnapshotDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *PortStatusSnapshotDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *PortStatusSnapshotDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetFlowFilesIn returns the FlowFilesIn field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetFlowFilesIn() int32 {
+	if o == nil || o.FlowFilesIn == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesIn
+}
+
+// GetFlowFilesInOk returns a tuple with the FlowFilesIn field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetFlowFilesInOk() (*int32, bool) {
+	if o == nil || o.FlowFilesIn == nil {
+		return nil, false
+	}
+	return o.FlowFilesIn, true
+}
+
+// HasFlowFilesIn returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasFlowFilesIn() bool {
+	if o != nil && o.FlowFilesIn != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesIn gets a reference to the given int32 and assigns it to the FlowFilesIn field.
+func (o *PortStatusSnapshotDTO) SetFlowFilesIn(v int32) {
+	o.FlowFilesIn = &v
+}
+
+// GetBytesIn returns the BytesIn field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetBytesIn() int64 {
+	if o == nil || o.BytesIn == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesIn
+}
+
+// GetBytesInOk returns a tuple with the BytesIn field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetBytesInOk() (*int64, bool) {
+	if o == nil || o.BytesIn == nil {
+		return nil, false
+	}
+	return o.BytesIn, true
+}
+
+// HasBytesIn returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasBytesIn() bool {
+	if o != nil && o.BytesIn != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesIn gets a reference to the given int64 and assigns it to the BytesIn field.
+func (o *PortStatusSnapshotDTO) SetBytesIn(v int64) {
+	o.BytesIn = &v
+}
+
+// GetInput returns the Input field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetInput() string {
+	if o == nil || o.Input == nil {
+		var ret string
+		return ret
+	}
+	return *o.Input
+}
+
+// GetInputOk returns a tuple with the Input field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetInputOk() (*string, bool) {
+	if o == nil || o.Input == nil {
+		return nil, false
+	}
+	return o.Input, true
+}
+
+// HasInput returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasInput() bool {
+	if o != nil && o.Input != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInput gets a reference to the given string and assigns it to the Input field.
+func (o *PortStatusSnapshotDTO) SetInput(v string) {
+	o.Input = &v
+}
+
+// GetFlowFilesOut returns the FlowFilesOut field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetFlowFilesOut() int32 {
+	if o == nil || o.FlowFilesOut == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesOut
+}
+
+// GetFlowFilesOutOk returns a tuple with the FlowFilesOut field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetFlowFilesOutOk() (*int32, bool) {
+	if o == nil || o.FlowFilesOut == nil {
+		return nil, false
+	}
+	return o.FlowFilesOut, true
+}
+
+// HasFlowFilesOut returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasFlowFilesOut() bool {
+	if o != nil && o.FlowFilesOut != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesOut gets a reference to the given int32 and assigns it to the FlowFilesOut field.
+func (o *PortStatusSnapshotDTO) SetFlowFilesOut(v int32) {
+	o.FlowFilesOut = &v
+}
+
+// GetBytesOut returns the BytesOut field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetBytesOut() int64 {
+	if o == nil || o.BytesOut == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesOut
+}
+
+// GetBytesOutOk returns a tuple with the BytesOut field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetBytesOutOk() (*int64, bool) {
+	if o == nil || o.BytesOut == nil {
+		return nil, false
+	}
+	return o.BytesOut, true
+}
+
+// HasBytesOut returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasBytesOut() bool {
+	if o != nil && o.BytesOut != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesOut gets a reference to the given int64 and assigns it to the BytesOut field.
+func (o *PortStatusSnapshotDTO) SetBytesOut(v int64) {
+	o.BytesOut = &v
+}
+
+// GetOutput returns the Output field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetOutput() string {
+	if o == nil || o.Output == nil {
+		var ret string
+		return ret
+	}
+	return *o.Output
+}
+
+// GetOutputOk returns a tuple with the Output field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetOutputOk() (*string, bool) {
+	if o == nil || o.Output == nil {
+		return nil, false
+	}
+	return o.Output, true
+}
+
+// HasOutput returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasOutput() bool {
+	if o != nil && o.Output != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutput gets a reference to the given string and assigns it to the Output field.
+func (o *PortStatusSnapshotDTO) SetOutput(v string) {
+	o.Output = &v
+}
+
+// GetTransmitting returns the Transmitting field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetTransmitting() bool {
+	if o == nil || o.Transmitting == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Transmitting
+}
+
+// GetTransmittingOk returns a tuple with the Transmitting field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetTransmittingOk() (*bool, bool) {
+	if o == nil || o.Transmitting == nil {
+		return nil, false
+	}
+	return o.Transmitting, true
+}
+
+// HasTransmitting returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasTransmitting() bool {
+	if o != nil && o.Transmitting != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransmitting gets a reference to the given bool and assigns it to the Transmitting field.
+func (o *PortStatusSnapshotDTO) SetTransmitting(v bool) {
+	o.Transmitting = &v
+}
+
+// GetRunStatus returns the RunStatus field value if set, zero value otherwise.
+func (o *PortStatusSnapshotDTO) GetRunStatus() string {
+	if o == nil || o.RunStatus == nil {
+		var ret string
+		return ret
+	}
+	return *o.RunStatus
+}
+
+// GetRunStatusOk returns a tuple with the RunStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusSnapshotDTO) GetRunStatusOk() (*string, bool) {
+	if o == nil || o.RunStatus == nil {
+		return nil, false
+	}
+	return o.RunStatus, true
+}
+
+// HasRunStatus returns a boolean if a field has been set.
+func (o *PortStatusSnapshotDTO) HasRunStatus() bool {
+	if o != nil && o.RunStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRunStatus gets a reference to the given string and assigns it to the RunStatus field.
+func (o *PortStatusSnapshotDTO) SetRunStatus(v string) {
+	o.RunStatus = &v
+}
+
+func (o PortStatusSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.FlowFilesIn != nil {
+		toSerialize["flowFilesIn"] = o.FlowFilesIn
+	}
+	if o.BytesIn != nil {
+		toSerialize["bytesIn"] = o.BytesIn
+	}
+	if o.Input != nil {
+		toSerialize["input"] = o.Input
+	}
+	if o.FlowFilesOut != nil {
+		toSerialize["flowFilesOut"] = o.FlowFilesOut
+	}
+	if o.BytesOut != nil {
+		toSerialize["bytesOut"] = o.BytesOut
+	}
+	if o.Output != nil {
+		toSerialize["output"] = o.Output
+	}
+	if o.Transmitting != nil {
+		toSerialize["transmitting"] = o.Transmitting
+	}
+	if o.RunStatus != nil {
+		toSerialize["runStatus"] = o.RunStatus
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePortStatusSnapshotDTO struct {
+	value *PortStatusSnapshotDTO
+	isSet bool
+}
+
+func (v NullablePortStatusSnapshotDTO) Get() *PortStatusSnapshotDTO {
+	return v.value
+}
+
+func (v *NullablePortStatusSnapshotDTO) Set(val *PortStatusSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePortStatusSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePortStatusSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePortStatusSnapshotDTO(val *PortStatusSnapshotDTO) *NullablePortStatusSnapshotDTO {
+	return &NullablePortStatusSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullablePortStatusSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePortStatusSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

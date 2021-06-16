@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
-// SystemDiagnosticsDto struct for SystemDiagnosticsDto
-type SystemDiagnosticsDto struct {
-	AggregateSnapshot SystemDiagnosticsSnapshotDto `json:"aggregateSnapshot,omitempty"`
+import (
+	"encoding/json"
+)
+
+// SystemDiagnosticsDTO struct for SystemDiagnosticsDTO
+type SystemDiagnosticsDTO struct {
+	AggregateSnapshot *SystemDiagnosticsSnapshotDTO `json:"aggregateSnapshot,omitempty"`
 	// A systems diagnostics snapshot for each node in the cluster. If the NiFi instance is a standalone instance, rather than a cluster, this may be null.
-	NodeSnapshots []NodeSystemDiagnosticsSnapshotDto `json:"nodeSnapshots,omitempty"`
+	NodeSnapshots *[]NodeSystemDiagnosticsSnapshotDTO `json:"nodeSnapshots,omitempty"`
+}
+
+// NewSystemDiagnosticsDTO instantiates a new SystemDiagnosticsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewSystemDiagnosticsDTO() *SystemDiagnosticsDTO {
+	this := SystemDiagnosticsDTO{}
+	return &this
+}
+
+// NewSystemDiagnosticsDTOWithDefaults instantiates a new SystemDiagnosticsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewSystemDiagnosticsDTOWithDefaults() *SystemDiagnosticsDTO {
+	this := SystemDiagnosticsDTO{}
+	return &this
+}
+
+// GetAggregateSnapshot returns the AggregateSnapshot field value if set, zero value otherwise.
+func (o *SystemDiagnosticsDTO) GetAggregateSnapshot() SystemDiagnosticsSnapshotDTO {
+	if o == nil || o.AggregateSnapshot == nil {
+		var ret SystemDiagnosticsSnapshotDTO
+		return ret
+	}
+	return *o.AggregateSnapshot
+}
+
+// GetAggregateSnapshotOk returns a tuple with the AggregateSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SystemDiagnosticsDTO) GetAggregateSnapshotOk() (*SystemDiagnosticsSnapshotDTO, bool) {
+	if o == nil || o.AggregateSnapshot == nil {
+		return nil, false
+	}
+	return o.AggregateSnapshot, true
+}
+
+// HasAggregateSnapshot returns a boolean if a field has been set.
+func (o *SystemDiagnosticsDTO) HasAggregateSnapshot() bool {
+	if o != nil && o.AggregateSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAggregateSnapshot gets a reference to the given SystemDiagnosticsSnapshotDTO and assigns it to the AggregateSnapshot field.
+func (o *SystemDiagnosticsDTO) SetAggregateSnapshot(v SystemDiagnosticsSnapshotDTO) {
+	o.AggregateSnapshot = &v
+}
+
+// GetNodeSnapshots returns the NodeSnapshots field value if set, zero value otherwise.
+func (o *SystemDiagnosticsDTO) GetNodeSnapshots() []NodeSystemDiagnosticsSnapshotDTO {
+	if o == nil || o.NodeSnapshots == nil {
+		var ret []NodeSystemDiagnosticsSnapshotDTO
+		return ret
+	}
+	return *o.NodeSnapshots
+}
+
+// GetNodeSnapshotsOk returns a tuple with the NodeSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SystemDiagnosticsDTO) GetNodeSnapshotsOk() (*[]NodeSystemDiagnosticsSnapshotDTO, bool) {
+	if o == nil || o.NodeSnapshots == nil {
+		return nil, false
+	}
+	return o.NodeSnapshots, true
+}
+
+// HasNodeSnapshots returns a boolean if a field has been set.
+func (o *SystemDiagnosticsDTO) HasNodeSnapshots() bool {
+	if o != nil && o.NodeSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeSnapshots gets a reference to the given []NodeSystemDiagnosticsSnapshotDTO and assigns it to the NodeSnapshots field.
+func (o *SystemDiagnosticsDTO) SetNodeSnapshots(v []NodeSystemDiagnosticsSnapshotDTO) {
+	o.NodeSnapshots = &v
+}
+
+func (o SystemDiagnosticsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.AggregateSnapshot != nil {
+		toSerialize["aggregateSnapshot"] = o.AggregateSnapshot
+	}
+	if o.NodeSnapshots != nil {
+		toSerialize["nodeSnapshots"] = o.NodeSnapshots
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableSystemDiagnosticsDTO struct {
+	value *SystemDiagnosticsDTO
+	isSet bool
+}
+
+func (v NullableSystemDiagnosticsDTO) Get() *SystemDiagnosticsDTO {
+	return v.value
+}
+
+func (v *NullableSystemDiagnosticsDTO) Set(val *SystemDiagnosticsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableSystemDiagnosticsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableSystemDiagnosticsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableSystemDiagnosticsDTO(val *SystemDiagnosticsDTO) *NullableSystemDiagnosticsDTO {
+	return &NullableSystemDiagnosticsDTO{value: val, isSet: true}
+}
+
+func (v NullableSystemDiagnosticsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableSystemDiagnosticsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

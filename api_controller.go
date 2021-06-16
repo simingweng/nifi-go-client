@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,38 @@ var (
 // ControllerApiService ControllerApi service
 type ControllerApiService service
 
+type ControllerApiApiCreateBulletinRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	body       *BulletinEntity
+}
+
+func (r ControllerApiApiCreateBulletinRequest) Body(body BulletinEntity) ControllerApiApiCreateBulletinRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiCreateBulletinRequest) Execute() (BulletinEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateBulletinExecute(r)
+}
+
 /*
-CreateBulletin Creates a new bulletin
+ * CreateBulletin Creates a new bulletin
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The reporting task configuration details.
-@return BulletinEntity
-*/
-func (a *ControllerApiService) CreateBulletin(ctx _context.Context, body BulletinEntity) (BulletinEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiCreateBulletinRequest
+ */
+func (a *ControllerApiService) CreateBulletin(ctx _context.Context) ControllerApiApiCreateBulletinRequest {
+	return ControllerApiApiCreateBulletinRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return BulletinEntity
+ */
+func (a *ControllerApiService) CreateBulletinExecute(r ControllerApiApiCreateBulletinRequest) (BulletinEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -44,11 +69,19 @@ func (a *ControllerApiService) CreateBulletin(ctx _context.Context, body Bulleti
 		localVarReturnValue  BulletinEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/bulletin"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.CreateBulletin")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/bulletin"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -68,19 +101,20 @@ func (a *ControllerApiService) CreateBulletin(ctx _context.Context, body Bulleti
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,13 +139,38 @@ func (a *ControllerApiService) CreateBulletin(ctx _context.Context, body Bulleti
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiCreateControllerServiceRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	body       *ControllerServiceEntity
+}
+
+func (r ControllerApiApiCreateControllerServiceRequest) Body(body ControllerServiceEntity) ControllerApiApiCreateControllerServiceRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiCreateControllerServiceRequest) Execute() (ControllerServiceEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateControllerServiceExecute(r)
+}
+
 /*
-CreateControllerService Creates a new controller service
+ * CreateControllerService Creates a new controller service
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The controller service configuration details.
-@return ControllerServiceEntity
-*/
-func (a *ControllerApiService) CreateControllerService(ctx _context.Context, body ControllerServiceEntity) (ControllerServiceEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiCreateControllerServiceRequest
+ */
+func (a *ControllerApiService) CreateControllerService(ctx _context.Context) ControllerApiApiCreateControllerServiceRequest {
+	return ControllerApiApiCreateControllerServiceRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerServiceEntity
+ */
+func (a *ControllerApiService) CreateControllerServiceExecute(r ControllerApiApiCreateControllerServiceRequest) (ControllerServiceEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -121,11 +180,19 @@ func (a *ControllerApiService) CreateControllerService(ctx _context.Context, bod
 		localVarReturnValue  ControllerServiceEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/controller-services"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.CreateControllerService")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/controller-services"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -145,19 +212,20 @@ func (a *ControllerApiService) CreateControllerService(ctx _context.Context, bod
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -182,13 +250,38 @@ func (a *ControllerApiService) CreateControllerService(ctx _context.Context, bod
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiCreateRegistryClientRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	body       *RegistryClientEntity
+}
+
+func (r ControllerApiApiCreateRegistryClientRequest) Body(body RegistryClientEntity) ControllerApiApiCreateRegistryClientRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiCreateRegistryClientRequest) Execute() (RegistryClientEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateRegistryClientExecute(r)
+}
+
 /*
-CreateRegistryClient Creates a new registry client
+ * CreateRegistryClient Creates a new registry client
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The registry configuration details.
-@return RegistryClientEntity
-*/
-func (a *ControllerApiService) CreateRegistryClient(ctx _context.Context, body RegistryClientEntity) (RegistryClientEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiCreateRegistryClientRequest
+ */
+func (a *ControllerApiService) CreateRegistryClient(ctx _context.Context) ControllerApiApiCreateRegistryClientRequest {
+	return ControllerApiApiCreateRegistryClientRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RegistryClientEntity
+ */
+func (a *ControllerApiService) CreateRegistryClientExecute(r ControllerApiApiCreateRegistryClientRequest) (RegistryClientEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -198,11 +291,19 @@ func (a *ControllerApiService) CreateRegistryClient(ctx _context.Context, body R
 		localVarReturnValue  RegistryClientEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/registry-clients"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.CreateRegistryClient")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/registry-clients"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -222,19 +323,20 @@ func (a *ControllerApiService) CreateRegistryClient(ctx _context.Context, body R
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -259,13 +361,38 @@ func (a *ControllerApiService) CreateRegistryClient(ctx _context.Context, body R
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiCreateReportingTaskRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	body       *ReportingTaskEntity
+}
+
+func (r ControllerApiApiCreateReportingTaskRequest) Body(body ReportingTaskEntity) ControllerApiApiCreateReportingTaskRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiCreateReportingTaskRequest) Execute() (ReportingTaskEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateReportingTaskExecute(r)
+}
+
 /*
-CreateReportingTask Creates a new reporting task
+ * CreateReportingTask Creates a new reporting task
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The reporting task configuration details.
-@return ReportingTaskEntity
-*/
-func (a *ControllerApiService) CreateReportingTask(ctx _context.Context, body ReportingTaskEntity) (ReportingTaskEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiCreateReportingTaskRequest
+ */
+func (a *ControllerApiService) CreateReportingTask(ctx _context.Context) ControllerApiApiCreateReportingTaskRequest {
+	return ControllerApiApiCreateReportingTaskRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ReportingTaskEntity
+ */
+func (a *ControllerApiService) CreateReportingTaskExecute(r ControllerApiApiCreateReportingTaskRequest) (ReportingTaskEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -275,11 +402,19 @@ func (a *ControllerApiService) CreateReportingTask(ctx _context.Context, body Re
 		localVarReturnValue  ReportingTaskEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/reporting-tasks"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.CreateReportingTask")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/reporting-tasks"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -299,19 +434,20 @@ func (a *ControllerApiService) CreateReportingTask(ctx _context.Context, body Re
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -336,13 +472,38 @@ func (a *ControllerApiService) CreateReportingTask(ctx _context.Context, body Re
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiDeleteHistoryRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	endDate    *string
+}
+
+func (r ControllerApiApiDeleteHistoryRequest) EndDate(endDate string) ControllerApiApiDeleteHistoryRequest {
+	r.endDate = &endDate
+	return r
+}
+
+func (r ControllerApiApiDeleteHistoryRequest) Execute() (HistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteHistoryExecute(r)
+}
+
 /*
-DeleteHistory Purges history
+ * DeleteHistory Purges history
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param endDate Purge actions before this date/time.
-@return HistoryEntity
-*/
-func (a *ControllerApiService) DeleteHistory(ctx _context.Context, endDate string) (HistoryEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiDeleteHistoryRequest
+ */
+func (a *ControllerApiService) DeleteHistory(ctx _context.Context) ControllerApiApiDeleteHistoryRequest {
+	return ControllerApiApiDeleteHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return HistoryEntity
+ */
+func (a *ControllerApiService) DeleteHistoryExecute(r ControllerApiApiDeleteHistoryRequest) (HistoryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -352,13 +513,21 @@ func (a *ControllerApiService) DeleteHistory(ctx _context.Context, endDate strin
 		localVarReturnValue  HistoryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/history"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.DeleteHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/history"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.endDate == nil {
+		return localVarReturnValue, nil, reportError("endDate is required and must be specified")
+	}
 
-	localVarQueryParams.Add("endDate", parameterToString(endDate, ""))
+	localVarQueryParams.Add("endDate", parameterToString(*r.endDate, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -376,18 +545,19 @@ func (a *ControllerApiService) DeleteHistory(ctx _context.Context, endDate strin
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -412,13 +582,35 @@ func (a *ControllerApiService) DeleteHistory(ctx _context.Context, endDate strin
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiDeleteNodeRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	id         string
+}
+
+func (r ControllerApiApiDeleteNodeRequest) Execute() (NodeEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteNodeExecute(r)
+}
+
 /*
-DeleteNode Removes a node from the cluster
+ * DeleteNode Removes a node from the cluster
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The node id.
-@return NodeEntity
-*/
-func (a *ControllerApiService) DeleteNode(ctx _context.Context, id string) (NodeEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiDeleteNodeRequest
+ */
+func (a *ControllerApiService) DeleteNode(ctx _context.Context, id string) ControllerApiApiDeleteNodeRequest {
+	return ControllerApiApiDeleteNodeRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return NodeEntity
+ */
+func (a *ControllerApiService) DeleteNodeExecute(r ControllerApiApiDeleteNodeRequest) (NodeEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -428,9 +620,13 @@ func (a *ControllerApiService) DeleteNode(ctx _context.Context, id string) (Node
 		localVarReturnValue  NodeEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/cluster/nodes/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.DeleteNode")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/cluster/nodes/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -453,18 +649,19 @@ func (a *ControllerApiService) DeleteNode(ctx _context.Context, id string) (Node
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -489,24 +686,51 @@ func (a *ControllerApiService) DeleteNode(ctx _context.Context, id string) (Node
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ControllerApiDeleteRegistryClientOpts Optional parameters for the method 'DeleteRegistryClient'
-type ControllerApiDeleteRegistryClientOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type ControllerApiApiDeleteRegistryClientRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ControllerApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ControllerApiApiDeleteRegistryClientRequest) Version(version string) ControllerApiApiDeleteRegistryClientRequest {
+	r.version = &version
+	return r
+}
+func (r ControllerApiApiDeleteRegistryClientRequest) ClientId(clientId string) ControllerApiApiDeleteRegistryClientRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r ControllerApiApiDeleteRegistryClientRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ControllerApiApiDeleteRegistryClientRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ControllerApiApiDeleteRegistryClientRequest) Execute() (RegistryClientEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteRegistryClientExecute(r)
 }
 
 /*
-DeleteRegistryClient Deletes a registry client
+ * DeleteRegistryClient Deletes a registry client
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The registry id.
- * @param optional nil or *ControllerApiDeleteRegistryClientOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return RegistryClientEntity
-*/
-func (a *ControllerApiService) DeleteRegistryClient(ctx _context.Context, id string, localVarOptionals *ControllerApiDeleteRegistryClientOpts) (RegistryClientEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiDeleteRegistryClientRequest
+ */
+func (a *ControllerApiService) DeleteRegistryClient(ctx _context.Context, id string) ControllerApiApiDeleteRegistryClientRequest {
+	return ControllerApiApiDeleteRegistryClientRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RegistryClientEntity
+ */
+func (a *ControllerApiService) DeleteRegistryClientExecute(r ControllerApiApiDeleteRegistryClientRequest) (RegistryClientEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -516,22 +740,26 @@ func (a *ControllerApiService) DeleteRegistryClient(ctx _context.Context, id str
 		localVarReturnValue  RegistryClientEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/registry-clients/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.DeleteRegistryClient")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/registry-clients/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -550,18 +778,19 @@ func (a *ControllerApiService) DeleteRegistryClient(ctx _context.Context, id str
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -586,13 +815,33 @@ func (a *ControllerApiService) DeleteRegistryClient(ctx _context.Context, id str
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiGetClusterRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+}
+
+func (r ControllerApiApiGetClusterRequest) Execute() (ClusterEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetClusterExecute(r)
+}
+
 /*
-GetCluster Gets the contents of the cluster
-Returns the contents of the cluster including all nodes and their status.
+ * GetCluster Gets the contents of the cluster
+ * Returns the contents of the cluster including all nodes and their status.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ClusterEntity
-*/
-func (a *ControllerApiService) GetCluster(ctx _context.Context) (ClusterEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiGetClusterRequest
+ */
+func (a *ControllerApiService) GetCluster(ctx _context.Context) ControllerApiApiGetClusterRequest {
+	return ControllerApiApiGetClusterRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ClusterEntity
+ */
+func (a *ControllerApiService) GetClusterExecute(r ControllerApiApiGetClusterRequest) (ClusterEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -602,8 +851,13 @@ func (a *ControllerApiService) GetCluster(ctx _context.Context) (ClusterEntity, 
 		localVarReturnValue  ClusterEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/cluster"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.GetCluster")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/cluster"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -625,18 +879,19 @@ func (a *ControllerApiService) GetCluster(ctx _context.Context) (ClusterEntity, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -661,12 +916,32 @@ func (a *ControllerApiService) GetCluster(ctx _context.Context) (ClusterEntity, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiGetControllerConfigRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+}
+
+func (r ControllerApiApiGetControllerConfigRequest) Execute() (ControllerConfigurationEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetControllerConfigExecute(r)
+}
+
 /*
-GetControllerConfig Retrieves the configuration for this NiFi Controller
+ * GetControllerConfig Retrieves the configuration for this NiFi Controller
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ControllerConfigurationEntity
-*/
-func (a *ControllerApiService) GetControllerConfig(ctx _context.Context) (ControllerConfigurationEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiGetControllerConfigRequest
+ */
+func (a *ControllerApiService) GetControllerConfig(ctx _context.Context) ControllerApiApiGetControllerConfigRequest {
+	return ControllerApiApiGetControllerConfigRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerConfigurationEntity
+ */
+func (a *ControllerApiService) GetControllerConfigExecute(r ControllerApiApiGetControllerConfigRequest) (ControllerConfigurationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -676,8 +951,13 @@ func (a *ControllerApiService) GetControllerConfig(ctx _context.Context) (Contro
 		localVarReturnValue  ControllerConfigurationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/config"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.GetControllerConfig")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/config"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -699,18 +979,19 @@ func (a *ControllerApiService) GetControllerConfig(ctx _context.Context) (Contro
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -735,13 +1016,35 @@ func (a *ControllerApiService) GetControllerConfig(ctx _context.Context) (Contro
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiGetNodeRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	id         string
+}
+
+func (r ControllerApiApiGetNodeRequest) Execute() (NodeEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetNodeExecute(r)
+}
+
 /*
-GetNode Gets a node in the cluster
+ * GetNode Gets a node in the cluster
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The node id.
-@return NodeEntity
-*/
-func (a *ControllerApiService) GetNode(ctx _context.Context, id string) (NodeEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiGetNodeRequest
+ */
+func (a *ControllerApiService) GetNode(ctx _context.Context, id string) ControllerApiApiGetNodeRequest {
+	return ControllerApiApiGetNodeRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return NodeEntity
+ */
+func (a *ControllerApiService) GetNodeExecute(r ControllerApiApiGetNodeRequest) (NodeEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -751,9 +1054,13 @@ func (a *ControllerApiService) GetNode(ctx _context.Context, id string) (NodeEnt
 		localVarReturnValue  NodeEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/cluster/nodes/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.GetNode")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/cluster/nodes/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -776,18 +1083,19 @@ func (a *ControllerApiService) GetNode(ctx _context.Context, id string) (NodeEnt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -812,13 +1120,136 @@ func (a *ControllerApiService) GetNode(ctx _context.Context, id string) (NodeEnt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiGetNodeStatusHistoryRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+}
+
+func (r ControllerApiApiGetNodeStatusHistoryRequest) Execute() (ComponentHistoryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetNodeStatusHistoryExecute(r)
+}
+
 /*
-GetRegistryClient Gets a registry client
+ * GetNodeStatusHistory Gets status history for the node
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ControllerApiApiGetNodeStatusHistoryRequest
+ */
+func (a *ControllerApiService) GetNodeStatusHistory(ctx _context.Context) ControllerApiApiGetNodeStatusHistoryRequest {
+	return ControllerApiApiGetNodeStatusHistoryRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ComponentHistoryEntity
+ */
+func (a *ControllerApiService) GetNodeStatusHistoryExecute(r ControllerApiApiGetNodeStatusHistoryRequest) (ComponentHistoryEntity, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  ComponentHistoryEntity
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.GetNodeStatusHistory")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/status/history"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ControllerApiApiGetRegistryClientRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	id         string
+}
+
+func (r ControllerApiApiGetRegistryClientRequest) Execute() (RegistryClientEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRegistryClientExecute(r)
+}
+
+/*
+ * GetRegistryClient Gets a registry client
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The registry id.
-@return RegistryClientEntity
-*/
-func (a *ControllerApiService) GetRegistryClient(ctx _context.Context, id string) (RegistryClientEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiGetRegistryClientRequest
+ */
+func (a *ControllerApiService) GetRegistryClient(ctx _context.Context, id string) ControllerApiApiGetRegistryClientRequest {
+	return ControllerApiApiGetRegistryClientRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RegistryClientEntity
+ */
+func (a *ControllerApiService) GetRegistryClientExecute(r ControllerApiApiGetRegistryClientRequest) (RegistryClientEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -828,9 +1259,13 @@ func (a *ControllerApiService) GetRegistryClient(ctx _context.Context, id string
 		localVarReturnValue  RegistryClientEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/registry-clients/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.GetRegistryClient")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/registry-clients/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -853,18 +1288,19 @@ func (a *ControllerApiService) GetRegistryClient(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -889,12 +1325,32 @@ func (a *ControllerApiService) GetRegistryClient(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiGetRegistryClientsRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+}
+
+func (r ControllerApiApiGetRegistryClientsRequest) Execute() (RegistryClientsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRegistryClientsExecute(r)
+}
+
 /*
-GetRegistryClients Gets the listing of available registry clients
+ * GetRegistryClients Gets the listing of available registry clients
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return RegistryClientsEntity
-*/
-func (a *ControllerApiService) GetRegistryClients(ctx _context.Context) (RegistryClientsEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiGetRegistryClientsRequest
+ */
+func (a *ControllerApiService) GetRegistryClients(ctx _context.Context) ControllerApiApiGetRegistryClientsRequest {
+	return ControllerApiApiGetRegistryClientsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RegistryClientsEntity
+ */
+func (a *ControllerApiService) GetRegistryClientsExecute(r ControllerApiApiGetRegistryClientsRequest) (RegistryClientsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -904,8 +1360,13 @@ func (a *ControllerApiService) GetRegistryClients(ctx _context.Context) (Registr
 		localVarReturnValue  RegistryClientsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/registry-clients"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.GetRegistryClients")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/registry-clients"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -927,18 +1388,19 @@ func (a *ControllerApiService) GetRegistryClients(ctx _context.Context) (Registr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -963,13 +1425,38 @@ func (a *ControllerApiService) GetRegistryClients(ctx _context.Context) (Registr
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiUpdateControllerConfigRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	body       *ControllerConfigurationEntity
+}
+
+func (r ControllerApiApiUpdateControllerConfigRequest) Body(body ControllerConfigurationEntity) ControllerApiApiUpdateControllerConfigRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiUpdateControllerConfigRequest) Execute() (ControllerConfigurationEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateControllerConfigExecute(r)
+}
+
 /*
-UpdateControllerConfig Retrieves the configuration for this NiFi
+ * UpdateControllerConfig Retrieves the configuration for this NiFi
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body The controller configuration.
-@return ControllerConfigurationEntity
-*/
-func (a *ControllerApiService) UpdateControllerConfig(ctx _context.Context, body ControllerConfigurationEntity) (ControllerConfigurationEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiUpdateControllerConfigRequest
+ */
+func (a *ControllerApiService) UpdateControllerConfig(ctx _context.Context) ControllerApiApiUpdateControllerConfigRequest {
+	return ControllerApiApiUpdateControllerConfigRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerConfigurationEntity
+ */
+func (a *ControllerApiService) UpdateControllerConfigExecute(r ControllerApiApiUpdateControllerConfigRequest) (ControllerConfigurationEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -979,11 +1466,19 @@ func (a *ControllerApiService) UpdateControllerConfig(ctx _context.Context, body
 		localVarReturnValue  ControllerConfigurationEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/config"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.UpdateControllerConfig")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/config"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1003,19 +1498,20 @@ func (a *ControllerApiService) UpdateControllerConfig(ctx _context.Context, body
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1040,14 +1536,41 @@ func (a *ControllerApiService) UpdateControllerConfig(ctx _context.Context, body
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiUpdateNodeRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	id         string
+	body       *NodeEntity
+}
+
+func (r ControllerApiApiUpdateNodeRequest) Body(body NodeEntity) ControllerApiApiUpdateNodeRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiUpdateNodeRequest) Execute() (NodeEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateNodeExecute(r)
+}
+
 /*
-UpdateNode Updates a node in the cluster
+ * UpdateNode Updates a node in the cluster
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The node id.
- * @param body The node configuration. The only configuration that will be honored at this endpoint is the status.
-@return NodeEntity
-*/
-func (a *ControllerApiService) UpdateNode(ctx _context.Context, id string, body NodeEntity) (NodeEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiUpdateNodeRequest
+ */
+func (a *ControllerApiService) UpdateNode(ctx _context.Context, id string) ControllerApiApiUpdateNodeRequest {
+	return ControllerApiApiUpdateNodeRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return NodeEntity
+ */
+func (a *ControllerApiService) UpdateNodeExecute(r ControllerApiApiUpdateNodeRequest) (NodeEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1057,13 +1580,20 @@ func (a *ControllerApiService) UpdateNode(ctx _context.Context, id string, body 
 		localVarReturnValue  NodeEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/cluster/nodes/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.UpdateNode")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/cluster/nodes/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1083,19 +1613,20 @@ func (a *ControllerApiService) UpdateNode(ctx _context.Context, id string, body 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1120,14 +1651,41 @@ func (a *ControllerApiService) UpdateNode(ctx _context.Context, id string, body 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ControllerApiApiUpdateRegistryClientRequest struct {
+	ctx        _context.Context
+	ApiService *ControllerApiService
+	id         string
+	body       *RegistryClientEntity
+}
+
+func (r ControllerApiApiUpdateRegistryClientRequest) Body(body RegistryClientEntity) ControllerApiApiUpdateRegistryClientRequest {
+	r.body = &body
+	return r
+}
+
+func (r ControllerApiApiUpdateRegistryClientRequest) Execute() (RegistryClientEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRegistryClientExecute(r)
+}
+
 /*
-UpdateRegistryClient Updates a registry client
+ * UpdateRegistryClient Updates a registry client
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The registry id.
- * @param body The registry configuration details.
-@return RegistryClientEntity
-*/
-func (a *ControllerApiService) UpdateRegistryClient(ctx _context.Context, id string, body RegistryClientEntity) (RegistryClientEntity, *_nethttp.Response, error) {
+ * @return ControllerApiApiUpdateRegistryClientRequest
+ */
+func (a *ControllerApiService) UpdateRegistryClient(ctx _context.Context, id string) ControllerApiApiUpdateRegistryClientRequest {
+	return ControllerApiApiUpdateRegistryClientRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RegistryClientEntity
+ */
+func (a *ControllerApiService) UpdateRegistryClientExecute(r ControllerApiApiUpdateRegistryClientRequest) (RegistryClientEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1137,13 +1695,20 @@ func (a *ControllerApiService) UpdateRegistryClient(ctx _context.Context, id str
 		localVarReturnValue  RegistryClientEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/controller/registry-clients/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ControllerApiService.UpdateRegistryClient")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/controller/registry-clients/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1163,19 +1728,20 @@ func (a *ControllerApiService) UpdateRegistryClient(ctx _context.Context, id str
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

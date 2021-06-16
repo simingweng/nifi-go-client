@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,177 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionControlInformationEntity struct for VersionControlInformationEntity
 type VersionControlInformationEntity struct {
-	ProcessGroupRevision RevisionDto `json:"processGroupRevision,omitempty"`
+	ProcessGroupRevision *RevisionDTO `json:"processGroupRevision,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool                         `json:"disconnectedNodeAcknowledged,omitempty"`
-	VersionControlInformation    VersionControlInformationDto `json:"versionControlInformation,omitempty"`
+	DisconnectedNodeAcknowledged *bool                         `json:"disconnectedNodeAcknowledged,omitempty"`
+	VersionControlInformation    *VersionControlInformationDTO `json:"versionControlInformation,omitempty"`
+}
+
+// NewVersionControlInformationEntity instantiates a new VersionControlInformationEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionControlInformationEntity() *VersionControlInformationEntity {
+	this := VersionControlInformationEntity{}
+	return &this
+}
+
+// NewVersionControlInformationEntityWithDefaults instantiates a new VersionControlInformationEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionControlInformationEntityWithDefaults() *VersionControlInformationEntity {
+	this := VersionControlInformationEntity{}
+	return &this
+}
+
+// GetProcessGroupRevision returns the ProcessGroupRevision field value if set, zero value otherwise.
+func (o *VersionControlInformationEntity) GetProcessGroupRevision() RevisionDTO {
+	if o == nil || o.ProcessGroupRevision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroupRevision
+}
+
+// GetProcessGroupRevisionOk returns a tuple with the ProcessGroupRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationEntity) GetProcessGroupRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.ProcessGroupRevision == nil {
+		return nil, false
+	}
+	return o.ProcessGroupRevision, true
+}
+
+// HasProcessGroupRevision returns a boolean if a field has been set.
+func (o *VersionControlInformationEntity) HasProcessGroupRevision() bool {
+	if o != nil && o.ProcessGroupRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupRevision gets a reference to the given RevisionDTO and assigns it to the ProcessGroupRevision field.
+func (o *VersionControlInformationEntity) SetProcessGroupRevision(v RevisionDTO) {
+	o.ProcessGroupRevision = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *VersionControlInformationEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *VersionControlInformationEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *VersionControlInformationEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+// GetVersionControlInformation returns the VersionControlInformation field value if set, zero value otherwise.
+func (o *VersionControlInformationEntity) GetVersionControlInformation() VersionControlInformationDTO {
+	if o == nil || o.VersionControlInformation == nil {
+		var ret VersionControlInformationDTO
+		return ret
+	}
+	return *o.VersionControlInformation
+}
+
+// GetVersionControlInformationOk returns a tuple with the VersionControlInformation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionControlInformationEntity) GetVersionControlInformationOk() (*VersionControlInformationDTO, bool) {
+	if o == nil || o.VersionControlInformation == nil {
+		return nil, false
+	}
+	return o.VersionControlInformation, true
+}
+
+// HasVersionControlInformation returns a boolean if a field has been set.
+func (o *VersionControlInformationEntity) HasVersionControlInformation() bool {
+	if o != nil && o.VersionControlInformation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionControlInformation gets a reference to the given VersionControlInformationDTO and assigns it to the VersionControlInformation field.
+func (o *VersionControlInformationEntity) SetVersionControlInformation(v VersionControlInformationDTO) {
+	o.VersionControlInformation = &v
+}
+
+func (o VersionControlInformationEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupRevision != nil {
+		toSerialize["processGroupRevision"] = o.ProcessGroupRevision
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	if o.VersionControlInformation != nil {
+		toSerialize["versionControlInformation"] = o.VersionControlInformation
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionControlInformationEntity struct {
+	value *VersionControlInformationEntity
+	isSet bool
+}
+
+func (v NullableVersionControlInformationEntity) Get() *VersionControlInformationEntity {
+	return v.value
+}
+
+func (v *NullableVersionControlInformationEntity) Set(val *VersionControlInformationEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionControlInformationEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionControlInformationEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionControlInformationEntity(val *VersionControlInformationEntity) *NullableVersionControlInformationEntity {
+	return &NullableVersionControlInformationEntity{value: val, isSet: true}
+}
+
+func (v NullableVersionControlInformationEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionControlInformationEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

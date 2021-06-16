@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// LineageRequestDto struct for LineageRequestDto
-type LineageRequestDto struct {
+import (
+	"encoding/json"
+)
+
+// LineageRequestDTO struct for LineageRequestDTO
+type LineageRequestDTO struct {
 	// The event id that was used to generate this lineage, if applicable. The event id is allowed for any type of lineageRequestType. If the lineageRequestType is FLOWFILE and the flowfile uuid is also included in the request, the event id will be ignored.
-	EventId int64 `json:"eventId,omitempty"`
+	EventId *int64 `json:"eventId,omitempty"`
 	// The type of lineage request. PARENTS will return the lineage for the flowfiles that are parents of the specified event. CHILDREN will return the lineage for the flowfiles that are children of the specified event. FLOWFILE will return the lineage for the specified flowfile.
-	LineageRequestType string `json:"lineageRequestType,omitempty"`
+	LineageRequestType *string `json:"lineageRequestType,omitempty"`
 	// The flowfile uuid that was used to generate the lineage. The flowfile uuid is only allowed when the lineageRequestType is FLOWFILE and will take precedence over event id.
-	Uuid string `json:"uuid,omitempty"`
+	Uuid *string `json:"uuid,omitempty"`
 	// The id of the node where this lineage originated if clustered.
-	ClusterNodeId string `json:"clusterNodeId,omitempty"`
+	ClusterNodeId *string `json:"clusterNodeId,omitempty"`
+}
+
+// NewLineageRequestDTO instantiates a new LineageRequestDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewLineageRequestDTO() *LineageRequestDTO {
+	this := LineageRequestDTO{}
+	return &this
+}
+
+// NewLineageRequestDTOWithDefaults instantiates a new LineageRequestDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewLineageRequestDTOWithDefaults() *LineageRequestDTO {
+	this := LineageRequestDTO{}
+	return &this
+}
+
+// GetEventId returns the EventId field value if set, zero value otherwise.
+func (o *LineageRequestDTO) GetEventId() int64 {
+	if o == nil || o.EventId == nil {
+		var ret int64
+		return ret
+	}
+	return *o.EventId
+}
+
+// GetEventIdOk returns a tuple with the EventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageRequestDTO) GetEventIdOk() (*int64, bool) {
+	if o == nil || o.EventId == nil {
+		return nil, false
+	}
+	return o.EventId, true
+}
+
+// HasEventId returns a boolean if a field has been set.
+func (o *LineageRequestDTO) HasEventId() bool {
+	if o != nil && o.EventId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventId gets a reference to the given int64 and assigns it to the EventId field.
+func (o *LineageRequestDTO) SetEventId(v int64) {
+	o.EventId = &v
+}
+
+// GetLineageRequestType returns the LineageRequestType field value if set, zero value otherwise.
+func (o *LineageRequestDTO) GetLineageRequestType() string {
+	if o == nil || o.LineageRequestType == nil {
+		var ret string
+		return ret
+	}
+	return *o.LineageRequestType
+}
+
+// GetLineageRequestTypeOk returns a tuple with the LineageRequestType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageRequestDTO) GetLineageRequestTypeOk() (*string, bool) {
+	if o == nil || o.LineageRequestType == nil {
+		return nil, false
+	}
+	return o.LineageRequestType, true
+}
+
+// HasLineageRequestType returns a boolean if a field has been set.
+func (o *LineageRequestDTO) HasLineageRequestType() bool {
+	if o != nil && o.LineageRequestType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLineageRequestType gets a reference to the given string and assigns it to the LineageRequestType field.
+func (o *LineageRequestDTO) SetLineageRequestType(v string) {
+	o.LineageRequestType = &v
+}
+
+// GetUuid returns the Uuid field value if set, zero value otherwise.
+func (o *LineageRequestDTO) GetUuid() string {
+	if o == nil || o.Uuid == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uuid
+}
+
+// GetUuidOk returns a tuple with the Uuid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageRequestDTO) GetUuidOk() (*string, bool) {
+	if o == nil || o.Uuid == nil {
+		return nil, false
+	}
+	return o.Uuid, true
+}
+
+// HasUuid returns a boolean if a field has been set.
+func (o *LineageRequestDTO) HasUuid() bool {
+	if o != nil && o.Uuid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUuid gets a reference to the given string and assigns it to the Uuid field.
+func (o *LineageRequestDTO) SetUuid(v string) {
+	o.Uuid = &v
+}
+
+// GetClusterNodeId returns the ClusterNodeId field value if set, zero value otherwise.
+func (o *LineageRequestDTO) GetClusterNodeId() string {
+	if o == nil || o.ClusterNodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeId
+}
+
+// GetClusterNodeIdOk returns a tuple with the ClusterNodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageRequestDTO) GetClusterNodeIdOk() (*string, bool) {
+	if o == nil || o.ClusterNodeId == nil {
+		return nil, false
+	}
+	return o.ClusterNodeId, true
+}
+
+// HasClusterNodeId returns a boolean if a field has been set.
+func (o *LineageRequestDTO) HasClusterNodeId() bool {
+	if o != nil && o.ClusterNodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeId gets a reference to the given string and assigns it to the ClusterNodeId field.
+func (o *LineageRequestDTO) SetClusterNodeId(v string) {
+	o.ClusterNodeId = &v
+}
+
+func (o LineageRequestDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.EventId != nil {
+		toSerialize["eventId"] = o.EventId
+	}
+	if o.LineageRequestType != nil {
+		toSerialize["lineageRequestType"] = o.LineageRequestType
+	}
+	if o.Uuid != nil {
+		toSerialize["uuid"] = o.Uuid
+	}
+	if o.ClusterNodeId != nil {
+		toSerialize["clusterNodeId"] = o.ClusterNodeId
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableLineageRequestDTO struct {
+	value *LineageRequestDTO
+	isSet bool
+}
+
+func (v NullableLineageRequestDTO) Get() *LineageRequestDTO {
+	return v.value
+}
+
+func (v *NullableLineageRequestDTO) Set(val *LineageRequestDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableLineageRequestDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableLineageRequestDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableLineageRequestDTO(val *LineageRequestDTO) *NullableLineageRequestDTO {
+	return &NullableLineageRequestDTO{value: val, isSet: true}
+}
+
+func (v NullableLineageRequestDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableLineageRequestDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

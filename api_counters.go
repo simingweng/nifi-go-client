@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,22 +28,44 @@ var (
 // CountersApiService CountersApi service
 type CountersApiService service
 
-// CountersApiGetCountersOpts Optional parameters for the method 'GetCounters'
-type CountersApiGetCountersOpts struct {
-	Nodewise      optional.Bool
-	ClusterNodeId optional.String
+type CountersApiApiGetCountersRequest struct {
+	ctx           _context.Context
+	ApiService    *CountersApiService
+	nodewise      *bool
+	clusterNodeId *string
+}
+
+func (r CountersApiApiGetCountersRequest) Nodewise(nodewise bool) CountersApiApiGetCountersRequest {
+	r.nodewise = &nodewise
+	return r
+}
+func (r CountersApiApiGetCountersRequest) ClusterNodeId(clusterNodeId string) CountersApiApiGetCountersRequest {
+	r.clusterNodeId = &clusterNodeId
+	return r
+}
+
+func (r CountersApiApiGetCountersRequest) Execute() (CountersEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetCountersExecute(r)
 }
 
 /*
-GetCounters Gets the current counters for this NiFi
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetCounters Gets the current counters for this NiFi
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *CountersApiGetCountersOpts - Optional Parameters:
- * @param "Nodewise" (optional.Bool) -  Whether or not to include the breakdown per node. Optional, defaults to false
- * @param "ClusterNodeId" (optional.String) -  The id of the node where to get the status.
-@return CountersEntity
-*/
-func (a *CountersApiService) GetCounters(ctx _context.Context, localVarOptionals *CountersApiGetCountersOpts) (CountersEntity, *_nethttp.Response, error) {
+ * @return CountersApiApiGetCountersRequest
+ */
+func (a *CountersApiService) GetCounters(ctx _context.Context) CountersApiApiGetCountersRequest {
+	return CountersApiApiGetCountersRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return CountersEntity
+ */
+func (a *CountersApiService) GetCountersExecute(r CountersApiApiGetCountersRequest) (CountersEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -53,17 +75,22 @@ func (a *CountersApiService) GetCounters(ctx _context.Context, localVarOptionals
 		localVarReturnValue  CountersEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/counters"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CountersApiService.GetCounters")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/counters"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Nodewise.IsSet() {
-		localVarQueryParams.Add("nodewise", parameterToString(localVarOptionals.Nodewise.Value(), ""))
+	if r.nodewise != nil {
+		localVarQueryParams.Add("nodewise", parameterToString(*r.nodewise, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClusterNodeId.IsSet() {
-		localVarQueryParams.Add("clusterNodeId", parameterToString(localVarOptionals.ClusterNodeId.Value(), ""))
+	if r.clusterNodeId != nil {
+		localVarQueryParams.Add("clusterNodeId", parameterToString(*r.clusterNodeId, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -82,18 +109,19 @@ func (a *CountersApiService) GetCounters(ctx _context.Context, localVarOptionals
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -118,14 +146,36 @@ func (a *CountersApiService) GetCounters(ctx _context.Context, localVarOptionals
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type CountersApiApiUpdateCounterRequest struct {
+	ctx        _context.Context
+	ApiService *CountersApiService
+	id         string
+}
+
+func (r CountersApiApiUpdateCounterRequest) Execute() (CounterEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateCounterExecute(r)
+}
+
 /*
-UpdateCounter Updates the specified counter. This will reset the counter value to 0
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateCounter Updates the specified counter. This will reset the counter value to 0
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The id of the counter.
-@return CounterEntity
-*/
-func (a *CountersApiService) UpdateCounter(ctx _context.Context, id string) (CounterEntity, *_nethttp.Response, error) {
+ * @return CountersApiApiUpdateCounterRequest
+ */
+func (a *CountersApiService) UpdateCounter(ctx _context.Context, id string) CountersApiApiUpdateCounterRequest {
+	return CountersApiApiUpdateCounterRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return CounterEntity
+ */
+func (a *CountersApiService) UpdateCounterExecute(r CountersApiApiUpdateCounterRequest) (CounterEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -135,9 +185,13 @@ func (a *CountersApiService) UpdateCounter(ctx _context.Context, id string) (Cou
 		localVarReturnValue  CounterEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/counters/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CountersApiService.UpdateCounter")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/counters/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -160,18 +214,19 @@ func (a *CountersApiService) UpdateCounter(ctx _context.Context, id string) (Cou
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

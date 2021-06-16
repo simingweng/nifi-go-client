@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,8 +11,105 @@
 
 package nifi
 
-// AccessConfigurationDto struct for AccessConfigurationDto
-type AccessConfigurationDto struct {
+import (
+	"encoding/json"
+)
+
+// AccessConfigurationDTO struct for AccessConfigurationDTO
+type AccessConfigurationDTO struct {
 	// Indicates whether or not this NiFi supports user login.
-	SupportsLogin bool `json:"supportsLogin,omitempty"`
+	SupportsLogin *bool `json:"supportsLogin,omitempty"`
+}
+
+// NewAccessConfigurationDTO instantiates a new AccessConfigurationDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAccessConfigurationDTO() *AccessConfigurationDTO {
+	this := AccessConfigurationDTO{}
+	return &this
+}
+
+// NewAccessConfigurationDTOWithDefaults instantiates a new AccessConfigurationDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAccessConfigurationDTOWithDefaults() *AccessConfigurationDTO {
+	this := AccessConfigurationDTO{}
+	return &this
+}
+
+// GetSupportsLogin returns the SupportsLogin field value if set, zero value otherwise.
+func (o *AccessConfigurationDTO) GetSupportsLogin() bool {
+	if o == nil || o.SupportsLogin == nil {
+		var ret bool
+		return ret
+	}
+	return *o.SupportsLogin
+}
+
+// GetSupportsLoginOk returns a tuple with the SupportsLogin field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessConfigurationDTO) GetSupportsLoginOk() (*bool, bool) {
+	if o == nil || o.SupportsLogin == nil {
+		return nil, false
+	}
+	return o.SupportsLogin, true
+}
+
+// HasSupportsLogin returns a boolean if a field has been set.
+func (o *AccessConfigurationDTO) HasSupportsLogin() bool {
+	if o != nil && o.SupportsLogin != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSupportsLogin gets a reference to the given bool and assigns it to the SupportsLogin field.
+func (o *AccessConfigurationDTO) SetSupportsLogin(v bool) {
+	o.SupportsLogin = &v
+}
+
+func (o AccessConfigurationDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.SupportsLogin != nil {
+		toSerialize["supportsLogin"] = o.SupportsLogin
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAccessConfigurationDTO struct {
+	value *AccessConfigurationDTO
+	isSet bool
+}
+
+func (v NullableAccessConfigurationDTO) Get() *AccessConfigurationDTO {
+	return v.value
+}
+
+func (v *NullableAccessConfigurationDTO) Set(val *AccessConfigurationDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAccessConfigurationDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAccessConfigurationDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAccessConfigurationDTO(val *AccessConfigurationDTO) *NullableAccessConfigurationDTO {
+	return &NullableAccessConfigurationDTO{value: val, isSet: true}
+}
+
+func (v NullableAccessConfigurationDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAccessConfigurationDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

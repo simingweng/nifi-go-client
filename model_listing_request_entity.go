@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ListingRequestEntity struct for ListingRequestEntity
 type ListingRequestEntity struct {
-	ListingRequest ListingRequestDto `json:"listingRequest,omitempty"`
+	ListingRequest *ListingRequestDTO `json:"listingRequest,omitempty"`
+}
+
+// NewListingRequestEntity instantiates a new ListingRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewListingRequestEntity() *ListingRequestEntity {
+	this := ListingRequestEntity{}
+	return &this
+}
+
+// NewListingRequestEntityWithDefaults instantiates a new ListingRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewListingRequestEntityWithDefaults() *ListingRequestEntity {
+	this := ListingRequestEntity{}
+	return &this
+}
+
+// GetListingRequest returns the ListingRequest field value if set, zero value otherwise.
+func (o *ListingRequestEntity) GetListingRequest() ListingRequestDTO {
+	if o == nil || o.ListingRequest == nil {
+		var ret ListingRequestDTO
+		return ret
+	}
+	return *o.ListingRequest
+}
+
+// GetListingRequestOk returns a tuple with the ListingRequest field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListingRequestEntity) GetListingRequestOk() (*ListingRequestDTO, bool) {
+	if o == nil || o.ListingRequest == nil {
+		return nil, false
+	}
+	return o.ListingRequest, true
+}
+
+// HasListingRequest returns a boolean if a field has been set.
+func (o *ListingRequestEntity) HasListingRequest() bool {
+	if o != nil && o.ListingRequest != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetListingRequest gets a reference to the given ListingRequestDTO and assigns it to the ListingRequest field.
+func (o *ListingRequestEntity) SetListingRequest(v ListingRequestDTO) {
+	o.ListingRequest = &v
+}
+
+func (o ListingRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ListingRequest != nil {
+		toSerialize["listingRequest"] = o.ListingRequest
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableListingRequestEntity struct {
+	value *ListingRequestEntity
+	isSet bool
+}
+
+func (v NullableListingRequestEntity) Get() *ListingRequestEntity {
+	return v.value
+}
+
+func (v *NullableListingRequestEntity) Set(val *ListingRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableListingRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableListingRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableListingRequestEntity(val *ListingRequestEntity) *NullableListingRequestEntity {
+	return &NullableListingRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableListingRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableListingRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// ParameterContextReferenceDto struct for ParameterContextReferenceDto
-type ParameterContextReferenceDto struct {
+import (
+	"encoding/json"
+)
+
+// ParameterContextReferenceDTO struct for ParameterContextReferenceDTO
+type ParameterContextReferenceDTO struct {
 	// The ID of the Parameter Context
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The name of the Parameter Context
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// NewParameterContextReferenceDTO instantiates a new ParameterContextReferenceDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewParameterContextReferenceDTO() *ParameterContextReferenceDTO {
+	this := ParameterContextReferenceDTO{}
+	return &this
+}
+
+// NewParameterContextReferenceDTOWithDefaults instantiates a new ParameterContextReferenceDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewParameterContextReferenceDTOWithDefaults() *ParameterContextReferenceDTO {
+	this := ParameterContextReferenceDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ParameterContextReferenceDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextReferenceDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ParameterContextReferenceDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ParameterContextReferenceDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ParameterContextReferenceDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextReferenceDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ParameterContextReferenceDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ParameterContextReferenceDTO) SetName(v string) {
+	o.Name = &v
+}
+
+func (o ParameterContextReferenceDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableParameterContextReferenceDTO struct {
+	value *ParameterContextReferenceDTO
+	isSet bool
+}
+
+func (v NullableParameterContextReferenceDTO) Get() *ParameterContextReferenceDTO {
+	return v.value
+}
+
+func (v *NullableParameterContextReferenceDTO) Set(val *ParameterContextReferenceDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableParameterContextReferenceDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableParameterContextReferenceDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableParameterContextReferenceDTO(val *ParameterContextReferenceDTO) *NullableParameterContextReferenceDTO {
+	return &NullableParameterContextReferenceDTO{value: val, isSet: true}
+}
+
+func (v NullableParameterContextReferenceDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableParameterContextReferenceDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

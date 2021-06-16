@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,23 +11,400 @@
 
 package nifi
 
-// DocumentedTypeDto struct for DocumentedTypeDto
-type DocumentedTypeDto struct {
+import (
+	"encoding/json"
+)
+
+// DocumentedTypeDTO struct for DocumentedTypeDTO
+type DocumentedTypeDTO struct {
 	// The fully qualified name of the type.
-	Type   string    `json:"type,omitempty"`
-	Bundle BundleDto `json:"bundle,omitempty"`
+	Type   *string    `json:"type,omitempty"`
+	Bundle *BundleDTO `json:"bundle,omitempty"`
 	// If this type represents a ControllerService, this lists the APIs it implements.
-	ControllerServiceApis []ControllerServiceApiDto `json:"controllerServiceApis,omitempty"`
+	ControllerServiceApis *[]ControllerServiceApiDTO `json:"controllerServiceApis,omitempty"`
 	// The description of the type.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Whether this type is restricted.
-	Restricted bool `json:"restricted,omitempty"`
+	Restricted *bool `json:"restricted,omitempty"`
 	// The optional description of why the usage of this component is restricted.
-	UsageRestriction string `json:"usageRestriction,omitempty"`
+	UsageRestriction *string `json:"usageRestriction,omitempty"`
 	// An optional collection of explicit restrictions. If specified, these explicit restrictions will be enfored.
-	ExplicitRestrictions []ExplicitRestrictionDto `json:"explicitRestrictions,omitempty"`
+	ExplicitRestrictions *[]ExplicitRestrictionDTO `json:"explicitRestrictions,omitempty"`
 	// The description of why the usage of this component is restricted.
-	DeprecationReason string `json:"deprecationReason,omitempty"`
+	DeprecationReason *string `json:"deprecationReason,omitempty"`
 	// The tags associated with this type.
-	Tags []string `json:"tags,omitempty"`
+	Tags *[]string `json:"tags,omitempty"`
+}
+
+// NewDocumentedTypeDTO instantiates a new DocumentedTypeDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewDocumentedTypeDTO() *DocumentedTypeDTO {
+	this := DocumentedTypeDTO{}
+	return &this
+}
+
+// NewDocumentedTypeDTOWithDefaults instantiates a new DocumentedTypeDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewDocumentedTypeDTOWithDefaults() *DocumentedTypeDTO {
+	this := DocumentedTypeDTO{}
+	return &this
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *DocumentedTypeDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetBundle returns the Bundle field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetBundle() BundleDTO {
+	if o == nil || o.Bundle == nil {
+		var ret BundleDTO
+		return ret
+	}
+	return *o.Bundle
+}
+
+// GetBundleOk returns a tuple with the Bundle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetBundleOk() (*BundleDTO, bool) {
+	if o == nil || o.Bundle == nil {
+		return nil, false
+	}
+	return o.Bundle, true
+}
+
+// HasBundle returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasBundle() bool {
+	if o != nil && o.Bundle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBundle gets a reference to the given BundleDTO and assigns it to the Bundle field.
+func (o *DocumentedTypeDTO) SetBundle(v BundleDTO) {
+	o.Bundle = &v
+}
+
+// GetControllerServiceApis returns the ControllerServiceApis field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetControllerServiceApis() []ControllerServiceApiDTO {
+	if o == nil || o.ControllerServiceApis == nil {
+		var ret []ControllerServiceApiDTO
+		return ret
+	}
+	return *o.ControllerServiceApis
+}
+
+// GetControllerServiceApisOk returns a tuple with the ControllerServiceApis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetControllerServiceApisOk() (*[]ControllerServiceApiDTO, bool) {
+	if o == nil || o.ControllerServiceApis == nil {
+		return nil, false
+	}
+	return o.ControllerServiceApis, true
+}
+
+// HasControllerServiceApis returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasControllerServiceApis() bool {
+	if o != nil && o.ControllerServiceApis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServiceApis gets a reference to the given []ControllerServiceApiDTO and assigns it to the ControllerServiceApis field.
+func (o *DocumentedTypeDTO) SetControllerServiceApis(v []ControllerServiceApiDTO) {
+	o.ControllerServiceApis = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *DocumentedTypeDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetRestricted returns the Restricted field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetRestricted() bool {
+	if o == nil || o.Restricted == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Restricted
+}
+
+// GetRestrictedOk returns a tuple with the Restricted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetRestrictedOk() (*bool, bool) {
+	if o == nil || o.Restricted == nil {
+		return nil, false
+	}
+	return o.Restricted, true
+}
+
+// HasRestricted returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasRestricted() bool {
+	if o != nil && o.Restricted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRestricted gets a reference to the given bool and assigns it to the Restricted field.
+func (o *DocumentedTypeDTO) SetRestricted(v bool) {
+	o.Restricted = &v
+}
+
+// GetUsageRestriction returns the UsageRestriction field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetUsageRestriction() string {
+	if o == nil || o.UsageRestriction == nil {
+		var ret string
+		return ret
+	}
+	return *o.UsageRestriction
+}
+
+// GetUsageRestrictionOk returns a tuple with the UsageRestriction field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetUsageRestrictionOk() (*string, bool) {
+	if o == nil || o.UsageRestriction == nil {
+		return nil, false
+	}
+	return o.UsageRestriction, true
+}
+
+// HasUsageRestriction returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasUsageRestriction() bool {
+	if o != nil && o.UsageRestriction != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUsageRestriction gets a reference to the given string and assigns it to the UsageRestriction field.
+func (o *DocumentedTypeDTO) SetUsageRestriction(v string) {
+	o.UsageRestriction = &v
+}
+
+// GetExplicitRestrictions returns the ExplicitRestrictions field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetExplicitRestrictions() []ExplicitRestrictionDTO {
+	if o == nil || o.ExplicitRestrictions == nil {
+		var ret []ExplicitRestrictionDTO
+		return ret
+	}
+	return *o.ExplicitRestrictions
+}
+
+// GetExplicitRestrictionsOk returns a tuple with the ExplicitRestrictions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetExplicitRestrictionsOk() (*[]ExplicitRestrictionDTO, bool) {
+	if o == nil || o.ExplicitRestrictions == nil {
+		return nil, false
+	}
+	return o.ExplicitRestrictions, true
+}
+
+// HasExplicitRestrictions returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasExplicitRestrictions() bool {
+	if o != nil && o.ExplicitRestrictions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExplicitRestrictions gets a reference to the given []ExplicitRestrictionDTO and assigns it to the ExplicitRestrictions field.
+func (o *DocumentedTypeDTO) SetExplicitRestrictions(v []ExplicitRestrictionDTO) {
+	o.ExplicitRestrictions = &v
+}
+
+// GetDeprecationReason returns the DeprecationReason field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetDeprecationReason() string {
+	if o == nil || o.DeprecationReason == nil {
+		var ret string
+		return ret
+	}
+	return *o.DeprecationReason
+}
+
+// GetDeprecationReasonOk returns a tuple with the DeprecationReason field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetDeprecationReasonOk() (*string, bool) {
+	if o == nil || o.DeprecationReason == nil {
+		return nil, false
+	}
+	return o.DeprecationReason, true
+}
+
+// HasDeprecationReason returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasDeprecationReason() bool {
+	if o != nil && o.DeprecationReason != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDeprecationReason gets a reference to the given string and assigns it to the DeprecationReason field.
+func (o *DocumentedTypeDTO) SetDeprecationReason(v string) {
+	o.DeprecationReason = &v
+}
+
+// GetTags returns the Tags field value if set, zero value otherwise.
+func (o *DocumentedTypeDTO) GetTags() []string {
+	if o == nil || o.Tags == nil {
+		var ret []string
+		return ret
+	}
+	return *o.Tags
+}
+
+// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentedTypeDTO) GetTagsOk() (*[]string, bool) {
+	if o == nil || o.Tags == nil {
+		return nil, false
+	}
+	return o.Tags, true
+}
+
+// HasTags returns a boolean if a field has been set.
+func (o *DocumentedTypeDTO) HasTags() bool {
+	if o != nil && o.Tags != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTags gets a reference to the given []string and assigns it to the Tags field.
+func (o *DocumentedTypeDTO) SetTags(v []string) {
+	o.Tags = &v
+}
+
+func (o DocumentedTypeDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Bundle != nil {
+		toSerialize["bundle"] = o.Bundle
+	}
+	if o.ControllerServiceApis != nil {
+		toSerialize["controllerServiceApis"] = o.ControllerServiceApis
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Restricted != nil {
+		toSerialize["restricted"] = o.Restricted
+	}
+	if o.UsageRestriction != nil {
+		toSerialize["usageRestriction"] = o.UsageRestriction
+	}
+	if o.ExplicitRestrictions != nil {
+		toSerialize["explicitRestrictions"] = o.ExplicitRestrictions
+	}
+	if o.DeprecationReason != nil {
+		toSerialize["deprecationReason"] = o.DeprecationReason
+	}
+	if o.Tags != nil {
+		toSerialize["tags"] = o.Tags
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableDocumentedTypeDTO struct {
+	value *DocumentedTypeDTO
+	isSet bool
+}
+
+func (v NullableDocumentedTypeDTO) Get() *DocumentedTypeDTO {
+	return v.value
+}
+
+func (v *NullableDocumentedTypeDTO) Set(val *DocumentedTypeDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableDocumentedTypeDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableDocumentedTypeDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableDocumentedTypeDTO(val *DocumentedTypeDTO) *NullableDocumentedTypeDTO {
+	return &NullableDocumentedTypeDTO{value: val, isSet: true}
+}
+
+func (v NullableDocumentedTypeDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableDocumentedTypeDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

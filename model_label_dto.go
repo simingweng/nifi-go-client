@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,21 +11,363 @@
 
 package nifi
 
-// LabelDto struct for LabelDto
-type LabelDto struct {
+import (
+	"encoding/json"
+)
+
+// LabelDTO struct for LabelDTO
+type LabelDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The text that appears in the label.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// The width of the label in pixels when at a 1:1 scale.
-	Width float64 `json:"width,omitempty"`
+	Width *float64 `json:"width,omitempty"`
 	// The height of the label in pixels when at a 1:1 scale.
-	Height float64 `json:"height,omitempty"`
+	Height *float64 `json:"height,omitempty"`
 	// The styles for this label (font-size : 12px, background-color : #eee, etc).
-	Style map[string]string `json:"style,omitempty"`
+	Style *map[string]string `json:"style,omitempty"`
+}
+
+// NewLabelDTO instantiates a new LabelDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewLabelDTO() *LabelDTO {
+	this := LabelDTO{}
+	return &this
+}
+
+// NewLabelDTOWithDefaults instantiates a new LabelDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewLabelDTOWithDefaults() *LabelDTO {
+	this := LabelDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *LabelDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *LabelDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *LabelDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *LabelDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *LabelDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *LabelDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *LabelDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *LabelDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *LabelDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *LabelDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *LabelDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *LabelDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetLabel returns the Label field value if set, zero value otherwise.
+func (o *LabelDTO) GetLabel() string {
+	if o == nil || o.Label == nil {
+		var ret string
+		return ret
+	}
+	return *o.Label
+}
+
+// GetLabelOk returns a tuple with the Label field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetLabelOk() (*string, bool) {
+	if o == nil || o.Label == nil {
+		return nil, false
+	}
+	return o.Label, true
+}
+
+// HasLabel returns a boolean if a field has been set.
+func (o *LabelDTO) HasLabel() bool {
+	if o != nil && o.Label != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabel gets a reference to the given string and assigns it to the Label field.
+func (o *LabelDTO) SetLabel(v string) {
+	o.Label = &v
+}
+
+// GetWidth returns the Width field value if set, zero value otherwise.
+func (o *LabelDTO) GetWidth() float64 {
+	if o == nil || o.Width == nil {
+		var ret float64
+		return ret
+	}
+	return *o.Width
+}
+
+// GetWidthOk returns a tuple with the Width field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetWidthOk() (*float64, bool) {
+	if o == nil || o.Width == nil {
+		return nil, false
+	}
+	return o.Width, true
+}
+
+// HasWidth returns a boolean if a field has been set.
+func (o *LabelDTO) HasWidth() bool {
+	if o != nil && o.Width != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetWidth gets a reference to the given float64 and assigns it to the Width field.
+func (o *LabelDTO) SetWidth(v float64) {
+	o.Width = &v
+}
+
+// GetHeight returns the Height field value if set, zero value otherwise.
+func (o *LabelDTO) GetHeight() float64 {
+	if o == nil || o.Height == nil {
+		var ret float64
+		return ret
+	}
+	return *o.Height
+}
+
+// GetHeightOk returns a tuple with the Height field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetHeightOk() (*float64, bool) {
+	if o == nil || o.Height == nil {
+		return nil, false
+	}
+	return o.Height, true
+}
+
+// HasHeight returns a boolean if a field has been set.
+func (o *LabelDTO) HasHeight() bool {
+	if o != nil && o.Height != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHeight gets a reference to the given float64 and assigns it to the Height field.
+func (o *LabelDTO) SetHeight(v float64) {
+	o.Height = &v
+}
+
+// GetStyle returns the Style field value if set, zero value otherwise.
+func (o *LabelDTO) GetStyle() map[string]string {
+	if o == nil || o.Style == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Style
+}
+
+// GetStyleOk returns a tuple with the Style field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LabelDTO) GetStyleOk() (*map[string]string, bool) {
+	if o == nil || o.Style == nil {
+		return nil, false
+	}
+	return o.Style, true
+}
+
+// HasStyle returns a boolean if a field has been set.
+func (o *LabelDTO) HasStyle() bool {
+	if o != nil && o.Style != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStyle gets a reference to the given map[string]string and assigns it to the Style field.
+func (o *LabelDTO) SetStyle(v map[string]string) {
+	o.Style = &v
+}
+
+func (o LabelDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Label != nil {
+		toSerialize["label"] = o.Label
+	}
+	if o.Width != nil {
+		toSerialize["width"] = o.Width
+	}
+	if o.Height != nil {
+		toSerialize["height"] = o.Height
+	}
+	if o.Style != nil {
+		toSerialize["style"] = o.Style
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableLabelDTO struct {
+	value *LabelDTO
+	isSet bool
+}
+
+func (v NullableLabelDTO) Get() *LabelDTO {
+	return v.value
+}
+
+func (v *NullableLabelDTO) Set(val *LabelDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableLabelDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableLabelDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableLabelDTO(val *LabelDTO) *NullableLabelDTO {
+	return &NullableLabelDTO{value: val, isSet: true}
+}
+
+func (v NullableLabelDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableLabelDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VariableEntity struct for VariableEntity
 type VariableEntity struct {
-	Variable VariableDto `json:"variable,omitempty"`
+	Variable *VariableDTO `json:"variable,omitempty"`
 	// Indicates whether the user can write a given resource.
-	CanWrite bool `json:"canWrite,omitempty"`
+	CanWrite *bool `json:"canWrite,omitempty"`
+}
+
+// NewVariableEntity instantiates a new VariableEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVariableEntity() *VariableEntity {
+	this := VariableEntity{}
+	return &this
+}
+
+// NewVariableEntityWithDefaults instantiates a new VariableEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVariableEntityWithDefaults() *VariableEntity {
+	this := VariableEntity{}
+	return &this
+}
+
+// GetVariable returns the Variable field value if set, zero value otherwise.
+func (o *VariableEntity) GetVariable() VariableDTO {
+	if o == nil || o.Variable == nil {
+		var ret VariableDTO
+		return ret
+	}
+	return *o.Variable
+}
+
+// GetVariableOk returns a tuple with the Variable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableEntity) GetVariableOk() (*VariableDTO, bool) {
+	if o == nil || o.Variable == nil {
+		return nil, false
+	}
+	return o.Variable, true
+}
+
+// HasVariable returns a boolean if a field has been set.
+func (o *VariableEntity) HasVariable() bool {
+	if o != nil && o.Variable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVariable gets a reference to the given VariableDTO and assigns it to the Variable field.
+func (o *VariableEntity) SetVariable(v VariableDTO) {
+	o.Variable = &v
+}
+
+// GetCanWrite returns the CanWrite field value if set, zero value otherwise.
+func (o *VariableEntity) GetCanWrite() bool {
+	if o == nil || o.CanWrite == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanWrite
+}
+
+// GetCanWriteOk returns a tuple with the CanWrite field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableEntity) GetCanWriteOk() (*bool, bool) {
+	if o == nil || o.CanWrite == nil {
+		return nil, false
+	}
+	return o.CanWrite, true
+}
+
+// HasCanWrite returns a boolean if a field has been set.
+func (o *VariableEntity) HasCanWrite() bool {
+	if o != nil && o.CanWrite != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanWrite gets a reference to the given bool and assigns it to the CanWrite field.
+func (o *VariableEntity) SetCanWrite(v bool) {
+	o.CanWrite = &v
+}
+
+func (o VariableEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Variable != nil {
+		toSerialize["variable"] = o.Variable
+	}
+	if o.CanWrite != nil {
+		toSerialize["canWrite"] = o.CanWrite
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVariableEntity struct {
+	value *VariableEntity
+	isSet bool
+}
+
+func (v NullableVariableEntity) Get() *VariableEntity {
+	return v.value
+}
+
+func (v *NullableVariableEntity) Set(val *VariableEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVariableEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVariableEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVariableEntity(val *VariableEntity) *NullableVariableEntity {
+	return &NullableVariableEntity{value: val, isSet: true}
+}
+
+func (v NullableVariableEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVariableEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

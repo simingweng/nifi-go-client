@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,253 @@
 
 package nifi
 
-// ParameterContextDto struct for ParameterContextDto
-type ParameterContextDto struct {
+import (
+	"encoding/json"
+)
+
+// ParameterContextDTO struct for ParameterContextDTO
+type ParameterContextDTO struct {
 	// The Name of the Parameter Context.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The Description of the Parameter Context.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The Parameters for the Parameter Context
-	Parameters []ParameterEntity `json:"parameters,omitempty"`
+	Parameters *[]ParameterEntity `json:"parameters,omitempty"`
 	// The Process Groups that are bound to this Parameter Context
-	BoundProcessGroups []ProcessGroupEntity `json:"boundProcessGroups,omitempty"`
+	BoundProcessGroups *[]ProcessGroupEntity `json:"boundProcessGroups,omitempty"`
 	// The ID the Parameter Context.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
+}
+
+// NewParameterContextDTO instantiates a new ParameterContextDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewParameterContextDTO() *ParameterContextDTO {
+	this := ParameterContextDTO{}
+	return &this
+}
+
+// NewParameterContextDTOWithDefaults instantiates a new ParameterContextDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewParameterContextDTOWithDefaults() *ParameterContextDTO {
+	this := ParameterContextDTO{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ParameterContextDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ParameterContextDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ParameterContextDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *ParameterContextDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *ParameterContextDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *ParameterContextDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetParameters returns the Parameters field value if set, zero value otherwise.
+func (o *ParameterContextDTO) GetParameters() []ParameterEntity {
+	if o == nil || o.Parameters == nil {
+		var ret []ParameterEntity
+		return ret
+	}
+	return *o.Parameters
+}
+
+// GetParametersOk returns a tuple with the Parameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextDTO) GetParametersOk() (*[]ParameterEntity, bool) {
+	if o == nil || o.Parameters == nil {
+		return nil, false
+	}
+	return o.Parameters, true
+}
+
+// HasParameters returns a boolean if a field has been set.
+func (o *ParameterContextDTO) HasParameters() bool {
+	if o != nil && o.Parameters != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameters gets a reference to the given []ParameterEntity and assigns it to the Parameters field.
+func (o *ParameterContextDTO) SetParameters(v []ParameterEntity) {
+	o.Parameters = &v
+}
+
+// GetBoundProcessGroups returns the BoundProcessGroups field value if set, zero value otherwise.
+func (o *ParameterContextDTO) GetBoundProcessGroups() []ProcessGroupEntity {
+	if o == nil || o.BoundProcessGroups == nil {
+		var ret []ProcessGroupEntity
+		return ret
+	}
+	return *o.BoundProcessGroups
+}
+
+// GetBoundProcessGroupsOk returns a tuple with the BoundProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextDTO) GetBoundProcessGroupsOk() (*[]ProcessGroupEntity, bool) {
+	if o == nil || o.BoundProcessGroups == nil {
+		return nil, false
+	}
+	return o.BoundProcessGroups, true
+}
+
+// HasBoundProcessGroups returns a boolean if a field has been set.
+func (o *ParameterContextDTO) HasBoundProcessGroups() bool {
+	if o != nil && o.BoundProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBoundProcessGroups gets a reference to the given []ProcessGroupEntity and assigns it to the BoundProcessGroups field.
+func (o *ParameterContextDTO) SetBoundProcessGroups(v []ProcessGroupEntity) {
+	o.BoundProcessGroups = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ParameterContextDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ParameterContextDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ParameterContextDTO) SetId(v string) {
+	o.Id = &v
+}
+
+func (o ParameterContextDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Parameters != nil {
+		toSerialize["parameters"] = o.Parameters
+	}
+	if o.BoundProcessGroups != nil {
+		toSerialize["boundProcessGroups"] = o.BoundProcessGroups
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableParameterContextDTO struct {
+	value *ParameterContextDTO
+	isSet bool
+}
+
+func (v NullableParameterContextDTO) Get() *ParameterContextDTO {
+	return v.value
+}
+
+func (v *NullableParameterContextDTO) Set(val *ParameterContextDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableParameterContextDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableParameterContextDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableParameterContextDTO(val *ParameterContextDTO) *NullableParameterContextDTO {
+	return &NullableParameterContextDTO{value: val, isSet: true}
+}
+
+func (v NullableParameterContextDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableParameterContextDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

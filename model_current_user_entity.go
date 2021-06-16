@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,22 +11,504 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // CurrentUserEntity struct for CurrentUserEntity
 type CurrentUserEntity struct {
 	// The user identity being serialized.
-	Identity string `json:"identity,omitempty"`
+	Identity *string `json:"identity,omitempty"`
 	// Whether the current user is anonymous.
-	Anonymous                       bool           `json:"anonymous,omitempty"`
-	ProvenancePermissions           PermissionsDto `json:"provenancePermissions,omitempty"`
-	CountersPermissions             PermissionsDto `json:"countersPermissions,omitempty"`
-	TenantsPermissions              PermissionsDto `json:"tenantsPermissions,omitempty"`
-	ControllerPermissions           PermissionsDto `json:"controllerPermissions,omitempty"`
-	PoliciesPermissions             PermissionsDto `json:"policiesPermissions,omitempty"`
-	SystemPermissions               PermissionsDto `json:"systemPermissions,omitempty"`
-	ParameterContextPermissions     PermissionsDto `json:"parameterContextPermissions,omitempty"`
-	RestrictedComponentsPermissions PermissionsDto `json:"restrictedComponentsPermissions,omitempty"`
+	Anonymous                       *bool           `json:"anonymous,omitempty"`
+	ProvenancePermissions           *PermissionsDTO `json:"provenancePermissions,omitempty"`
+	CountersPermissions             *PermissionsDTO `json:"countersPermissions,omitempty"`
+	TenantsPermissions              *PermissionsDTO `json:"tenantsPermissions,omitempty"`
+	ControllerPermissions           *PermissionsDTO `json:"controllerPermissions,omitempty"`
+	PoliciesPermissions             *PermissionsDTO `json:"policiesPermissions,omitempty"`
+	SystemPermissions               *PermissionsDTO `json:"systemPermissions,omitempty"`
+	ParameterContextPermissions     *PermissionsDTO `json:"parameterContextPermissions,omitempty"`
+	RestrictedComponentsPermissions *PermissionsDTO `json:"restrictedComponentsPermissions,omitempty"`
 	// Permissions for specific component restrictions.
-	ComponentRestrictionPermissions []ComponentRestrictionPermissionDto `json:"componentRestrictionPermissions,omitempty"`
+	ComponentRestrictionPermissions *[]ComponentRestrictionPermissionDTO `json:"componentRestrictionPermissions,omitempty"`
 	// Whether the current user can version flows.
-	CanVersionFlows bool `json:"canVersionFlows,omitempty"`
+	CanVersionFlows *bool `json:"canVersionFlows,omitempty"`
+}
+
+// NewCurrentUserEntity instantiates a new CurrentUserEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCurrentUserEntity() *CurrentUserEntity {
+	this := CurrentUserEntity{}
+	return &this
+}
+
+// NewCurrentUserEntityWithDefaults instantiates a new CurrentUserEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCurrentUserEntityWithDefaults() *CurrentUserEntity {
+	this := CurrentUserEntity{}
+	return &this
+}
+
+// GetIdentity returns the Identity field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetIdentity() string {
+	if o == nil || o.Identity == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identity
+}
+
+// GetIdentityOk returns a tuple with the Identity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetIdentityOk() (*string, bool) {
+	if o == nil || o.Identity == nil {
+		return nil, false
+	}
+	return o.Identity, true
+}
+
+// HasIdentity returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasIdentity() bool {
+	if o != nil && o.Identity != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentity gets a reference to the given string and assigns it to the Identity field.
+func (o *CurrentUserEntity) SetIdentity(v string) {
+	o.Identity = &v
+}
+
+// GetAnonymous returns the Anonymous field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetAnonymous() bool {
+	if o == nil || o.Anonymous == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Anonymous
+}
+
+// GetAnonymousOk returns a tuple with the Anonymous field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetAnonymousOk() (*bool, bool) {
+	if o == nil || o.Anonymous == nil {
+		return nil, false
+	}
+	return o.Anonymous, true
+}
+
+// HasAnonymous returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasAnonymous() bool {
+	if o != nil && o.Anonymous != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAnonymous gets a reference to the given bool and assigns it to the Anonymous field.
+func (o *CurrentUserEntity) SetAnonymous(v bool) {
+	o.Anonymous = &v
+}
+
+// GetProvenancePermissions returns the ProvenancePermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetProvenancePermissions() PermissionsDTO {
+	if o == nil || o.ProvenancePermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.ProvenancePermissions
+}
+
+// GetProvenancePermissionsOk returns a tuple with the ProvenancePermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetProvenancePermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.ProvenancePermissions == nil {
+		return nil, false
+	}
+	return o.ProvenancePermissions, true
+}
+
+// HasProvenancePermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasProvenancePermissions() bool {
+	if o != nil && o.ProvenancePermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProvenancePermissions gets a reference to the given PermissionsDTO and assigns it to the ProvenancePermissions field.
+func (o *CurrentUserEntity) SetProvenancePermissions(v PermissionsDTO) {
+	o.ProvenancePermissions = &v
+}
+
+// GetCountersPermissions returns the CountersPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetCountersPermissions() PermissionsDTO {
+	if o == nil || o.CountersPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.CountersPermissions
+}
+
+// GetCountersPermissionsOk returns a tuple with the CountersPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetCountersPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.CountersPermissions == nil {
+		return nil, false
+	}
+	return o.CountersPermissions, true
+}
+
+// HasCountersPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasCountersPermissions() bool {
+	if o != nil && o.CountersPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCountersPermissions gets a reference to the given PermissionsDTO and assigns it to the CountersPermissions field.
+func (o *CurrentUserEntity) SetCountersPermissions(v PermissionsDTO) {
+	o.CountersPermissions = &v
+}
+
+// GetTenantsPermissions returns the TenantsPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetTenantsPermissions() PermissionsDTO {
+	if o == nil || o.TenantsPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.TenantsPermissions
+}
+
+// GetTenantsPermissionsOk returns a tuple with the TenantsPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetTenantsPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.TenantsPermissions == nil {
+		return nil, false
+	}
+	return o.TenantsPermissions, true
+}
+
+// HasTenantsPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasTenantsPermissions() bool {
+	if o != nil && o.TenantsPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTenantsPermissions gets a reference to the given PermissionsDTO and assigns it to the TenantsPermissions field.
+func (o *CurrentUserEntity) SetTenantsPermissions(v PermissionsDTO) {
+	o.TenantsPermissions = &v
+}
+
+// GetControllerPermissions returns the ControllerPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetControllerPermissions() PermissionsDTO {
+	if o == nil || o.ControllerPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.ControllerPermissions
+}
+
+// GetControllerPermissionsOk returns a tuple with the ControllerPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetControllerPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.ControllerPermissions == nil {
+		return nil, false
+	}
+	return o.ControllerPermissions, true
+}
+
+// HasControllerPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasControllerPermissions() bool {
+	if o != nil && o.ControllerPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerPermissions gets a reference to the given PermissionsDTO and assigns it to the ControllerPermissions field.
+func (o *CurrentUserEntity) SetControllerPermissions(v PermissionsDTO) {
+	o.ControllerPermissions = &v
+}
+
+// GetPoliciesPermissions returns the PoliciesPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetPoliciesPermissions() PermissionsDTO {
+	if o == nil || o.PoliciesPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.PoliciesPermissions
+}
+
+// GetPoliciesPermissionsOk returns a tuple with the PoliciesPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetPoliciesPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.PoliciesPermissions == nil {
+		return nil, false
+	}
+	return o.PoliciesPermissions, true
+}
+
+// HasPoliciesPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasPoliciesPermissions() bool {
+	if o != nil && o.PoliciesPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPoliciesPermissions gets a reference to the given PermissionsDTO and assigns it to the PoliciesPermissions field.
+func (o *CurrentUserEntity) SetPoliciesPermissions(v PermissionsDTO) {
+	o.PoliciesPermissions = &v
+}
+
+// GetSystemPermissions returns the SystemPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetSystemPermissions() PermissionsDTO {
+	if o == nil || o.SystemPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.SystemPermissions
+}
+
+// GetSystemPermissionsOk returns a tuple with the SystemPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetSystemPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.SystemPermissions == nil {
+		return nil, false
+	}
+	return o.SystemPermissions, true
+}
+
+// HasSystemPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasSystemPermissions() bool {
+	if o != nil && o.SystemPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSystemPermissions gets a reference to the given PermissionsDTO and assigns it to the SystemPermissions field.
+func (o *CurrentUserEntity) SetSystemPermissions(v PermissionsDTO) {
+	o.SystemPermissions = &v
+}
+
+// GetParameterContextPermissions returns the ParameterContextPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetParameterContextPermissions() PermissionsDTO {
+	if o == nil || o.ParameterContextPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.ParameterContextPermissions
+}
+
+// GetParameterContextPermissionsOk returns a tuple with the ParameterContextPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetParameterContextPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.ParameterContextPermissions == nil {
+		return nil, false
+	}
+	return o.ParameterContextPermissions, true
+}
+
+// HasParameterContextPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasParameterContextPermissions() bool {
+	if o != nil && o.ParameterContextPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContextPermissions gets a reference to the given PermissionsDTO and assigns it to the ParameterContextPermissions field.
+func (o *CurrentUserEntity) SetParameterContextPermissions(v PermissionsDTO) {
+	o.ParameterContextPermissions = &v
+}
+
+// GetRestrictedComponentsPermissions returns the RestrictedComponentsPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetRestrictedComponentsPermissions() PermissionsDTO {
+	if o == nil || o.RestrictedComponentsPermissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.RestrictedComponentsPermissions
+}
+
+// GetRestrictedComponentsPermissionsOk returns a tuple with the RestrictedComponentsPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetRestrictedComponentsPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.RestrictedComponentsPermissions == nil {
+		return nil, false
+	}
+	return o.RestrictedComponentsPermissions, true
+}
+
+// HasRestrictedComponentsPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasRestrictedComponentsPermissions() bool {
+	if o != nil && o.RestrictedComponentsPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRestrictedComponentsPermissions gets a reference to the given PermissionsDTO and assigns it to the RestrictedComponentsPermissions field.
+func (o *CurrentUserEntity) SetRestrictedComponentsPermissions(v PermissionsDTO) {
+	o.RestrictedComponentsPermissions = &v
+}
+
+// GetComponentRestrictionPermissions returns the ComponentRestrictionPermissions field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetComponentRestrictionPermissions() []ComponentRestrictionPermissionDTO {
+	if o == nil || o.ComponentRestrictionPermissions == nil {
+		var ret []ComponentRestrictionPermissionDTO
+		return ret
+	}
+	return *o.ComponentRestrictionPermissions
+}
+
+// GetComponentRestrictionPermissionsOk returns a tuple with the ComponentRestrictionPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetComponentRestrictionPermissionsOk() (*[]ComponentRestrictionPermissionDTO, bool) {
+	if o == nil || o.ComponentRestrictionPermissions == nil {
+		return nil, false
+	}
+	return o.ComponentRestrictionPermissions, true
+}
+
+// HasComponentRestrictionPermissions returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasComponentRestrictionPermissions() bool {
+	if o != nil && o.ComponentRestrictionPermissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentRestrictionPermissions gets a reference to the given []ComponentRestrictionPermissionDTO and assigns it to the ComponentRestrictionPermissions field.
+func (o *CurrentUserEntity) SetComponentRestrictionPermissions(v []ComponentRestrictionPermissionDTO) {
+	o.ComponentRestrictionPermissions = &v
+}
+
+// GetCanVersionFlows returns the CanVersionFlows field value if set, zero value otherwise.
+func (o *CurrentUserEntity) GetCanVersionFlows() bool {
+	if o == nil || o.CanVersionFlows == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanVersionFlows
+}
+
+// GetCanVersionFlowsOk returns a tuple with the CanVersionFlows field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CurrentUserEntity) GetCanVersionFlowsOk() (*bool, bool) {
+	if o == nil || o.CanVersionFlows == nil {
+		return nil, false
+	}
+	return o.CanVersionFlows, true
+}
+
+// HasCanVersionFlows returns a boolean if a field has been set.
+func (o *CurrentUserEntity) HasCanVersionFlows() bool {
+	if o != nil && o.CanVersionFlows != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanVersionFlows gets a reference to the given bool and assigns it to the CanVersionFlows field.
+func (o *CurrentUserEntity) SetCanVersionFlows(v bool) {
+	o.CanVersionFlows = &v
+}
+
+func (o CurrentUserEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identity != nil {
+		toSerialize["identity"] = o.Identity
+	}
+	if o.Anonymous != nil {
+		toSerialize["anonymous"] = o.Anonymous
+	}
+	if o.ProvenancePermissions != nil {
+		toSerialize["provenancePermissions"] = o.ProvenancePermissions
+	}
+	if o.CountersPermissions != nil {
+		toSerialize["countersPermissions"] = o.CountersPermissions
+	}
+	if o.TenantsPermissions != nil {
+		toSerialize["tenantsPermissions"] = o.TenantsPermissions
+	}
+	if o.ControllerPermissions != nil {
+		toSerialize["controllerPermissions"] = o.ControllerPermissions
+	}
+	if o.PoliciesPermissions != nil {
+		toSerialize["policiesPermissions"] = o.PoliciesPermissions
+	}
+	if o.SystemPermissions != nil {
+		toSerialize["systemPermissions"] = o.SystemPermissions
+	}
+	if o.ParameterContextPermissions != nil {
+		toSerialize["parameterContextPermissions"] = o.ParameterContextPermissions
+	}
+	if o.RestrictedComponentsPermissions != nil {
+		toSerialize["restrictedComponentsPermissions"] = o.RestrictedComponentsPermissions
+	}
+	if o.ComponentRestrictionPermissions != nil {
+		toSerialize["componentRestrictionPermissions"] = o.ComponentRestrictionPermissions
+	}
+	if o.CanVersionFlows != nil {
+		toSerialize["canVersionFlows"] = o.CanVersionFlows
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableCurrentUserEntity struct {
+	value *CurrentUserEntity
+	isSet bool
+}
+
+func (v NullableCurrentUserEntity) Get() *CurrentUserEntity {
+	return v.value
+}
+
+func (v *NullableCurrentUserEntity) Set(val *CurrentUserEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableCurrentUserEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableCurrentUserEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableCurrentUserEntity(val *CurrentUserEntity) *NullableCurrentUserEntity {
+	return &NullableCurrentUserEntity{value: val, isSet: true}
+}
+
+func (v NullableCurrentUserEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableCurrentUserEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

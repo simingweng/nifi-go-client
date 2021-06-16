@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,11 +11,178 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ConnectionStatusSnapshotEntity struct for ConnectionStatusSnapshotEntity
 type ConnectionStatusSnapshotEntity struct {
 	// The id of the connection.
-	Id                       string                      `json:"id,omitempty"`
-	ConnectionStatusSnapshot ConnectionStatusSnapshotDto `json:"connectionStatusSnapshot,omitempty"`
+	Id                       *string                      `json:"id,omitempty"`
+	ConnectionStatusSnapshot *ConnectionStatusSnapshotDTO `json:"connectionStatusSnapshot,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewConnectionStatusSnapshotEntity instantiates a new ConnectionStatusSnapshotEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewConnectionStatusSnapshotEntity() *ConnectionStatusSnapshotEntity {
+	this := ConnectionStatusSnapshotEntity{}
+	return &this
+}
+
+// NewConnectionStatusSnapshotEntityWithDefaults instantiates a new ConnectionStatusSnapshotEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewConnectionStatusSnapshotEntityWithDefaults() *ConnectionStatusSnapshotEntity {
+	this := ConnectionStatusSnapshotEntity{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ConnectionStatusSnapshotEntity) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatusSnapshotEntity) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ConnectionStatusSnapshotEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ConnectionStatusSnapshotEntity) SetId(v string) {
+	o.Id = &v
+}
+
+// GetConnectionStatusSnapshot returns the ConnectionStatusSnapshot field value if set, zero value otherwise.
+func (o *ConnectionStatusSnapshotEntity) GetConnectionStatusSnapshot() ConnectionStatusSnapshotDTO {
+	if o == nil || o.ConnectionStatusSnapshot == nil {
+		var ret ConnectionStatusSnapshotDTO
+		return ret
+	}
+	return *o.ConnectionStatusSnapshot
+}
+
+// GetConnectionStatusSnapshotOk returns a tuple with the ConnectionStatusSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatusSnapshotEntity) GetConnectionStatusSnapshotOk() (*ConnectionStatusSnapshotDTO, bool) {
+	if o == nil || o.ConnectionStatusSnapshot == nil {
+		return nil, false
+	}
+	return o.ConnectionStatusSnapshot, true
+}
+
+// HasConnectionStatusSnapshot returns a boolean if a field has been set.
+func (o *ConnectionStatusSnapshotEntity) HasConnectionStatusSnapshot() bool {
+	if o != nil && o.ConnectionStatusSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectionStatusSnapshot gets a reference to the given ConnectionStatusSnapshotDTO and assigns it to the ConnectionStatusSnapshot field.
+func (o *ConnectionStatusSnapshotEntity) SetConnectionStatusSnapshot(v ConnectionStatusSnapshotDTO) {
+	o.ConnectionStatusSnapshot = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *ConnectionStatusSnapshotEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectionStatusSnapshotEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *ConnectionStatusSnapshotEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *ConnectionStatusSnapshotEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o ConnectionStatusSnapshotEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.ConnectionStatusSnapshot != nil {
+		toSerialize["connectionStatusSnapshot"] = o.ConnectionStatusSnapshot
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableConnectionStatusSnapshotEntity struct {
+	value *ConnectionStatusSnapshotEntity
+	isSet bool
+}
+
+func (v NullableConnectionStatusSnapshotEntity) Get() *ConnectionStatusSnapshotEntity {
+	return v.value
+}
+
+func (v *NullableConnectionStatusSnapshotEntity) Set(val *ConnectionStatusSnapshotEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableConnectionStatusSnapshotEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableConnectionStatusSnapshotEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableConnectionStatusSnapshotEntity(val *ConnectionStatusSnapshotEntity) *NullableConnectionStatusSnapshotEntity {
+	return &NullableConnectionStatusSnapshotEntity{value: val, isSet: true}
+}
+
+func (v NullableConnectionStatusSnapshotEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableConnectionStatusSnapshotEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

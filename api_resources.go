@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,6 +12,7 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
@@ -26,12 +27,32 @@ var (
 // ResourcesApiService ResourcesApi service
 type ResourcesApiService service
 
+type ResourcesApiApiGetResourcesRequest struct {
+	ctx        _context.Context
+	ApiService *ResourcesApiService
+}
+
+func (r ResourcesApiApiGetResourcesRequest) Execute() (ResourcesEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetResourcesExecute(r)
+}
+
 /*
-GetResources Gets the available resources that support access/authorization policies
+ * GetResources Gets the available resources that support access/authorization policies
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return ResourcesEntity
-*/
-func (a *ResourcesApiService) GetResources(ctx _context.Context) (ResourcesEntity, *_nethttp.Response, error) {
+ * @return ResourcesApiApiGetResourcesRequest
+ */
+func (a *ResourcesApiService) GetResources(ctx _context.Context) ResourcesApiApiGetResourcesRequest {
+	return ResourcesApiApiGetResourcesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ResourcesEntity
+ */
+func (a *ResourcesApiService) GetResourcesExecute(r ResourcesApiApiGetResourcesRequest) (ResourcesEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -41,8 +62,13 @@ func (a *ResourcesApiService) GetResources(ctx _context.Context) (ResourcesEntit
 		localVarReturnValue  ResourcesEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/resources"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ResourcesApiService.GetResources")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/resources"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -64,18 +90,19 @@ func (a *ResourcesApiService) GetResources(ctx _context.Context) (ResourcesEntit
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

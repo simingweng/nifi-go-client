@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// PermissionsDto struct for PermissionsDto
-type PermissionsDto struct {
+import (
+	"encoding/json"
+)
+
+// PermissionsDTO struct for PermissionsDTO
+type PermissionsDTO struct {
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
 	// Indicates whether the user can write a given resource.
-	CanWrite bool `json:"canWrite,omitempty"`
+	CanWrite *bool `json:"canWrite,omitempty"`
+}
+
+// NewPermissionsDTO instantiates a new PermissionsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPermissionsDTO() *PermissionsDTO {
+	this := PermissionsDTO{}
+	return &this
+}
+
+// NewPermissionsDTOWithDefaults instantiates a new PermissionsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPermissionsDTOWithDefaults() *PermissionsDTO {
+	this := PermissionsDTO{}
+	return &this
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *PermissionsDTO) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PermissionsDTO) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *PermissionsDTO) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *PermissionsDTO) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+// GetCanWrite returns the CanWrite field value if set, zero value otherwise.
+func (o *PermissionsDTO) GetCanWrite() bool {
+	if o == nil || o.CanWrite == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanWrite
+}
+
+// GetCanWriteOk returns a tuple with the CanWrite field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PermissionsDTO) GetCanWriteOk() (*bool, bool) {
+	if o == nil || o.CanWrite == nil {
+		return nil, false
+	}
+	return o.CanWrite, true
+}
+
+// HasCanWrite returns a boolean if a field has been set.
+func (o *PermissionsDTO) HasCanWrite() bool {
+	if o != nil && o.CanWrite != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanWrite gets a reference to the given bool and assigns it to the CanWrite field.
+func (o *PermissionsDTO) SetCanWrite(v bool) {
+	o.CanWrite = &v
+}
+
+func (o PermissionsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	if o.CanWrite != nil {
+		toSerialize["canWrite"] = o.CanWrite
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePermissionsDTO struct {
+	value *PermissionsDTO
+	isSet bool
+}
+
+func (v NullablePermissionsDTO) Get() *PermissionsDTO {
+	return v.value
+}
+
+func (v *NullablePermissionsDTO) Set(val *PermissionsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePermissionsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePermissionsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePermissionsDTO(val *PermissionsDTO) *NullablePermissionsDTO {
+	return &NullablePermissionsDTO{value: val, isSet: true}
+}
+
+func (v NullablePermissionsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePermissionsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

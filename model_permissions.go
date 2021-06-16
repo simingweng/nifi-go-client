@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // Permissions struct for Permissions
 type Permissions struct {
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
 	// Indicates whether the user can write a given resource.
-	CanWrite bool `json:"canWrite,omitempty"`
+	CanWrite *bool `json:"canWrite,omitempty"`
 	// Indicates whether the user can delete a given resource.
-	CanDelete bool `json:"canDelete,omitempty"`
+	CanDelete *bool `json:"canDelete,omitempty"`
+}
+
+// NewPermissions instantiates a new Permissions object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPermissions() *Permissions {
+	this := Permissions{}
+	return &this
+}
+
+// NewPermissionsWithDefaults instantiates a new Permissions object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPermissionsWithDefaults() *Permissions {
+	this := Permissions{}
+	return &this
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *Permissions) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Permissions) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *Permissions) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *Permissions) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+// GetCanWrite returns the CanWrite field value if set, zero value otherwise.
+func (o *Permissions) GetCanWrite() bool {
+	if o == nil || o.CanWrite == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanWrite
+}
+
+// GetCanWriteOk returns a tuple with the CanWrite field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Permissions) GetCanWriteOk() (*bool, bool) {
+	if o == nil || o.CanWrite == nil {
+		return nil, false
+	}
+	return o.CanWrite, true
+}
+
+// HasCanWrite returns a boolean if a field has been set.
+func (o *Permissions) HasCanWrite() bool {
+	if o != nil && o.CanWrite != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanWrite gets a reference to the given bool and assigns it to the CanWrite field.
+func (o *Permissions) SetCanWrite(v bool) {
+	o.CanWrite = &v
+}
+
+// GetCanDelete returns the CanDelete field value if set, zero value otherwise.
+func (o *Permissions) GetCanDelete() bool {
+	if o == nil || o.CanDelete == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanDelete
+}
+
+// GetCanDeleteOk returns a tuple with the CanDelete field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Permissions) GetCanDeleteOk() (*bool, bool) {
+	if o == nil || o.CanDelete == nil {
+		return nil, false
+	}
+	return o.CanDelete, true
+}
+
+// HasCanDelete returns a boolean if a field has been set.
+func (o *Permissions) HasCanDelete() bool {
+	if o != nil && o.CanDelete != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanDelete gets a reference to the given bool and assigns it to the CanDelete field.
+func (o *Permissions) SetCanDelete(v bool) {
+	o.CanDelete = &v
+}
+
+func (o Permissions) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	if o.CanWrite != nil {
+		toSerialize["canWrite"] = o.CanWrite
+	}
+	if o.CanDelete != nil {
+		toSerialize["canDelete"] = o.CanDelete
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePermissions struct {
+	value *Permissions
+	isSet bool
+}
+
+func (v NullablePermissions) Get() *Permissions {
+	return v.value
+}
+
+func (v *NullablePermissions) Set(val *Permissions) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePermissions) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePermissions) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePermissions(val *Permissions) *NullablePermissions {
+	return &NullablePermissions{value: val, isSet: true}
+}
+
+func (v NullablePermissions) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePermissions) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

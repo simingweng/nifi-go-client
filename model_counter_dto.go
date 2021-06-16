@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,253 @@
 
 package nifi
 
-// CounterDto struct for CounterDto
-type CounterDto struct {
+import (
+	"encoding/json"
+)
+
+// CounterDTO struct for CounterDTO
+type CounterDTO struct {
 	// The id of the counter.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The context of the counter.
-	Context string `json:"context,omitempty"`
+	Context *string `json:"context,omitempty"`
 	// The name of the counter.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The value count.
-	ValueCount int64 `json:"valueCount,omitempty"`
+	ValueCount *int64 `json:"valueCount,omitempty"`
 	// The value of the counter.
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
+// NewCounterDTO instantiates a new CounterDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCounterDTO() *CounterDTO {
+	this := CounterDTO{}
+	return &this
+}
+
+// NewCounterDTOWithDefaults instantiates a new CounterDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCounterDTOWithDefaults() *CounterDTO {
+	this := CounterDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *CounterDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CounterDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *CounterDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *CounterDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetContext returns the Context field value if set, zero value otherwise.
+func (o *CounterDTO) GetContext() string {
+	if o == nil || o.Context == nil {
+		var ret string
+		return ret
+	}
+	return *o.Context
+}
+
+// GetContextOk returns a tuple with the Context field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CounterDTO) GetContextOk() (*string, bool) {
+	if o == nil || o.Context == nil {
+		return nil, false
+	}
+	return o.Context, true
+}
+
+// HasContext returns a boolean if a field has been set.
+func (o *CounterDTO) HasContext() bool {
+	if o != nil && o.Context != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContext gets a reference to the given string and assigns it to the Context field.
+func (o *CounterDTO) SetContext(v string) {
+	o.Context = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *CounterDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CounterDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *CounterDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *CounterDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetValueCount returns the ValueCount field value if set, zero value otherwise.
+func (o *CounterDTO) GetValueCount() int64 {
+	if o == nil || o.ValueCount == nil {
+		var ret int64
+		return ret
+	}
+	return *o.ValueCount
+}
+
+// GetValueCountOk returns a tuple with the ValueCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CounterDTO) GetValueCountOk() (*int64, bool) {
+	if o == nil || o.ValueCount == nil {
+		return nil, false
+	}
+	return o.ValueCount, true
+}
+
+// HasValueCount returns a boolean if a field has been set.
+func (o *CounterDTO) HasValueCount() bool {
+	if o != nil && o.ValueCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValueCount gets a reference to the given int64 and assigns it to the ValueCount field.
+func (o *CounterDTO) SetValueCount(v int64) {
+	o.ValueCount = &v
+}
+
+// GetValue returns the Value field value if set, zero value otherwise.
+func (o *CounterDTO) GetValue() string {
+	if o == nil || o.Value == nil {
+		var ret string
+		return ret
+	}
+	return *o.Value
+}
+
+// GetValueOk returns a tuple with the Value field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CounterDTO) GetValueOk() (*string, bool) {
+	if o == nil || o.Value == nil {
+		return nil, false
+	}
+	return o.Value, true
+}
+
+// HasValue returns a boolean if a field has been set.
+func (o *CounterDTO) HasValue() bool {
+	if o != nil && o.Value != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValue gets a reference to the given string and assigns it to the Value field.
+func (o *CounterDTO) SetValue(v string) {
+	o.Value = &v
+}
+
+func (o CounterDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Context != nil {
+		toSerialize["context"] = o.Context
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.ValueCount != nil {
+		toSerialize["valueCount"] = o.ValueCount
+	}
+	if o.Value != nil {
+		toSerialize["value"] = o.Value
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableCounterDTO struct {
+	value *CounterDTO
+	isSet bool
+}
+
+func (v NullableCounterDTO) Get() *CounterDTO {
+	return v.value
+}
+
+func (v *NullableCounterDTO) Set(val *CounterDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableCounterDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableCounterDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableCounterDTO(val *CounterDTO) *NullableCounterDTO {
+	return &NullableCounterDTO{value: val, isSet: true}
+}
+
+func (v NullableCounterDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableCounterDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

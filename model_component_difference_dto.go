@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,253 @@
 
 package nifi
 
-// ComponentDifferenceDto struct for ComponentDifferenceDto
-type ComponentDifferenceDto struct {
+import (
+	"encoding/json"
+)
+
+// ComponentDifferenceDTO struct for ComponentDifferenceDTO
+type ComponentDifferenceDTO struct {
 	// The type of component
-	ComponentType string `json:"componentType,omitempty"`
+	ComponentType *string `json:"componentType,omitempty"`
 	// The ID of the component
-	ComponentId string `json:"componentId,omitempty"`
+	ComponentId *string `json:"componentId,omitempty"`
 	// The name of the component
-	ComponentName string `json:"componentName,omitempty"`
+	ComponentName *string `json:"componentName,omitempty"`
 	// The ID of the Process Group that the component belongs to
-	ProcessGroupId string `json:"processGroupId,omitempty"`
+	ProcessGroupId *string `json:"processGroupId,omitempty"`
 	// The differences in the component between the two flows
-	Differences []DifferenceDto `json:"differences,omitempty"`
+	Differences *[]DifferenceDTO `json:"differences,omitempty"`
+}
+
+// NewComponentDifferenceDTO instantiates a new ComponentDifferenceDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewComponentDifferenceDTO() *ComponentDifferenceDTO {
+	this := ComponentDifferenceDTO{}
+	return &this
+}
+
+// NewComponentDifferenceDTOWithDefaults instantiates a new ComponentDifferenceDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewComponentDifferenceDTOWithDefaults() *ComponentDifferenceDTO {
+	this := ComponentDifferenceDTO{}
+	return &this
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *ComponentDifferenceDTO) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentDifferenceDTO) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *ComponentDifferenceDTO) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *ComponentDifferenceDTO) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetComponentId returns the ComponentId field value if set, zero value otherwise.
+func (o *ComponentDifferenceDTO) GetComponentId() string {
+	if o == nil || o.ComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentId
+}
+
+// GetComponentIdOk returns a tuple with the ComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentDifferenceDTO) GetComponentIdOk() (*string, bool) {
+	if o == nil || o.ComponentId == nil {
+		return nil, false
+	}
+	return o.ComponentId, true
+}
+
+// HasComponentId returns a boolean if a field has been set.
+func (o *ComponentDifferenceDTO) HasComponentId() bool {
+	if o != nil && o.ComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentId gets a reference to the given string and assigns it to the ComponentId field.
+func (o *ComponentDifferenceDTO) SetComponentId(v string) {
+	o.ComponentId = &v
+}
+
+// GetComponentName returns the ComponentName field value if set, zero value otherwise.
+func (o *ComponentDifferenceDTO) GetComponentName() string {
+	if o == nil || o.ComponentName == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentName
+}
+
+// GetComponentNameOk returns a tuple with the ComponentName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentDifferenceDTO) GetComponentNameOk() (*string, bool) {
+	if o == nil || o.ComponentName == nil {
+		return nil, false
+	}
+	return o.ComponentName, true
+}
+
+// HasComponentName returns a boolean if a field has been set.
+func (o *ComponentDifferenceDTO) HasComponentName() bool {
+	if o != nil && o.ComponentName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentName gets a reference to the given string and assigns it to the ComponentName field.
+func (o *ComponentDifferenceDTO) SetComponentName(v string) {
+	o.ComponentName = &v
+}
+
+// GetProcessGroupId returns the ProcessGroupId field value if set, zero value otherwise.
+func (o *ComponentDifferenceDTO) GetProcessGroupId() string {
+	if o == nil || o.ProcessGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProcessGroupId
+}
+
+// GetProcessGroupIdOk returns a tuple with the ProcessGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentDifferenceDTO) GetProcessGroupIdOk() (*string, bool) {
+	if o == nil || o.ProcessGroupId == nil {
+		return nil, false
+	}
+	return o.ProcessGroupId, true
+}
+
+// HasProcessGroupId returns a boolean if a field has been set.
+func (o *ComponentDifferenceDTO) HasProcessGroupId() bool {
+	if o != nil && o.ProcessGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupId gets a reference to the given string and assigns it to the ProcessGroupId field.
+func (o *ComponentDifferenceDTO) SetProcessGroupId(v string) {
+	o.ProcessGroupId = &v
+}
+
+// GetDifferences returns the Differences field value if set, zero value otherwise.
+func (o *ComponentDifferenceDTO) GetDifferences() []DifferenceDTO {
+	if o == nil || o.Differences == nil {
+		var ret []DifferenceDTO
+		return ret
+	}
+	return *o.Differences
+}
+
+// GetDifferencesOk returns a tuple with the Differences field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentDifferenceDTO) GetDifferencesOk() (*[]DifferenceDTO, bool) {
+	if o == nil || o.Differences == nil {
+		return nil, false
+	}
+	return o.Differences, true
+}
+
+// HasDifferences returns a boolean if a field has been set.
+func (o *ComponentDifferenceDTO) HasDifferences() bool {
+	if o != nil && o.Differences != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDifferences gets a reference to the given []DifferenceDTO and assigns it to the Differences field.
+func (o *ComponentDifferenceDTO) SetDifferences(v []DifferenceDTO) {
+	o.Differences = &v
+}
+
+func (o ComponentDifferenceDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.ComponentId != nil {
+		toSerialize["componentId"] = o.ComponentId
+	}
+	if o.ComponentName != nil {
+		toSerialize["componentName"] = o.ComponentName
+	}
+	if o.ProcessGroupId != nil {
+		toSerialize["processGroupId"] = o.ProcessGroupId
+	}
+	if o.Differences != nil {
+		toSerialize["differences"] = o.Differences
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableComponentDifferenceDTO struct {
+	value *ComponentDifferenceDTO
+	isSet bool
+}
+
+func (v NullableComponentDifferenceDTO) Get() *ComponentDifferenceDTO {
+	return v.value
+}
+
+func (v *NullableComponentDifferenceDTO) Set(val *ComponentDifferenceDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableComponentDifferenceDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableComponentDifferenceDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableComponentDifferenceDTO(val *ComponentDifferenceDTO) *NullableComponentDifferenceDTO {
+	return &NullableComponentDifferenceDTO{value: val, isSet: true}
+}
+
+func (v NullableComponentDifferenceDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableComponentDifferenceDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,253 @@
 
 package nifi
 
-// StatusHistoryDto struct for StatusHistoryDto
-type StatusHistoryDto struct {
+import (
+	"encoding/json"
+)
+
+// StatusHistoryDTO struct for StatusHistoryDTO
+type StatusHistoryDTO struct {
 	// When the status history was generated.
-	Generated string `json:"generated,omitempty"`
+	Generated *string `json:"generated,omitempty"`
 	// A Map of key/value pairs that describe the component that the status history belongs to
-	ComponentDetails map[string]string `json:"componentDetails,omitempty"`
+	ComponentDetails *map[string]string `json:"componentDetails,omitempty"`
 	// The Descriptors that provide information on each of the metrics provided in the status history
-	FieldDescriptors []StatusDescriptorDto `json:"fieldDescriptors,omitempty"`
+	FieldDescriptors *[]StatusDescriptorDTO `json:"fieldDescriptors,omitempty"`
 	// A list of StatusSnapshotDTO objects that provide the actual metric values for the component. If the NiFi instance is clustered, this will represent the aggregate status across all nodes. If the NiFi instance is not clustered, this will represent the status of the entire NiFi instance.
-	AggregateSnapshots []StatusSnapshotDto `json:"aggregateSnapshots,omitempty"`
+	AggregateSnapshots *[]StatusSnapshotDTO `json:"aggregateSnapshots,omitempty"`
 	// The NodeStatusSnapshotsDTO objects that provide the actual metric values for the component, for each node. If the NiFi instance is not clustered, this value will be null.
-	NodeSnapshots []NodeStatusSnapshotsDto `json:"nodeSnapshots,omitempty"`
+	NodeSnapshots *[]NodeStatusSnapshotsDTO `json:"nodeSnapshots,omitempty"`
+}
+
+// NewStatusHistoryDTO instantiates a new StatusHistoryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewStatusHistoryDTO() *StatusHistoryDTO {
+	this := StatusHistoryDTO{}
+	return &this
+}
+
+// NewStatusHistoryDTOWithDefaults instantiates a new StatusHistoryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewStatusHistoryDTOWithDefaults() *StatusHistoryDTO {
+	this := StatusHistoryDTO{}
+	return &this
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *StatusHistoryDTO) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryDTO) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *StatusHistoryDTO) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *StatusHistoryDTO) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+// GetComponentDetails returns the ComponentDetails field value if set, zero value otherwise.
+func (o *StatusHistoryDTO) GetComponentDetails() map[string]string {
+	if o == nil || o.ComponentDetails == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.ComponentDetails
+}
+
+// GetComponentDetailsOk returns a tuple with the ComponentDetails field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryDTO) GetComponentDetailsOk() (*map[string]string, bool) {
+	if o == nil || o.ComponentDetails == nil {
+		return nil, false
+	}
+	return o.ComponentDetails, true
+}
+
+// HasComponentDetails returns a boolean if a field has been set.
+func (o *StatusHistoryDTO) HasComponentDetails() bool {
+	if o != nil && o.ComponentDetails != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentDetails gets a reference to the given map[string]string and assigns it to the ComponentDetails field.
+func (o *StatusHistoryDTO) SetComponentDetails(v map[string]string) {
+	o.ComponentDetails = &v
+}
+
+// GetFieldDescriptors returns the FieldDescriptors field value if set, zero value otherwise.
+func (o *StatusHistoryDTO) GetFieldDescriptors() []StatusDescriptorDTO {
+	if o == nil || o.FieldDescriptors == nil {
+		var ret []StatusDescriptorDTO
+		return ret
+	}
+	return *o.FieldDescriptors
+}
+
+// GetFieldDescriptorsOk returns a tuple with the FieldDescriptors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryDTO) GetFieldDescriptorsOk() (*[]StatusDescriptorDTO, bool) {
+	if o == nil || o.FieldDescriptors == nil {
+		return nil, false
+	}
+	return o.FieldDescriptors, true
+}
+
+// HasFieldDescriptors returns a boolean if a field has been set.
+func (o *StatusHistoryDTO) HasFieldDescriptors() bool {
+	if o != nil && o.FieldDescriptors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFieldDescriptors gets a reference to the given []StatusDescriptorDTO and assigns it to the FieldDescriptors field.
+func (o *StatusHistoryDTO) SetFieldDescriptors(v []StatusDescriptorDTO) {
+	o.FieldDescriptors = &v
+}
+
+// GetAggregateSnapshots returns the AggregateSnapshots field value if set, zero value otherwise.
+func (o *StatusHistoryDTO) GetAggregateSnapshots() []StatusSnapshotDTO {
+	if o == nil || o.AggregateSnapshots == nil {
+		var ret []StatusSnapshotDTO
+		return ret
+	}
+	return *o.AggregateSnapshots
+}
+
+// GetAggregateSnapshotsOk returns a tuple with the AggregateSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryDTO) GetAggregateSnapshotsOk() (*[]StatusSnapshotDTO, bool) {
+	if o == nil || o.AggregateSnapshots == nil {
+		return nil, false
+	}
+	return o.AggregateSnapshots, true
+}
+
+// HasAggregateSnapshots returns a boolean if a field has been set.
+func (o *StatusHistoryDTO) HasAggregateSnapshots() bool {
+	if o != nil && o.AggregateSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAggregateSnapshots gets a reference to the given []StatusSnapshotDTO and assigns it to the AggregateSnapshots field.
+func (o *StatusHistoryDTO) SetAggregateSnapshots(v []StatusSnapshotDTO) {
+	o.AggregateSnapshots = &v
+}
+
+// GetNodeSnapshots returns the NodeSnapshots field value if set, zero value otherwise.
+func (o *StatusHistoryDTO) GetNodeSnapshots() []NodeStatusSnapshotsDTO {
+	if o == nil || o.NodeSnapshots == nil {
+		var ret []NodeStatusSnapshotsDTO
+		return ret
+	}
+	return *o.NodeSnapshots
+}
+
+// GetNodeSnapshotsOk returns a tuple with the NodeSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusHistoryDTO) GetNodeSnapshotsOk() (*[]NodeStatusSnapshotsDTO, bool) {
+	if o == nil || o.NodeSnapshots == nil {
+		return nil, false
+	}
+	return o.NodeSnapshots, true
+}
+
+// HasNodeSnapshots returns a boolean if a field has been set.
+func (o *StatusHistoryDTO) HasNodeSnapshots() bool {
+	if o != nil && o.NodeSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeSnapshots gets a reference to the given []NodeStatusSnapshotsDTO and assigns it to the NodeSnapshots field.
+func (o *StatusHistoryDTO) SetNodeSnapshots(v []NodeStatusSnapshotsDTO) {
+	o.NodeSnapshots = &v
+}
+
+func (o StatusHistoryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	if o.ComponentDetails != nil {
+		toSerialize["componentDetails"] = o.ComponentDetails
+	}
+	if o.FieldDescriptors != nil {
+		toSerialize["fieldDescriptors"] = o.FieldDescriptors
+	}
+	if o.AggregateSnapshots != nil {
+		toSerialize["aggregateSnapshots"] = o.AggregateSnapshots
+	}
+	if o.NodeSnapshots != nil {
+		toSerialize["nodeSnapshots"] = o.NodeSnapshots
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableStatusHistoryDTO struct {
+	value *StatusHistoryDTO
+	isSet bool
+}
+
+func (v NullableStatusHistoryDTO) Get() *StatusHistoryDTO {
+	return v.value
+}
+
+func (v *NullableStatusHistoryDTO) Set(val *StatusHistoryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableStatusHistoryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableStatusHistoryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableStatusHistoryDTO(val *StatusHistoryDTO) *NullableStatusHistoryDTO {
+	return &NullableStatusHistoryDTO{value: val, isSet: true}
+}
+
+func (v NullableStatusHistoryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableStatusHistoryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

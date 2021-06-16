@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,38 +11,660 @@
 
 package nifi
 
-// ControllerStatusDto struct for ControllerStatusDto
-type ControllerStatusDto struct {
+import (
+	"encoding/json"
+)
+
+// ControllerStatusDTO struct for ControllerStatusDTO
+type ControllerStatusDTO struct {
 	// The number of active threads in the NiFi.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// The number of terminated threads in the NiFi.
-	TerminatedThreadCount int32 `json:"terminatedThreadCount,omitempty"`
+	TerminatedThreadCount *int32 `json:"terminatedThreadCount,omitempty"`
 	// The number of flowfiles queued in the NiFi.
-	Queued string `json:"queued,omitempty"`
+	Queued *string `json:"queued,omitempty"`
 	// The number of FlowFiles queued across the entire flow
-	FlowFilesQueued int32 `json:"flowFilesQueued,omitempty"`
+	FlowFilesQueued *int32 `json:"flowFilesQueued,omitempty"`
 	// The size of the FlowFiles queued across the entire flow
-	BytesQueued int64 `json:"bytesQueued,omitempty"`
+	BytesQueued *int64 `json:"bytesQueued,omitempty"`
 	// The number of running components in the NiFi.
-	RunningCount int32 `json:"runningCount,omitempty"`
+	RunningCount *int32 `json:"runningCount,omitempty"`
 	// The number of stopped components in the NiFi.
-	StoppedCount int32 `json:"stoppedCount,omitempty"`
+	StoppedCount *int32 `json:"stoppedCount,omitempty"`
 	// The number of invalid components in the NiFi.
-	InvalidCount int32 `json:"invalidCount,omitempty"`
+	InvalidCount *int32 `json:"invalidCount,omitempty"`
 	// The number of disabled components in the NiFi.
-	DisabledCount int32 `json:"disabledCount,omitempty"`
+	DisabledCount *int32 `json:"disabledCount,omitempty"`
 	// The number of active remote ports in the NiFi.
-	ActiveRemotePortCount int32 `json:"activeRemotePortCount,omitempty"`
+	ActiveRemotePortCount *int32 `json:"activeRemotePortCount,omitempty"`
 	// The number of inactive remote ports in the NiFi.
-	InactiveRemotePortCount int32 `json:"inactiveRemotePortCount,omitempty"`
+	InactiveRemotePortCount *int32 `json:"inactiveRemotePortCount,omitempty"`
 	// The number of up to date versioned process groups in the NiFi.
-	UpToDateCount int32 `json:"upToDateCount,omitempty"`
+	UpToDateCount *int32 `json:"upToDateCount,omitempty"`
 	// The number of locally modified versioned process groups in the NiFi.
-	LocallyModifiedCount int32 `json:"locallyModifiedCount,omitempty"`
+	LocallyModifiedCount *int32 `json:"locallyModifiedCount,omitempty"`
 	// The number of stale versioned process groups in the NiFi.
-	StaleCount int32 `json:"staleCount,omitempty"`
+	StaleCount *int32 `json:"staleCount,omitempty"`
 	// The number of locally modified and stale versioned process groups in the NiFi.
-	LocallyModifiedAndStaleCount int32 `json:"locallyModifiedAndStaleCount,omitempty"`
+	LocallyModifiedAndStaleCount *int32 `json:"locallyModifiedAndStaleCount,omitempty"`
 	// The number of versioned process groups in the NiFi that are unable to sync to a registry.
-	SyncFailureCount int32 `json:"syncFailureCount,omitempty"`
+	SyncFailureCount *int32 `json:"syncFailureCount,omitempty"`
+}
+
+// NewControllerStatusDTO instantiates a new ControllerStatusDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerStatusDTO() *ControllerStatusDTO {
+	this := ControllerStatusDTO{}
+	return &this
+}
+
+// NewControllerStatusDTOWithDefaults instantiates a new ControllerStatusDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerStatusDTOWithDefaults() *ControllerStatusDTO {
+	this := ControllerStatusDTO{}
+	return &this
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *ControllerStatusDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetTerminatedThreadCount returns the TerminatedThreadCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetTerminatedThreadCount() int32 {
+	if o == nil || o.TerminatedThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.TerminatedThreadCount
+}
+
+// GetTerminatedThreadCountOk returns a tuple with the TerminatedThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetTerminatedThreadCountOk() (*int32, bool) {
+	if o == nil || o.TerminatedThreadCount == nil {
+		return nil, false
+	}
+	return o.TerminatedThreadCount, true
+}
+
+// HasTerminatedThreadCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasTerminatedThreadCount() bool {
+	if o != nil && o.TerminatedThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTerminatedThreadCount gets a reference to the given int32 and assigns it to the TerminatedThreadCount field.
+func (o *ControllerStatusDTO) SetTerminatedThreadCount(v int32) {
+	o.TerminatedThreadCount = &v
+}
+
+// GetQueued returns the Queued field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetQueued() string {
+	if o == nil || o.Queued == nil {
+		var ret string
+		return ret
+	}
+	return *o.Queued
+}
+
+// GetQueuedOk returns a tuple with the Queued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetQueuedOk() (*string, bool) {
+	if o == nil || o.Queued == nil {
+		return nil, false
+	}
+	return o.Queued, true
+}
+
+// HasQueued returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasQueued() bool {
+	if o != nil && o.Queued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueued gets a reference to the given string and assigns it to the Queued field.
+func (o *ControllerStatusDTO) SetQueued(v string) {
+	o.Queued = &v
+}
+
+// GetFlowFilesQueued returns the FlowFilesQueued field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetFlowFilesQueued() int32 {
+	if o == nil || o.FlowFilesQueued == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFilesQueued
+}
+
+// GetFlowFilesQueuedOk returns a tuple with the FlowFilesQueued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetFlowFilesQueuedOk() (*int32, bool) {
+	if o == nil || o.FlowFilesQueued == nil {
+		return nil, false
+	}
+	return o.FlowFilesQueued, true
+}
+
+// HasFlowFilesQueued returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasFlowFilesQueued() bool {
+	if o != nil && o.FlowFilesQueued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFilesQueued gets a reference to the given int32 and assigns it to the FlowFilesQueued field.
+func (o *ControllerStatusDTO) SetFlowFilesQueued(v int32) {
+	o.FlowFilesQueued = &v
+}
+
+// GetBytesQueued returns the BytesQueued field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetBytesQueued() int64 {
+	if o == nil || o.BytesQueued == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BytesQueued
+}
+
+// GetBytesQueuedOk returns a tuple with the BytesQueued field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetBytesQueuedOk() (*int64, bool) {
+	if o == nil || o.BytesQueued == nil {
+		return nil, false
+	}
+	return o.BytesQueued, true
+}
+
+// HasBytesQueued returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasBytesQueued() bool {
+	if o != nil && o.BytesQueued != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBytesQueued gets a reference to the given int64 and assigns it to the BytesQueued field.
+func (o *ControllerStatusDTO) SetBytesQueued(v int64) {
+	o.BytesQueued = &v
+}
+
+// GetRunningCount returns the RunningCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetRunningCount() int32 {
+	if o == nil || o.RunningCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.RunningCount
+}
+
+// GetRunningCountOk returns a tuple with the RunningCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetRunningCountOk() (*int32, bool) {
+	if o == nil || o.RunningCount == nil {
+		return nil, false
+	}
+	return o.RunningCount, true
+}
+
+// HasRunningCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasRunningCount() bool {
+	if o != nil && o.RunningCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRunningCount gets a reference to the given int32 and assigns it to the RunningCount field.
+func (o *ControllerStatusDTO) SetRunningCount(v int32) {
+	o.RunningCount = &v
+}
+
+// GetStoppedCount returns the StoppedCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetStoppedCount() int32 {
+	if o == nil || o.StoppedCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.StoppedCount
+}
+
+// GetStoppedCountOk returns a tuple with the StoppedCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetStoppedCountOk() (*int32, bool) {
+	if o == nil || o.StoppedCount == nil {
+		return nil, false
+	}
+	return o.StoppedCount, true
+}
+
+// HasStoppedCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasStoppedCount() bool {
+	if o != nil && o.StoppedCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStoppedCount gets a reference to the given int32 and assigns it to the StoppedCount field.
+func (o *ControllerStatusDTO) SetStoppedCount(v int32) {
+	o.StoppedCount = &v
+}
+
+// GetInvalidCount returns the InvalidCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetInvalidCount() int32 {
+	if o == nil || o.InvalidCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.InvalidCount
+}
+
+// GetInvalidCountOk returns a tuple with the InvalidCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetInvalidCountOk() (*int32, bool) {
+	if o == nil || o.InvalidCount == nil {
+		return nil, false
+	}
+	return o.InvalidCount, true
+}
+
+// HasInvalidCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasInvalidCount() bool {
+	if o != nil && o.InvalidCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInvalidCount gets a reference to the given int32 and assigns it to the InvalidCount field.
+func (o *ControllerStatusDTO) SetInvalidCount(v int32) {
+	o.InvalidCount = &v
+}
+
+// GetDisabledCount returns the DisabledCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetDisabledCount() int32 {
+	if o == nil || o.DisabledCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.DisabledCount
+}
+
+// GetDisabledCountOk returns a tuple with the DisabledCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetDisabledCountOk() (*int32, bool) {
+	if o == nil || o.DisabledCount == nil {
+		return nil, false
+	}
+	return o.DisabledCount, true
+}
+
+// HasDisabledCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasDisabledCount() bool {
+	if o != nil && o.DisabledCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisabledCount gets a reference to the given int32 and assigns it to the DisabledCount field.
+func (o *ControllerStatusDTO) SetDisabledCount(v int32) {
+	o.DisabledCount = &v
+}
+
+// GetActiveRemotePortCount returns the ActiveRemotePortCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetActiveRemotePortCount() int32 {
+	if o == nil || o.ActiveRemotePortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveRemotePortCount
+}
+
+// GetActiveRemotePortCountOk returns a tuple with the ActiveRemotePortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetActiveRemotePortCountOk() (*int32, bool) {
+	if o == nil || o.ActiveRemotePortCount == nil {
+		return nil, false
+	}
+	return o.ActiveRemotePortCount, true
+}
+
+// HasActiveRemotePortCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasActiveRemotePortCount() bool {
+	if o != nil && o.ActiveRemotePortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveRemotePortCount gets a reference to the given int32 and assigns it to the ActiveRemotePortCount field.
+func (o *ControllerStatusDTO) SetActiveRemotePortCount(v int32) {
+	o.ActiveRemotePortCount = &v
+}
+
+// GetInactiveRemotePortCount returns the InactiveRemotePortCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetInactiveRemotePortCount() int32 {
+	if o == nil || o.InactiveRemotePortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.InactiveRemotePortCount
+}
+
+// GetInactiveRemotePortCountOk returns a tuple with the InactiveRemotePortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetInactiveRemotePortCountOk() (*int32, bool) {
+	if o == nil || o.InactiveRemotePortCount == nil {
+		return nil, false
+	}
+	return o.InactiveRemotePortCount, true
+}
+
+// HasInactiveRemotePortCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasInactiveRemotePortCount() bool {
+	if o != nil && o.InactiveRemotePortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInactiveRemotePortCount gets a reference to the given int32 and assigns it to the InactiveRemotePortCount field.
+func (o *ControllerStatusDTO) SetInactiveRemotePortCount(v int32) {
+	o.InactiveRemotePortCount = &v
+}
+
+// GetUpToDateCount returns the UpToDateCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetUpToDateCount() int32 {
+	if o == nil || o.UpToDateCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.UpToDateCount
+}
+
+// GetUpToDateCountOk returns a tuple with the UpToDateCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetUpToDateCountOk() (*int32, bool) {
+	if o == nil || o.UpToDateCount == nil {
+		return nil, false
+	}
+	return o.UpToDateCount, true
+}
+
+// HasUpToDateCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasUpToDateCount() bool {
+	if o != nil && o.UpToDateCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUpToDateCount gets a reference to the given int32 and assigns it to the UpToDateCount field.
+func (o *ControllerStatusDTO) SetUpToDateCount(v int32) {
+	o.UpToDateCount = &v
+}
+
+// GetLocallyModifiedCount returns the LocallyModifiedCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetLocallyModifiedCount() int32 {
+	if o == nil || o.LocallyModifiedCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LocallyModifiedCount
+}
+
+// GetLocallyModifiedCountOk returns a tuple with the LocallyModifiedCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetLocallyModifiedCountOk() (*int32, bool) {
+	if o == nil || o.LocallyModifiedCount == nil {
+		return nil, false
+	}
+	return o.LocallyModifiedCount, true
+}
+
+// HasLocallyModifiedCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasLocallyModifiedCount() bool {
+	if o != nil && o.LocallyModifiedCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocallyModifiedCount gets a reference to the given int32 and assigns it to the LocallyModifiedCount field.
+func (o *ControllerStatusDTO) SetLocallyModifiedCount(v int32) {
+	o.LocallyModifiedCount = &v
+}
+
+// GetStaleCount returns the StaleCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetStaleCount() int32 {
+	if o == nil || o.StaleCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.StaleCount
+}
+
+// GetStaleCountOk returns a tuple with the StaleCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetStaleCountOk() (*int32, bool) {
+	if o == nil || o.StaleCount == nil {
+		return nil, false
+	}
+	return o.StaleCount, true
+}
+
+// HasStaleCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasStaleCount() bool {
+	if o != nil && o.StaleCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStaleCount gets a reference to the given int32 and assigns it to the StaleCount field.
+func (o *ControllerStatusDTO) SetStaleCount(v int32) {
+	o.StaleCount = &v
+}
+
+// GetLocallyModifiedAndStaleCount returns the LocallyModifiedAndStaleCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetLocallyModifiedAndStaleCount() int32 {
+	if o == nil || o.LocallyModifiedAndStaleCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LocallyModifiedAndStaleCount
+}
+
+// GetLocallyModifiedAndStaleCountOk returns a tuple with the LocallyModifiedAndStaleCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetLocallyModifiedAndStaleCountOk() (*int32, bool) {
+	if o == nil || o.LocallyModifiedAndStaleCount == nil {
+		return nil, false
+	}
+	return o.LocallyModifiedAndStaleCount, true
+}
+
+// HasLocallyModifiedAndStaleCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasLocallyModifiedAndStaleCount() bool {
+	if o != nil && o.LocallyModifiedAndStaleCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocallyModifiedAndStaleCount gets a reference to the given int32 and assigns it to the LocallyModifiedAndStaleCount field.
+func (o *ControllerStatusDTO) SetLocallyModifiedAndStaleCount(v int32) {
+	o.LocallyModifiedAndStaleCount = &v
+}
+
+// GetSyncFailureCount returns the SyncFailureCount field value if set, zero value otherwise.
+func (o *ControllerStatusDTO) GetSyncFailureCount() int32 {
+	if o == nil || o.SyncFailureCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.SyncFailureCount
+}
+
+// GetSyncFailureCountOk returns a tuple with the SyncFailureCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerStatusDTO) GetSyncFailureCountOk() (*int32, bool) {
+	if o == nil || o.SyncFailureCount == nil {
+		return nil, false
+	}
+	return o.SyncFailureCount, true
+}
+
+// HasSyncFailureCount returns a boolean if a field has been set.
+func (o *ControllerStatusDTO) HasSyncFailureCount() bool {
+	if o != nil && o.SyncFailureCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSyncFailureCount gets a reference to the given int32 and assigns it to the SyncFailureCount field.
+func (o *ControllerStatusDTO) SetSyncFailureCount(v int32) {
+	o.SyncFailureCount = &v
+}
+
+func (o ControllerStatusDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.TerminatedThreadCount != nil {
+		toSerialize["terminatedThreadCount"] = o.TerminatedThreadCount
+	}
+	if o.Queued != nil {
+		toSerialize["queued"] = o.Queued
+	}
+	if o.FlowFilesQueued != nil {
+		toSerialize["flowFilesQueued"] = o.FlowFilesQueued
+	}
+	if o.BytesQueued != nil {
+		toSerialize["bytesQueued"] = o.BytesQueued
+	}
+	if o.RunningCount != nil {
+		toSerialize["runningCount"] = o.RunningCount
+	}
+	if o.StoppedCount != nil {
+		toSerialize["stoppedCount"] = o.StoppedCount
+	}
+	if o.InvalidCount != nil {
+		toSerialize["invalidCount"] = o.InvalidCount
+	}
+	if o.DisabledCount != nil {
+		toSerialize["disabledCount"] = o.DisabledCount
+	}
+	if o.ActiveRemotePortCount != nil {
+		toSerialize["activeRemotePortCount"] = o.ActiveRemotePortCount
+	}
+	if o.InactiveRemotePortCount != nil {
+		toSerialize["inactiveRemotePortCount"] = o.InactiveRemotePortCount
+	}
+	if o.UpToDateCount != nil {
+		toSerialize["upToDateCount"] = o.UpToDateCount
+	}
+	if o.LocallyModifiedCount != nil {
+		toSerialize["locallyModifiedCount"] = o.LocallyModifiedCount
+	}
+	if o.StaleCount != nil {
+		toSerialize["staleCount"] = o.StaleCount
+	}
+	if o.LocallyModifiedAndStaleCount != nil {
+		toSerialize["locallyModifiedAndStaleCount"] = o.LocallyModifiedAndStaleCount
+	}
+	if o.SyncFailureCount != nil {
+		toSerialize["syncFailureCount"] = o.SyncFailureCount
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerStatusDTO struct {
+	value *ControllerStatusDTO
+	isSet bool
+}
+
+func (v NullableControllerStatusDTO) Get() *ControllerStatusDTO {
+	return v.value
+}
+
+func (v *NullableControllerStatusDTO) Set(val *ControllerStatusDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerStatusDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerStatusDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerStatusDTO(val *ControllerStatusDTO) *NullableControllerStatusDTO {
+	return &NullableControllerStatusDTO{value: val, isSet: true}
+}
+
+func (v NullableControllerStatusDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerStatusDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

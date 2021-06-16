@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,24 +11,380 @@
 
 package nifi
 
-// ConnectableDto struct for ConnectableDto
-type ConnectableDto struct {
+import (
+	"encoding/json"
+)
+
+// ConnectableDTO struct for ConnectableDTO
+type ConnectableDTO struct {
 	// The id of the connectable component.
 	Id string `json:"id"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The type of component the connectable is.
 	Type string `json:"type"`
 	// The id of the group that the connectable component resides in
 	GroupId string `json:"groupId"`
 	// The name of the connectable component
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// Reflects the current state of the connectable component.
-	Running bool `json:"running,omitempty"`
+	Running *bool `json:"running,omitempty"`
 	// If the connectable component represents a remote port, indicates if the target is configured to transmit.
-	Transmitting bool `json:"transmitting,omitempty"`
+	Transmitting *bool `json:"transmitting,omitempty"`
 	// If the connectable component represents a remote port, indicates if the target exists.
-	Exists bool `json:"exists,omitempty"`
+	Exists *bool `json:"exists,omitempty"`
 	// The comments for the connectable component.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
+}
+
+// NewConnectableDTO instantiates a new ConnectableDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewConnectableDTO(id string, type_ string, groupId string) *ConnectableDTO {
+	this := ConnectableDTO{}
+	this.Id = id
+	this.Type = type_
+	this.GroupId = groupId
+	return &this
+}
+
+// NewConnectableDTOWithDefaults instantiates a new ConnectableDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewConnectableDTOWithDefaults() *ConnectableDTO {
+	this := ConnectableDTO{}
+	return &this
+}
+
+// GetId returns the Id field value
+func (o *ConnectableDTO) GetId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Id, true
+}
+
+// SetId sets field value
+func (o *ConnectableDTO) SetId(v string) {
+	o.Id = v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *ConnectableDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *ConnectableDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *ConnectableDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetType returns the Type field value
+func (o *ConnectableDTO) GetType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Type, true
+}
+
+// SetType sets field value
+func (o *ConnectableDTO) SetType(v string) {
+	o.Type = v
+}
+
+// GetGroupId returns the GroupId field value
+func (o *ConnectableDTO) GetGroupId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.GroupId, true
+}
+
+// SetGroupId sets field value
+func (o *ConnectableDTO) SetGroupId(v string) {
+	o.GroupId = v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ConnectableDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ConnectableDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ConnectableDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetRunning returns the Running field value if set, zero value otherwise.
+func (o *ConnectableDTO) GetRunning() bool {
+	if o == nil || o.Running == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Running
+}
+
+// GetRunningOk returns a tuple with the Running field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetRunningOk() (*bool, bool) {
+	if o == nil || o.Running == nil {
+		return nil, false
+	}
+	return o.Running, true
+}
+
+// HasRunning returns a boolean if a field has been set.
+func (o *ConnectableDTO) HasRunning() bool {
+	if o != nil && o.Running != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRunning gets a reference to the given bool and assigns it to the Running field.
+func (o *ConnectableDTO) SetRunning(v bool) {
+	o.Running = &v
+}
+
+// GetTransmitting returns the Transmitting field value if set, zero value otherwise.
+func (o *ConnectableDTO) GetTransmitting() bool {
+	if o == nil || o.Transmitting == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Transmitting
+}
+
+// GetTransmittingOk returns a tuple with the Transmitting field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetTransmittingOk() (*bool, bool) {
+	if o == nil || o.Transmitting == nil {
+		return nil, false
+	}
+	return o.Transmitting, true
+}
+
+// HasTransmitting returns a boolean if a field has been set.
+func (o *ConnectableDTO) HasTransmitting() bool {
+	if o != nil && o.Transmitting != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransmitting gets a reference to the given bool and assigns it to the Transmitting field.
+func (o *ConnectableDTO) SetTransmitting(v bool) {
+	o.Transmitting = &v
+}
+
+// GetExists returns the Exists field value if set, zero value otherwise.
+func (o *ConnectableDTO) GetExists() bool {
+	if o == nil || o.Exists == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Exists
+}
+
+// GetExistsOk returns a tuple with the Exists field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetExistsOk() (*bool, bool) {
+	if o == nil || o.Exists == nil {
+		return nil, false
+	}
+	return o.Exists, true
+}
+
+// HasExists returns a boolean if a field has been set.
+func (o *ConnectableDTO) HasExists() bool {
+	if o != nil && o.Exists != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExists gets a reference to the given bool and assigns it to the Exists field.
+func (o *ConnectableDTO) SetExists(v bool) {
+	o.Exists = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *ConnectableDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConnectableDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *ConnectableDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *ConnectableDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+func (o ConnectableDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if true {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if true {
+		toSerialize["type"] = o.Type
+	}
+	if true {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Running != nil {
+		toSerialize["running"] = o.Running
+	}
+	if o.Transmitting != nil {
+		toSerialize["transmitting"] = o.Transmitting
+	}
+	if o.Exists != nil {
+		toSerialize["exists"] = o.Exists
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableConnectableDTO struct {
+	value *ConnectableDTO
+	isSet bool
+}
+
+func (v NullableConnectableDTO) Get() *ConnectableDTO {
+	return v.value
+}
+
+func (v *NullableConnectableDTO) Set(val *ConnectableDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableConnectableDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableConnectableDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableConnectableDTO(val *ConnectableDTO) *NullableConnectableDTO {
+	return &NullableConnectableDTO{value: val, isSet: true}
+}
+
+func (v NullableConnectableDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableConnectableDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

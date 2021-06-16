@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,29 +12,473 @@
 package nifi
 
 import (
+	"encoding/json"
 	"time"
 )
 
-// ParameterContextValidationRequestDto struct for ParameterContextValidationRequestDto
-type ParameterContextValidationRequestDto struct {
+// ParameterContextValidationRequestDTO struct for ParameterContextValidationRequestDTO
+type ParameterContextValidationRequestDTO struct {
 	// The ID of the request
-	RequestId string `json:"requestId,omitempty"`
+	RequestId *string `json:"requestId,omitempty"`
 	// The URI for the request
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The timestamp of when the request was submitted
-	SubmissionTime time.Time `json:"submissionTime,omitempty"`
+	SubmissionTime *time.Time `json:"submissionTime,omitempty"`
 	// The timestamp of when the request was last updated
-	LastUpdated time.Time `json:"lastUpdated,omitempty"`
+	LastUpdated *time.Time `json:"lastUpdated,omitempty"`
 	// Whether or not the request is completed
-	Complete bool `json:"complete,omitempty"`
+	Complete *bool `json:"complete,omitempty"`
 	// The reason for the request failing, or null if the request has not failed
-	FailureReason string `json:"failureReason,omitempty"`
+	FailureReason *string `json:"failureReason,omitempty"`
 	// A value between 0 and 100 (inclusive) indicating how close the request is to completion
-	PercentCompleted int32 `json:"percentCompleted,omitempty"`
+	PercentCompleted *int32 `json:"percentCompleted,omitempty"`
 	// A description of the current state of the request
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// The steps that are required in order to complete the request, along with the status of each
-	UpdateSteps                []ParameterContextValidationStepDto `json:"updateSteps,omitempty"`
-	ParameterContext           ParameterContextDto                 `json:"parameterContext,omitempty"`
-	ComponentValidationResults ComponentValidationResultsEntity    `json:"componentValidationResults,omitempty"`
+	UpdateSteps                *[]ParameterContextValidationStepDTO `json:"updateSteps,omitempty"`
+	ParameterContext           *ParameterContextDTO                 `json:"parameterContext,omitempty"`
+	ComponentValidationResults *ComponentValidationResultsEntity    `json:"componentValidationResults,omitempty"`
+}
+
+// NewParameterContextValidationRequestDTO instantiates a new ParameterContextValidationRequestDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewParameterContextValidationRequestDTO() *ParameterContextValidationRequestDTO {
+	this := ParameterContextValidationRequestDTO{}
+	return &this
+}
+
+// NewParameterContextValidationRequestDTOWithDefaults instantiates a new ParameterContextValidationRequestDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewParameterContextValidationRequestDTOWithDefaults() *ParameterContextValidationRequestDTO {
+	this := ParameterContextValidationRequestDTO{}
+	return &this
+}
+
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetRequestId() string {
+	if o == nil || o.RequestId == nil {
+		var ret string
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetRequestIdOk() (*string, bool) {
+	if o == nil || o.RequestId == nil {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasRequestId() bool {
+	if o != nil && o.RequestId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given string and assigns it to the RequestId field.
+func (o *ParameterContextValidationRequestDTO) SetRequestId(v string) {
+	o.RequestId = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *ParameterContextValidationRequestDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetSubmissionTime returns the SubmissionTime field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetSubmissionTime() time.Time {
+	if o == nil || o.SubmissionTime == nil {
+		var ret time.Time
+		return ret
+	}
+	return *o.SubmissionTime
+}
+
+// GetSubmissionTimeOk returns a tuple with the SubmissionTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetSubmissionTimeOk() (*time.Time, bool) {
+	if o == nil || o.SubmissionTime == nil {
+		return nil, false
+	}
+	return o.SubmissionTime, true
+}
+
+// HasSubmissionTime returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasSubmissionTime() bool {
+	if o != nil && o.SubmissionTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSubmissionTime gets a reference to the given time.Time and assigns it to the SubmissionTime field.
+func (o *ParameterContextValidationRequestDTO) SetSubmissionTime(v time.Time) {
+	o.SubmissionTime = &v
+}
+
+// GetLastUpdated returns the LastUpdated field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetLastUpdated() time.Time {
+	if o == nil || o.LastUpdated == nil {
+		var ret time.Time
+		return ret
+	}
+	return *o.LastUpdated
+}
+
+// GetLastUpdatedOk returns a tuple with the LastUpdated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetLastUpdatedOk() (*time.Time, bool) {
+	if o == nil || o.LastUpdated == nil {
+		return nil, false
+	}
+	return o.LastUpdated, true
+}
+
+// HasLastUpdated returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasLastUpdated() bool {
+	if o != nil && o.LastUpdated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLastUpdated gets a reference to the given time.Time and assigns it to the LastUpdated field.
+func (o *ParameterContextValidationRequestDTO) SetLastUpdated(v time.Time) {
+	o.LastUpdated = &v
+}
+
+// GetComplete returns the Complete field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetComplete() bool {
+	if o == nil || o.Complete == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Complete
+}
+
+// GetCompleteOk returns a tuple with the Complete field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetCompleteOk() (*bool, bool) {
+	if o == nil || o.Complete == nil {
+		return nil, false
+	}
+	return o.Complete, true
+}
+
+// HasComplete returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasComplete() bool {
+	if o != nil && o.Complete != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComplete gets a reference to the given bool and assigns it to the Complete field.
+func (o *ParameterContextValidationRequestDTO) SetComplete(v bool) {
+	o.Complete = &v
+}
+
+// GetFailureReason returns the FailureReason field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetFailureReason() string {
+	if o == nil || o.FailureReason == nil {
+		var ret string
+		return ret
+	}
+	return *o.FailureReason
+}
+
+// GetFailureReasonOk returns a tuple with the FailureReason field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetFailureReasonOk() (*string, bool) {
+	if o == nil || o.FailureReason == nil {
+		return nil, false
+	}
+	return o.FailureReason, true
+}
+
+// HasFailureReason returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasFailureReason() bool {
+	if o != nil && o.FailureReason != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFailureReason gets a reference to the given string and assigns it to the FailureReason field.
+func (o *ParameterContextValidationRequestDTO) SetFailureReason(v string) {
+	o.FailureReason = &v
+}
+
+// GetPercentCompleted returns the PercentCompleted field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetPercentCompleted() int32 {
+	if o == nil || o.PercentCompleted == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PercentCompleted
+}
+
+// GetPercentCompletedOk returns a tuple with the PercentCompleted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetPercentCompletedOk() (*int32, bool) {
+	if o == nil || o.PercentCompleted == nil {
+		return nil, false
+	}
+	return o.PercentCompleted, true
+}
+
+// HasPercentCompleted returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasPercentCompleted() bool {
+	if o != nil && o.PercentCompleted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPercentCompleted gets a reference to the given int32 and assigns it to the PercentCompleted field.
+func (o *ParameterContextValidationRequestDTO) SetPercentCompleted(v int32) {
+	o.PercentCompleted = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ParameterContextValidationRequestDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetUpdateSteps returns the UpdateSteps field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetUpdateSteps() []ParameterContextValidationStepDTO {
+	if o == nil || o.UpdateSteps == nil {
+		var ret []ParameterContextValidationStepDTO
+		return ret
+	}
+	return *o.UpdateSteps
+}
+
+// GetUpdateStepsOk returns a tuple with the UpdateSteps field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetUpdateStepsOk() (*[]ParameterContextValidationStepDTO, bool) {
+	if o == nil || o.UpdateSteps == nil {
+		return nil, false
+	}
+	return o.UpdateSteps, true
+}
+
+// HasUpdateSteps returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasUpdateSteps() bool {
+	if o != nil && o.UpdateSteps != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUpdateSteps gets a reference to the given []ParameterContextValidationStepDTO and assigns it to the UpdateSteps field.
+func (o *ParameterContextValidationRequestDTO) SetUpdateSteps(v []ParameterContextValidationStepDTO) {
+	o.UpdateSteps = &v
+}
+
+// GetParameterContext returns the ParameterContext field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetParameterContext() ParameterContextDTO {
+	if o == nil || o.ParameterContext == nil {
+		var ret ParameterContextDTO
+		return ret
+	}
+	return *o.ParameterContext
+}
+
+// GetParameterContextOk returns a tuple with the ParameterContext field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetParameterContextOk() (*ParameterContextDTO, bool) {
+	if o == nil || o.ParameterContext == nil {
+		return nil, false
+	}
+	return o.ParameterContext, true
+}
+
+// HasParameterContext returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasParameterContext() bool {
+	if o != nil && o.ParameterContext != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContext gets a reference to the given ParameterContextDTO and assigns it to the ParameterContext field.
+func (o *ParameterContextValidationRequestDTO) SetParameterContext(v ParameterContextDTO) {
+	o.ParameterContext = &v
+}
+
+// GetComponentValidationResults returns the ComponentValidationResults field value if set, zero value otherwise.
+func (o *ParameterContextValidationRequestDTO) GetComponentValidationResults() ComponentValidationResultsEntity {
+	if o == nil || o.ComponentValidationResults == nil {
+		var ret ComponentValidationResultsEntity
+		return ret
+	}
+	return *o.ComponentValidationResults
+}
+
+// GetComponentValidationResultsOk returns a tuple with the ComponentValidationResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ParameterContextValidationRequestDTO) GetComponentValidationResultsOk() (*ComponentValidationResultsEntity, bool) {
+	if o == nil || o.ComponentValidationResults == nil {
+		return nil, false
+	}
+	return o.ComponentValidationResults, true
+}
+
+// HasComponentValidationResults returns a boolean if a field has been set.
+func (o *ParameterContextValidationRequestDTO) HasComponentValidationResults() bool {
+	if o != nil && o.ComponentValidationResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentValidationResults gets a reference to the given ComponentValidationResultsEntity and assigns it to the ComponentValidationResults field.
+func (o *ParameterContextValidationRequestDTO) SetComponentValidationResults(v ComponentValidationResultsEntity) {
+	o.ComponentValidationResults = &v
+}
+
+func (o ParameterContextValidationRequestDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.RequestId != nil {
+		toSerialize["requestId"] = o.RequestId
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.SubmissionTime != nil {
+		toSerialize["submissionTime"] = o.SubmissionTime
+	}
+	if o.LastUpdated != nil {
+		toSerialize["lastUpdated"] = o.LastUpdated
+	}
+	if o.Complete != nil {
+		toSerialize["complete"] = o.Complete
+	}
+	if o.FailureReason != nil {
+		toSerialize["failureReason"] = o.FailureReason
+	}
+	if o.PercentCompleted != nil {
+		toSerialize["percentCompleted"] = o.PercentCompleted
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.UpdateSteps != nil {
+		toSerialize["updateSteps"] = o.UpdateSteps
+	}
+	if o.ParameterContext != nil {
+		toSerialize["parameterContext"] = o.ParameterContext
+	}
+	if o.ComponentValidationResults != nil {
+		toSerialize["componentValidationResults"] = o.ComponentValidationResults
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableParameterContextValidationRequestDTO struct {
+	value *ParameterContextValidationRequestDTO
+	isSet bool
+}
+
+func (v NullableParameterContextValidationRequestDTO) Get() *ParameterContextValidationRequestDTO {
+	return v.value
+}
+
+func (v *NullableParameterContextValidationRequestDTO) Set(val *ParameterContextValidationRequestDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableParameterContextValidationRequestDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableParameterContextValidationRequestDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableParameterContextValidationRequestDTO(val *ParameterContextValidationRequestDTO) *NullableParameterContextValidationRequestDTO {
+	return &NullableParameterContextValidationRequestDTO{value: val, isSet: true}
+}
+
+func (v NullableParameterContextValidationRequestDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableParameterContextValidationRequestDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

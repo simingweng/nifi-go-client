@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // SubmitReplayRequestEntity struct for SubmitReplayRequestEntity
 type SubmitReplayRequestEntity struct {
 	// The event identifier
-	EventId int64 `json:"eventId,omitempty"`
+	EventId *int64 `json:"eventId,omitempty"`
 	// The identifier of the node where to submit the replay request.
-	ClusterNodeId string `json:"clusterNodeId,omitempty"`
+	ClusterNodeId *string `json:"clusterNodeId,omitempty"`
+}
+
+// NewSubmitReplayRequestEntity instantiates a new SubmitReplayRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewSubmitReplayRequestEntity() *SubmitReplayRequestEntity {
+	this := SubmitReplayRequestEntity{}
+	return &this
+}
+
+// NewSubmitReplayRequestEntityWithDefaults instantiates a new SubmitReplayRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewSubmitReplayRequestEntityWithDefaults() *SubmitReplayRequestEntity {
+	this := SubmitReplayRequestEntity{}
+	return &this
+}
+
+// GetEventId returns the EventId field value if set, zero value otherwise.
+func (o *SubmitReplayRequestEntity) GetEventId() int64 {
+	if o == nil || o.EventId == nil {
+		var ret int64
+		return ret
+	}
+	return *o.EventId
+}
+
+// GetEventIdOk returns a tuple with the EventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmitReplayRequestEntity) GetEventIdOk() (*int64, bool) {
+	if o == nil || o.EventId == nil {
+		return nil, false
+	}
+	return o.EventId, true
+}
+
+// HasEventId returns a boolean if a field has been set.
+func (o *SubmitReplayRequestEntity) HasEventId() bool {
+	if o != nil && o.EventId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventId gets a reference to the given int64 and assigns it to the EventId field.
+func (o *SubmitReplayRequestEntity) SetEventId(v int64) {
+	o.EventId = &v
+}
+
+// GetClusterNodeId returns the ClusterNodeId field value if set, zero value otherwise.
+func (o *SubmitReplayRequestEntity) GetClusterNodeId() string {
+	if o == nil || o.ClusterNodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeId
+}
+
+// GetClusterNodeIdOk returns a tuple with the ClusterNodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmitReplayRequestEntity) GetClusterNodeIdOk() (*string, bool) {
+	if o == nil || o.ClusterNodeId == nil {
+		return nil, false
+	}
+	return o.ClusterNodeId, true
+}
+
+// HasClusterNodeId returns a boolean if a field has been set.
+func (o *SubmitReplayRequestEntity) HasClusterNodeId() bool {
+	if o != nil && o.ClusterNodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeId gets a reference to the given string and assigns it to the ClusterNodeId field.
+func (o *SubmitReplayRequestEntity) SetClusterNodeId(v string) {
+	o.ClusterNodeId = &v
+}
+
+func (o SubmitReplayRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.EventId != nil {
+		toSerialize["eventId"] = o.EventId
+	}
+	if o.ClusterNodeId != nil {
+		toSerialize["clusterNodeId"] = o.ClusterNodeId
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableSubmitReplayRequestEntity struct {
+	value *SubmitReplayRequestEntity
+	isSet bool
+}
+
+func (v NullableSubmitReplayRequestEntity) Get() *SubmitReplayRequestEntity {
+	return v.value
+}
+
+func (v *NullableSubmitReplayRequestEntity) Set(val *SubmitReplayRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableSubmitReplayRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableSubmitReplayRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableSubmitReplayRequestEntity(val *SubmitReplayRequestEntity) *NullableSubmitReplayRequestEntity {
+	return &NullableSubmitReplayRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableSubmitReplayRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableSubmitReplayRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ComponentHistoryEntity struct for ComponentHistoryEntity
 type ComponentHistoryEntity struct {
-	ComponentHistory ComponentHistoryDto `json:"componentHistory,omitempty"`
+	ComponentHistory *ComponentHistoryDTO `json:"componentHistory,omitempty"`
+}
+
+// NewComponentHistoryEntity instantiates a new ComponentHistoryEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewComponentHistoryEntity() *ComponentHistoryEntity {
+	this := ComponentHistoryEntity{}
+	return &this
+}
+
+// NewComponentHistoryEntityWithDefaults instantiates a new ComponentHistoryEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewComponentHistoryEntityWithDefaults() *ComponentHistoryEntity {
+	this := ComponentHistoryEntity{}
+	return &this
+}
+
+// GetComponentHistory returns the ComponentHistory field value if set, zero value otherwise.
+func (o *ComponentHistoryEntity) GetComponentHistory() ComponentHistoryDTO {
+	if o == nil || o.ComponentHistory == nil {
+		var ret ComponentHistoryDTO
+		return ret
+	}
+	return *o.ComponentHistory
+}
+
+// GetComponentHistoryOk returns a tuple with the ComponentHistory field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentHistoryEntity) GetComponentHistoryOk() (*ComponentHistoryDTO, bool) {
+	if o == nil || o.ComponentHistory == nil {
+		return nil, false
+	}
+	return o.ComponentHistory, true
+}
+
+// HasComponentHistory returns a boolean if a field has been set.
+func (o *ComponentHistoryEntity) HasComponentHistory() bool {
+	if o != nil && o.ComponentHistory != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentHistory gets a reference to the given ComponentHistoryDTO and assigns it to the ComponentHistory field.
+func (o *ComponentHistoryEntity) SetComponentHistory(v ComponentHistoryDTO) {
+	o.ComponentHistory = &v
+}
+
+func (o ComponentHistoryEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ComponentHistory != nil {
+		toSerialize["componentHistory"] = o.ComponentHistory
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableComponentHistoryEntity struct {
+	value *ComponentHistoryEntity
+	isSet bool
+}
+
+func (v NullableComponentHistoryEntity) Get() *ComponentHistoryEntity {
+	return v.value
+}
+
+func (v *NullableComponentHistoryEntity) Set(val *ComponentHistoryEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableComponentHistoryEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableComponentHistoryEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableComponentHistoryEntity(val *ComponentHistoryEntity) *NullableComponentHistoryEntity {
+	return &NullableComponentHistoryEntity{value: val, isSet: true}
+}
+
+func (v NullableComponentHistoryEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableComponentHistoryEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

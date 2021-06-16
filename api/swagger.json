@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "description" : "The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and \n                                            stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,\n                                            definitions of the expected input and output, potential response codes, and the authorizations required\n                                            to invoke each service.",
-    "version" : "1.12.0-SNAPSHOT",
+    "version" : "1.13.2",
     "title" : "NiFi Rest Api",
     "contact" : {
       "url" : "https://nifi.apache.org",
@@ -272,6 +272,27 @@
         }
       }
     },
+    "/access/logout/complete" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Completes the logout sequence by removing the cached Logout Request and Cookie if they existed and redirects to /nifi/login.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "logOutComplete",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "200" : {
+            "description" : "User was logged out successfully."
+          },
+          "401" : {
+            "description" : "Authentication token provided was empty or not in the correct JWT format."
+          },
+          "500" : {
+            "description" : "Client failed to log out."
+          }
+        }
+      }
+    },
     "/access/oidc/callback" : {
       "get" : {
         "tags" : [ "access" ],
@@ -320,12 +341,161 @@
         }
       }
     },
+    "/access/oidc/logoutCallback" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Redirect/callback URI for processing the result of the OpenId Connect logout sequence.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "oidcLogoutCallback",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
     "/access/oidc/request" : {
       "get" : {
         "tags" : [ "access" ],
         "summary" : "Initiates a request to authenticate through the configured OpenId Connect provider.",
         "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
         "operationId" : "oidcRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/access/saml/local-logout" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Local logout when SAML is enabled, does not communicate with the IDP.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlLocalLogout",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/access/saml/login/consumer" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Processes the SSO response from the SAML identity provider for HTTP-REDIRECT binding.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlLoginHttpRedirectConsumer",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "access" ],
+        "summary" : "Processes the SSO response from the SAML identity provider for HTTP-POST binding.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlLoginHttpPostConsumer",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/access/saml/login/exchange" : {
+      "post" : {
+        "tags" : [ "access" ],
+        "summary" : "Retrieves a JWT following a successful login sequence using the configured SAML identity provider.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlLoginExchange",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/access/saml/login/request" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Initiates an SSO request to the configured SAML identity provider.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlLoginRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/access/saml/metadata" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Retrieves the service provider metadata.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlMetadata",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/samlmetadata+xml" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/access/saml/single-logout/consumer" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Processes a SingleLogout message from the configured SAML identity provider using the HTTP-REDIRECT binding.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlSingleLogoutHttpRedirectConsumer",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "access" ],
+        "summary" : "Processes a SingleLogout message from the configured SAML identity provider using the HTTP-POST binding.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlSingleLogoutHttpPostConsumer",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/access/saml/single-logout/request" : {
+      "get" : {
+        "tags" : [ "access" ],
+        "summary" : "Initiates a logout request using the SingleLogout service of the configured SAML identity provider.",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "samlSingleLogoutRequest",
         "consumes" : [ "*/*" ],
         "produces" : [ "*/*" ],
         "responses" : {
@@ -1643,6 +1813,42 @@
           "Read - any referenced Controller Services - /controller-services/{uuid}" : [ ]
         }, {
           "Write - if the Reporting Task is restricted - /restricted-components" : [ ]
+        } ]
+      }
+    },
+    "/controller/status/history" : {
+      "get" : {
+        "tags" : [ "controller" ],
+        "summary" : "Gets status history for the node",
+        "description" : "Note: This endpoint is subject to change as NiFi and it's REST API evolve.",
+        "operationId" : "getNodeStatusHistory",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ComponentHistoryEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /controller" : [ ]
         } ]
       }
     },
@@ -6461,6 +6667,154 @@
         },
         "security" : [ {
           "Read - /process-groups/{uuid}" : [ ]
+        } ]
+      }
+    },
+    "/process-groups/{id}/empty-all-connections-requests" : {
+      "post" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Creates a request to drop all flowfiles of all connection queues in this process group.",
+        "description" : "",
+        "operationId" : "createEmptyAllConnectionsRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The process group id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessGroupEntity"
+            }
+          },
+          "202" : {
+            "description" : "The request has been accepted. An HTTP response header will contain the URI where the status can be polled."
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /process-groups/{uuid} - For this and all encapsulated process groups" : [ ]
+        }, {
+          "Write Source Data - /data/{component-type}/{uuid} - For all encapsulated connections" : [ ]
+        } ]
+      }
+    },
+    "/process-groups/{id}/empty-all-connections-requests/{drop-request-id}" : {
+      "get" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Gets the current status of a drop all flowfiles request.",
+        "description" : "",
+        "operationId" : "getDropAllFlowfilesRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The process group id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "drop-request-id",
+          "in" : "path",
+          "description" : "The drop request id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/DropRequestEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /process-groups/{uuid} - For this and all encapsulated process groups" : [ ]
+        }, {
+          "Write Source Data - /data/{component-type}/{uuid} - For all encapsulated connections" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "process-groups" ],
+        "summary" : "Cancels and/or removes a request to drop all flowfiles.",
+        "description" : "",
+        "operationId" : "removeDropRequest",
+        "consumes" : [ "*/*" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The process group id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "drop-request-id",
+          "in" : "path",
+          "description" : "The drop request id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/DropRequestEntity"
+            }
+          },
+          "400" : {
+            "description" : "NiFi was unable to complete the request because it was invalid. The request should not be retried without modification."
+          },
+          "401" : {
+            "description" : "Client could not be authenticated."
+          },
+          "403" : {
+            "description" : "Client is not authorized to make this request."
+          },
+          "404" : {
+            "description" : "The specified resource could not be found."
+          },
+          "409" : {
+            "description" : "The request was valid but NiFi was not in the appropriate state to process it. Retrying the same request later may be successful."
+          }
+        },
+        "security" : [ {
+          "Read - /process-groups/{uuid} - For this and all encapsulated process groups" : [ ]
+        }, {
+          "Write Source Data - /data/{component-type}/{uuid} - For all encapsulated connections" : [ ]
         } ]
       }
     },
@@ -11728,6 +12082,11 @@
           "description" : "The access that the current user has to this bucket.",
           "readOnly" : true,
           "$ref" : "#/definitions/Permissions"
+        },
+        "revision" : {
+          "description" : "The revision of this entity used for optimistic-locking during updates.",
+          "readOnly" : true,
+          "$ref" : "#/definitions/RevisionInfo"
         }
       }
     },
@@ -11990,13 +12349,13 @@
           "format" : "int32",
           "description" : "The number of nodes in the cluster, regardless of whether or not they are connected"
         },
-        "clustered" : {
-          "type" : "boolean",
-          "description" : "Whether this NiFi instance is clustered."
-        },
         "connectedToCluster" : {
           "type" : "boolean",
           "description" : "Whether this NiFi instance is connected to a cluster."
+        },
+        "clustered" : {
+          "type" : "boolean",
+          "description" : "Whether this NiFi instance is clustered."
         }
       }
     },
@@ -15557,6 +15916,10 @@
           "type" : "string",
           "description" : "The value of the Parameter"
         },
+        "valueRemoved" : {
+          "type" : "boolean",
+          "description" : "Whether or not the value of the Parameter was removed. When a request is made to change a parameter, the value may be null. The absence of the value may be used either to indicate that the value is not to be changed, or that the value is to be set to null (i.e., removed). This denotes which of the two scenarios is being encountered."
+        },
         "referencingComponents" : {
           "type" : "array",
           "description" : "The set of all components in the flow that are referencing this Parameter",
@@ -16981,7 +17344,7 @@
         "runStatus" : {
           "type" : "string",
           "description" : "The run status of the processor",
-          "enum" : [ "RUNNING", "STOPPED", "INVALID", "VALIDATING", "VALID", "DISABLED" ]
+          "enum" : [ "Running", "Stopped", "Invalid", "Validating", "Disabled" ]
         },
         "validationErrors" : {
           "type" : "array",
@@ -17265,6 +17628,23 @@
         "name" : "processorsRunStatusDetails"
       }
     },
+    "PropertyDependencyDTO" : {
+      "type" : "object",
+      "properties" : {
+        "propertyName" : {
+          "type" : "string",
+          "description" : "The name of the property that is being depended upon"
+        },
+        "dependentValues" : {
+          "type" : "array",
+          "description" : "The values for the property that satisfies the dependency, or null if the dependency is satisfied by the presence of any value for the associated property name",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
     "PropertyDescriptorDTO" : {
       "type" : "object",
       "properties" : {
@@ -17318,6 +17698,13 @@
         "identifiesControllerServiceBundle" : {
           "description" : "If the property identifies a controller service this returns the bundle of the type, null otherwise.",
           "$ref" : "#/definitions/BundleDTO"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "description" : "A list of dependencies that must be met in order for this Property to be relevant. If any of these dependencies is not met, the property described by this Property Descriptor is not relevant.",
+          "items" : {
+            "$ref" : "#/definitions/PropertyDependencyDTO"
+          }
         }
       }
     },
@@ -17695,7 +18082,7 @@
           "type" : "object",
           "description" : "The search terms used to perform the search.",
           "additionalProperties" : {
-            "type" : "string"
+            "$ref" : "#/definitions/ProvenanceSearchValueDTO"
           }
         },
         "clusterNodeId" : {
@@ -17772,6 +18159,19 @@
           "items" : {
             "type" : "string"
           }
+        }
+      }
+    },
+    "ProvenanceSearchValueDTO" : {
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "type" : "string",
+          "description" : "The search value."
+        },
+        "inverse" : {
+          "type" : "boolean",
+          "description" : "Query for all except for search value."
         }
       }
     },
@@ -18691,6 +19091,26 @@
           "readOnly" : true
         }
       }
+    },
+    "RevisionInfo" : {
+      "type" : "object",
+      "properties" : {
+        "clientId" : {
+          "type" : "string",
+          "description" : "A client identifier used to make a request. By including a client identifier, the API can allow multiple requests without needing the current revision. Due to the asynchronous nature of requests/responses this was implemented to allow the client to make numerous requests without having to wait for the previous response to come back."
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "NiFi Registry employs an optimistic locking strategy where the client must include a revision in their request when performing an update. In a response to a mutable flow request, this field represents the updated base version."
+        },
+        "lastModifier" : {
+          "type" : "string",
+          "description" : "The user that last modified the entity.",
+          "readOnly" : true
+        }
+      },
+      "description" : "The revision information for an entity managed through the REST API."
     },
     "RunStatusDetailsRequestEntity" : {
       "type" : "object",
@@ -20323,6 +20743,11 @@
           "description" : "The number of versions of this flow.",
           "readOnly" : true,
           "minimum" : 0
+        },
+        "revision" : {
+          "description" : "The revision of this entity used for optimistic-locking during updates.",
+          "readOnly" : true,
+          "$ref" : "#/definitions/RevisionInfo"
         }
       }
     },
@@ -20898,6 +21323,14 @@
         "parameterContextName" : {
           "type" : "string",
           "description" : "The name of the parameter context used by this process group"
+        },
+        "flowFileConcurrency" : {
+          "type" : "string",
+          "description" : "The configured FlowFile Concurrency for the Process Group"
+        },
+        "flowFileOutboundPolicy" : {
+          "type" : "string",
+          "description" : "The FlowFile Outbound Policy for the Process Group"
         },
         "componentType" : {
           "type" : "string",

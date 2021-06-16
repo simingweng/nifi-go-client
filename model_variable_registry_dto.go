@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// VariableRegistryDto struct for VariableRegistryDto
-type VariableRegistryDto struct {
+import (
+	"encoding/json"
+)
+
+// VariableRegistryDTO struct for VariableRegistryDTO
+type VariableRegistryDTO struct {
 	// The variables that are available in this Variable Registry
-	Variables []VariableEntity `json:"variables,omitempty"`
+	Variables *[]VariableEntity `json:"variables,omitempty"`
 	// The UUID of the Process Group that this Variable Registry belongs to
-	ProcessGroupId string `json:"processGroupId,omitempty"`
+	ProcessGroupId *string `json:"processGroupId,omitempty"`
+}
+
+// NewVariableRegistryDTO instantiates a new VariableRegistryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVariableRegistryDTO() *VariableRegistryDTO {
+	this := VariableRegistryDTO{}
+	return &this
+}
+
+// NewVariableRegistryDTOWithDefaults instantiates a new VariableRegistryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVariableRegistryDTOWithDefaults() *VariableRegistryDTO {
+	this := VariableRegistryDTO{}
+	return &this
+}
+
+// GetVariables returns the Variables field value if set, zero value otherwise.
+func (o *VariableRegistryDTO) GetVariables() []VariableEntity {
+	if o == nil || o.Variables == nil {
+		var ret []VariableEntity
+		return ret
+	}
+	return *o.Variables
+}
+
+// GetVariablesOk returns a tuple with the Variables field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryDTO) GetVariablesOk() (*[]VariableEntity, bool) {
+	if o == nil || o.Variables == nil {
+		return nil, false
+	}
+	return o.Variables, true
+}
+
+// HasVariables returns a boolean if a field has been set.
+func (o *VariableRegistryDTO) HasVariables() bool {
+	if o != nil && o.Variables != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVariables gets a reference to the given []VariableEntity and assigns it to the Variables field.
+func (o *VariableRegistryDTO) SetVariables(v []VariableEntity) {
+	o.Variables = &v
+}
+
+// GetProcessGroupId returns the ProcessGroupId field value if set, zero value otherwise.
+func (o *VariableRegistryDTO) GetProcessGroupId() string {
+	if o == nil || o.ProcessGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProcessGroupId
+}
+
+// GetProcessGroupIdOk returns a tuple with the ProcessGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryDTO) GetProcessGroupIdOk() (*string, bool) {
+	if o == nil || o.ProcessGroupId == nil {
+		return nil, false
+	}
+	return o.ProcessGroupId, true
+}
+
+// HasProcessGroupId returns a boolean if a field has been set.
+func (o *VariableRegistryDTO) HasProcessGroupId() bool {
+	if o != nil && o.ProcessGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupId gets a reference to the given string and assigns it to the ProcessGroupId field.
+func (o *VariableRegistryDTO) SetProcessGroupId(v string) {
+	o.ProcessGroupId = &v
+}
+
+func (o VariableRegistryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Variables != nil {
+		toSerialize["variables"] = o.Variables
+	}
+	if o.ProcessGroupId != nil {
+		toSerialize["processGroupId"] = o.ProcessGroupId
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVariableRegistryDTO struct {
+	value *VariableRegistryDTO
+	isSet bool
+}
+
+func (v NullableVariableRegistryDTO) Get() *VariableRegistryDTO {
+	return v.value
+}
+
+func (v *NullableVariableRegistryDTO) Set(val *VariableRegistryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVariableRegistryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVariableRegistryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVariableRegistryDTO(val *VariableRegistryDTO) *NullableVariableRegistryDTO {
+	return &NullableVariableRegistryDTO{value: val, isSet: true}
+}
+
+func (v NullableVariableRegistryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVariableRegistryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

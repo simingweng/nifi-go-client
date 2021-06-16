@@ -12,17 +12,49 @@ Method | HTTP request | Description
 
 ## CreateSnippet
 
-> SnippetEntity CreateSnippet(ctx, body)
+> SnippetEntity CreateSnippet(ctx).Body(body).Execute()
 
 Creates a snippet. The snippet will be automatically discarded if not used in a subsequent request after 1 minute.
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewSnippetEntity() // SnippetEntity | The snippet configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.SnippetsApi.CreateSnippet(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SnippetsApi.CreateSnippet``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateSnippet`: SnippetEntity
+    fmt.Fprintf(os.Stdout, "Response from `SnippetsApi.CreateSnippet`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateSnippetRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**SnippetEntity**](SnippetEntity.md)| The snippet configuration details. | 
+ **body** | [**SnippetEntity**](SnippetEntity.md) | The snippet configuration details. | 
 
 ### Return type
 
@@ -44,28 +76,55 @@ No authorization required
 
 ## DeleteSnippet
 
-> SnippetEntity DeleteSnippet(ctx, id, optional)
+> SnippetEntity DeleteSnippet(ctx, id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the components in a snippet and discards the snippet
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The snippet id.
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.SnippetsApi.DeleteSnippet(context.Background(), id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SnippetsApi.DeleteSnippet``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteSnippet`: SnippetEntity
+    fmt.Fprintf(os.Stdout, "Response from `SnippetsApi.DeleteSnippet`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The snippet id. | 
- **optional** | ***DeleteSnippetOpts** | optional parameters | nil if no parameters
+**id** | **string** | The snippet id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteSnippetOpts struct
+Other parameters are passed through a pointer to a apiDeleteSnippetRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -87,18 +146,55 @@ No authorization required
 
 ## UpdateSnippet
 
-> SnippetEntity UpdateSnippet(ctx, id, body)
+> SnippetEntity UpdateSnippet(ctx, id).Body(body).Execute()
 
 Move's the components in this Snippet into a new Process Group and discards the snippet
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The snippet id.
+    body := *openapiclient.NewSnippetEntity() // SnippetEntity | The snippet configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.SnippetsApi.UpdateSnippet(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SnippetsApi.UpdateSnippet``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateSnippet`: SnippetEntity
+    fmt.Fprintf(os.Stdout, "Response from `SnippetsApi.UpdateSnippet`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The snippet id. | 
-**body** | [**SnippetEntity**](SnippetEntity.md)| The snippet configuration details. | 
+**id** | **string** | The snippet id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateSnippetRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**SnippetEntity**](SnippetEntity.md) | The snippet configuration details. | 
 
 ### Return type
 

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,40 +11,767 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedConnection struct for VersionedConnection
 type VersionedConnection struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments    string               `json:"comments,omitempty"`
-	Position    Position             `json:"position,omitempty"`
-	Source      ConnectableComponent `json:"source,omitempty"`
-	Destination ConnectableComponent `json:"destination,omitempty"`
+	Comments    *string               `json:"comments,omitempty"`
+	Position    *Position             `json:"position,omitempty"`
+	Source      *ConnectableComponent `json:"source,omitempty"`
+	Destination *ConnectableComponent `json:"destination,omitempty"`
 	// The index of the bend point where to place the connection label.
-	LabelIndex int32 `json:"labelIndex,omitempty"`
+	LabelIndex *int32 `json:"labelIndex,omitempty"`
 	// The z index of the connection.
-	ZIndex int64 `json:"zIndex,omitempty"`
+	ZIndex *int64 `json:"zIndex,omitempty"`
 	// The selected relationship that comprise the connection.
-	SelectedRelationships []string `json:"selectedRelationships,omitempty"`
+	SelectedRelationships *[]string `json:"selectedRelationships,omitempty"`
 	// The object count threshold for determining when back pressure is applied. Updating this value is a passive change in the sense that it won't impact whether existing files over the limit are affected but it does help feeder processors to stop pushing too much into this work queue.
-	BackPressureObjectThreshold int64 `json:"backPressureObjectThreshold,omitempty"`
+	BackPressureObjectThreshold *int64 `json:"backPressureObjectThreshold,omitempty"`
 	// The object data size threshold for determining when back pressure is applied. Updating this value is a passive change in the sense that it won't impact whether existing files over the limit are affected but it does help feeder processors to stop pushing too much into this work queue.
-	BackPressureDataSizeThreshold string `json:"backPressureDataSizeThreshold,omitempty"`
+	BackPressureDataSizeThreshold *string `json:"backPressureDataSizeThreshold,omitempty"`
 	// The amount of time a flow file may be in the flow before it will be automatically aged out of the flow. Once a flow file reaches this age it will be terminated from the flow the next time a processor attempts to start work on it.
-	FlowFileExpiration string `json:"flowFileExpiration,omitempty"`
+	FlowFileExpiration *string `json:"flowFileExpiration,omitempty"`
 	// The comparators used to prioritize the queue.
-	Prioritizers []string `json:"prioritizers,omitempty"`
+	Prioritizers *[]string `json:"prioritizers,omitempty"`
 	// The bend points on the connection.
-	Bends []Position `json:"bends,omitempty"`
+	Bends *[]Position `json:"bends,omitempty"`
 	// The Strategy to use for load balancing data across the cluster, or null, if no Load Balance Strategy has been specified.
-	LoadBalanceStrategy string `json:"loadBalanceStrategy,omitempty"`
+	LoadBalanceStrategy *string `json:"loadBalanceStrategy,omitempty"`
 	// The attribute to use for partitioning data as it is load balanced across the cluster. If the Load Balance Strategy is configured to use PARTITION_BY_ATTRIBUTE, the value returned by this method is the name of the FlowFile Attribute that will be used to determine which node in the cluster should receive a given FlowFile. If the Load Balance Strategy is unset or is set to any other value, the Partitioning Attribute has no effect.
-	PartitioningAttribute string `json:"partitioningAttribute,omitempty"`
+	PartitioningAttribute *string `json:"partitioningAttribute,omitempty"`
 	// Whether or not compression should be used when transferring FlowFiles between nodes
-	LoadBalanceCompression string `json:"loadBalanceCompression,omitempty"`
-	ComponentType          string `json:"componentType,omitempty"`
+	LoadBalanceCompression *string `json:"loadBalanceCompression,omitempty"`
+	ComponentType          *string `json:"componentType,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedConnection instantiates a new VersionedConnection object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedConnection() *VersionedConnection {
+	this := VersionedConnection{}
+	return &this
+}
+
+// NewVersionedConnectionWithDefaults instantiates a new VersionedConnection object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedConnectionWithDefaults() *VersionedConnection {
+	this := VersionedConnection{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedConnection) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedConnection) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedConnection) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedConnection) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedConnection) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedConnection) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedConnection) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedConnection) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedConnection) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedConnection) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedConnection) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedConnection) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetSource returns the Source field value if set, zero value otherwise.
+func (o *VersionedConnection) GetSource() ConnectableComponent {
+	if o == nil || o.Source == nil {
+		var ret ConnectableComponent
+		return ret
+	}
+	return *o.Source
+}
+
+// GetSourceOk returns a tuple with the Source field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetSourceOk() (*ConnectableComponent, bool) {
+	if o == nil || o.Source == nil {
+		return nil, false
+	}
+	return o.Source, true
+}
+
+// HasSource returns a boolean if a field has been set.
+func (o *VersionedConnection) HasSource() bool {
+	if o != nil && o.Source != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSource gets a reference to the given ConnectableComponent and assigns it to the Source field.
+func (o *VersionedConnection) SetSource(v ConnectableComponent) {
+	o.Source = &v
+}
+
+// GetDestination returns the Destination field value if set, zero value otherwise.
+func (o *VersionedConnection) GetDestination() ConnectableComponent {
+	if o == nil || o.Destination == nil {
+		var ret ConnectableComponent
+		return ret
+	}
+	return *o.Destination
+}
+
+// GetDestinationOk returns a tuple with the Destination field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetDestinationOk() (*ConnectableComponent, bool) {
+	if o == nil || o.Destination == nil {
+		return nil, false
+	}
+	return o.Destination, true
+}
+
+// HasDestination returns a boolean if a field has been set.
+func (o *VersionedConnection) HasDestination() bool {
+	if o != nil && o.Destination != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDestination gets a reference to the given ConnectableComponent and assigns it to the Destination field.
+func (o *VersionedConnection) SetDestination(v ConnectableComponent) {
+	o.Destination = &v
+}
+
+// GetLabelIndex returns the LabelIndex field value if set, zero value otherwise.
+func (o *VersionedConnection) GetLabelIndex() int32 {
+	if o == nil || o.LabelIndex == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LabelIndex
+}
+
+// GetLabelIndexOk returns a tuple with the LabelIndex field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetLabelIndexOk() (*int32, bool) {
+	if o == nil || o.LabelIndex == nil {
+		return nil, false
+	}
+	return o.LabelIndex, true
+}
+
+// HasLabelIndex returns a boolean if a field has been set.
+func (o *VersionedConnection) HasLabelIndex() bool {
+	if o != nil && o.LabelIndex != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabelIndex gets a reference to the given int32 and assigns it to the LabelIndex field.
+func (o *VersionedConnection) SetLabelIndex(v int32) {
+	o.LabelIndex = &v
+}
+
+// GetZIndex returns the ZIndex field value if set, zero value otherwise.
+func (o *VersionedConnection) GetZIndex() int64 {
+	if o == nil || o.ZIndex == nil {
+		var ret int64
+		return ret
+	}
+	return *o.ZIndex
+}
+
+// GetZIndexOk returns a tuple with the ZIndex field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetZIndexOk() (*int64, bool) {
+	if o == nil || o.ZIndex == nil {
+		return nil, false
+	}
+	return o.ZIndex, true
+}
+
+// HasZIndex returns a boolean if a field has been set.
+func (o *VersionedConnection) HasZIndex() bool {
+	if o != nil && o.ZIndex != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetZIndex gets a reference to the given int64 and assigns it to the ZIndex field.
+func (o *VersionedConnection) SetZIndex(v int64) {
+	o.ZIndex = &v
+}
+
+// GetSelectedRelationships returns the SelectedRelationships field value if set, zero value otherwise.
+func (o *VersionedConnection) GetSelectedRelationships() []string {
+	if o == nil || o.SelectedRelationships == nil {
+		var ret []string
+		return ret
+	}
+	return *o.SelectedRelationships
+}
+
+// GetSelectedRelationshipsOk returns a tuple with the SelectedRelationships field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetSelectedRelationshipsOk() (*[]string, bool) {
+	if o == nil || o.SelectedRelationships == nil {
+		return nil, false
+	}
+	return o.SelectedRelationships, true
+}
+
+// HasSelectedRelationships returns a boolean if a field has been set.
+func (o *VersionedConnection) HasSelectedRelationships() bool {
+	if o != nil && o.SelectedRelationships != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSelectedRelationships gets a reference to the given []string and assigns it to the SelectedRelationships field.
+func (o *VersionedConnection) SetSelectedRelationships(v []string) {
+	o.SelectedRelationships = &v
+}
+
+// GetBackPressureObjectThreshold returns the BackPressureObjectThreshold field value if set, zero value otherwise.
+func (o *VersionedConnection) GetBackPressureObjectThreshold() int64 {
+	if o == nil || o.BackPressureObjectThreshold == nil {
+		var ret int64
+		return ret
+	}
+	return *o.BackPressureObjectThreshold
+}
+
+// GetBackPressureObjectThresholdOk returns a tuple with the BackPressureObjectThreshold field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetBackPressureObjectThresholdOk() (*int64, bool) {
+	if o == nil || o.BackPressureObjectThreshold == nil {
+		return nil, false
+	}
+	return o.BackPressureObjectThreshold, true
+}
+
+// HasBackPressureObjectThreshold returns a boolean if a field has been set.
+func (o *VersionedConnection) HasBackPressureObjectThreshold() bool {
+	if o != nil && o.BackPressureObjectThreshold != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBackPressureObjectThreshold gets a reference to the given int64 and assigns it to the BackPressureObjectThreshold field.
+func (o *VersionedConnection) SetBackPressureObjectThreshold(v int64) {
+	o.BackPressureObjectThreshold = &v
+}
+
+// GetBackPressureDataSizeThreshold returns the BackPressureDataSizeThreshold field value if set, zero value otherwise.
+func (o *VersionedConnection) GetBackPressureDataSizeThreshold() string {
+	if o == nil || o.BackPressureDataSizeThreshold == nil {
+		var ret string
+		return ret
+	}
+	return *o.BackPressureDataSizeThreshold
+}
+
+// GetBackPressureDataSizeThresholdOk returns a tuple with the BackPressureDataSizeThreshold field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetBackPressureDataSizeThresholdOk() (*string, bool) {
+	if o == nil || o.BackPressureDataSizeThreshold == nil {
+		return nil, false
+	}
+	return o.BackPressureDataSizeThreshold, true
+}
+
+// HasBackPressureDataSizeThreshold returns a boolean if a field has been set.
+func (o *VersionedConnection) HasBackPressureDataSizeThreshold() bool {
+	if o != nil && o.BackPressureDataSizeThreshold != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBackPressureDataSizeThreshold gets a reference to the given string and assigns it to the BackPressureDataSizeThreshold field.
+func (o *VersionedConnection) SetBackPressureDataSizeThreshold(v string) {
+	o.BackPressureDataSizeThreshold = &v
+}
+
+// GetFlowFileExpiration returns the FlowFileExpiration field value if set, zero value otherwise.
+func (o *VersionedConnection) GetFlowFileExpiration() string {
+	if o == nil || o.FlowFileExpiration == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowFileExpiration
+}
+
+// GetFlowFileExpirationOk returns a tuple with the FlowFileExpiration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetFlowFileExpirationOk() (*string, bool) {
+	if o == nil || o.FlowFileExpiration == nil {
+		return nil, false
+	}
+	return o.FlowFileExpiration, true
+}
+
+// HasFlowFileExpiration returns a boolean if a field has been set.
+func (o *VersionedConnection) HasFlowFileExpiration() bool {
+	if o != nil && o.FlowFileExpiration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileExpiration gets a reference to the given string and assigns it to the FlowFileExpiration field.
+func (o *VersionedConnection) SetFlowFileExpiration(v string) {
+	o.FlowFileExpiration = &v
+}
+
+// GetPrioritizers returns the Prioritizers field value if set, zero value otherwise.
+func (o *VersionedConnection) GetPrioritizers() []string {
+	if o == nil || o.Prioritizers == nil {
+		var ret []string
+		return ret
+	}
+	return *o.Prioritizers
+}
+
+// GetPrioritizersOk returns a tuple with the Prioritizers field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetPrioritizersOk() (*[]string, bool) {
+	if o == nil || o.Prioritizers == nil {
+		return nil, false
+	}
+	return o.Prioritizers, true
+}
+
+// HasPrioritizers returns a boolean if a field has been set.
+func (o *VersionedConnection) HasPrioritizers() bool {
+	if o != nil && o.Prioritizers != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPrioritizers gets a reference to the given []string and assigns it to the Prioritizers field.
+func (o *VersionedConnection) SetPrioritizers(v []string) {
+	o.Prioritizers = &v
+}
+
+// GetBends returns the Bends field value if set, zero value otherwise.
+func (o *VersionedConnection) GetBends() []Position {
+	if o == nil || o.Bends == nil {
+		var ret []Position
+		return ret
+	}
+	return *o.Bends
+}
+
+// GetBendsOk returns a tuple with the Bends field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetBendsOk() (*[]Position, bool) {
+	if o == nil || o.Bends == nil {
+		return nil, false
+	}
+	return o.Bends, true
+}
+
+// HasBends returns a boolean if a field has been set.
+func (o *VersionedConnection) HasBends() bool {
+	if o != nil && o.Bends != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBends gets a reference to the given []Position and assigns it to the Bends field.
+func (o *VersionedConnection) SetBends(v []Position) {
+	o.Bends = &v
+}
+
+// GetLoadBalanceStrategy returns the LoadBalanceStrategy field value if set, zero value otherwise.
+func (o *VersionedConnection) GetLoadBalanceStrategy() string {
+	if o == nil || o.LoadBalanceStrategy == nil {
+		var ret string
+		return ret
+	}
+	return *o.LoadBalanceStrategy
+}
+
+// GetLoadBalanceStrategyOk returns a tuple with the LoadBalanceStrategy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetLoadBalanceStrategyOk() (*string, bool) {
+	if o == nil || o.LoadBalanceStrategy == nil {
+		return nil, false
+	}
+	return o.LoadBalanceStrategy, true
+}
+
+// HasLoadBalanceStrategy returns a boolean if a field has been set.
+func (o *VersionedConnection) HasLoadBalanceStrategy() bool {
+	if o != nil && o.LoadBalanceStrategy != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLoadBalanceStrategy gets a reference to the given string and assigns it to the LoadBalanceStrategy field.
+func (o *VersionedConnection) SetLoadBalanceStrategy(v string) {
+	o.LoadBalanceStrategy = &v
+}
+
+// GetPartitioningAttribute returns the PartitioningAttribute field value if set, zero value otherwise.
+func (o *VersionedConnection) GetPartitioningAttribute() string {
+	if o == nil || o.PartitioningAttribute == nil {
+		var ret string
+		return ret
+	}
+	return *o.PartitioningAttribute
+}
+
+// GetPartitioningAttributeOk returns a tuple with the PartitioningAttribute field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetPartitioningAttributeOk() (*string, bool) {
+	if o == nil || o.PartitioningAttribute == nil {
+		return nil, false
+	}
+	return o.PartitioningAttribute, true
+}
+
+// HasPartitioningAttribute returns a boolean if a field has been set.
+func (o *VersionedConnection) HasPartitioningAttribute() bool {
+	if o != nil && o.PartitioningAttribute != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPartitioningAttribute gets a reference to the given string and assigns it to the PartitioningAttribute field.
+func (o *VersionedConnection) SetPartitioningAttribute(v string) {
+	o.PartitioningAttribute = &v
+}
+
+// GetLoadBalanceCompression returns the LoadBalanceCompression field value if set, zero value otherwise.
+func (o *VersionedConnection) GetLoadBalanceCompression() string {
+	if o == nil || o.LoadBalanceCompression == nil {
+		var ret string
+		return ret
+	}
+	return *o.LoadBalanceCompression
+}
+
+// GetLoadBalanceCompressionOk returns a tuple with the LoadBalanceCompression field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetLoadBalanceCompressionOk() (*string, bool) {
+	if o == nil || o.LoadBalanceCompression == nil {
+		return nil, false
+	}
+	return o.LoadBalanceCompression, true
+}
+
+// HasLoadBalanceCompression returns a boolean if a field has been set.
+func (o *VersionedConnection) HasLoadBalanceCompression() bool {
+	if o != nil && o.LoadBalanceCompression != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLoadBalanceCompression gets a reference to the given string and assigns it to the LoadBalanceCompression field.
+func (o *VersionedConnection) SetLoadBalanceCompression(v string) {
+	o.LoadBalanceCompression = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedConnection) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedConnection) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedConnection) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedConnection) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedConnection) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedConnection) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedConnection) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedConnection) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Source != nil {
+		toSerialize["source"] = o.Source
+	}
+	if o.Destination != nil {
+		toSerialize["destination"] = o.Destination
+	}
+	if o.LabelIndex != nil {
+		toSerialize["labelIndex"] = o.LabelIndex
+	}
+	if o.ZIndex != nil {
+		toSerialize["zIndex"] = o.ZIndex
+	}
+	if o.SelectedRelationships != nil {
+		toSerialize["selectedRelationships"] = o.SelectedRelationships
+	}
+	if o.BackPressureObjectThreshold != nil {
+		toSerialize["backPressureObjectThreshold"] = o.BackPressureObjectThreshold
+	}
+	if o.BackPressureDataSizeThreshold != nil {
+		toSerialize["backPressureDataSizeThreshold"] = o.BackPressureDataSizeThreshold
+	}
+	if o.FlowFileExpiration != nil {
+		toSerialize["flowFileExpiration"] = o.FlowFileExpiration
+	}
+	if o.Prioritizers != nil {
+		toSerialize["prioritizers"] = o.Prioritizers
+	}
+	if o.Bends != nil {
+		toSerialize["bends"] = o.Bends
+	}
+	if o.LoadBalanceStrategy != nil {
+		toSerialize["loadBalanceStrategy"] = o.LoadBalanceStrategy
+	}
+	if o.PartitioningAttribute != nil {
+		toSerialize["partitioningAttribute"] = o.PartitioningAttribute
+	}
+	if o.LoadBalanceCompression != nil {
+		toSerialize["loadBalanceCompression"] = o.LoadBalanceCompression
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedConnection struct {
+	value *VersionedConnection
+	isSet bool
+}
+
+func (v NullableVersionedConnection) Get() *VersionedConnection {
+	return v.value
+}
+
+func (v *NullableVersionedConnection) Set(val *VersionedConnection) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedConnection) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedConnection) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedConnection(val *VersionedConnection) *NullableVersionedConnection {
+	return &NullableVersionedConnection{value: val, isSet: true}
+}
+
+func (v NullableVersionedConnection) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedConnection) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

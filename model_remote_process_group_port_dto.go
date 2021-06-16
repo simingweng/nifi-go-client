@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,31 +11,548 @@
 
 package nifi
 
-// RemoteProcessGroupPortDto struct for RemoteProcessGroupPortDto
-type RemoteProcessGroupPortDto struct {
+import (
+	"encoding/json"
+)
+
+// RemoteProcessGroupPortDTO struct for RemoteProcessGroupPortDTO
+type RemoteProcessGroupPortDTO struct {
 	// The id of the port.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The id of the target port.
-	TargetId string `json:"targetId,omitempty"`
+	TargetId *string `json:"targetId,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of the remote process group that the port resides in.
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The name of the target port.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The comments as configured on the target port.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
 	// The number of task that may transmit flowfiles to the target port concurrently.
-	ConcurrentlySchedulableTaskCount int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
+	ConcurrentlySchedulableTaskCount *int32 `json:"concurrentlySchedulableTaskCount,omitempty"`
 	// Whether the remote port is configured for transmission.
-	Transmitting bool `json:"transmitting,omitempty"`
+	Transmitting *bool `json:"transmitting,omitempty"`
 	// Whether the flowfiles are compressed when sent to the target port.
-	UseCompression bool `json:"useCompression,omitempty"`
+	UseCompression *bool `json:"useCompression,omitempty"`
 	// Whether the target port exists.
-	Exists bool `json:"exists,omitempty"`
+	Exists *bool `json:"exists,omitempty"`
 	// Whether the target port is running.
-	TargetRunning bool `json:"targetRunning,omitempty"`
+	TargetRunning *bool `json:"targetRunning,omitempty"`
 	// Whether the port has either an incoming or outgoing connection.
-	Connected     bool             `json:"connected,omitempty"`
-	BatchSettings BatchSettingsDto `json:"batchSettings,omitempty"`
+	Connected     *bool             `json:"connected,omitempty"`
+	BatchSettings *BatchSettingsDTO `json:"batchSettings,omitempty"`
+}
+
+// NewRemoteProcessGroupPortDTO instantiates a new RemoteProcessGroupPortDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRemoteProcessGroupPortDTO() *RemoteProcessGroupPortDTO {
+	this := RemoteProcessGroupPortDTO{}
+	return &this
+}
+
+// NewRemoteProcessGroupPortDTOWithDefaults instantiates a new RemoteProcessGroupPortDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRemoteProcessGroupPortDTOWithDefaults() *RemoteProcessGroupPortDTO {
+	this := RemoteProcessGroupPortDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *RemoteProcessGroupPortDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetTargetId returns the TargetId field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetTargetId() string {
+	if o == nil || o.TargetId == nil {
+		var ret string
+		return ret
+	}
+	return *o.TargetId
+}
+
+// GetTargetIdOk returns a tuple with the TargetId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetTargetIdOk() (*string, bool) {
+	if o == nil || o.TargetId == nil {
+		return nil, false
+	}
+	return o.TargetId, true
+}
+
+// HasTargetId returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasTargetId() bool {
+	if o != nil && o.TargetId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetId gets a reference to the given string and assigns it to the TargetId field.
+func (o *RemoteProcessGroupPortDTO) SetTargetId(v string) {
+	o.TargetId = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *RemoteProcessGroupPortDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *RemoteProcessGroupPortDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *RemoteProcessGroupPortDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *RemoteProcessGroupPortDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetConcurrentlySchedulableTaskCount returns the ConcurrentlySchedulableTaskCount field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetConcurrentlySchedulableTaskCount() int32 {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ConcurrentlySchedulableTaskCount
+}
+
+// GetConcurrentlySchedulableTaskCountOk returns a tuple with the ConcurrentlySchedulableTaskCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetConcurrentlySchedulableTaskCountOk() (*int32, bool) {
+	if o == nil || o.ConcurrentlySchedulableTaskCount == nil {
+		return nil, false
+	}
+	return o.ConcurrentlySchedulableTaskCount, true
+}
+
+// HasConcurrentlySchedulableTaskCount returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasConcurrentlySchedulableTaskCount() bool {
+	if o != nil && o.ConcurrentlySchedulableTaskCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConcurrentlySchedulableTaskCount gets a reference to the given int32 and assigns it to the ConcurrentlySchedulableTaskCount field.
+func (o *RemoteProcessGroupPortDTO) SetConcurrentlySchedulableTaskCount(v int32) {
+	o.ConcurrentlySchedulableTaskCount = &v
+}
+
+// GetTransmitting returns the Transmitting field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetTransmitting() bool {
+	if o == nil || o.Transmitting == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Transmitting
+}
+
+// GetTransmittingOk returns a tuple with the Transmitting field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetTransmittingOk() (*bool, bool) {
+	if o == nil || o.Transmitting == nil {
+		return nil, false
+	}
+	return o.Transmitting, true
+}
+
+// HasTransmitting returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasTransmitting() bool {
+	if o != nil && o.Transmitting != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransmitting gets a reference to the given bool and assigns it to the Transmitting field.
+func (o *RemoteProcessGroupPortDTO) SetTransmitting(v bool) {
+	o.Transmitting = &v
+}
+
+// GetUseCompression returns the UseCompression field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetUseCompression() bool {
+	if o == nil || o.UseCompression == nil {
+		var ret bool
+		return ret
+	}
+	return *o.UseCompression
+}
+
+// GetUseCompressionOk returns a tuple with the UseCompression field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetUseCompressionOk() (*bool, bool) {
+	if o == nil || o.UseCompression == nil {
+		return nil, false
+	}
+	return o.UseCompression, true
+}
+
+// HasUseCompression returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasUseCompression() bool {
+	if o != nil && o.UseCompression != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUseCompression gets a reference to the given bool and assigns it to the UseCompression field.
+func (o *RemoteProcessGroupPortDTO) SetUseCompression(v bool) {
+	o.UseCompression = &v
+}
+
+// GetExists returns the Exists field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetExists() bool {
+	if o == nil || o.Exists == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Exists
+}
+
+// GetExistsOk returns a tuple with the Exists field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetExistsOk() (*bool, bool) {
+	if o == nil || o.Exists == nil {
+		return nil, false
+	}
+	return o.Exists, true
+}
+
+// HasExists returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasExists() bool {
+	if o != nil && o.Exists != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExists gets a reference to the given bool and assigns it to the Exists field.
+func (o *RemoteProcessGroupPortDTO) SetExists(v bool) {
+	o.Exists = &v
+}
+
+// GetTargetRunning returns the TargetRunning field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetTargetRunning() bool {
+	if o == nil || o.TargetRunning == nil {
+		var ret bool
+		return ret
+	}
+	return *o.TargetRunning
+}
+
+// GetTargetRunningOk returns a tuple with the TargetRunning field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetTargetRunningOk() (*bool, bool) {
+	if o == nil || o.TargetRunning == nil {
+		return nil, false
+	}
+	return o.TargetRunning, true
+}
+
+// HasTargetRunning returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasTargetRunning() bool {
+	if o != nil && o.TargetRunning != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetRunning gets a reference to the given bool and assigns it to the TargetRunning field.
+func (o *RemoteProcessGroupPortDTO) SetTargetRunning(v bool) {
+	o.TargetRunning = &v
+}
+
+// GetConnected returns the Connected field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetConnected() bool {
+	if o == nil || o.Connected == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Connected
+}
+
+// GetConnectedOk returns a tuple with the Connected field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetConnectedOk() (*bool, bool) {
+	if o == nil || o.Connected == nil {
+		return nil, false
+	}
+	return o.Connected, true
+}
+
+// HasConnected returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasConnected() bool {
+	if o != nil && o.Connected != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnected gets a reference to the given bool and assigns it to the Connected field.
+func (o *RemoteProcessGroupPortDTO) SetConnected(v bool) {
+	o.Connected = &v
+}
+
+// GetBatchSettings returns the BatchSettings field value if set, zero value otherwise.
+func (o *RemoteProcessGroupPortDTO) GetBatchSettings() BatchSettingsDTO {
+	if o == nil || o.BatchSettings == nil {
+		var ret BatchSettingsDTO
+		return ret
+	}
+	return *o.BatchSettings
+}
+
+// GetBatchSettingsOk returns a tuple with the BatchSettings field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RemoteProcessGroupPortDTO) GetBatchSettingsOk() (*BatchSettingsDTO, bool) {
+	if o == nil || o.BatchSettings == nil {
+		return nil, false
+	}
+	return o.BatchSettings, true
+}
+
+// HasBatchSettings returns a boolean if a field has been set.
+func (o *RemoteProcessGroupPortDTO) HasBatchSettings() bool {
+	if o != nil && o.BatchSettings != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBatchSettings gets a reference to the given BatchSettingsDTO and assigns it to the BatchSettings field.
+func (o *RemoteProcessGroupPortDTO) SetBatchSettings(v BatchSettingsDTO) {
+	o.BatchSettings = &v
+}
+
+func (o RemoteProcessGroupPortDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.TargetId != nil {
+		toSerialize["targetId"] = o.TargetId
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.ConcurrentlySchedulableTaskCount != nil {
+		toSerialize["concurrentlySchedulableTaskCount"] = o.ConcurrentlySchedulableTaskCount
+	}
+	if o.Transmitting != nil {
+		toSerialize["transmitting"] = o.Transmitting
+	}
+	if o.UseCompression != nil {
+		toSerialize["useCompression"] = o.UseCompression
+	}
+	if o.Exists != nil {
+		toSerialize["exists"] = o.Exists
+	}
+	if o.TargetRunning != nil {
+		toSerialize["targetRunning"] = o.TargetRunning
+	}
+	if o.Connected != nil {
+		toSerialize["connected"] = o.Connected
+	}
+	if o.BatchSettings != nil {
+		toSerialize["batchSettings"] = o.BatchSettings
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRemoteProcessGroupPortDTO struct {
+	value *RemoteProcessGroupPortDTO
+	isSet bool
+}
+
+func (v NullableRemoteProcessGroupPortDTO) Get() *RemoteProcessGroupPortDTO {
+	return v.value
+}
+
+func (v *NullableRemoteProcessGroupPortDTO) Set(val *RemoteProcessGroupPortDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRemoteProcessGroupPortDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRemoteProcessGroupPortDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRemoteProcessGroupPortDTO(val *RemoteProcessGroupPortDTO) *NullableRemoteProcessGroupPortDTO {
+	return &NullableRemoteProcessGroupPortDTO{value: val, isSet: true}
+}
+
+func (v NullableRemoteProcessGroupPortDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRemoteProcessGroupPortDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

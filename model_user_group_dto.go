@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,21 +11,363 @@
 
 package nifi
 
-// UserGroupDto struct for UserGroupDto
-type UserGroupDto struct {
+import (
+	"encoding/json"
+)
+
+// UserGroupDTO struct for UserGroupDTO
+type UserGroupDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The identity of the tenant.
-	Identity string `json:"identity,omitempty"`
+	Identity *string `json:"identity,omitempty"`
 	// Whether this tenant is configurable.
-	Configurable bool `json:"configurable,omitempty"`
+	Configurable *bool `json:"configurable,omitempty"`
 	// The users that belong to the user group.
-	Users []TenantEntity `json:"users,omitempty"`
+	Users *[]TenantEntity `json:"users,omitempty"`
 	// The access policies this user group belongs to. This field was incorrectly defined as an AccessPolicyEntity. For compatibility reasons the field will remain of this type, however only the fields that are present in the AccessPolicySummaryEntity will be populated here.
-	AccessPolicies []AccessPolicyEntity `json:"accessPolicies,omitempty"`
+	AccessPolicies *[]AccessPolicyEntity `json:"accessPolicies,omitempty"`
+}
+
+// NewUserGroupDTO instantiates a new UserGroupDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewUserGroupDTO() *UserGroupDTO {
+	this := UserGroupDTO{}
+	return &this
+}
+
+// NewUserGroupDTOWithDefaults instantiates a new UserGroupDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewUserGroupDTOWithDefaults() *UserGroupDTO {
+	this := UserGroupDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *UserGroupDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *UserGroupDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *UserGroupDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *UserGroupDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetIdentity returns the Identity field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetIdentity() string {
+	if o == nil || o.Identity == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identity
+}
+
+// GetIdentityOk returns a tuple with the Identity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetIdentityOk() (*string, bool) {
+	if o == nil || o.Identity == nil {
+		return nil, false
+	}
+	return o.Identity, true
+}
+
+// HasIdentity returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasIdentity() bool {
+	if o != nil && o.Identity != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentity gets a reference to the given string and assigns it to the Identity field.
+func (o *UserGroupDTO) SetIdentity(v string) {
+	o.Identity = &v
+}
+
+// GetConfigurable returns the Configurable field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetConfigurable() bool {
+	if o == nil || o.Configurable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Configurable
+}
+
+// GetConfigurableOk returns a tuple with the Configurable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetConfigurableOk() (*bool, bool) {
+	if o == nil || o.Configurable == nil {
+		return nil, false
+	}
+	return o.Configurable, true
+}
+
+// HasConfigurable returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasConfigurable() bool {
+	if o != nil && o.Configurable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConfigurable gets a reference to the given bool and assigns it to the Configurable field.
+func (o *UserGroupDTO) SetConfigurable(v bool) {
+	o.Configurable = &v
+}
+
+// GetUsers returns the Users field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetUsers() []TenantEntity {
+	if o == nil || o.Users == nil {
+		var ret []TenantEntity
+		return ret
+	}
+	return *o.Users
+}
+
+// GetUsersOk returns a tuple with the Users field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetUsersOk() (*[]TenantEntity, bool) {
+	if o == nil || o.Users == nil {
+		return nil, false
+	}
+	return o.Users, true
+}
+
+// HasUsers returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasUsers() bool {
+	if o != nil && o.Users != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUsers gets a reference to the given []TenantEntity and assigns it to the Users field.
+func (o *UserGroupDTO) SetUsers(v []TenantEntity) {
+	o.Users = &v
+}
+
+// GetAccessPolicies returns the AccessPolicies field value if set, zero value otherwise.
+func (o *UserGroupDTO) GetAccessPolicies() []AccessPolicyEntity {
+	if o == nil || o.AccessPolicies == nil {
+		var ret []AccessPolicyEntity
+		return ret
+	}
+	return *o.AccessPolicies
+}
+
+// GetAccessPoliciesOk returns a tuple with the AccessPolicies field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroupDTO) GetAccessPoliciesOk() (*[]AccessPolicyEntity, bool) {
+	if o == nil || o.AccessPolicies == nil {
+		return nil, false
+	}
+	return o.AccessPolicies, true
+}
+
+// HasAccessPolicies returns a boolean if a field has been set.
+func (o *UserGroupDTO) HasAccessPolicies() bool {
+	if o != nil && o.AccessPolicies != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAccessPolicies gets a reference to the given []AccessPolicyEntity and assigns it to the AccessPolicies field.
+func (o *UserGroupDTO) SetAccessPolicies(v []AccessPolicyEntity) {
+	o.AccessPolicies = &v
+}
+
+func (o UserGroupDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Identity != nil {
+		toSerialize["identity"] = o.Identity
+	}
+	if o.Configurable != nil {
+		toSerialize["configurable"] = o.Configurable
+	}
+	if o.Users != nil {
+		toSerialize["users"] = o.Users
+	}
+	if o.AccessPolicies != nil {
+		toSerialize["accessPolicies"] = o.AccessPolicies
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableUserGroupDTO struct {
+	value *UserGroupDTO
+	isSet bool
+}
+
+func (v NullableUserGroupDTO) Get() *UserGroupDTO {
+	return v.value
+}
+
+func (v *NullableUserGroupDTO) Set(val *UserGroupDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableUserGroupDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableUserGroupDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableUserGroupDTO(val *UserGroupDTO) *NullableUserGroupDTO {
+	return &NullableUserGroupDTO{value: val, isSet: true}
+}
+
+func (v NullableUserGroupDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableUserGroupDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

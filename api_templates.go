@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // TemplatesApiService TemplatesApi service
 type TemplatesApiService service
 
+type TemplatesApiApiExportTemplateRequest struct {
+	ctx        _context.Context
+	ApiService *TemplatesApiService
+	id         string
+}
+
+func (r TemplatesApiApiExportTemplateRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.ExportTemplateExecute(r)
+}
+
 /*
-ExportTemplate Exports a template
+ * ExportTemplate Exports a template
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The template id.
-@return string
-*/
-func (a *TemplatesApiService) ExportTemplate(ctx _context.Context, id string) (string, *_nethttp.Response, error) {
+ * @return TemplatesApiApiExportTemplateRequest
+ */
+func (a *TemplatesApiService) ExportTemplate(ctx _context.Context, id string) TemplatesApiApiExportTemplateRequest {
+	return TemplatesApiApiExportTemplateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *TemplatesApiService) ExportTemplateExecute(r TemplatesApiApiExportTemplateRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *TemplatesApiService) ExportTemplate(ctx _context.Context, id string) (s
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/templates/{id}/download"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TemplatesApiService.ExportTemplate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{id}/download"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *TemplatesApiService) ExportTemplate(ctx _context.Context, id string) (s
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,20 +132,41 @@ func (a *TemplatesApiService) ExportTemplate(ctx _context.Context, id string) (s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// TemplatesApiRemoveTemplateOpts Optional parameters for the method 'RemoveTemplate'
-type TemplatesApiRemoveTemplateOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type TemplatesApiApiRemoveTemplateRequest struct {
+	ctx                          _context.Context
+	ApiService                   *TemplatesApiService
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r TemplatesApiApiRemoveTemplateRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) TemplatesApiApiRemoveTemplateRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r TemplatesApiApiRemoveTemplateRequest) Execute() (TemplateEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveTemplateExecute(r)
 }
 
 /*
-RemoveTemplate Deletes a template
+ * RemoveTemplate Deletes a template
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The template id.
- * @param optional nil or *TemplatesApiRemoveTemplateOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return TemplateEntity
-*/
-func (a *TemplatesApiService) RemoveTemplate(ctx _context.Context, id string, localVarOptionals *TemplatesApiRemoveTemplateOpts) (TemplateEntity, *_nethttp.Response, error) {
+ * @return TemplatesApiApiRemoveTemplateRequest
+ */
+func (a *TemplatesApiService) RemoveTemplate(ctx _context.Context, id string) TemplatesApiApiRemoveTemplateRequest {
+	return TemplatesApiApiRemoveTemplateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TemplateEntity
+ */
+func (a *TemplatesApiService) RemoveTemplateExecute(r TemplatesApiApiRemoveTemplateRequest) (TemplateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -128,16 +176,20 @@ func (a *TemplatesApiService) RemoveTemplate(ctx _context.Context, id string, lo
 		localVarReturnValue  TemplateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/templates/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TemplatesApiService.RemoveTemplate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/templates/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -156,18 +208,19 @@ func (a *TemplatesApiService) RemoveTemplate(ctx _context.Context, id string, lo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

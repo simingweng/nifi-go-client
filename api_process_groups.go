@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -29,14 +29,41 @@ var (
 // ProcessGroupsApiService ProcessGroupsApi service
 type ProcessGroupsApiService service
 
+type ProcessGroupsApiApiCopySnippetRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *CopySnippetRequestEntity
+}
+
+func (r ProcessGroupsApiApiCopySnippetRequest) Body(body CopySnippetRequestEntity) ProcessGroupsApiApiCopySnippetRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCopySnippetRequest) Execute() (FlowEntity, *_nethttp.Response, error) {
+	return r.ApiService.CopySnippetExecute(r)
+}
+
 /*
-CopySnippet Copies a snippet and discards it.
+ * CopySnippet Copies a snippet and discards it.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The copy snippet request.
-@return FlowEntity
-*/
-func (a *ProcessGroupsApiService) CopySnippet(ctx _context.Context, id string, body CopySnippetRequestEntity) (FlowEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCopySnippetRequest
+ */
+func (a *ProcessGroupsApiService) CopySnippet(ctx _context.Context, id string) ProcessGroupsApiApiCopySnippetRequest {
+	return ProcessGroupsApiApiCopySnippetRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FlowEntity
+ */
+func (a *ProcessGroupsApiService) CopySnippetExecute(r ProcessGroupsApiApiCopySnippetRequest) (FlowEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -46,13 +73,20 @@ func (a *ProcessGroupsApiService) CopySnippet(ctx _context.Context, id string, b
 		localVarReturnValue  FlowEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/snippet-instance"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CopySnippet")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/snippet-instance"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -72,19 +106,20 @@ func (a *ProcessGroupsApiService) CopySnippet(ctx _context.Context, id string, b
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -109,14 +144,41 @@ func (a *ProcessGroupsApiService) CopySnippet(ctx _context.Context, id string, b
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateConnectionRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ConnectionEntity
+}
+
+func (r ProcessGroupsApiApiCreateConnectionRequest) Body(body ConnectionEntity) ProcessGroupsApiApiCreateConnectionRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateConnectionRequest) Execute() (ConnectionEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateConnectionExecute(r)
+}
+
 /*
-CreateConnection Creates a connection
+ * CreateConnection Creates a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The connection configuration details.
-@return ConnectionEntity
-*/
-func (a *ProcessGroupsApiService) CreateConnection(ctx _context.Context, id string, body ConnectionEntity) (ConnectionEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateConnectionRequest
+ */
+func (a *ProcessGroupsApiService) CreateConnection(ctx _context.Context, id string) ProcessGroupsApiApiCreateConnectionRequest {
+	return ProcessGroupsApiApiCreateConnectionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionEntity
+ */
+func (a *ProcessGroupsApiService) CreateConnectionExecute(r ProcessGroupsApiApiCreateConnectionRequest) (ConnectionEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -126,13 +188,20 @@ func (a *ProcessGroupsApiService) CreateConnection(ctx _context.Context, id stri
 		localVarReturnValue  ConnectionEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/connections"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateConnection")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/connections"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -152,19 +221,20 @@ func (a *ProcessGroupsApiService) CreateConnection(ctx _context.Context, id stri
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -189,14 +259,41 @@ func (a *ProcessGroupsApiService) CreateConnection(ctx _context.Context, id stri
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateControllerServiceRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ControllerServiceEntity
+}
+
+func (r ProcessGroupsApiApiCreateControllerServiceRequest) Body(body ControllerServiceEntity) ProcessGroupsApiApiCreateControllerServiceRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateControllerServiceRequest) Execute() (ControllerServiceEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateControllerServiceExecute(r)
+}
+
 /*
-CreateControllerService Creates a new controller service
+ * CreateControllerService Creates a new controller service
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The controller service configuration details.
-@return ControllerServiceEntity
-*/
-func (a *ProcessGroupsApiService) CreateControllerService(ctx _context.Context, id string, body ControllerServiceEntity) (ControllerServiceEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateControllerServiceRequest
+ */
+func (a *ProcessGroupsApiService) CreateControllerService(ctx _context.Context, id string) ProcessGroupsApiApiCreateControllerServiceRequest {
+	return ProcessGroupsApiApiCreateControllerServiceRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ControllerServiceEntity
+ */
+func (a *ProcessGroupsApiService) CreateControllerServiceExecute(r ProcessGroupsApiApiCreateControllerServiceRequest) (ControllerServiceEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -206,13 +303,20 @@ func (a *ProcessGroupsApiService) CreateControllerService(ctx _context.Context, 
 		localVarReturnValue  ControllerServiceEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/controller-services"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateControllerService")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/controller-services"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -232,19 +336,20 @@ func (a *ProcessGroupsApiService) CreateControllerService(ctx _context.Context, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -269,14 +374,145 @@ func (a *ProcessGroupsApiService) CreateControllerService(ctx _context.Context, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateEmptyAllConnectionsRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiCreateEmptyAllConnectionsRequestRequest) Execute() (ProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateEmptyAllConnectionsRequestExecute(r)
+}
+
 /*
-CreateFunnel Creates a funnel
+ * CreateEmptyAllConnectionsRequest Creates a request to drop all flowfiles of all connection queues in this process group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The funnel configuration details.
-@return FunnelEntity
-*/
-func (a *ProcessGroupsApiService) CreateFunnel(ctx _context.Context, id string, body FunnelEntity) (FunnelEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateEmptyAllConnectionsRequestRequest
+ */
+func (a *ProcessGroupsApiService) CreateEmptyAllConnectionsRequest(ctx _context.Context, id string) ProcessGroupsApiApiCreateEmptyAllConnectionsRequestRequest {
+	return ProcessGroupsApiApiCreateEmptyAllConnectionsRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupEntity
+ */
+func (a *ProcessGroupsApiService) CreateEmptyAllConnectionsRequestExecute(r ProcessGroupsApiApiCreateEmptyAllConnectionsRequestRequest) (ProcessGroupEntity, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  ProcessGroupEntity
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateEmptyAllConnectionsRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/empty-all-connections-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProcessGroupsApiApiCreateFunnelRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *FunnelEntity
+}
+
+func (r ProcessGroupsApiApiCreateFunnelRequest) Body(body FunnelEntity) ProcessGroupsApiApiCreateFunnelRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateFunnelRequest) Execute() (FunnelEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateFunnelExecute(r)
+}
+
+/*
+ * CreateFunnel Creates a funnel
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param id The process group id.
+ * @return ProcessGroupsApiApiCreateFunnelRequest
+ */
+func (a *ProcessGroupsApiService) CreateFunnel(ctx _context.Context, id string) ProcessGroupsApiApiCreateFunnelRequest {
+	return ProcessGroupsApiApiCreateFunnelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FunnelEntity
+ */
+func (a *ProcessGroupsApiService) CreateFunnelExecute(r ProcessGroupsApiApiCreateFunnelRequest) (FunnelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -286,13 +522,20 @@ func (a *ProcessGroupsApiService) CreateFunnel(ctx _context.Context, id string, 
 		localVarReturnValue  FunnelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/funnels"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateFunnel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/funnels"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -312,19 +555,20 @@ func (a *ProcessGroupsApiService) CreateFunnel(ctx _context.Context, id string, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -349,14 +593,41 @@ func (a *ProcessGroupsApiService) CreateFunnel(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateInputPortRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *PortEntity
+}
+
+func (r ProcessGroupsApiApiCreateInputPortRequest) Body(body PortEntity) ProcessGroupsApiApiCreateInputPortRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateInputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateInputPortExecute(r)
+}
+
 /*
-CreateInputPort Creates an input port
+ * CreateInputPort Creates an input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The input port configuration details.
-@return PortEntity
-*/
-func (a *ProcessGroupsApiService) CreateInputPort(ctx _context.Context, id string, body PortEntity) (PortEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateInputPortRequest
+ */
+func (a *ProcessGroupsApiService) CreateInputPort(ctx _context.Context, id string) ProcessGroupsApiApiCreateInputPortRequest {
+	return ProcessGroupsApiApiCreateInputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *ProcessGroupsApiService) CreateInputPortExecute(r ProcessGroupsApiApiCreateInputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -366,13 +637,20 @@ func (a *ProcessGroupsApiService) CreateInputPort(ctx _context.Context, id strin
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/input-ports"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateInputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/input-ports"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -392,19 +670,20 @@ func (a *ProcessGroupsApiService) CreateInputPort(ctx _context.Context, id strin
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -429,14 +708,41 @@ func (a *ProcessGroupsApiService) CreateInputPort(ctx _context.Context, id strin
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateLabelRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *LabelEntity
+}
+
+func (r ProcessGroupsApiApiCreateLabelRequest) Body(body LabelEntity) ProcessGroupsApiApiCreateLabelRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateLabelRequest) Execute() (LabelEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateLabelExecute(r)
+}
+
 /*
-CreateLabel Creates a label
+ * CreateLabel Creates a label
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The label configuration details.
-@return LabelEntity
-*/
-func (a *ProcessGroupsApiService) CreateLabel(ctx _context.Context, id string, body LabelEntity) (LabelEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateLabelRequest
+ */
+func (a *ProcessGroupsApiService) CreateLabel(ctx _context.Context, id string) ProcessGroupsApiApiCreateLabelRequest {
+	return ProcessGroupsApiApiCreateLabelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LabelEntity
+ */
+func (a *ProcessGroupsApiService) CreateLabelExecute(r ProcessGroupsApiApiCreateLabelRequest) (LabelEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -446,13 +752,20 @@ func (a *ProcessGroupsApiService) CreateLabel(ctx _context.Context, id string, b
 		localVarReturnValue  LabelEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/labels"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateLabel")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/labels"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -472,19 +785,20 @@ func (a *ProcessGroupsApiService) CreateLabel(ctx _context.Context, id string, b
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -509,14 +823,41 @@ func (a *ProcessGroupsApiService) CreateLabel(ctx _context.Context, id string, b
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateOutputPortRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *PortEntity
+}
+
+func (r ProcessGroupsApiApiCreateOutputPortRequest) Body(body PortEntity) ProcessGroupsApiApiCreateOutputPortRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateOutputPortRequest) Execute() (PortEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateOutputPortExecute(r)
+}
+
 /*
-CreateOutputPort Creates an output port
+ * CreateOutputPort Creates an output port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The output port configuration.
-@return PortEntity
-*/
-func (a *ProcessGroupsApiService) CreateOutputPort(ctx _context.Context, id string, body PortEntity) (PortEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateOutputPortRequest
+ */
+func (a *ProcessGroupsApiService) CreateOutputPort(ctx _context.Context, id string) ProcessGroupsApiApiCreateOutputPortRequest {
+	return ProcessGroupsApiApiCreateOutputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PortEntity
+ */
+func (a *ProcessGroupsApiService) CreateOutputPortExecute(r ProcessGroupsApiApiCreateOutputPortRequest) (PortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -526,13 +867,20 @@ func (a *ProcessGroupsApiService) CreateOutputPort(ctx _context.Context, id stri
 		localVarReturnValue  PortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/output-ports"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateOutputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/output-ports"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -552,19 +900,20 @@ func (a *ProcessGroupsApiService) CreateOutputPort(ctx _context.Context, id stri
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -589,14 +938,41 @@ func (a *ProcessGroupsApiService) CreateOutputPort(ctx _context.Context, id stri
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ProcessGroupEntity
+}
+
+func (r ProcessGroupsApiApiCreateProcessGroupRequest) Body(body ProcessGroupEntity) ProcessGroupsApiApiCreateProcessGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateProcessGroupRequest) Execute() (ProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateProcessGroupExecute(r)
+}
+
 /*
-CreateProcessGroup Creates a process group
+ * CreateProcessGroup Creates a process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The process group configuration details.
-@return ProcessGroupEntity
-*/
-func (a *ProcessGroupsApiService) CreateProcessGroup(ctx _context.Context, id string, body ProcessGroupEntity) (ProcessGroupEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) CreateProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiCreateProcessGroupRequest {
+	return ProcessGroupsApiApiCreateProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupEntity
+ */
+func (a *ProcessGroupsApiService) CreateProcessGroupExecute(r ProcessGroupsApiApiCreateProcessGroupRequest) (ProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -606,13 +982,20 @@ func (a *ProcessGroupsApiService) CreateProcessGroup(ctx _context.Context, id st
 		localVarReturnValue  ProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/process-groups"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/process-groups"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -632,19 +1015,20 @@ func (a *ProcessGroupsApiService) CreateProcessGroup(ctx _context.Context, id st
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -669,14 +1053,41 @@ func (a *ProcessGroupsApiService) CreateProcessGroup(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateProcessorRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ProcessorEntity
+}
+
+func (r ProcessGroupsApiApiCreateProcessorRequest) Body(body ProcessorEntity) ProcessGroupsApiApiCreateProcessorRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateProcessorRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateProcessorExecute(r)
+}
+
 /*
-CreateProcessor Creates a new processor
+ * CreateProcessor Creates a new processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The processor configuration details.
-@return ProcessorEntity
-*/
-func (a *ProcessGroupsApiService) CreateProcessor(ctx _context.Context, id string, body ProcessorEntity) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateProcessorRequest
+ */
+func (a *ProcessGroupsApiService) CreateProcessor(ctx _context.Context, id string) ProcessGroupsApiApiCreateProcessorRequest {
+	return ProcessGroupsApiApiCreateProcessorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessGroupsApiService) CreateProcessorExecute(r ProcessGroupsApiApiCreateProcessorRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -686,13 +1097,20 @@ func (a *ProcessGroupsApiService) CreateProcessor(ctx _context.Context, id strin
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/processors"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateProcessor")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/processors"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -712,19 +1130,20 @@ func (a *ProcessGroupsApiService) CreateProcessor(ctx _context.Context, id strin
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -749,14 +1168,41 @@ func (a *ProcessGroupsApiService) CreateProcessor(ctx _context.Context, id strin
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateRemoteProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *RemoteProcessGroupEntity
+}
+
+func (r ProcessGroupsApiApiCreateRemoteProcessGroupRequest) Body(body RemoteProcessGroupEntity) ProcessGroupsApiApiCreateRemoteProcessGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateRemoteProcessGroupRequest) Execute() (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateRemoteProcessGroupExecute(r)
+}
+
 /*
-CreateRemoteProcessGroup Creates a new process group
+ * CreateRemoteProcessGroup Creates a new process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The remote process group configuration details.
-@return RemoteProcessGroupEntity
-*/
-func (a *ProcessGroupsApiService) CreateRemoteProcessGroup(ctx _context.Context, id string, body RemoteProcessGroupEntity) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateRemoteProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) CreateRemoteProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiCreateRemoteProcessGroupRequest {
+	return ProcessGroupsApiApiCreateRemoteProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupEntity
+ */
+func (a *ProcessGroupsApiService) CreateRemoteProcessGroupExecute(r ProcessGroupsApiApiCreateRemoteProcessGroupRequest) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -766,13 +1212,20 @@ func (a *ProcessGroupsApiService) CreateRemoteProcessGroup(ctx _context.Context,
 		localVarReturnValue  RemoteProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/remote-process-groups"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateRemoteProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/remote-process-groups"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -792,19 +1245,20 @@ func (a *ProcessGroupsApiService) CreateRemoteProcessGroup(ctx _context.Context,
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -829,14 +1283,41 @@ func (a *ProcessGroupsApiService) CreateRemoteProcessGroup(ctx _context.Context,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiCreateTemplateRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *CreateTemplateRequestEntity
+}
+
+func (r ProcessGroupsApiApiCreateTemplateRequest) Body(body CreateTemplateRequestEntity) ProcessGroupsApiApiCreateTemplateRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiCreateTemplateRequest) Execute() (TemplateEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreateTemplateExecute(r)
+}
+
 /*
-CreateTemplate Creates a template and discards the specified snippet.
+ * CreateTemplate Creates a template and discards the specified snippet.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The create template request.
-@return TemplateEntity
-*/
-func (a *ProcessGroupsApiService) CreateTemplate(ctx _context.Context, id string, body CreateTemplateRequestEntity) (TemplateEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiCreateTemplateRequest
+ */
+func (a *ProcessGroupsApiService) CreateTemplate(ctx _context.Context, id string) ProcessGroupsApiApiCreateTemplateRequest {
+	return ProcessGroupsApiApiCreateTemplateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TemplateEntity
+ */
+func (a *ProcessGroupsApiService) CreateTemplateExecute(r ProcessGroupsApiApiCreateTemplateRequest) (TemplateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -846,13 +1327,20 @@ func (a *ProcessGroupsApiService) CreateTemplate(ctx _context.Context, id string
 		localVarReturnValue  TemplateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/templates"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.CreateTemplate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/templates"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -872,19 +1360,20 @@ func (a *ProcessGroupsApiService) CreateTemplate(ctx _context.Context, id string
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -909,21 +1398,42 @@ func (a *ProcessGroupsApiService) CreateTemplate(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessGroupsApiDeleteReplaceProcessGroupRequestOpts Optional parameters for the method 'DeleteReplaceProcessGroupRequest'
-type ProcessGroupsApiDeleteReplaceProcessGroupRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ProcessGroupsApiService
+	id                           string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest) Execute() (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteReplaceProcessGroupRequestExecute(r)
 }
 
 /*
-DeleteReplaceProcessGroupRequest Deletes the Replace Request with the given ID
-Deletes the Replace Request with the given ID. After a request is created via a POST to /process-groups/{id}/replace-requests, it is expected that the client will properly clean up the request by DELETE&#39;ing it, once the Replace process has completed. If the request is deleted before the request completes, then the Replace request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * DeleteReplaceProcessGroupRequest Deletes the Replace Request with the given ID
+ * Deletes the Replace Request with the given ID. After a request is created via a POST to /process-groups/{id}/replace-requests, it is expected that the client will properly clean up the request by DELETE'ing it, once the Replace process has completed. If the request is deleted before the request completes, then the Replace request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Update Request
- * @param optional nil or *ProcessGroupsApiDeleteReplaceProcessGroupRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ProcessGroupReplaceRequestEntity
-*/
-func (a *ProcessGroupsApiService) DeleteReplaceProcessGroupRequest(ctx _context.Context, id string, localVarOptionals *ProcessGroupsApiDeleteReplaceProcessGroupRequestOpts) (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest
+ */
+func (a *ProcessGroupsApiService) DeleteReplaceProcessGroupRequest(ctx _context.Context, id string) ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest {
+	return ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupReplaceRequestEntity
+ */
+func (a *ProcessGroupsApiService) DeleteReplaceProcessGroupRequestExecute(r ProcessGroupsApiApiDeleteReplaceProcessGroupRequestRequest) (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -933,16 +1443,20 @@ func (a *ProcessGroupsApiService) DeleteReplaceProcessGroupRequest(ctx _context.
 		localVarReturnValue  ProcessGroupReplaceRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/replace-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.DeleteReplaceProcessGroupRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/replace-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -961,18 +1475,19 @@ func (a *ProcessGroupsApiService) DeleteReplaceProcessGroupRequest(ctx _context.
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -997,22 +1512,45 @@ func (a *ProcessGroupsApiService) DeleteReplaceProcessGroupRequest(ctx _context.
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessGroupsApiDeleteVariableRegistryUpdateRequestOpts Optional parameters for the method 'DeleteVariableRegistryUpdateRequest'
-type ProcessGroupsApiDeleteVariableRegistryUpdateRequestOpts struct {
-	DisconnectedNodeAcknowledged optional.Bool
+type ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ProcessGroupsApiService
+	groupId                      string
+	updateId                     string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest) Execute() (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteVariableRegistryUpdateRequestExecute(r)
 }
 
 /*
-DeleteVariableRegistryUpdateRequest Deletes an update request for a process group's variable registry. If the request is not yet complete, it will automatically be cancelled.
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * DeleteVariableRegistryUpdateRequest Deletes an update request for a process group's variable registry. If the request is not yet complete, it will automatically be cancelled.
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param groupId The process group id.
  * @param updateId The ID of the Variable Registry Update Request
- * @param optional nil or *ProcessGroupsApiDeleteVariableRegistryUpdateRequestOpts - Optional Parameters:
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return VariableRegistryUpdateRequestEntity
-*/
-func (a *ProcessGroupsApiService) DeleteVariableRegistryUpdateRequest(ctx _context.Context, groupId string, updateId string, localVarOptionals *ProcessGroupsApiDeleteVariableRegistryUpdateRequestOpts) (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest
+ */
+func (a *ProcessGroupsApiService) DeleteVariableRegistryUpdateRequest(ctx _context.Context, groupId string, updateId string) ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest {
+	return ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		groupId:    groupId,
+		updateId:   updateId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VariableRegistryUpdateRequestEntity
+ */
+func (a *ProcessGroupsApiService) DeleteVariableRegistryUpdateRequestExecute(r ProcessGroupsApiApiDeleteVariableRegistryUpdateRequestRequest) (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1022,18 +1560,21 @@ func (a *ProcessGroupsApiService) DeleteVariableRegistryUpdateRequest(ctx _conte
 		localVarReturnValue  VariableRegistryUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{groupId}/variable-registry/update-requests/{updateId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"groupId"+"}", _neturl.QueryEscape(parameterToString(groupId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.DeleteVariableRegistryUpdateRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"updateId"+"}", _neturl.QueryEscape(parameterToString(updateId, "")), -1)
+	localVarPath := localBasePath + "/process-groups/{groupId}/variable-registry/update-requests/{updateId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"groupId"+"}", _neturl.PathEscape(parameterToString(r.groupId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"updateId"+"}", _neturl.PathEscape(parameterToString(r.updateId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1052,18 +1593,19 @@ func (a *ProcessGroupsApiService) DeleteVariableRegistryUpdateRequest(ctx _conte
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1088,13 +1630,35 @@ func (a *ProcessGroupsApiService) DeleteVariableRegistryUpdateRequest(ctx _conte
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiExportProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiExportProcessGroupRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.ExportProcessGroupExecute(r)
+}
+
 /*
-ExportProcessGroup Gets a process group for download
+ * ExportProcessGroup Gets a process group for download
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return string
-*/
-func (a *ProcessGroupsApiService) ExportProcessGroup(ctx _context.Context, id string) (string, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiExportProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) ExportProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiExportProcessGroupRequest {
+	return ProcessGroupsApiApiExportProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *ProcessGroupsApiService) ExportProcessGroupExecute(r ProcessGroupsApiApiExportProcessGroupRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1104,9 +1668,13 @@ func (a *ProcessGroupsApiService) ExportProcessGroup(ctx _context.Context, id st
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/download"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.ExportProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/download"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1129,18 +1697,19 @@ func (a *ProcessGroupsApiService) ExportProcessGroup(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1165,13 +1734,35 @@ func (a *ProcessGroupsApiService) ExportProcessGroup(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetConnectionsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetConnectionsRequest) Execute() (ConnectionsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetConnectionsExecute(r)
+}
+
 /*
-GetConnections Gets all connections
+ * GetConnections Gets all connections
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return ConnectionsEntity
-*/
-func (a *ProcessGroupsApiService) GetConnections(ctx _context.Context, id string) (ConnectionsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetConnectionsRequest
+ */
+func (a *ProcessGroupsApiService) GetConnections(ctx _context.Context, id string) ProcessGroupsApiApiGetConnectionsRequest {
+	return ProcessGroupsApiApiGetConnectionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionsEntity
+ */
+func (a *ProcessGroupsApiService) GetConnectionsExecute(r ProcessGroupsApiApiGetConnectionsRequest) (ConnectionsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1181,9 +1772,13 @@ func (a *ProcessGroupsApiService) GetConnections(ctx _context.Context, id string
 		localVarReturnValue  ConnectionsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/connections"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetConnections")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/connections"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1206,18 +1801,19 @@ func (a *ProcessGroupsApiService) GetConnections(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1242,13 +1838,143 @@ func (a *ProcessGroupsApiService) GetConnections(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetDropAllFlowfilesRequestRequest struct {
+	ctx           _context.Context
+	ApiService    *ProcessGroupsApiService
+	id            string
+	dropRequestId string
+}
+
+func (r ProcessGroupsApiApiGetDropAllFlowfilesRequestRequest) Execute() (DropRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetDropAllFlowfilesRequestExecute(r)
+}
+
 /*
-GetFunnels Gets all funnels
+ * GetDropAllFlowfilesRequest Gets the current status of a drop all flowfiles request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return FunnelsEntity
-*/
-func (a *ProcessGroupsApiService) GetFunnels(ctx _context.Context, id string) (FunnelsEntity, *_nethttp.Response, error) {
+ * @param dropRequestId The drop request id.
+ * @return ProcessGroupsApiApiGetDropAllFlowfilesRequestRequest
+ */
+func (a *ProcessGroupsApiService) GetDropAllFlowfilesRequest(ctx _context.Context, id string, dropRequestId string) ProcessGroupsApiApiGetDropAllFlowfilesRequestRequest {
+	return ProcessGroupsApiApiGetDropAllFlowfilesRequestRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		id:            id,
+		dropRequestId: dropRequestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return DropRequestEntity
+ */
+func (a *ProcessGroupsApiService) GetDropAllFlowfilesRequestExecute(r ProcessGroupsApiApiGetDropAllFlowfilesRequestRequest) (DropRequestEntity, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  DropRequestEntity
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetDropAllFlowfilesRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/empty-all-connections-requests/{drop-request-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"drop-request-id"+"}", _neturl.PathEscape(parameterToString(r.dropRequestId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProcessGroupsApiApiGetFunnelsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetFunnelsRequest) Execute() (FunnelsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetFunnelsExecute(r)
+}
+
+/*
+ * GetFunnels Gets all funnels
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param id The process group id.
+ * @return ProcessGroupsApiApiGetFunnelsRequest
+ */
+func (a *ProcessGroupsApiService) GetFunnels(ctx _context.Context, id string) ProcessGroupsApiApiGetFunnelsRequest {
+	return ProcessGroupsApiApiGetFunnelsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FunnelsEntity
+ */
+func (a *ProcessGroupsApiService) GetFunnelsExecute(r ProcessGroupsApiApiGetFunnelsRequest) (FunnelsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1258,9 +1984,13 @@ func (a *ProcessGroupsApiService) GetFunnels(ctx _context.Context, id string) (F
 		localVarReturnValue  FunnelsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/funnels"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetFunnels")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/funnels"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1283,18 +2013,19 @@ func (a *ProcessGroupsApiService) GetFunnels(ctx _context.Context, id string) (F
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1319,13 +2050,35 @@ func (a *ProcessGroupsApiService) GetFunnels(ctx _context.Context, id string) (F
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetInputPortsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetInputPortsRequest) Execute() (InputPortsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetInputPortsExecute(r)
+}
+
 /*
-GetInputPorts Gets all input ports
+ * GetInputPorts Gets all input ports
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return InputPortsEntity
-*/
-func (a *ProcessGroupsApiService) GetInputPorts(ctx _context.Context, id string) (InputPortsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetInputPortsRequest
+ */
+func (a *ProcessGroupsApiService) GetInputPorts(ctx _context.Context, id string) ProcessGroupsApiApiGetInputPortsRequest {
+	return ProcessGroupsApiApiGetInputPortsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return InputPortsEntity
+ */
+func (a *ProcessGroupsApiService) GetInputPortsExecute(r ProcessGroupsApiApiGetInputPortsRequest) (InputPortsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1335,9 +2088,13 @@ func (a *ProcessGroupsApiService) GetInputPorts(ctx _context.Context, id string)
 		localVarReturnValue  InputPortsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/input-ports"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetInputPorts")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/input-ports"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1360,18 +2117,19 @@ func (a *ProcessGroupsApiService) GetInputPorts(ctx _context.Context, id string)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1396,13 +2154,35 @@ func (a *ProcessGroupsApiService) GetInputPorts(ctx _context.Context, id string)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetLabelsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetLabelsRequest) Execute() (LabelsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetLabelsExecute(r)
+}
+
 /*
-GetLabels Gets all labels
+ * GetLabels Gets all labels
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return LabelsEntity
-*/
-func (a *ProcessGroupsApiService) GetLabels(ctx _context.Context, id string) (LabelsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetLabelsRequest
+ */
+func (a *ProcessGroupsApiService) GetLabels(ctx _context.Context, id string) ProcessGroupsApiApiGetLabelsRequest {
+	return ProcessGroupsApiApiGetLabelsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return LabelsEntity
+ */
+func (a *ProcessGroupsApiService) GetLabelsExecute(r ProcessGroupsApiApiGetLabelsRequest) (LabelsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1412,9 +2192,13 @@ func (a *ProcessGroupsApiService) GetLabels(ctx _context.Context, id string) (La
 		localVarReturnValue  LabelsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/labels"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetLabels")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/labels"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1437,18 +2221,19 @@ func (a *ProcessGroupsApiService) GetLabels(ctx _context.Context, id string) (La
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1473,13 +2258,35 @@ func (a *ProcessGroupsApiService) GetLabels(ctx _context.Context, id string) (La
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetLocalModificationsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetLocalModificationsRequest) Execute() (FlowComparisonEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetLocalModificationsExecute(r)
+}
+
 /*
-GetLocalModifications Gets a list of local modifications to the Process Group since it was last synchronized with the Flow Registry
+ * GetLocalModifications Gets a list of local modifications to the Process Group since it was last synchronized with the Flow Registry
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return FlowComparisonEntity
-*/
-func (a *ProcessGroupsApiService) GetLocalModifications(ctx _context.Context, id string) (FlowComparisonEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetLocalModificationsRequest
+ */
+func (a *ProcessGroupsApiService) GetLocalModifications(ctx _context.Context, id string) ProcessGroupsApiApiGetLocalModificationsRequest {
+	return ProcessGroupsApiApiGetLocalModificationsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FlowComparisonEntity
+ */
+func (a *ProcessGroupsApiService) GetLocalModificationsExecute(r ProcessGroupsApiApiGetLocalModificationsRequest) (FlowComparisonEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1489,9 +2296,13 @@ func (a *ProcessGroupsApiService) GetLocalModifications(ctx _context.Context, id
 		localVarReturnValue  FlowComparisonEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/local-modifications"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetLocalModifications")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/local-modifications"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1514,18 +2325,19 @@ func (a *ProcessGroupsApiService) GetLocalModifications(ctx _context.Context, id
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1550,13 +2362,35 @@ func (a *ProcessGroupsApiService) GetLocalModifications(ctx _context.Context, id
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetOutputPortsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetOutputPortsRequest) Execute() (OutputPortsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetOutputPortsExecute(r)
+}
+
 /*
-GetOutputPorts Gets all output ports
+ * GetOutputPorts Gets all output ports
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return OutputPortsEntity
-*/
-func (a *ProcessGroupsApiService) GetOutputPorts(ctx _context.Context, id string) (OutputPortsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetOutputPortsRequest
+ */
+func (a *ProcessGroupsApiService) GetOutputPorts(ctx _context.Context, id string) ProcessGroupsApiApiGetOutputPortsRequest {
+	return ProcessGroupsApiApiGetOutputPortsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return OutputPortsEntity
+ */
+func (a *ProcessGroupsApiService) GetOutputPortsExecute(r ProcessGroupsApiApiGetOutputPortsRequest) (OutputPortsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1566,9 +2400,13 @@ func (a *ProcessGroupsApiService) GetOutputPorts(ctx _context.Context, id string
 		localVarReturnValue  OutputPortsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/output-ports"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetOutputPorts")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/output-ports"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1591,18 +2429,19 @@ func (a *ProcessGroupsApiService) GetOutputPorts(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1627,13 +2466,35 @@ func (a *ProcessGroupsApiService) GetOutputPorts(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetProcessGroupRequest) Execute() (ProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessGroupExecute(r)
+}
+
 /*
-GetProcessGroup Gets a process group
+ * GetProcessGroup Gets a process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return ProcessGroupEntity
-*/
-func (a *ProcessGroupsApiService) GetProcessGroup(ctx _context.Context, id string) (ProcessGroupEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) GetProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiGetProcessGroupRequest {
+	return ProcessGroupsApiApiGetProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupEntity
+ */
+func (a *ProcessGroupsApiService) GetProcessGroupExecute(r ProcessGroupsApiApiGetProcessGroupRequest) (ProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1643,9 +2504,13 @@ func (a *ProcessGroupsApiService) GetProcessGroup(ctx _context.Context, id strin
 		localVarReturnValue  ProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1668,18 +2533,19 @@ func (a *ProcessGroupsApiService) GetProcessGroup(ctx _context.Context, id strin
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1704,13 +2570,35 @@ func (a *ProcessGroupsApiService) GetProcessGroup(ctx _context.Context, id strin
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetProcessGroupsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetProcessGroupsRequest) Execute() (ProcessGroupsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessGroupsExecute(r)
+}
+
 /*
-GetProcessGroups Gets all process groups
+ * GetProcessGroups Gets all process groups
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return ProcessGroupsEntity
-*/
-func (a *ProcessGroupsApiService) GetProcessGroups(ctx _context.Context, id string) (ProcessGroupsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetProcessGroupsRequest
+ */
+func (a *ProcessGroupsApiService) GetProcessGroups(ctx _context.Context, id string) ProcessGroupsApiApiGetProcessGroupsRequest {
+	return ProcessGroupsApiApiGetProcessGroupsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupsEntity
+ */
+func (a *ProcessGroupsApiService) GetProcessGroupsExecute(r ProcessGroupsApiApiGetProcessGroupsRequest) (ProcessGroupsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1720,9 +2608,13 @@ func (a *ProcessGroupsApiService) GetProcessGroups(ctx _context.Context, id stri
 		localVarReturnValue  ProcessGroupsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/process-groups"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetProcessGroups")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/process-groups"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1745,18 +2637,19 @@ func (a *ProcessGroupsApiService) GetProcessGroups(ctx _context.Context, id stri
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1781,20 +2674,41 @@ func (a *ProcessGroupsApiService) GetProcessGroups(ctx _context.Context, id stri
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessGroupsApiGetProcessorsOpts Optional parameters for the method 'GetProcessors'
-type ProcessGroupsApiGetProcessorsOpts struct {
-	IncludeDescendantGroups optional.Bool
+type ProcessGroupsApiApiGetProcessorsRequest struct {
+	ctx                     _context.Context
+	ApiService              *ProcessGroupsApiService
+	id                      string
+	includeDescendantGroups *bool
+}
+
+func (r ProcessGroupsApiApiGetProcessorsRequest) IncludeDescendantGroups(includeDescendantGroups bool) ProcessGroupsApiApiGetProcessorsRequest {
+	r.includeDescendantGroups = &includeDescendantGroups
+	return r
+}
+
+func (r ProcessGroupsApiApiGetProcessorsRequest) Execute() (ProcessorsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorsExecute(r)
 }
 
 /*
-GetProcessors Gets all processors
+ * GetProcessors Gets all processors
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param optional nil or *ProcessGroupsApiGetProcessorsOpts - Optional Parameters:
- * @param "IncludeDescendantGroups" (optional.Bool) -  Whether or not to include processors from descendant process groups
-@return ProcessorsEntity
-*/
-func (a *ProcessGroupsApiService) GetProcessors(ctx _context.Context, id string, localVarOptionals *ProcessGroupsApiGetProcessorsOpts) (ProcessorsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetProcessorsRequest
+ */
+func (a *ProcessGroupsApiService) GetProcessors(ctx _context.Context, id string) ProcessGroupsApiApiGetProcessorsRequest {
+	return ProcessGroupsApiApiGetProcessorsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorsEntity
+ */
+func (a *ProcessGroupsApiService) GetProcessorsExecute(r ProcessGroupsApiApiGetProcessorsRequest) (ProcessorsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1804,16 +2718,20 @@ func (a *ProcessGroupsApiService) GetProcessors(ctx _context.Context, id string,
 		localVarReturnValue  ProcessorsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/processors"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetProcessors")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/processors"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.IncludeDescendantGroups.IsSet() {
-		localVarQueryParams.Add("includeDescendantGroups", parameterToString(localVarOptionals.IncludeDescendantGroups.Value(), ""))
+	if r.includeDescendantGroups != nil {
+		localVarQueryParams.Add("includeDescendantGroups", parameterToString(*r.includeDescendantGroups, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1832,18 +2750,19 @@ func (a *ProcessGroupsApiService) GetProcessors(ctx _context.Context, id string,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1868,13 +2787,35 @@ func (a *ProcessGroupsApiService) GetProcessors(ctx _context.Context, id string,
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetRemoteProcessGroupsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetRemoteProcessGroupsRequest) Execute() (RemoteProcessGroupsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRemoteProcessGroupsExecute(r)
+}
+
 /*
-GetRemoteProcessGroups Gets all remote process groups
+ * GetRemoteProcessGroups Gets all remote process groups
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return RemoteProcessGroupsEntity
-*/
-func (a *ProcessGroupsApiService) GetRemoteProcessGroups(ctx _context.Context, id string) (RemoteProcessGroupsEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetRemoteProcessGroupsRequest
+ */
+func (a *ProcessGroupsApiService) GetRemoteProcessGroups(ctx _context.Context, id string) ProcessGroupsApiApiGetRemoteProcessGroupsRequest {
+	return ProcessGroupsApiApiGetRemoteProcessGroupsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupsEntity
+ */
+func (a *ProcessGroupsApiService) GetRemoteProcessGroupsExecute(r ProcessGroupsApiApiGetRemoteProcessGroupsRequest) (RemoteProcessGroupsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1884,9 +2825,13 @@ func (a *ProcessGroupsApiService) GetRemoteProcessGroups(ctx _context.Context, i
 		localVarReturnValue  RemoteProcessGroupsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/remote-process-groups"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetRemoteProcessGroups")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/remote-process-groups"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1909,18 +2854,19 @@ func (a *ProcessGroupsApiService) GetRemoteProcessGroups(ctx _context.Context, i
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1945,14 +2891,36 @@ func (a *ProcessGroupsApiService) GetRemoteProcessGroups(ctx _context.Context, i
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetReplaceProcessGroupRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiGetReplaceProcessGroupRequestRequest) Execute() (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetReplaceProcessGroupRequestExecute(r)
+}
+
 /*
-GetReplaceProcessGroupRequest Returns the Replace Request with the given ID
-Returns the Replace Request with the given ID. Once a Replace Request has been created by performing a POST to /process-groups/{id}/replace-requests, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetReplaceProcessGroupRequest Returns the Replace Request with the given ID
+ * Returns the Replace Request with the given ID. Once a Replace Request has been created by performing a POST to /process-groups/{id}/replace-requests, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The ID of the Replace Request
-@return ProcessGroupReplaceRequestEntity
-*/
-func (a *ProcessGroupsApiService) GetReplaceProcessGroupRequest(ctx _context.Context, id string) (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetReplaceProcessGroupRequestRequest
+ */
+func (a *ProcessGroupsApiService) GetReplaceProcessGroupRequest(ctx _context.Context, id string) ProcessGroupsApiApiGetReplaceProcessGroupRequestRequest {
+	return ProcessGroupsApiApiGetReplaceProcessGroupRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupReplaceRequestEntity
+ */
+func (a *ProcessGroupsApiService) GetReplaceProcessGroupRequestExecute(r ProcessGroupsApiApiGetReplaceProcessGroupRequestRequest) (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1962,9 +2930,13 @@ func (a *ProcessGroupsApiService) GetReplaceProcessGroupRequest(ctx _context.Con
 		localVarReturnValue  ProcessGroupReplaceRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/replace-requests/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetReplaceProcessGroupRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/replace-requests/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1987,18 +2959,19 @@ func (a *ProcessGroupsApiService) GetReplaceProcessGroupRequest(ctx _context.Con
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2023,21 +2996,42 @@ func (a *ProcessGroupsApiService) GetReplaceProcessGroupRequest(ctx _context.Con
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessGroupsApiGetVariableRegistryOpts Optional parameters for the method 'GetVariableRegistry'
-type ProcessGroupsApiGetVariableRegistryOpts struct {
-	IncludeAncestorGroups optional.Bool
+type ProcessGroupsApiApiGetVariableRegistryRequest struct {
+	ctx                   _context.Context
+	ApiService            *ProcessGroupsApiService
+	id                    string
+	includeAncestorGroups *bool
+}
+
+func (r ProcessGroupsApiApiGetVariableRegistryRequest) IncludeAncestorGroups(includeAncestorGroups bool) ProcessGroupsApiApiGetVariableRegistryRequest {
+	r.includeAncestorGroups = &includeAncestorGroups
+	return r
+}
+
+func (r ProcessGroupsApiApiGetVariableRegistryRequest) Execute() (VariableRegistryEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetVariableRegistryExecute(r)
 }
 
 /*
-GetVariableRegistry Gets a process group's variable registry
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetVariableRegistry Gets a process group's variable registry
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param optional nil or *ProcessGroupsApiGetVariableRegistryOpts - Optional Parameters:
- * @param "IncludeAncestorGroups" (optional.Bool) -  Whether or not to include ancestor groups
-@return VariableRegistryEntity
-*/
-func (a *ProcessGroupsApiService) GetVariableRegistry(ctx _context.Context, id string, localVarOptionals *ProcessGroupsApiGetVariableRegistryOpts) (VariableRegistryEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetVariableRegistryRequest
+ */
+func (a *ProcessGroupsApiService) GetVariableRegistry(ctx _context.Context, id string) ProcessGroupsApiApiGetVariableRegistryRequest {
+	return ProcessGroupsApiApiGetVariableRegistryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VariableRegistryEntity
+ */
+func (a *ProcessGroupsApiService) GetVariableRegistryExecute(r ProcessGroupsApiApiGetVariableRegistryRequest) (VariableRegistryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2047,16 +3041,20 @@ func (a *ProcessGroupsApiService) GetVariableRegistry(ctx _context.Context, id s
 		localVarReturnValue  VariableRegistryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/variable-registry"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetVariableRegistry")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/variable-registry"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.IncludeAncestorGroups.IsSet() {
-		localVarQueryParams.Add("includeAncestorGroups", parameterToString(localVarOptionals.IncludeAncestorGroups.Value(), ""))
+	if r.includeAncestorGroups != nil {
+		localVarQueryParams.Add("includeAncestorGroups", parameterToString(*r.includeAncestorGroups, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2075,18 +3073,19 @@ func (a *ProcessGroupsApiService) GetVariableRegistry(ctx _context.Context, id s
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2111,15 +3110,39 @@ func (a *ProcessGroupsApiService) GetVariableRegistry(ctx _context.Context, id s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiGetVariableRegistryUpdateRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	groupId    string
+	updateId   string
+}
+
+func (r ProcessGroupsApiApiGetVariableRegistryUpdateRequestRequest) Execute() (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetVariableRegistryUpdateRequestExecute(r)
+}
+
 /*
-GetVariableRegistryUpdateRequest Gets a process group's variable registry
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetVariableRegistryUpdateRequest Gets a process group's variable registry
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param groupId The process group id.
  * @param updateId The ID of the Variable Registry Update Request
-@return VariableRegistryUpdateRequestEntity
-*/
-func (a *ProcessGroupsApiService) GetVariableRegistryUpdateRequest(ctx _context.Context, groupId string, updateId string) (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiGetVariableRegistryUpdateRequestRequest
+ */
+func (a *ProcessGroupsApiService) GetVariableRegistryUpdateRequest(ctx _context.Context, groupId string, updateId string) ProcessGroupsApiApiGetVariableRegistryUpdateRequestRequest {
+	return ProcessGroupsApiApiGetVariableRegistryUpdateRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		groupId:    groupId,
+		updateId:   updateId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VariableRegistryUpdateRequestEntity
+ */
+func (a *ProcessGroupsApiService) GetVariableRegistryUpdateRequestExecute(r ProcessGroupsApiApiGetVariableRegistryUpdateRequestRequest) (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2129,11 +3152,14 @@ func (a *ProcessGroupsApiService) GetVariableRegistryUpdateRequest(ctx _context.
 		localVarReturnValue  VariableRegistryUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{groupId}/variable-registry/update-requests/{updateId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"groupId"+"}", _neturl.QueryEscape(parameterToString(groupId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.GetVariableRegistryUpdateRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"updateId"+"}", _neturl.QueryEscape(parameterToString(updateId, "")), -1)
+	localVarPath := localBasePath + "/process-groups/{groupId}/variable-registry/update-requests/{updateId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"groupId"+"}", _neturl.PathEscape(parameterToString(r.groupId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"updateId"+"}", _neturl.PathEscape(parameterToString(r.updateId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2156,18 +3182,19 @@ func (a *ProcessGroupsApiService) GetVariableRegistryUpdateRequest(ctx _context.
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2192,13 +3219,35 @@ func (a *ProcessGroupsApiService) GetVariableRegistryUpdateRequest(ctx _context.
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiImportTemplateRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+}
+
+func (r ProcessGroupsApiApiImportTemplateRequest) Execute() (TemplateEntity, *_nethttp.Response, error) {
+	return r.ApiService.ImportTemplateExecute(r)
+}
+
 /*
-ImportTemplate Imports a template
+ * ImportTemplate Imports a template
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
-@return TemplateEntity
-*/
-func (a *ProcessGroupsApiService) ImportTemplate(ctx _context.Context, id string) (TemplateEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiImportTemplateRequest
+ */
+func (a *ProcessGroupsApiService) ImportTemplate(ctx _context.Context, id string) ProcessGroupsApiApiImportTemplateRequest {
+	return ProcessGroupsApiApiImportTemplateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TemplateEntity
+ */
+func (a *ProcessGroupsApiService) ImportTemplateExecute(r ProcessGroupsApiApiImportTemplateRequest) (TemplateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2208,9 +3257,13 @@ func (a *ProcessGroupsApiService) ImportTemplate(ctx _context.Context, id string
 		localVarReturnValue  TemplateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/templates/import"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.ImportTemplate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/templates/import"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2233,18 +3286,19 @@ func (a *ProcessGroupsApiService) ImportTemplate(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2269,15 +3323,42 @@ func (a *ProcessGroupsApiService) ImportTemplate(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiInitiateReplaceProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ProcessGroupImportEntity
+}
+
+func (r ProcessGroupsApiApiInitiateReplaceProcessGroupRequest) Body(body ProcessGroupImportEntity) ProcessGroupsApiApiInitiateReplaceProcessGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiInitiateReplaceProcessGroupRequest) Execute() (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.InitiateReplaceProcessGroupExecute(r)
+}
+
 /*
-InitiateReplaceProcessGroup Initiate the Replace Request of a Process Group with the given ID
-This will initiate the action of replacing a process group with the given process group. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a ProcessGroupReplaceRequestEntity, and the process of replacing the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /process-groups/replace-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /process-groups/replace-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * InitiateReplaceProcessGroup Initiate the Replace Request of a Process Group with the given ID
+ * This will initiate the action of replacing a process group with the given process group. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a ProcessGroupReplaceRequestEntity, and the process of replacing the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /process-groups/replace-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /process-groups/replace-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The process group replace request entity
-@return ProcessGroupReplaceRequestEntity
-*/
-func (a *ProcessGroupsApiService) InitiateReplaceProcessGroup(ctx _context.Context, id string, body ProcessGroupImportEntity) (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiInitiateReplaceProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) InitiateReplaceProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiInitiateReplaceProcessGroupRequest {
+	return ProcessGroupsApiApiInitiateReplaceProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupReplaceRequestEntity
+ */
+func (a *ProcessGroupsApiService) InitiateReplaceProcessGroupExecute(r ProcessGroupsApiApiInitiateReplaceProcessGroupRequest) (ProcessGroupReplaceRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2287,13 +3368,20 @@ func (a *ProcessGroupsApiService) InitiateReplaceProcessGroup(ctx _context.Conte
 		localVarReturnValue  ProcessGroupReplaceRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/replace-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.InitiateReplaceProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/replace-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2313,19 +3401,20 @@ func (a *ProcessGroupsApiService) InitiateReplaceProcessGroup(ctx _context.Conte
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2350,14 +3439,41 @@ func (a *ProcessGroupsApiService) InitiateReplaceProcessGroup(ctx _context.Conte
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiInstantiateTemplateRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *InstantiateTemplateRequestEntity
+}
+
+func (r ProcessGroupsApiApiInstantiateTemplateRequest) Body(body InstantiateTemplateRequestEntity) ProcessGroupsApiApiInstantiateTemplateRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiInstantiateTemplateRequest) Execute() (FlowEntity, *_nethttp.Response, error) {
+	return r.ApiService.InstantiateTemplateExecute(r)
+}
+
 /*
-InstantiateTemplate Instantiates a template
+ * InstantiateTemplate Instantiates a template
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The instantiate template request.
-@return FlowEntity
-*/
-func (a *ProcessGroupsApiService) InstantiateTemplate(ctx _context.Context, id string, body InstantiateTemplateRequestEntity) (FlowEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiInstantiateTemplateRequest
+ */
+func (a *ProcessGroupsApiService) InstantiateTemplate(ctx _context.Context, id string) ProcessGroupsApiApiInstantiateTemplateRequest {
+	return ProcessGroupsApiApiInstantiateTemplateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return FlowEntity
+ */
+func (a *ProcessGroupsApiService) InstantiateTemplateExecute(r ProcessGroupsApiApiInstantiateTemplateRequest) (FlowEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2367,13 +3483,20 @@ func (a *ProcessGroupsApiService) InstantiateTemplate(ctx _context.Context, id s
 		localVarReturnValue  FlowEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/template-instance"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.InstantiateTemplate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/template-instance"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2393,19 +3516,20 @@ func (a *ProcessGroupsApiService) InstantiateTemplate(ctx _context.Context, id s
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2430,24 +3554,159 @@ func (a *ProcessGroupsApiService) InstantiateTemplate(ctx _context.Context, id s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessGroupsApiRemoveProcessGroupOpts Optional parameters for the method 'RemoveProcessGroup'
-type ProcessGroupsApiRemoveProcessGroupOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type ProcessGroupsApiApiRemoveDropRequestRequest struct {
+	ctx           _context.Context
+	ApiService    *ProcessGroupsApiService
+	id            string
+	dropRequestId string
+}
+
+func (r ProcessGroupsApiApiRemoveDropRequestRequest) Execute() (DropRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveDropRequestExecute(r)
 }
 
 /*
-RemoveProcessGroup Deletes a process group
+ * RemoveDropRequest Cancels and/or removes a request to drop all flowfiles.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param optional nil or *ProcessGroupsApiRemoveProcessGroupOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ProcessGroupEntity
-*/
-func (a *ProcessGroupsApiService) RemoveProcessGroup(ctx _context.Context, id string, localVarOptionals *ProcessGroupsApiRemoveProcessGroupOpts) (ProcessGroupEntity, *_nethttp.Response, error) {
+ * @param dropRequestId The drop request id.
+ * @return ProcessGroupsApiApiRemoveDropRequestRequest
+ */
+func (a *ProcessGroupsApiService) RemoveDropRequest(ctx _context.Context, id string, dropRequestId string) ProcessGroupsApiApiRemoveDropRequestRequest {
+	return ProcessGroupsApiApiRemoveDropRequestRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		id:            id,
+		dropRequestId: dropRequestId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return DropRequestEntity
+ */
+func (a *ProcessGroupsApiService) RemoveDropRequestExecute(r ProcessGroupsApiApiRemoveDropRequestRequest) (DropRequestEntity, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  DropRequestEntity
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.RemoveDropRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/empty-all-connections-requests/{drop-request-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"drop-request-id"+"}", _neturl.PathEscape(parameterToString(r.dropRequestId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProcessGroupsApiApiRemoveProcessGroupRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ProcessGroupsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ProcessGroupsApiApiRemoveProcessGroupRequest) Version(version string) ProcessGroupsApiApiRemoveProcessGroupRequest {
+	r.version = &version
+	return r
+}
+func (r ProcessGroupsApiApiRemoveProcessGroupRequest) ClientId(clientId string) ProcessGroupsApiApiRemoveProcessGroupRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r ProcessGroupsApiApiRemoveProcessGroupRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ProcessGroupsApiApiRemoveProcessGroupRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ProcessGroupsApiApiRemoveProcessGroupRequest) Execute() (ProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveProcessGroupExecute(r)
+}
+
+/*
+ * RemoveProcessGroup Deletes a process group
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param id The process group id.
+ * @return ProcessGroupsApiApiRemoveProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) RemoveProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiRemoveProcessGroupRequest {
+	return ProcessGroupsApiApiRemoveProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupEntity
+ */
+func (a *ProcessGroupsApiService) RemoveProcessGroupExecute(r ProcessGroupsApiApiRemoveProcessGroupRequest) (ProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -2457,22 +3716,26 @@ func (a *ProcessGroupsApiService) RemoveProcessGroup(ctx _context.Context, id st
 		localVarReturnValue  ProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.RemoveProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2491,18 +3754,19 @@ func (a *ProcessGroupsApiService) RemoveProcessGroup(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2527,15 +3791,42 @@ func (a *ProcessGroupsApiService) RemoveProcessGroup(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiReplaceProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ProcessGroupImportEntity
+}
+
+func (r ProcessGroupsApiApiReplaceProcessGroupRequest) Body(body ProcessGroupImportEntity) ProcessGroupsApiApiReplaceProcessGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiReplaceProcessGroupRequest) Execute() (ProcessGroupImportEntity, *_nethttp.Response, error) {
+	return r.ApiService.ReplaceProcessGroupExecute(r)
+}
+
 /*
-ReplaceProcessGroup Replace Process Group contents with the given ID with the specified Process Group contents
-This endpoint is used for replication within a cluster, when replacing a flow with a new flow. It expects that the flow beingreplaced is not under version control and that the given snapshot will not modify any Processor that is currently running or any Controller Service that is enabled. Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * ReplaceProcessGroup Replace Process Group contents with the given ID with the specified Process Group contents
+ * This endpoint is used for replication within a cluster, when replacing a flow with a new flow. It expects that the flow beingreplaced is not under version control and that the given snapshot will not modify any Processor that is currently running or any Controller Service that is enabled. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The process group replace request entity.
-@return ProcessGroupImportEntity
-*/
-func (a *ProcessGroupsApiService) ReplaceProcessGroup(ctx _context.Context, id string, body ProcessGroupImportEntity) (ProcessGroupImportEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiReplaceProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) ReplaceProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiReplaceProcessGroupRequest {
+	return ProcessGroupsApiApiReplaceProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupImportEntity
+ */
+func (a *ProcessGroupsApiService) ReplaceProcessGroupExecute(r ProcessGroupsApiApiReplaceProcessGroupRequest) (ProcessGroupImportEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -2545,13 +3836,20 @@ func (a *ProcessGroupsApiService) ReplaceProcessGroup(ctx _context.Context, id s
 		localVarReturnValue  ProcessGroupImportEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/flow-contents"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.ReplaceProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/flow-contents"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2571,19 +3869,20 @@ func (a *ProcessGroupsApiService) ReplaceProcessGroup(ctx _context.Context, id s
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2608,15 +3907,42 @@ func (a *ProcessGroupsApiService) ReplaceProcessGroup(ctx _context.Context, id s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *VariableRegistryEntity
+}
+
+func (r ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest) Body(body VariableRegistryEntity) ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest) Execute() (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
+	return r.ApiService.SubmitUpdateVariableRegistryRequestExecute(r)
+}
+
 /*
-SubmitUpdateVariableRegistryRequest Submits a request to update a process group's variable registry
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * SubmitUpdateVariableRegistryRequest Submits a request to update a process group's variable registry
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The variable registry configuration details.
-@return VariableRegistryUpdateRequestEntity
-*/
-func (a *ProcessGroupsApiService) SubmitUpdateVariableRegistryRequest(ctx _context.Context, id string, body VariableRegistryEntity) (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest
+ */
+func (a *ProcessGroupsApiService) SubmitUpdateVariableRegistryRequest(ctx _context.Context, id string) ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest {
+	return ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VariableRegistryUpdateRequestEntity
+ */
+func (a *ProcessGroupsApiService) SubmitUpdateVariableRegistryRequestExecute(r ProcessGroupsApiApiSubmitUpdateVariableRegistryRequestRequest) (VariableRegistryUpdateRequestEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2626,13 +3952,20 @@ func (a *ProcessGroupsApiService) SubmitUpdateVariableRegistryRequest(ctx _conte
 		localVarReturnValue  VariableRegistryUpdateRequestEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/variable-registry/update-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.SubmitUpdateVariableRegistryRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/variable-registry/update-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2652,19 +3985,20 @@ func (a *ProcessGroupsApiService) SubmitUpdateVariableRegistryRequest(ctx _conte
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2689,14 +4023,41 @@ func (a *ProcessGroupsApiService) SubmitUpdateVariableRegistryRequest(ctx _conte
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiUpdateProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *ProcessGroupEntity
+}
+
+func (r ProcessGroupsApiApiUpdateProcessGroupRequest) Body(body ProcessGroupEntity) ProcessGroupsApiApiUpdateProcessGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiUpdateProcessGroupRequest) Execute() (ProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateProcessGroupExecute(r)
+}
+
 /*
-UpdateProcessGroup Updates a process group
+ * UpdateProcessGroup Updates a process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The process group configuration details.
-@return ProcessGroupEntity
-*/
-func (a *ProcessGroupsApiService) UpdateProcessGroup(ctx _context.Context, id string, body ProcessGroupEntity) (ProcessGroupEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiUpdateProcessGroupRequest
+ */
+func (a *ProcessGroupsApiService) UpdateProcessGroup(ctx _context.Context, id string) ProcessGroupsApiApiUpdateProcessGroupRequest {
+	return ProcessGroupsApiApiUpdateProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessGroupEntity
+ */
+func (a *ProcessGroupsApiService) UpdateProcessGroupExecute(r ProcessGroupsApiApiUpdateProcessGroupRequest) (ProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -2706,13 +4067,20 @@ func (a *ProcessGroupsApiService) UpdateProcessGroup(ctx _context.Context, id st
 		localVarReturnValue  ProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.UpdateProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2732,19 +4100,20 @@ func (a *ProcessGroupsApiService) UpdateProcessGroup(ctx _context.Context, id st
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2769,15 +4138,42 @@ func (a *ProcessGroupsApiService) UpdateProcessGroup(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiUpdateVariableRegistryRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	body       *VariableRegistryEntity
+}
+
+func (r ProcessGroupsApiApiUpdateVariableRegistryRequest) Body(body VariableRegistryEntity) ProcessGroupsApiApiUpdateVariableRegistryRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessGroupsApiApiUpdateVariableRegistryRequest) Execute() (VariableRegistryEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateVariableRegistryExecute(r)
+}
+
 /*
-UpdateVariableRegistry Updates the contents of a Process Group's variable Registry
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateVariableRegistry Updates the contents of a Process Group's variable Registry
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param body The variable registry configuration details.
-@return VariableRegistryEntity
-*/
-func (a *ProcessGroupsApiService) UpdateVariableRegistry(ctx _context.Context, id string, body VariableRegistryEntity) (VariableRegistryEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiUpdateVariableRegistryRequest
+ */
+func (a *ProcessGroupsApiService) UpdateVariableRegistry(ctx _context.Context, id string) ProcessGroupsApiApiUpdateVariableRegistryRequest {
+	return ProcessGroupsApiApiUpdateVariableRegistryRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return VariableRegistryEntity
+ */
+func (a *ProcessGroupsApiService) UpdateVariableRegistryExecute(r ProcessGroupsApiApiUpdateVariableRegistryRequest) (VariableRegistryEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -2787,13 +4183,20 @@ func (a *ProcessGroupsApiService) UpdateVariableRegistry(ctx _context.Context, i
 		localVarReturnValue  VariableRegistryEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/variable-registry"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.UpdateVariableRegistry")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/variable-registry"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2813,19 +4216,20 @@ func (a *ProcessGroupsApiService) UpdateVariableRegistry(ctx _context.Context, i
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2850,14 +4254,41 @@ func (a *ProcessGroupsApiService) UpdateVariableRegistry(ctx _context.Context, i
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessGroupsApiApiUploadTemplateRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessGroupsApiService
+	id         string
+	template   **os.File
+}
+
+func (r ProcessGroupsApiApiUploadTemplateRequest) Template(template *os.File) ProcessGroupsApiApiUploadTemplateRequest {
+	r.template = &template
+	return r
+}
+
+func (r ProcessGroupsApiApiUploadTemplateRequest) Execute() (TemplateEntity, *_nethttp.Response, error) {
+	return r.ApiService.UploadTemplateExecute(r)
+}
+
 /*
-UploadTemplate Uploads a template
+ * UploadTemplate Uploads a template
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The process group id.
- * @param template The binary content of the template file being uploaded.
-@return TemplateEntity
-*/
-func (a *ProcessGroupsApiService) UploadTemplate(ctx _context.Context, id string, template *os.File) (TemplateEntity, *_nethttp.Response, error) {
+ * @return ProcessGroupsApiApiUploadTemplateRequest
+ */
+func (a *ProcessGroupsApiService) UploadTemplate(ctx _context.Context, id string) ProcessGroupsApiApiUploadTemplateRequest {
+	return ProcessGroupsApiApiUploadTemplateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TemplateEntity
+ */
+func (a *ProcessGroupsApiService) UploadTemplateExecute(r ProcessGroupsApiApiUploadTemplateRequest) (TemplateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2867,13 +4298,20 @@ func (a *ProcessGroupsApiService) UploadTemplate(ctx _context.Context, id string
 		localVarReturnValue  TemplateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/process-groups/{id}/templates/upload"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessGroupsApiService.UploadTemplate")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/process-groups/{id}/templates/upload"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.template == nil {
+		return localVarReturnValue, nil, reportError("template is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"multipart/form-data"}
@@ -2893,25 +4331,26 @@ func (a *ProcessGroupsApiService) UploadTemplate(ctx _context.Context, id string
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	localVarFormFileName = "template"
-	localVarFile := template
+	localVarFile := *r.template
 	if localVarFile != nil {
 		fbs, _ := _ioutil.ReadAll(localVarFile)
 		localVarFileBytes = fbs
 		localVarFileName = localVarFile.Name()
 		localVarFile.Close()
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

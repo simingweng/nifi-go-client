@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,21 +11,363 @@
 
 package nifi
 
-// ProcessorStatusDto struct for ProcessorStatusDto
-type ProcessorStatusDto struct {
+import (
+	"encoding/json"
+)
+
+// ProcessorStatusDTO struct for ProcessorStatusDTO
+type ProcessorStatusDTO struct {
 	// The unique ID of the process group that the Processor belongs to
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The unique ID of the Processor
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The name of the Processor
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The type of the Processor
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 	// The run status of the Processor
-	RunStatus string `json:"runStatus,omitempty"`
+	RunStatus *string `json:"runStatus,omitempty"`
 	// The timestamp of when the stats were last refreshed
-	StatsLastRefreshed string                     `json:"statsLastRefreshed,omitempty"`
-	AggregateSnapshot  ProcessorStatusSnapshotDto `json:"aggregateSnapshot,omitempty"`
+	StatsLastRefreshed *string                     `json:"statsLastRefreshed,omitempty"`
+	AggregateSnapshot  *ProcessorStatusSnapshotDTO `json:"aggregateSnapshot,omitempty"`
 	// A status snapshot for each node in the cluster. If the NiFi instance is a standalone instance, rather than a cluster, this may be null.
-	NodeSnapshots []NodeProcessorStatusSnapshotDto `json:"nodeSnapshots,omitempty"`
+	NodeSnapshots *[]NodeProcessorStatusSnapshotDTO `json:"nodeSnapshots,omitempty"`
+}
+
+// NewProcessorStatusDTO instantiates a new ProcessorStatusDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorStatusDTO() *ProcessorStatusDTO {
+	this := ProcessorStatusDTO{}
+	return &this
+}
+
+// NewProcessorStatusDTOWithDefaults instantiates a new ProcessorStatusDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorStatusDTOWithDefaults() *ProcessorStatusDTO {
+	this := ProcessorStatusDTO{}
+	return &this
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *ProcessorStatusDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProcessorStatusDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ProcessorStatusDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ProcessorStatusDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetRunStatus returns the RunStatus field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetRunStatus() string {
+	if o == nil || o.RunStatus == nil {
+		var ret string
+		return ret
+	}
+	return *o.RunStatus
+}
+
+// GetRunStatusOk returns a tuple with the RunStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetRunStatusOk() (*string, bool) {
+	if o == nil || o.RunStatus == nil {
+		return nil, false
+	}
+	return o.RunStatus, true
+}
+
+// HasRunStatus returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasRunStatus() bool {
+	if o != nil && o.RunStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRunStatus gets a reference to the given string and assigns it to the RunStatus field.
+func (o *ProcessorStatusDTO) SetRunStatus(v string) {
+	o.RunStatus = &v
+}
+
+// GetStatsLastRefreshed returns the StatsLastRefreshed field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetStatsLastRefreshed() string {
+	if o == nil || o.StatsLastRefreshed == nil {
+		var ret string
+		return ret
+	}
+	return *o.StatsLastRefreshed
+}
+
+// GetStatsLastRefreshedOk returns a tuple with the StatsLastRefreshed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetStatsLastRefreshedOk() (*string, bool) {
+	if o == nil || o.StatsLastRefreshed == nil {
+		return nil, false
+	}
+	return o.StatsLastRefreshed, true
+}
+
+// HasStatsLastRefreshed returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasStatsLastRefreshed() bool {
+	if o != nil && o.StatsLastRefreshed != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatsLastRefreshed gets a reference to the given string and assigns it to the StatsLastRefreshed field.
+func (o *ProcessorStatusDTO) SetStatsLastRefreshed(v string) {
+	o.StatsLastRefreshed = &v
+}
+
+// GetAggregateSnapshot returns the AggregateSnapshot field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetAggregateSnapshot() ProcessorStatusSnapshotDTO {
+	if o == nil || o.AggregateSnapshot == nil {
+		var ret ProcessorStatusSnapshotDTO
+		return ret
+	}
+	return *o.AggregateSnapshot
+}
+
+// GetAggregateSnapshotOk returns a tuple with the AggregateSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetAggregateSnapshotOk() (*ProcessorStatusSnapshotDTO, bool) {
+	if o == nil || o.AggregateSnapshot == nil {
+		return nil, false
+	}
+	return o.AggregateSnapshot, true
+}
+
+// HasAggregateSnapshot returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasAggregateSnapshot() bool {
+	if o != nil && o.AggregateSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAggregateSnapshot gets a reference to the given ProcessorStatusSnapshotDTO and assigns it to the AggregateSnapshot field.
+func (o *ProcessorStatusDTO) SetAggregateSnapshot(v ProcessorStatusSnapshotDTO) {
+	o.AggregateSnapshot = &v
+}
+
+// GetNodeSnapshots returns the NodeSnapshots field value if set, zero value otherwise.
+func (o *ProcessorStatusDTO) GetNodeSnapshots() []NodeProcessorStatusSnapshotDTO {
+	if o == nil || o.NodeSnapshots == nil {
+		var ret []NodeProcessorStatusSnapshotDTO
+		return ret
+	}
+	return *o.NodeSnapshots
+}
+
+// GetNodeSnapshotsOk returns a tuple with the NodeSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusDTO) GetNodeSnapshotsOk() (*[]NodeProcessorStatusSnapshotDTO, bool) {
+	if o == nil || o.NodeSnapshots == nil {
+		return nil, false
+	}
+	return o.NodeSnapshots, true
+}
+
+// HasNodeSnapshots returns a boolean if a field has been set.
+func (o *ProcessorStatusDTO) HasNodeSnapshots() bool {
+	if o != nil && o.NodeSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeSnapshots gets a reference to the given []NodeProcessorStatusSnapshotDTO and assigns it to the NodeSnapshots field.
+func (o *ProcessorStatusDTO) SetNodeSnapshots(v []NodeProcessorStatusSnapshotDTO) {
+	o.NodeSnapshots = &v
+}
+
+func (o ProcessorStatusDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.RunStatus != nil {
+		toSerialize["runStatus"] = o.RunStatus
+	}
+	if o.StatsLastRefreshed != nil {
+		toSerialize["statsLastRefreshed"] = o.StatsLastRefreshed
+	}
+	if o.AggregateSnapshot != nil {
+		toSerialize["aggregateSnapshot"] = o.AggregateSnapshot
+	}
+	if o.NodeSnapshots != nil {
+		toSerialize["nodeSnapshots"] = o.NodeSnapshots
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorStatusDTO struct {
+	value *ProcessorStatusDTO
+	isSet bool
+}
+
+func (v NullableProcessorStatusDTO) Get() *ProcessorStatusDTO {
+	return v.value
+}
+
+func (v *NullableProcessorStatusDTO) Set(val *ProcessorStatusDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorStatusDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorStatusDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorStatusDTO(val *ProcessorStatusDTO) *NullableProcessorStatusDTO {
+	return &NullableProcessorStatusDTO{value: val, isSet: true}
+}
+
+func (v NullableProcessorStatusDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorStatusDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

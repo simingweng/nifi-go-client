@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ReportingTasksEntity struct for ReportingTasksEntity
 type ReportingTasksEntity struct {
-	ReportingTasks []ReportingTaskEntity `json:"reportingTasks,omitempty"`
+	ReportingTasks *[]ReportingTaskEntity `json:"reportingTasks,omitempty"`
+}
+
+// NewReportingTasksEntity instantiates a new ReportingTasksEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewReportingTasksEntity() *ReportingTasksEntity {
+	this := ReportingTasksEntity{}
+	return &this
+}
+
+// NewReportingTasksEntityWithDefaults instantiates a new ReportingTasksEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewReportingTasksEntityWithDefaults() *ReportingTasksEntity {
+	this := ReportingTasksEntity{}
+	return &this
+}
+
+// GetReportingTasks returns the ReportingTasks field value if set, zero value otherwise.
+func (o *ReportingTasksEntity) GetReportingTasks() []ReportingTaskEntity {
+	if o == nil || o.ReportingTasks == nil {
+		var ret []ReportingTaskEntity
+		return ret
+	}
+	return *o.ReportingTasks
+}
+
+// GetReportingTasksOk returns a tuple with the ReportingTasks field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ReportingTasksEntity) GetReportingTasksOk() (*[]ReportingTaskEntity, bool) {
+	if o == nil || o.ReportingTasks == nil {
+		return nil, false
+	}
+	return o.ReportingTasks, true
+}
+
+// HasReportingTasks returns a boolean if a field has been set.
+func (o *ReportingTasksEntity) HasReportingTasks() bool {
+	if o != nil && o.ReportingTasks != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReportingTasks gets a reference to the given []ReportingTaskEntity and assigns it to the ReportingTasks field.
+func (o *ReportingTasksEntity) SetReportingTasks(v []ReportingTaskEntity) {
+	o.ReportingTasks = &v
+}
+
+func (o ReportingTasksEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ReportingTasks != nil {
+		toSerialize["reportingTasks"] = o.ReportingTasks
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableReportingTasksEntity struct {
+	value *ReportingTasksEntity
+	isSet bool
+}
+
+func (v NullableReportingTasksEntity) Get() *ReportingTasksEntity {
+	return v.value
+}
+
+func (v *NullableReportingTasksEntity) Set(val *ReportingTasksEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableReportingTasksEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableReportingTasksEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableReportingTasksEntity(val *ReportingTasksEntity) *NullableReportingTasksEntity {
+	return &NullableReportingTasksEntity{value: val, isSet: true}
+}
+
+func (v NullableReportingTasksEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableReportingTasksEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

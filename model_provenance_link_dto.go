@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,253 @@
 
 package nifi
 
-// ProvenanceLinkDto struct for ProvenanceLinkDto
-type ProvenanceLinkDto struct {
+import (
+	"encoding/json"
+)
+
+// ProvenanceLinkDTO struct for ProvenanceLinkDTO
+type ProvenanceLinkDTO struct {
 	// The source node id of the link.
-	SourceId string `json:"sourceId,omitempty"`
+	SourceId *string `json:"sourceId,omitempty"`
 	// The target node id of the link.
-	TargetId string `json:"targetId,omitempty"`
+	TargetId *string `json:"targetId,omitempty"`
 	// The flowfile uuid that traversed the link.
-	FlowFileUuid string `json:"flowFileUuid,omitempty"`
+	FlowFileUuid *string `json:"flowFileUuid,omitempty"`
 	// The timestamp of the link (based on the destination).
-	Timestamp string `json:"timestamp,omitempty"`
+	Timestamp *string `json:"timestamp,omitempty"`
 	// The timestamp of this link in milliseconds.
-	Millis int64 `json:"millis,omitempty"`
+	Millis *int64 `json:"millis,omitempty"`
+}
+
+// NewProvenanceLinkDTO instantiates a new ProvenanceLinkDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProvenanceLinkDTO() *ProvenanceLinkDTO {
+	this := ProvenanceLinkDTO{}
+	return &this
+}
+
+// NewProvenanceLinkDTOWithDefaults instantiates a new ProvenanceLinkDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProvenanceLinkDTOWithDefaults() *ProvenanceLinkDTO {
+	this := ProvenanceLinkDTO{}
+	return &this
+}
+
+// GetSourceId returns the SourceId field value if set, zero value otherwise.
+func (o *ProvenanceLinkDTO) GetSourceId() string {
+	if o == nil || o.SourceId == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceId
+}
+
+// GetSourceIdOk returns a tuple with the SourceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceLinkDTO) GetSourceIdOk() (*string, bool) {
+	if o == nil || o.SourceId == nil {
+		return nil, false
+	}
+	return o.SourceId, true
+}
+
+// HasSourceId returns a boolean if a field has been set.
+func (o *ProvenanceLinkDTO) HasSourceId() bool {
+	if o != nil && o.SourceId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceId gets a reference to the given string and assigns it to the SourceId field.
+func (o *ProvenanceLinkDTO) SetSourceId(v string) {
+	o.SourceId = &v
+}
+
+// GetTargetId returns the TargetId field value if set, zero value otherwise.
+func (o *ProvenanceLinkDTO) GetTargetId() string {
+	if o == nil || o.TargetId == nil {
+		var ret string
+		return ret
+	}
+	return *o.TargetId
+}
+
+// GetTargetIdOk returns a tuple with the TargetId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceLinkDTO) GetTargetIdOk() (*string, bool) {
+	if o == nil || o.TargetId == nil {
+		return nil, false
+	}
+	return o.TargetId, true
+}
+
+// HasTargetId returns a boolean if a field has been set.
+func (o *ProvenanceLinkDTO) HasTargetId() bool {
+	if o != nil && o.TargetId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetId gets a reference to the given string and assigns it to the TargetId field.
+func (o *ProvenanceLinkDTO) SetTargetId(v string) {
+	o.TargetId = &v
+}
+
+// GetFlowFileUuid returns the FlowFileUuid field value if set, zero value otherwise.
+func (o *ProvenanceLinkDTO) GetFlowFileUuid() string {
+	if o == nil || o.FlowFileUuid == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowFileUuid
+}
+
+// GetFlowFileUuidOk returns a tuple with the FlowFileUuid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceLinkDTO) GetFlowFileUuidOk() (*string, bool) {
+	if o == nil || o.FlowFileUuid == nil {
+		return nil, false
+	}
+	return o.FlowFileUuid, true
+}
+
+// HasFlowFileUuid returns a boolean if a field has been set.
+func (o *ProvenanceLinkDTO) HasFlowFileUuid() bool {
+	if o != nil && o.FlowFileUuid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileUuid gets a reference to the given string and assigns it to the FlowFileUuid field.
+func (o *ProvenanceLinkDTO) SetFlowFileUuid(v string) {
+	o.FlowFileUuid = &v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *ProvenanceLinkDTO) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceLinkDTO) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *ProvenanceLinkDTO) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *ProvenanceLinkDTO) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+// GetMillis returns the Millis field value if set, zero value otherwise.
+func (o *ProvenanceLinkDTO) GetMillis() int64 {
+	if o == nil || o.Millis == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Millis
+}
+
+// GetMillisOk returns a tuple with the Millis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceLinkDTO) GetMillisOk() (*int64, bool) {
+	if o == nil || o.Millis == nil {
+		return nil, false
+	}
+	return o.Millis, true
+}
+
+// HasMillis returns a boolean if a field has been set.
+func (o *ProvenanceLinkDTO) HasMillis() bool {
+	if o != nil && o.Millis != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMillis gets a reference to the given int64 and assigns it to the Millis field.
+func (o *ProvenanceLinkDTO) SetMillis(v int64) {
+	o.Millis = &v
+}
+
+func (o ProvenanceLinkDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.SourceId != nil {
+		toSerialize["sourceId"] = o.SourceId
+	}
+	if o.TargetId != nil {
+		toSerialize["targetId"] = o.TargetId
+	}
+	if o.FlowFileUuid != nil {
+		toSerialize["flowFileUuid"] = o.FlowFileUuid
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.Millis != nil {
+		toSerialize["millis"] = o.Millis
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProvenanceLinkDTO struct {
+	value *ProvenanceLinkDTO
+	isSet bool
+}
+
+func (v NullableProvenanceLinkDTO) Get() *ProvenanceLinkDTO {
+	return v.value
+}
+
+func (v *NullableProvenanceLinkDTO) Set(val *ProvenanceLinkDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProvenanceLinkDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProvenanceLinkDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProvenanceLinkDTO(val *ProvenanceLinkDTO) *NullableProvenanceLinkDTO {
+	return &NullableProvenanceLinkDTO{value: val, isSet: true}
+}
+
+func (v NullableProvenanceLinkDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProvenanceLinkDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

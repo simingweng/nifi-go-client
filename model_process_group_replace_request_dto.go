@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,22 +11,364 @@
 
 package nifi
 
-// ProcessGroupReplaceRequestDto struct for ProcessGroupReplaceRequestDto
-type ProcessGroupReplaceRequestDto struct {
+import (
+	"encoding/json"
+)
+
+// ProcessGroupReplaceRequestDTO struct for ProcessGroupReplaceRequestDTO
+type ProcessGroupReplaceRequestDTO struct {
 	// The unique ID of this request.
-	RequestId string `json:"requestId,omitempty"`
+	RequestId *string `json:"requestId,omitempty"`
 	// The unique ID of the Process Group being updated
-	ProcessGroupId string `json:"processGroupId,omitempty"`
+	ProcessGroupId *string `json:"processGroupId,omitempty"`
 	// The URI for future requests to this drop request.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The last time this request was updated.
-	LastUpdated string `json:"lastUpdated,omitempty"`
+	LastUpdated *string `json:"lastUpdated,omitempty"`
 	// Whether or not this request has completed
-	Complete bool `json:"complete,omitempty"`
+	Complete *bool `json:"complete,omitempty"`
 	// An explanation of why this request failed, or null if this request has not failed
-	FailureReason string `json:"failureReason,omitempty"`
+	FailureReason *string `json:"failureReason,omitempty"`
 	// The percentage complete for the request, between 0 and 100
-	PercentCompleted int32 `json:"percentCompleted,omitempty"`
+	PercentCompleted *int32 `json:"percentCompleted,omitempty"`
 	// The state of the request
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
+}
+
+// NewProcessGroupReplaceRequestDTO instantiates a new ProcessGroupReplaceRequestDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupReplaceRequestDTO() *ProcessGroupReplaceRequestDTO {
+	this := ProcessGroupReplaceRequestDTO{}
+	return &this
+}
+
+// NewProcessGroupReplaceRequestDTOWithDefaults instantiates a new ProcessGroupReplaceRequestDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupReplaceRequestDTOWithDefaults() *ProcessGroupReplaceRequestDTO {
+	this := ProcessGroupReplaceRequestDTO{}
+	return &this
+}
+
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetRequestId() string {
+	if o == nil || o.RequestId == nil {
+		var ret string
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetRequestIdOk() (*string, bool) {
+	if o == nil || o.RequestId == nil {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasRequestId() bool {
+	if o != nil && o.RequestId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given string and assigns it to the RequestId field.
+func (o *ProcessGroupReplaceRequestDTO) SetRequestId(v string) {
+	o.RequestId = &v
+}
+
+// GetProcessGroupId returns the ProcessGroupId field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetProcessGroupId() string {
+	if o == nil || o.ProcessGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProcessGroupId
+}
+
+// GetProcessGroupIdOk returns a tuple with the ProcessGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetProcessGroupIdOk() (*string, bool) {
+	if o == nil || o.ProcessGroupId == nil {
+		return nil, false
+	}
+	return o.ProcessGroupId, true
+}
+
+// HasProcessGroupId returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasProcessGroupId() bool {
+	if o != nil && o.ProcessGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupId gets a reference to the given string and assigns it to the ProcessGroupId field.
+func (o *ProcessGroupReplaceRequestDTO) SetProcessGroupId(v string) {
+	o.ProcessGroupId = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *ProcessGroupReplaceRequestDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetLastUpdated returns the LastUpdated field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetLastUpdated() string {
+	if o == nil || o.LastUpdated == nil {
+		var ret string
+		return ret
+	}
+	return *o.LastUpdated
+}
+
+// GetLastUpdatedOk returns a tuple with the LastUpdated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetLastUpdatedOk() (*string, bool) {
+	if o == nil || o.LastUpdated == nil {
+		return nil, false
+	}
+	return o.LastUpdated, true
+}
+
+// HasLastUpdated returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasLastUpdated() bool {
+	if o != nil && o.LastUpdated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLastUpdated gets a reference to the given string and assigns it to the LastUpdated field.
+func (o *ProcessGroupReplaceRequestDTO) SetLastUpdated(v string) {
+	o.LastUpdated = &v
+}
+
+// GetComplete returns the Complete field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetComplete() bool {
+	if o == nil || o.Complete == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Complete
+}
+
+// GetCompleteOk returns a tuple with the Complete field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetCompleteOk() (*bool, bool) {
+	if o == nil || o.Complete == nil {
+		return nil, false
+	}
+	return o.Complete, true
+}
+
+// HasComplete returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasComplete() bool {
+	if o != nil && o.Complete != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComplete gets a reference to the given bool and assigns it to the Complete field.
+func (o *ProcessGroupReplaceRequestDTO) SetComplete(v bool) {
+	o.Complete = &v
+}
+
+// GetFailureReason returns the FailureReason field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetFailureReason() string {
+	if o == nil || o.FailureReason == nil {
+		var ret string
+		return ret
+	}
+	return *o.FailureReason
+}
+
+// GetFailureReasonOk returns a tuple with the FailureReason field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetFailureReasonOk() (*string, bool) {
+	if o == nil || o.FailureReason == nil {
+		return nil, false
+	}
+	return o.FailureReason, true
+}
+
+// HasFailureReason returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasFailureReason() bool {
+	if o != nil && o.FailureReason != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFailureReason gets a reference to the given string and assigns it to the FailureReason field.
+func (o *ProcessGroupReplaceRequestDTO) SetFailureReason(v string) {
+	o.FailureReason = &v
+}
+
+// GetPercentCompleted returns the PercentCompleted field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetPercentCompleted() int32 {
+	if o == nil || o.PercentCompleted == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PercentCompleted
+}
+
+// GetPercentCompletedOk returns a tuple with the PercentCompleted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetPercentCompletedOk() (*int32, bool) {
+	if o == nil || o.PercentCompleted == nil {
+		return nil, false
+	}
+	return o.PercentCompleted, true
+}
+
+// HasPercentCompleted returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasPercentCompleted() bool {
+	if o != nil && o.PercentCompleted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPercentCompleted gets a reference to the given int32 and assigns it to the PercentCompleted field.
+func (o *ProcessGroupReplaceRequestDTO) SetPercentCompleted(v int32) {
+	o.PercentCompleted = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ProcessGroupReplaceRequestDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupReplaceRequestDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ProcessGroupReplaceRequestDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ProcessGroupReplaceRequestDTO) SetState(v string) {
+	o.State = &v
+}
+
+func (o ProcessGroupReplaceRequestDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.RequestId != nil {
+		toSerialize["requestId"] = o.RequestId
+	}
+	if o.ProcessGroupId != nil {
+		toSerialize["processGroupId"] = o.ProcessGroupId
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.LastUpdated != nil {
+		toSerialize["lastUpdated"] = o.LastUpdated
+	}
+	if o.Complete != nil {
+		toSerialize["complete"] = o.Complete
+	}
+	if o.FailureReason != nil {
+		toSerialize["failureReason"] = o.FailureReason
+	}
+	if o.PercentCompleted != nil {
+		toSerialize["percentCompleted"] = o.PercentCompleted
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupReplaceRequestDTO struct {
+	value *ProcessGroupReplaceRequestDTO
+	isSet bool
+}
+
+func (v NullableProcessGroupReplaceRequestDTO) Get() *ProcessGroupReplaceRequestDTO {
+	return v.value
+}
+
+func (v *NullableProcessGroupReplaceRequestDTO) Set(val *ProcessGroupReplaceRequestDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupReplaceRequestDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupReplaceRequestDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupReplaceRequestDTO(val *ProcessGroupReplaceRequestDTO) *NullableProcessGroupReplaceRequestDTO {
+	return &NullableProcessGroupReplaceRequestDTO{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupReplaceRequestDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupReplaceRequestDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

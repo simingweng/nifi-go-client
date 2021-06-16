@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// PeerDto struct for PeerDto
-type PeerDto struct {
+import (
+	"encoding/json"
+)
+
+// PeerDTO struct for PeerDTO
+type PeerDTO struct {
 	// The hostname of this peer.
-	Hostname string `json:"hostname,omitempty"`
+	Hostname *string `json:"hostname,omitempty"`
 	// The port number of this peer.
-	Port int32 `json:"port,omitempty"`
+	Port *int32 `json:"port,omitempty"`
 	// Returns if this peer connection is secure.
-	Secure bool `json:"secure,omitempty"`
+	Secure *bool `json:"secure,omitempty"`
 	// The number of flowFiles this peer holds.
-	FlowFileCount int32 `json:"flowFileCount,omitempty"`
+	FlowFileCount *int32 `json:"flowFileCount,omitempty"`
+}
+
+// NewPeerDTO instantiates a new PeerDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPeerDTO() *PeerDTO {
+	this := PeerDTO{}
+	return &this
+}
+
+// NewPeerDTOWithDefaults instantiates a new PeerDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPeerDTOWithDefaults() *PeerDTO {
+	this := PeerDTO{}
+	return &this
+}
+
+// GetHostname returns the Hostname field value if set, zero value otherwise.
+func (o *PeerDTO) GetHostname() string {
+	if o == nil || o.Hostname == nil {
+		var ret string
+		return ret
+	}
+	return *o.Hostname
+}
+
+// GetHostnameOk returns a tuple with the Hostname field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PeerDTO) GetHostnameOk() (*string, bool) {
+	if o == nil || o.Hostname == nil {
+		return nil, false
+	}
+	return o.Hostname, true
+}
+
+// HasHostname returns a boolean if a field has been set.
+func (o *PeerDTO) HasHostname() bool {
+	if o != nil && o.Hostname != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHostname gets a reference to the given string and assigns it to the Hostname field.
+func (o *PeerDTO) SetHostname(v string) {
+	o.Hostname = &v
+}
+
+// GetPort returns the Port field value if set, zero value otherwise.
+func (o *PeerDTO) GetPort() int32 {
+	if o == nil || o.Port == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Port
+}
+
+// GetPortOk returns a tuple with the Port field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PeerDTO) GetPortOk() (*int32, bool) {
+	if o == nil || o.Port == nil {
+		return nil, false
+	}
+	return o.Port, true
+}
+
+// HasPort returns a boolean if a field has been set.
+func (o *PeerDTO) HasPort() bool {
+	if o != nil && o.Port != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPort gets a reference to the given int32 and assigns it to the Port field.
+func (o *PeerDTO) SetPort(v int32) {
+	o.Port = &v
+}
+
+// GetSecure returns the Secure field value if set, zero value otherwise.
+func (o *PeerDTO) GetSecure() bool {
+	if o == nil || o.Secure == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Secure
+}
+
+// GetSecureOk returns a tuple with the Secure field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PeerDTO) GetSecureOk() (*bool, bool) {
+	if o == nil || o.Secure == nil {
+		return nil, false
+	}
+	return o.Secure, true
+}
+
+// HasSecure returns a boolean if a field has been set.
+func (o *PeerDTO) HasSecure() bool {
+	if o != nil && o.Secure != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSecure gets a reference to the given bool and assigns it to the Secure field.
+func (o *PeerDTO) SetSecure(v bool) {
+	o.Secure = &v
+}
+
+// GetFlowFileCount returns the FlowFileCount field value if set, zero value otherwise.
+func (o *PeerDTO) GetFlowFileCount() int32 {
+	if o == nil || o.FlowFileCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.FlowFileCount
+}
+
+// GetFlowFileCountOk returns a tuple with the FlowFileCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PeerDTO) GetFlowFileCountOk() (*int32, bool) {
+	if o == nil || o.FlowFileCount == nil {
+		return nil, false
+	}
+	return o.FlowFileCount, true
+}
+
+// HasFlowFileCount returns a boolean if a field has been set.
+func (o *PeerDTO) HasFlowFileCount() bool {
+	if o != nil && o.FlowFileCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileCount gets a reference to the given int32 and assigns it to the FlowFileCount field.
+func (o *PeerDTO) SetFlowFileCount(v int32) {
+	o.FlowFileCount = &v
+}
+
+func (o PeerDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Hostname != nil {
+		toSerialize["hostname"] = o.Hostname
+	}
+	if o.Port != nil {
+		toSerialize["port"] = o.Port
+	}
+	if o.Secure != nil {
+		toSerialize["secure"] = o.Secure
+	}
+	if o.FlowFileCount != nil {
+		toSerialize["flowFileCount"] = o.FlowFileCount
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePeerDTO struct {
+	value *PeerDTO
+	isSet bool
+}
+
+func (v NullablePeerDTO) Get() *PeerDTO {
+	return v.value
+}
+
+func (v *NullablePeerDTO) Set(val *PeerDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePeerDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePeerDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePeerDTO(val *PeerDTO) *NullablePeerDTO {
+	return &NullablePeerDTO{value: val, isSet: true}
+}
+
+func (v NullablePeerDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePeerDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,20 +11,391 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // Bucket struct for Bucket
 type Bucket struct {
-	Link JaxbLink `json:"link,omitempty"`
+	Link *JaxbLink `json:"link,omitempty"`
 	// An ID to uniquely identify this object.
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The name of the bucket.
 	Name string `json:"name"`
 	// The timestamp of when the bucket was first created. This is set by the server at creation time.
-	CreatedTimestamp int64 `json:"createdTimestamp,omitempty"`
+	CreatedTimestamp *int64 `json:"createdTimestamp,omitempty"`
 	// A description of the bucket.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Indicates if this bucket allows the same version of an extension bundle to be redeployed and thus overwrite the existing artifact. By default this is false.
-	AllowBundleRedeploy bool `json:"allowBundleRedeploy,omitempty"`
+	AllowBundleRedeploy *bool `json:"allowBundleRedeploy,omitempty"`
 	// Indicates if this bucket allows read access to unauthenticated anonymous users
-	AllowPublicRead bool        `json:"allowPublicRead,omitempty"`
-	Permissions     Permissions `json:"permissions,omitempty"`
+	AllowPublicRead *bool         `json:"allowPublicRead,omitempty"`
+	Permissions     *Permissions  `json:"permissions,omitempty"`
+	Revision        *RevisionInfo `json:"revision,omitempty"`
+}
+
+// NewBucket instantiates a new Bucket object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBucket(name string) *Bucket {
+	this := Bucket{}
+	this.Name = name
+	return &this
+}
+
+// NewBucketWithDefaults instantiates a new Bucket object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBucketWithDefaults() *Bucket {
+	this := Bucket{}
+	return &this
+}
+
+// GetLink returns the Link field value if set, zero value otherwise.
+func (o *Bucket) GetLink() JaxbLink {
+	if o == nil || o.Link == nil {
+		var ret JaxbLink
+		return ret
+	}
+	return *o.Link
+}
+
+// GetLinkOk returns a tuple with the Link field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetLinkOk() (*JaxbLink, bool) {
+	if o == nil || o.Link == nil {
+		return nil, false
+	}
+	return o.Link, true
+}
+
+// HasLink returns a boolean if a field has been set.
+func (o *Bucket) HasLink() bool {
+	if o != nil && o.Link != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLink gets a reference to the given JaxbLink and assigns it to the Link field.
+func (o *Bucket) SetLink(v JaxbLink) {
+	o.Link = &v
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *Bucket) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *Bucket) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *Bucket) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value
+func (o *Bucket) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Name, true
+}
+
+// SetName sets field value
+func (o *Bucket) SetName(v string) {
+	o.Name = v
+}
+
+// GetCreatedTimestamp returns the CreatedTimestamp field value if set, zero value otherwise.
+func (o *Bucket) GetCreatedTimestamp() int64 {
+	if o == nil || o.CreatedTimestamp == nil {
+		var ret int64
+		return ret
+	}
+	return *o.CreatedTimestamp
+}
+
+// GetCreatedTimestampOk returns a tuple with the CreatedTimestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetCreatedTimestampOk() (*int64, bool) {
+	if o == nil || o.CreatedTimestamp == nil {
+		return nil, false
+	}
+	return o.CreatedTimestamp, true
+}
+
+// HasCreatedTimestamp returns a boolean if a field has been set.
+func (o *Bucket) HasCreatedTimestamp() bool {
+	if o != nil && o.CreatedTimestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCreatedTimestamp gets a reference to the given int64 and assigns it to the CreatedTimestamp field.
+func (o *Bucket) SetCreatedTimestamp(v int64) {
+	o.CreatedTimestamp = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *Bucket) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *Bucket) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *Bucket) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetAllowBundleRedeploy returns the AllowBundleRedeploy field value if set, zero value otherwise.
+func (o *Bucket) GetAllowBundleRedeploy() bool {
+	if o == nil || o.AllowBundleRedeploy == nil {
+		var ret bool
+		return ret
+	}
+	return *o.AllowBundleRedeploy
+}
+
+// GetAllowBundleRedeployOk returns a tuple with the AllowBundleRedeploy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetAllowBundleRedeployOk() (*bool, bool) {
+	if o == nil || o.AllowBundleRedeploy == nil {
+		return nil, false
+	}
+	return o.AllowBundleRedeploy, true
+}
+
+// HasAllowBundleRedeploy returns a boolean if a field has been set.
+func (o *Bucket) HasAllowBundleRedeploy() bool {
+	if o != nil && o.AllowBundleRedeploy != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowBundleRedeploy gets a reference to the given bool and assigns it to the AllowBundleRedeploy field.
+func (o *Bucket) SetAllowBundleRedeploy(v bool) {
+	o.AllowBundleRedeploy = &v
+}
+
+// GetAllowPublicRead returns the AllowPublicRead field value if set, zero value otherwise.
+func (o *Bucket) GetAllowPublicRead() bool {
+	if o == nil || o.AllowPublicRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.AllowPublicRead
+}
+
+// GetAllowPublicReadOk returns a tuple with the AllowPublicRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetAllowPublicReadOk() (*bool, bool) {
+	if o == nil || o.AllowPublicRead == nil {
+		return nil, false
+	}
+	return o.AllowPublicRead, true
+}
+
+// HasAllowPublicRead returns a boolean if a field has been set.
+func (o *Bucket) HasAllowPublicRead() bool {
+	if o != nil && o.AllowPublicRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowPublicRead gets a reference to the given bool and assigns it to the AllowPublicRead field.
+func (o *Bucket) SetAllowPublicRead(v bool) {
+	o.AllowPublicRead = &v
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *Bucket) GetPermissions() Permissions {
+	if o == nil || o.Permissions == nil {
+		var ret Permissions
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetPermissionsOk() (*Permissions, bool) {
+	if o == nil || o.Permissions == nil {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *Bucket) HasPermissions() bool {
+	if o != nil && o.Permissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given Permissions and assigns it to the Permissions field.
+func (o *Bucket) SetPermissions(v Permissions) {
+	o.Permissions = &v
+}
+
+// GetRevision returns the Revision field value if set, zero value otherwise.
+func (o *Bucket) GetRevision() RevisionInfo {
+	if o == nil || o.Revision == nil {
+		var ret RevisionInfo
+		return ret
+	}
+	return *o.Revision
+}
+
+// GetRevisionOk returns a tuple with the Revision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Bucket) GetRevisionOk() (*RevisionInfo, bool) {
+	if o == nil || o.Revision == nil {
+		return nil, false
+	}
+	return o.Revision, true
+}
+
+// HasRevision returns a boolean if a field has been set.
+func (o *Bucket) HasRevision() bool {
+	if o != nil && o.Revision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRevision gets a reference to the given RevisionInfo and assigns it to the Revision field.
+func (o *Bucket) SetRevision(v RevisionInfo) {
+	o.Revision = &v
+}
+
+func (o Bucket) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Link != nil {
+		toSerialize["link"] = o.Link
+	}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if true {
+		toSerialize["name"] = o.Name
+	}
+	if o.CreatedTimestamp != nil {
+		toSerialize["createdTimestamp"] = o.CreatedTimestamp
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.AllowBundleRedeploy != nil {
+		toSerialize["allowBundleRedeploy"] = o.AllowBundleRedeploy
+	}
+	if o.AllowPublicRead != nil {
+		toSerialize["allowPublicRead"] = o.AllowPublicRead
+	}
+	if o.Permissions != nil {
+		toSerialize["permissions"] = o.Permissions
+	}
+	if o.Revision != nil {
+		toSerialize["revision"] = o.Revision
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBucket struct {
+	value *Bucket
+	isSet bool
+}
+
+func (v NullableBucket) Get() *Bucket {
+	return v.value
+}
+
+func (v *NullableBucket) Set(val *Bucket) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBucket) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBucket) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBucket(val *Bucket) *NullableBucket {
+	return &NullableBucket{value: val, isSet: true}
+}
+
+func (v NullableBucket) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBucket) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

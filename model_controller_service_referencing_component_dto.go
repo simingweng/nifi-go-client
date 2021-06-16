@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,30 +11,512 @@
 
 package nifi
 
-// ControllerServiceReferencingComponentDto struct for ControllerServiceReferencingComponentDto
-type ControllerServiceReferencingComponentDto struct {
+import (
+	"encoding/json"
+)
+
+// ControllerServiceReferencingComponentDTO struct for ControllerServiceReferencingComponentDTO
+type ControllerServiceReferencingComponentDTO struct {
 	// The group id for the component referencing a controller service. If this component is another controller service or a reporting task, this field is blank.
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The id of the component referencing a controller service.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The name of the component referencing a controller service.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The type of the component referencing a controller service in simple Java class name format without package name.
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 	// The scheduled state of a processor or reporting task referencing a controller service. If this component is another controller service, this field represents the controller service state.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// The properties for the component.
-	Properties map[string]string `json:"properties,omitempty"`
+	Properties *map[string]string `json:"properties,omitempty"`
 	// The descriptors for the component properties.
-	Descriptors map[string]PropertyDescriptorDto `json:"descriptors,omitempty"`
+	Descriptors *map[string]PropertyDescriptorDTO `json:"descriptors,omitempty"`
 	// The validation errors for the component.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
 	// The type of reference this is.
-	ReferenceType string `json:"referenceType,omitempty"`
+	ReferenceType *string `json:"referenceType,omitempty"`
 	// The number of active threads for the referencing component.
-	ActiveThreadCount int32 `json:"activeThreadCount,omitempty"`
+	ActiveThreadCount *int32 `json:"activeThreadCount,omitempty"`
 	// If the referencing component represents a controller service, this indicates whether it has already been represented in this hierarchy.
-	ReferenceCycle bool `json:"referenceCycle,omitempty"`
+	ReferenceCycle *bool `json:"referenceCycle,omitempty"`
 	// If the referencing component represents a controller service, these are the components that reference it.
-	ReferencingComponents []ControllerServiceReferencingComponentEntity `json:"referencingComponents,omitempty"`
+	ReferencingComponents *[]ControllerServiceReferencingComponentEntity `json:"referencingComponents,omitempty"`
+}
+
+// NewControllerServiceReferencingComponentDTO instantiates a new ControllerServiceReferencingComponentDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewControllerServiceReferencingComponentDTO() *ControllerServiceReferencingComponentDTO {
+	this := ControllerServiceReferencingComponentDTO{}
+	return &this
+}
+
+// NewControllerServiceReferencingComponentDTOWithDefaults instantiates a new ControllerServiceReferencingComponentDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewControllerServiceReferencingComponentDTOWithDefaults() *ControllerServiceReferencingComponentDTO {
+	this := ControllerServiceReferencingComponentDTO{}
+	return &this
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *ControllerServiceReferencingComponentDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ControllerServiceReferencingComponentDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ControllerServiceReferencingComponentDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ControllerServiceReferencingComponentDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ControllerServiceReferencingComponentDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetProperties returns the Properties field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetProperties() map[string]string {
+	if o == nil || o.Properties == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Properties
+}
+
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetPropertiesOk() (*map[string]string, bool) {
+	if o == nil || o.Properties == nil {
+		return nil, false
+	}
+	return o.Properties, true
+}
+
+// HasProperties returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasProperties() bool {
+	if o != nil && o.Properties != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+func (o *ControllerServiceReferencingComponentDTO) SetProperties(v map[string]string) {
+	o.Properties = &v
+}
+
+// GetDescriptors returns the Descriptors field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetDescriptors() map[string]PropertyDescriptorDTO {
+	if o == nil || o.Descriptors == nil {
+		var ret map[string]PropertyDescriptorDTO
+		return ret
+	}
+	return *o.Descriptors
+}
+
+// GetDescriptorsOk returns a tuple with the Descriptors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetDescriptorsOk() (*map[string]PropertyDescriptorDTO, bool) {
+	if o == nil || o.Descriptors == nil {
+		return nil, false
+	}
+	return o.Descriptors, true
+}
+
+// HasDescriptors returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasDescriptors() bool {
+	if o != nil && o.Descriptors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescriptors gets a reference to the given map[string]PropertyDescriptorDTO and assigns it to the Descriptors field.
+func (o *ControllerServiceReferencingComponentDTO) SetDescriptors(v map[string]PropertyDescriptorDTO) {
+	o.Descriptors = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *ControllerServiceReferencingComponentDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+// GetReferenceType returns the ReferenceType field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetReferenceType() string {
+	if o == nil || o.ReferenceType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ReferenceType
+}
+
+// GetReferenceTypeOk returns a tuple with the ReferenceType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetReferenceTypeOk() (*string, bool) {
+	if o == nil || o.ReferenceType == nil {
+		return nil, false
+	}
+	return o.ReferenceType, true
+}
+
+// HasReferenceType returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasReferenceType() bool {
+	if o != nil && o.ReferenceType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferenceType gets a reference to the given string and assigns it to the ReferenceType field.
+func (o *ControllerServiceReferencingComponentDTO) SetReferenceType(v string) {
+	o.ReferenceType = &v
+}
+
+// GetActiveThreadCount returns the ActiveThreadCount field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetActiveThreadCount() int32 {
+	if o == nil || o.ActiveThreadCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveThreadCount
+}
+
+// GetActiveThreadCountOk returns a tuple with the ActiveThreadCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetActiveThreadCountOk() (*int32, bool) {
+	if o == nil || o.ActiveThreadCount == nil {
+		return nil, false
+	}
+	return o.ActiveThreadCount, true
+}
+
+// HasActiveThreadCount returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasActiveThreadCount() bool {
+	if o != nil && o.ActiveThreadCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveThreadCount gets a reference to the given int32 and assigns it to the ActiveThreadCount field.
+func (o *ControllerServiceReferencingComponentDTO) SetActiveThreadCount(v int32) {
+	o.ActiveThreadCount = &v
+}
+
+// GetReferenceCycle returns the ReferenceCycle field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetReferenceCycle() bool {
+	if o == nil || o.ReferenceCycle == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ReferenceCycle
+}
+
+// GetReferenceCycleOk returns a tuple with the ReferenceCycle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetReferenceCycleOk() (*bool, bool) {
+	if o == nil || o.ReferenceCycle == nil {
+		return nil, false
+	}
+	return o.ReferenceCycle, true
+}
+
+// HasReferenceCycle returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasReferenceCycle() bool {
+	if o != nil && o.ReferenceCycle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferenceCycle gets a reference to the given bool and assigns it to the ReferenceCycle field.
+func (o *ControllerServiceReferencingComponentDTO) SetReferenceCycle(v bool) {
+	o.ReferenceCycle = &v
+}
+
+// GetReferencingComponents returns the ReferencingComponents field value if set, zero value otherwise.
+func (o *ControllerServiceReferencingComponentDTO) GetReferencingComponents() []ControllerServiceReferencingComponentEntity {
+	if o == nil || o.ReferencingComponents == nil {
+		var ret []ControllerServiceReferencingComponentEntity
+		return ret
+	}
+	return *o.ReferencingComponents
+}
+
+// GetReferencingComponentsOk returns a tuple with the ReferencingComponents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ControllerServiceReferencingComponentDTO) GetReferencingComponentsOk() (*[]ControllerServiceReferencingComponentEntity, bool) {
+	if o == nil || o.ReferencingComponents == nil {
+		return nil, false
+	}
+	return o.ReferencingComponents, true
+}
+
+// HasReferencingComponents returns a boolean if a field has been set.
+func (o *ControllerServiceReferencingComponentDTO) HasReferencingComponents() bool {
+	if o != nil && o.ReferencingComponents != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReferencingComponents gets a reference to the given []ControllerServiceReferencingComponentEntity and assigns it to the ReferencingComponents field.
+func (o *ControllerServiceReferencingComponentDTO) SetReferencingComponents(v []ControllerServiceReferencingComponentEntity) {
+	o.ReferencingComponents = &v
+}
+
+func (o ControllerServiceReferencingComponentDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.Properties != nil {
+		toSerialize["properties"] = o.Properties
+	}
+	if o.Descriptors != nil {
+		toSerialize["descriptors"] = o.Descriptors
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	if o.ReferenceType != nil {
+		toSerialize["referenceType"] = o.ReferenceType
+	}
+	if o.ActiveThreadCount != nil {
+		toSerialize["activeThreadCount"] = o.ActiveThreadCount
+	}
+	if o.ReferenceCycle != nil {
+		toSerialize["referenceCycle"] = o.ReferenceCycle
+	}
+	if o.ReferencingComponents != nil {
+		toSerialize["referencingComponents"] = o.ReferencingComponents
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableControllerServiceReferencingComponentDTO struct {
+	value *ControllerServiceReferencingComponentDTO
+	isSet bool
+}
+
+func (v NullableControllerServiceReferencingComponentDTO) Get() *ControllerServiceReferencingComponentDTO {
+	return v.value
+}
+
+func (v *NullableControllerServiceReferencingComponentDTO) Set(val *ControllerServiceReferencingComponentDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableControllerServiceReferencingComponentDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableControllerServiceReferencingComponentDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableControllerServiceReferencingComponentDTO(val *ControllerServiceReferencingComponentDTO) *NullableControllerServiceReferencingComponentDTO {
+	return &NullableControllerServiceReferencingComponentDTO{value: val, isSet: true}
+}
+
+func (v NullableControllerServiceReferencingComponentDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableControllerServiceReferencingComponentDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

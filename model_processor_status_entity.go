@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessorStatusEntity struct for ProcessorStatusEntity
 type ProcessorStatusEntity struct {
-	ProcessorStatus ProcessorStatusDto `json:"processorStatus,omitempty"`
+	ProcessorStatus *ProcessorStatusDTO `json:"processorStatus,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewProcessorStatusEntity instantiates a new ProcessorStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorStatusEntity() *ProcessorStatusEntity {
+	this := ProcessorStatusEntity{}
+	return &this
+}
+
+// NewProcessorStatusEntityWithDefaults instantiates a new ProcessorStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorStatusEntityWithDefaults() *ProcessorStatusEntity {
+	this := ProcessorStatusEntity{}
+	return &this
+}
+
+// GetProcessorStatus returns the ProcessorStatus field value if set, zero value otherwise.
+func (o *ProcessorStatusEntity) GetProcessorStatus() ProcessorStatusDTO {
+	if o == nil || o.ProcessorStatus == nil {
+		var ret ProcessorStatusDTO
+		return ret
+	}
+	return *o.ProcessorStatus
+}
+
+// GetProcessorStatusOk returns a tuple with the ProcessorStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusEntity) GetProcessorStatusOk() (*ProcessorStatusDTO, bool) {
+	if o == nil || o.ProcessorStatus == nil {
+		return nil, false
+	}
+	return o.ProcessorStatus, true
+}
+
+// HasProcessorStatus returns a boolean if a field has been set.
+func (o *ProcessorStatusEntity) HasProcessorStatus() bool {
+	if o != nil && o.ProcessorStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessorStatus gets a reference to the given ProcessorStatusDTO and assigns it to the ProcessorStatus field.
+func (o *ProcessorStatusEntity) SetProcessorStatus(v ProcessorStatusDTO) {
+	o.ProcessorStatus = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *ProcessorStatusEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorStatusEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *ProcessorStatusEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *ProcessorStatusEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o ProcessorStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessorStatus != nil {
+		toSerialize["processorStatus"] = o.ProcessorStatus
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorStatusEntity struct {
+	value *ProcessorStatusEntity
+	isSet bool
+}
+
+func (v NullableProcessorStatusEntity) Get() *ProcessorStatusEntity {
+	return v.value
+}
+
+func (v *NullableProcessorStatusEntity) Set(val *ProcessorStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorStatusEntity(val *ProcessorStatusEntity) *NullableProcessorStatusEntity {
+	return &NullableProcessorStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessorStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

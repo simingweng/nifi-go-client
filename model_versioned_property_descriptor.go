@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedPropertyDescriptor struct for VersionedPropertyDescriptor
 type VersionedPropertyDescriptor struct {
 	// The name of the property
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The display name of the property
-	DisplayName string `json:"displayName,omitempty"`
+	DisplayName *string `json:"displayName,omitempty"`
 	// Whether or not the property provides the identifier of a Controller Service
-	IdentifiesControllerService bool `json:"identifiesControllerService,omitempty"`
+	IdentifiesControllerService *bool `json:"identifiesControllerService,omitempty"`
 	// Whether or not the property is considered sensitive
-	Sensitive bool `json:"sensitive,omitempty"`
+	Sensitive *bool `json:"sensitive,omitempty"`
+}
+
+// NewVersionedPropertyDescriptor instantiates a new VersionedPropertyDescriptor object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedPropertyDescriptor() *VersionedPropertyDescriptor {
+	this := VersionedPropertyDescriptor{}
+	return &this
+}
+
+// NewVersionedPropertyDescriptorWithDefaults instantiates a new VersionedPropertyDescriptor object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedPropertyDescriptorWithDefaults() *VersionedPropertyDescriptor {
+	this := VersionedPropertyDescriptor{}
+	return &this
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedPropertyDescriptor) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPropertyDescriptor) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedPropertyDescriptor) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedPropertyDescriptor) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDisplayName returns the DisplayName field value if set, zero value otherwise.
+func (o *VersionedPropertyDescriptor) GetDisplayName() string {
+	if o == nil || o.DisplayName == nil {
+		var ret string
+		return ret
+	}
+	return *o.DisplayName
+}
+
+// GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPropertyDescriptor) GetDisplayNameOk() (*string, bool) {
+	if o == nil || o.DisplayName == nil {
+		return nil, false
+	}
+	return o.DisplayName, true
+}
+
+// HasDisplayName returns a boolean if a field has been set.
+func (o *VersionedPropertyDescriptor) HasDisplayName() bool {
+	if o != nil && o.DisplayName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
+func (o *VersionedPropertyDescriptor) SetDisplayName(v string) {
+	o.DisplayName = &v
+}
+
+// GetIdentifiesControllerService returns the IdentifiesControllerService field value if set, zero value otherwise.
+func (o *VersionedPropertyDescriptor) GetIdentifiesControllerService() bool {
+	if o == nil || o.IdentifiesControllerService == nil {
+		var ret bool
+		return ret
+	}
+	return *o.IdentifiesControllerService
+}
+
+// GetIdentifiesControllerServiceOk returns a tuple with the IdentifiesControllerService field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPropertyDescriptor) GetIdentifiesControllerServiceOk() (*bool, bool) {
+	if o == nil || o.IdentifiesControllerService == nil {
+		return nil, false
+	}
+	return o.IdentifiesControllerService, true
+}
+
+// HasIdentifiesControllerService returns a boolean if a field has been set.
+func (o *VersionedPropertyDescriptor) HasIdentifiesControllerService() bool {
+	if o != nil && o.IdentifiesControllerService != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifiesControllerService gets a reference to the given bool and assigns it to the IdentifiesControllerService field.
+func (o *VersionedPropertyDescriptor) SetIdentifiesControllerService(v bool) {
+	o.IdentifiesControllerService = &v
+}
+
+// GetSensitive returns the Sensitive field value if set, zero value otherwise.
+func (o *VersionedPropertyDescriptor) GetSensitive() bool {
+	if o == nil || o.Sensitive == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Sensitive
+}
+
+// GetSensitiveOk returns a tuple with the Sensitive field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedPropertyDescriptor) GetSensitiveOk() (*bool, bool) {
+	if o == nil || o.Sensitive == nil {
+		return nil, false
+	}
+	return o.Sensitive, true
+}
+
+// HasSensitive returns a boolean if a field has been set.
+func (o *VersionedPropertyDescriptor) HasSensitive() bool {
+	if o != nil && o.Sensitive != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSensitive gets a reference to the given bool and assigns it to the Sensitive field.
+func (o *VersionedPropertyDescriptor) SetSensitive(v bool) {
+	o.Sensitive = &v
+}
+
+func (o VersionedPropertyDescriptor) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.DisplayName != nil {
+		toSerialize["displayName"] = o.DisplayName
+	}
+	if o.IdentifiesControllerService != nil {
+		toSerialize["identifiesControllerService"] = o.IdentifiesControllerService
+	}
+	if o.Sensitive != nil {
+		toSerialize["sensitive"] = o.Sensitive
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedPropertyDescriptor struct {
+	value *VersionedPropertyDescriptor
+	isSet bool
+}
+
+func (v NullableVersionedPropertyDescriptor) Get() *VersionedPropertyDescriptor {
+	return v.value
+}
+
+func (v *NullableVersionedPropertyDescriptor) Set(val *VersionedPropertyDescriptor) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedPropertyDescriptor) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedPropertyDescriptor) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedPropertyDescriptor(val *VersionedPropertyDescriptor) *NullableVersionedPropertyDescriptor {
+	return &NullableVersionedPropertyDescriptor{value: val, isSet: true}
+}
+
+func (v NullableVersionedPropertyDescriptor) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedPropertyDescriptor) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

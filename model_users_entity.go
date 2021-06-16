@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // UsersEntity struct for UsersEntity
 type UsersEntity struct {
 	// When this content was generated.
-	Generated string       `json:"generated,omitempty"`
-	Users     []UserEntity `json:"users,omitempty"`
+	Generated *string       `json:"generated,omitempty"`
+	Users     *[]UserEntity `json:"users,omitempty"`
+}
+
+// NewUsersEntity instantiates a new UsersEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewUsersEntity() *UsersEntity {
+	this := UsersEntity{}
+	return &this
+}
+
+// NewUsersEntityWithDefaults instantiates a new UsersEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewUsersEntityWithDefaults() *UsersEntity {
+	this := UsersEntity{}
+	return &this
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *UsersEntity) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UsersEntity) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *UsersEntity) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *UsersEntity) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+// GetUsers returns the Users field value if set, zero value otherwise.
+func (o *UsersEntity) GetUsers() []UserEntity {
+	if o == nil || o.Users == nil {
+		var ret []UserEntity
+		return ret
+	}
+	return *o.Users
+}
+
+// GetUsersOk returns a tuple with the Users field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UsersEntity) GetUsersOk() (*[]UserEntity, bool) {
+	if o == nil || o.Users == nil {
+		return nil, false
+	}
+	return o.Users, true
+}
+
+// HasUsers returns a boolean if a field has been set.
+func (o *UsersEntity) HasUsers() bool {
+	if o != nil && o.Users != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUsers gets a reference to the given []UserEntity and assigns it to the Users field.
+func (o *UsersEntity) SetUsers(v []UserEntity) {
+	o.Users = &v
+}
+
+func (o UsersEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	if o.Users != nil {
+		toSerialize["users"] = o.Users
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableUsersEntity struct {
+	value *UsersEntity
+	isSet bool
+}
+
+func (v NullableUsersEntity) Get() *UsersEntity {
+	return v.value
+}
+
+func (v *NullableUsersEntity) Set(val *UsersEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableUsersEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableUsersEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableUsersEntity(val *UsersEntity) *NullableUsersEntity {
+	return &NullableUsersEntity{value: val, isSet: true}
+}
+
+func (v NullableUsersEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableUsersEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

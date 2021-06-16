@@ -16,28 +16,55 @@ Method | HTTP request | Description
 
 ## DeleteLineage
 
-> LineageEntity DeleteLineage(ctx, id, optional)
+> LineageEntity DeleteLineage(ctx, id).ClusterNodeId(clusterNodeId).Execute()
 
 Deletes a lineage query
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The id of the lineage query.
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where this query exists if clustered. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.DeleteLineage(context.Background(), id).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.DeleteLineage``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteLineage`: LineageEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.DeleteLineage`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The id of the lineage query. | 
- **optional** | ***DeleteLineageOpts** | optional parameters | nil if no parameters
+**id** | **string** | The id of the lineage query. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteLineageOpts struct
+Other parameters are passed through a pointer to a apiDeleteLineageRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **clusterNodeId** | **optional.String**| The id of the node where this query exists if clustered. | 
+ **clusterNodeId** | **string** | The id of the node where this query exists if clustered. | 
 
 ### Return type
 
@@ -59,28 +86,55 @@ No authorization required
 
 ## DeleteProvenance
 
-> ProvenanceEntity DeleteProvenance(ctx, id, optional)
+> ProvenanceEntity DeleteProvenance(ctx, id).ClusterNodeId(clusterNodeId).Execute()
 
 Deletes a provenance query
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The id of the provenance query.
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where this query exists if clustered. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.DeleteProvenance(context.Background(), id).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.DeleteProvenance``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteProvenance`: ProvenanceEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.DeleteProvenance`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The id of the provenance query. | 
- **optional** | ***DeleteProvenanceOpts** | optional parameters | nil if no parameters
+**id** | **string** | The id of the provenance query. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteProvenanceOpts struct
+Other parameters are passed through a pointer to a apiDeleteProvenanceRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **clusterNodeId** | **optional.String**| The id of the node where this query exists if clustered. | 
+ **clusterNodeId** | **string** | The id of the node where this query exists if clustered. | 
 
 ### Return type
 
@@ -102,28 +156,55 @@ No authorization required
 
 ## GetLineage
 
-> LineageEntity GetLineage(ctx, id, optional)
+> LineageEntity GetLineage(ctx, id).ClusterNodeId(clusterNodeId).Execute()
 
 Gets a lineage query
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The id of the lineage query.
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where this query exists if clustered. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.GetLineage(context.Background(), id).ClusterNodeId(clusterNodeId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.GetLineage``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetLineage`: LineageEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.GetLineage`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The id of the lineage query. | 
- **optional** | ***GetLineageOpts** | optional parameters | nil if no parameters
+**id** | **string** | The id of the lineage query. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetLineageOpts struct
+Other parameters are passed through a pointer to a apiGetLineageRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **clusterNodeId** | **optional.String**| The id of the node where this query exists if clustered. | 
+ **clusterNodeId** | **string** | The id of the node where this query exists if clustered. | 
 
 ### Return type
 
@@ -145,30 +226,59 @@ No authorization required
 
 ## GetProvenance
 
-> ProvenanceEntity GetProvenance(ctx, id, optional)
+> ProvenanceEntity GetProvenance(ctx, id).ClusterNodeId(clusterNodeId).Summarize(summarize).IncrementalResults(incrementalResults).Execute()
 
 Gets a provenance query
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The id of the provenance query.
+    clusterNodeId := "clusterNodeId_example" // string | The id of the node where this query exists if clustered. (optional)
+    summarize := true // bool | Whether or not incremental results are returned. If false, provenance events are only returned once the query completes. This property is true by default. (optional) (default to false)
+    incrementalResults := true // bool | Whether or not to summarize provenance events returned. This property is false by default. (optional) (default to true)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.GetProvenance(context.Background(), id).ClusterNodeId(clusterNodeId).Summarize(summarize).IncrementalResults(incrementalResults).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.GetProvenance``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetProvenance`: ProvenanceEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.GetProvenance`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The id of the provenance query. | 
- **optional** | ***GetProvenanceOpts** | optional parameters | nil if no parameters
+**id** | **string** | The id of the provenance query. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a GetProvenanceOpts struct
+Other parameters are passed through a pointer to a apiGetProvenanceRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **clusterNodeId** | **optional.String**| The id of the node where this query exists if clustered. | 
- **summarize** | **optional.Bool**| Whether or not incremental results are returned. If false, provenance events are only returned once the query completes. This property is true by default. | [default to false]
- **incrementalResults** | **optional.Bool**| Whether or not to summarize provenance events returned. This property is false by default. | [default to true]
+ **clusterNodeId** | **string** | The id of the node where this query exists if clustered. | 
+ **summarize** | **bool** | Whether or not incremental results are returned. If false, provenance events are only returned once the query completes. This property is true by default. | [default to false]
+ **incrementalResults** | **bool** | Whether or not to summarize provenance events returned. This property is false by default. | [default to true]
 
 ### Return type
 
@@ -190,13 +300,44 @@ No authorization required
 
 ## GetSearchOptions
 
-> ProvenanceOptionsEntity GetSearchOptions(ctx, )
+> ProvenanceOptionsEntity GetSearchOptions(ctx).Execute()
 
 Gets the searchable attributes for provenance events
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.GetSearchOptions(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.GetSearchOptions``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetSearchOptions`: ProvenanceOptionsEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.GetSearchOptions`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSearchOptionsRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -218,19 +359,51 @@ No authorization required
 
 ## SubmitLineageRequest
 
-> LineageEntity SubmitLineageRequest(ctx, body)
+> LineageEntity SubmitLineageRequest(ctx).Body(body).Execute()
 
 Submits a lineage query
 
-Lineage queries may be long running so this endpoint submits a request. The response will include the current state of the query. If the request is not completed the URI in the response can be used at a later time to get the updated state of the query. Once the query has completed the lineage request should be deleted by the client who originally submitted it.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewLineageEntity() // LineageEntity | The lineage query details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.SubmitLineageRequest(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.SubmitLineageRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SubmitLineageRequest`: LineageEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.SubmitLineageRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSubmitLineageRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**LineageEntity**](LineageEntity.md)| The lineage query details. | 
+ **body** | [**LineageEntity**](LineageEntity.md) | The lineage query details. | 
 
 ### Return type
 
@@ -252,19 +425,51 @@ No authorization required
 
 ## SubmitProvenanceRequest
 
-> ProvenanceEntity SubmitProvenanceRequest(ctx, body)
+> ProvenanceEntity SubmitProvenanceRequest(ctx).Body(body).Execute()
 
 Submits a provenance query
 
-Provenance queries may be long running so this endpoint submits a request. The response will include the current state of the query. If the request is not completed the URI in the response can be used at a later time to get the updated state of the query. Once the query has completed the provenance request should be deleted by the client who originally submitted it.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewProvenanceEntity() // ProvenanceEntity | The provenance query details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ProvenanceApi.SubmitProvenanceRequest(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ProvenanceApi.SubmitProvenanceRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SubmitProvenanceRequest`: ProvenanceEntity
+    fmt.Fprintf(os.Stdout, "Response from `ProvenanceApi.SubmitProvenanceRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSubmitProvenanceRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**ProvenanceEntity**](ProvenanceEntity.md)| The provenance query details. | 
+ **body** | [**ProvenanceEntity**](ProvenanceEntity.md) | The provenance query details. | 
 
 ### Return type
 

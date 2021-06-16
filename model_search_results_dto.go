@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,28 +11,475 @@
 
 package nifi
 
-// SearchResultsDto struct for SearchResultsDto
-type SearchResultsDto struct {
+import (
+	"encoding/json"
+)
+
+// SearchResultsDTO struct for SearchResultsDTO
+type SearchResultsDTO struct {
 	// The processors that matched the search.
-	ProcessorResults []ComponentSearchResultDto `json:"processorResults,omitempty"`
+	ProcessorResults *[]ComponentSearchResultDTO `json:"processorResults,omitempty"`
 	// The connections that matched the search.
-	ConnectionResults []ComponentSearchResultDto `json:"connectionResults,omitempty"`
+	ConnectionResults *[]ComponentSearchResultDTO `json:"connectionResults,omitempty"`
 	// The process groups that matched the search.
-	ProcessGroupResults []ComponentSearchResultDto `json:"processGroupResults,omitempty"`
+	ProcessGroupResults *[]ComponentSearchResultDTO `json:"processGroupResults,omitempty"`
 	// The input ports that matched the search.
-	InputPortResults []ComponentSearchResultDto `json:"inputPortResults,omitempty"`
+	InputPortResults *[]ComponentSearchResultDTO `json:"inputPortResults,omitempty"`
 	// The output ports that matched the search.
-	OutputPortResults []ComponentSearchResultDto `json:"outputPortResults,omitempty"`
+	OutputPortResults *[]ComponentSearchResultDTO `json:"outputPortResults,omitempty"`
 	// The remote process groups that matched the search.
-	RemoteProcessGroupResults []ComponentSearchResultDto `json:"remoteProcessGroupResults,omitempty"`
+	RemoteProcessGroupResults *[]ComponentSearchResultDTO `json:"remoteProcessGroupResults,omitempty"`
 	// The funnels that matched the search.
-	FunnelResults []ComponentSearchResultDto `json:"funnelResults,omitempty"`
+	FunnelResults *[]ComponentSearchResultDTO `json:"funnelResults,omitempty"`
 	// The labels that matched the search.
-	LabelResults []ComponentSearchResultDto `json:"labelResults,omitempty"`
+	LabelResults *[]ComponentSearchResultDTO `json:"labelResults,omitempty"`
 	// The controller service nodes that matched the search
-	ControllerServiceNodeResults []ComponentSearchResultDto `json:"controllerServiceNodeResults,omitempty"`
+	ControllerServiceNodeResults *[]ComponentSearchResultDTO `json:"controllerServiceNodeResults,omitempty"`
 	// The parameter contexts that matched the search.
-	ParameterContextResults []ComponentSearchResultDto `json:"parameterContextResults,omitempty"`
+	ParameterContextResults *[]ComponentSearchResultDTO `json:"parameterContextResults,omitempty"`
 	// The parameters that matched the search.
-	ParameterResults []ComponentSearchResultDto `json:"parameterResults,omitempty"`
+	ParameterResults *[]ComponentSearchResultDTO `json:"parameterResults,omitempty"`
+}
+
+// NewSearchResultsDTO instantiates a new SearchResultsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewSearchResultsDTO() *SearchResultsDTO {
+	this := SearchResultsDTO{}
+	return &this
+}
+
+// NewSearchResultsDTOWithDefaults instantiates a new SearchResultsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewSearchResultsDTOWithDefaults() *SearchResultsDTO {
+	this := SearchResultsDTO{}
+	return &this
+}
+
+// GetProcessorResults returns the ProcessorResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetProcessorResults() []ComponentSearchResultDTO {
+	if o == nil || o.ProcessorResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.ProcessorResults
+}
+
+// GetProcessorResultsOk returns a tuple with the ProcessorResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetProcessorResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.ProcessorResults == nil {
+		return nil, false
+	}
+	return o.ProcessorResults, true
+}
+
+// HasProcessorResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasProcessorResults() bool {
+	if o != nil && o.ProcessorResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessorResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the ProcessorResults field.
+func (o *SearchResultsDTO) SetProcessorResults(v []ComponentSearchResultDTO) {
+	o.ProcessorResults = &v
+}
+
+// GetConnectionResults returns the ConnectionResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetConnectionResults() []ComponentSearchResultDTO {
+	if o == nil || o.ConnectionResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.ConnectionResults
+}
+
+// GetConnectionResultsOk returns a tuple with the ConnectionResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetConnectionResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.ConnectionResults == nil {
+		return nil, false
+	}
+	return o.ConnectionResults, true
+}
+
+// HasConnectionResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasConnectionResults() bool {
+	if o != nil && o.ConnectionResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnectionResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the ConnectionResults field.
+func (o *SearchResultsDTO) SetConnectionResults(v []ComponentSearchResultDTO) {
+	o.ConnectionResults = &v
+}
+
+// GetProcessGroupResults returns the ProcessGroupResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetProcessGroupResults() []ComponentSearchResultDTO {
+	if o == nil || o.ProcessGroupResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.ProcessGroupResults
+}
+
+// GetProcessGroupResultsOk returns a tuple with the ProcessGroupResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetProcessGroupResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.ProcessGroupResults == nil {
+		return nil, false
+	}
+	return o.ProcessGroupResults, true
+}
+
+// HasProcessGroupResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasProcessGroupResults() bool {
+	if o != nil && o.ProcessGroupResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the ProcessGroupResults field.
+func (o *SearchResultsDTO) SetProcessGroupResults(v []ComponentSearchResultDTO) {
+	o.ProcessGroupResults = &v
+}
+
+// GetInputPortResults returns the InputPortResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetInputPortResults() []ComponentSearchResultDTO {
+	if o == nil || o.InputPortResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.InputPortResults
+}
+
+// GetInputPortResultsOk returns a tuple with the InputPortResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetInputPortResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.InputPortResults == nil {
+		return nil, false
+	}
+	return o.InputPortResults, true
+}
+
+// HasInputPortResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasInputPortResults() bool {
+	if o != nil && o.InputPortResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPortResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the InputPortResults field.
+func (o *SearchResultsDTO) SetInputPortResults(v []ComponentSearchResultDTO) {
+	o.InputPortResults = &v
+}
+
+// GetOutputPortResults returns the OutputPortResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetOutputPortResults() []ComponentSearchResultDTO {
+	if o == nil || o.OutputPortResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.OutputPortResults
+}
+
+// GetOutputPortResultsOk returns a tuple with the OutputPortResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetOutputPortResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.OutputPortResults == nil {
+		return nil, false
+	}
+	return o.OutputPortResults, true
+}
+
+// HasOutputPortResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasOutputPortResults() bool {
+	if o != nil && o.OutputPortResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPortResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the OutputPortResults field.
+func (o *SearchResultsDTO) SetOutputPortResults(v []ComponentSearchResultDTO) {
+	o.OutputPortResults = &v
+}
+
+// GetRemoteProcessGroupResults returns the RemoteProcessGroupResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetRemoteProcessGroupResults() []ComponentSearchResultDTO {
+	if o == nil || o.RemoteProcessGroupResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.RemoteProcessGroupResults
+}
+
+// GetRemoteProcessGroupResultsOk returns a tuple with the RemoteProcessGroupResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetRemoteProcessGroupResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.RemoteProcessGroupResults == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroupResults, true
+}
+
+// HasRemoteProcessGroupResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasRemoteProcessGroupResults() bool {
+	if o != nil && o.RemoteProcessGroupResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroupResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the RemoteProcessGroupResults field.
+func (o *SearchResultsDTO) SetRemoteProcessGroupResults(v []ComponentSearchResultDTO) {
+	o.RemoteProcessGroupResults = &v
+}
+
+// GetFunnelResults returns the FunnelResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetFunnelResults() []ComponentSearchResultDTO {
+	if o == nil || o.FunnelResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.FunnelResults
+}
+
+// GetFunnelResultsOk returns a tuple with the FunnelResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetFunnelResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.FunnelResults == nil {
+		return nil, false
+	}
+	return o.FunnelResults, true
+}
+
+// HasFunnelResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasFunnelResults() bool {
+	if o != nil && o.FunnelResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFunnelResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the FunnelResults field.
+func (o *SearchResultsDTO) SetFunnelResults(v []ComponentSearchResultDTO) {
+	o.FunnelResults = &v
+}
+
+// GetLabelResults returns the LabelResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetLabelResults() []ComponentSearchResultDTO {
+	if o == nil || o.LabelResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.LabelResults
+}
+
+// GetLabelResultsOk returns a tuple with the LabelResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetLabelResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.LabelResults == nil {
+		return nil, false
+	}
+	return o.LabelResults, true
+}
+
+// HasLabelResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasLabelResults() bool {
+	if o != nil && o.LabelResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabelResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the LabelResults field.
+func (o *SearchResultsDTO) SetLabelResults(v []ComponentSearchResultDTO) {
+	o.LabelResults = &v
+}
+
+// GetControllerServiceNodeResults returns the ControllerServiceNodeResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetControllerServiceNodeResults() []ComponentSearchResultDTO {
+	if o == nil || o.ControllerServiceNodeResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.ControllerServiceNodeResults
+}
+
+// GetControllerServiceNodeResultsOk returns a tuple with the ControllerServiceNodeResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetControllerServiceNodeResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.ControllerServiceNodeResults == nil {
+		return nil, false
+	}
+	return o.ControllerServiceNodeResults, true
+}
+
+// HasControllerServiceNodeResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasControllerServiceNodeResults() bool {
+	if o != nil && o.ControllerServiceNodeResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServiceNodeResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the ControllerServiceNodeResults field.
+func (o *SearchResultsDTO) SetControllerServiceNodeResults(v []ComponentSearchResultDTO) {
+	o.ControllerServiceNodeResults = &v
+}
+
+// GetParameterContextResults returns the ParameterContextResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetParameterContextResults() []ComponentSearchResultDTO {
+	if o == nil || o.ParameterContextResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.ParameterContextResults
+}
+
+// GetParameterContextResultsOk returns a tuple with the ParameterContextResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetParameterContextResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.ParameterContextResults == nil {
+		return nil, false
+	}
+	return o.ParameterContextResults, true
+}
+
+// HasParameterContextResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasParameterContextResults() bool {
+	if o != nil && o.ParameterContextResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContextResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the ParameterContextResults field.
+func (o *SearchResultsDTO) SetParameterContextResults(v []ComponentSearchResultDTO) {
+	o.ParameterContextResults = &v
+}
+
+// GetParameterResults returns the ParameterResults field value if set, zero value otherwise.
+func (o *SearchResultsDTO) GetParameterResults() []ComponentSearchResultDTO {
+	if o == nil || o.ParameterResults == nil {
+		var ret []ComponentSearchResultDTO
+		return ret
+	}
+	return *o.ParameterResults
+}
+
+// GetParameterResultsOk returns a tuple with the ParameterResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchResultsDTO) GetParameterResultsOk() (*[]ComponentSearchResultDTO, bool) {
+	if o == nil || o.ParameterResults == nil {
+		return nil, false
+	}
+	return o.ParameterResults, true
+}
+
+// HasParameterResults returns a boolean if a field has been set.
+func (o *SearchResultsDTO) HasParameterResults() bool {
+	if o != nil && o.ParameterResults != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterResults gets a reference to the given []ComponentSearchResultDTO and assigns it to the ParameterResults field.
+func (o *SearchResultsDTO) SetParameterResults(v []ComponentSearchResultDTO) {
+	o.ParameterResults = &v
+}
+
+func (o SearchResultsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessorResults != nil {
+		toSerialize["processorResults"] = o.ProcessorResults
+	}
+	if o.ConnectionResults != nil {
+		toSerialize["connectionResults"] = o.ConnectionResults
+	}
+	if o.ProcessGroupResults != nil {
+		toSerialize["processGroupResults"] = o.ProcessGroupResults
+	}
+	if o.InputPortResults != nil {
+		toSerialize["inputPortResults"] = o.InputPortResults
+	}
+	if o.OutputPortResults != nil {
+		toSerialize["outputPortResults"] = o.OutputPortResults
+	}
+	if o.RemoteProcessGroupResults != nil {
+		toSerialize["remoteProcessGroupResults"] = o.RemoteProcessGroupResults
+	}
+	if o.FunnelResults != nil {
+		toSerialize["funnelResults"] = o.FunnelResults
+	}
+	if o.LabelResults != nil {
+		toSerialize["labelResults"] = o.LabelResults
+	}
+	if o.ControllerServiceNodeResults != nil {
+		toSerialize["controllerServiceNodeResults"] = o.ControllerServiceNodeResults
+	}
+	if o.ParameterContextResults != nil {
+		toSerialize["parameterContextResults"] = o.ParameterContextResults
+	}
+	if o.ParameterResults != nil {
+		toSerialize["parameterResults"] = o.ParameterResults
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableSearchResultsDTO struct {
+	value *SearchResultsDTO
+	isSet bool
+}
+
+func (v NullableSearchResultsDTO) Get() *SearchResultsDTO {
+	return v.value
+}
+
+func (v *NullableSearchResultsDTO) Set(val *SearchResultsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableSearchResultsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableSearchResultsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableSearchResultsDTO(val *SearchResultsDTO) *NullableSearchResultsDTO {
+	return &NullableSearchResultsDTO{value: val, isSet: true}
+}
+
+func (v NullableSearchResultsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableSearchResultsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// CountersSnapshotDto struct for CountersSnapshotDto
-type CountersSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// CountersSnapshotDTO struct for CountersSnapshotDTO
+type CountersSnapshotDTO struct {
 	// The timestamp when the report was generated.
-	Generated string `json:"generated,omitempty"`
+	Generated *string `json:"generated,omitempty"`
 	// All counters in the NiFi.
-	Counters []CounterDto `json:"counters,omitempty"`
+	Counters *[]CounterDTO `json:"counters,omitempty"`
+}
+
+// NewCountersSnapshotDTO instantiates a new CountersSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCountersSnapshotDTO() *CountersSnapshotDTO {
+	this := CountersSnapshotDTO{}
+	return &this
+}
+
+// NewCountersSnapshotDTOWithDefaults instantiates a new CountersSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCountersSnapshotDTOWithDefaults() *CountersSnapshotDTO {
+	this := CountersSnapshotDTO{}
+	return &this
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *CountersSnapshotDTO) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountersSnapshotDTO) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *CountersSnapshotDTO) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *CountersSnapshotDTO) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+// GetCounters returns the Counters field value if set, zero value otherwise.
+func (o *CountersSnapshotDTO) GetCounters() []CounterDTO {
+	if o == nil || o.Counters == nil {
+		var ret []CounterDTO
+		return ret
+	}
+	return *o.Counters
+}
+
+// GetCountersOk returns a tuple with the Counters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CountersSnapshotDTO) GetCountersOk() (*[]CounterDTO, bool) {
+	if o == nil || o.Counters == nil {
+		return nil, false
+	}
+	return o.Counters, true
+}
+
+// HasCounters returns a boolean if a field has been set.
+func (o *CountersSnapshotDTO) HasCounters() bool {
+	if o != nil && o.Counters != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCounters gets a reference to the given []CounterDTO and assigns it to the Counters field.
+func (o *CountersSnapshotDTO) SetCounters(v []CounterDTO) {
+	o.Counters = &v
+}
+
+func (o CountersSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	if o.Counters != nil {
+		toSerialize["counters"] = o.Counters
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableCountersSnapshotDTO struct {
+	value *CountersSnapshotDTO
+	isSet bool
+}
+
+func (v NullableCountersSnapshotDTO) Get() *CountersSnapshotDTO {
+	return v.value
+}
+
+func (v *NullableCountersSnapshotDTO) Set(val *CountersSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableCountersSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableCountersSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableCountersSnapshotDTO(val *CountersSnapshotDTO) *NullableCountersSnapshotDTO {
+	return &NullableCountersSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullableCountersSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableCountersSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

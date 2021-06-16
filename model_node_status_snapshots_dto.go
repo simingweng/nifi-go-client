@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// NodeStatusSnapshotsDto struct for NodeStatusSnapshotsDto
-type NodeStatusSnapshotsDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeStatusSnapshotsDTO struct for NodeStatusSnapshotsDTO
+type NodeStatusSnapshotsDTO struct {
 	// The id of the node.
-	NodeId string `json:"nodeId,omitempty"`
+	NodeId *string `json:"nodeId,omitempty"`
 	// The node's host/ip address.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// The port the node is listening for API requests.
-	ApiPort int32 `json:"apiPort,omitempty"`
+	ApiPort *int32 `json:"apiPort,omitempty"`
 	// A list of StatusSnapshotDTO objects that provide the actual metric values for the component for this node.
-	StatusSnapshots []StatusSnapshotDto `json:"statusSnapshots,omitempty"`
+	StatusSnapshots *[]StatusSnapshotDTO `json:"statusSnapshots,omitempty"`
+}
+
+// NewNodeStatusSnapshotsDTO instantiates a new NodeStatusSnapshotsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeStatusSnapshotsDTO() *NodeStatusSnapshotsDTO {
+	this := NodeStatusSnapshotsDTO{}
+	return &this
+}
+
+// NewNodeStatusSnapshotsDTOWithDefaults instantiates a new NodeStatusSnapshotsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeStatusSnapshotsDTOWithDefaults() *NodeStatusSnapshotsDTO {
+	this := NodeStatusSnapshotsDTO{}
+	return &this
+}
+
+// GetNodeId returns the NodeId field value if set, zero value otherwise.
+func (o *NodeStatusSnapshotsDTO) GetNodeId() string {
+	if o == nil || o.NodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeId
+}
+
+// GetNodeIdOk returns a tuple with the NodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeStatusSnapshotsDTO) GetNodeIdOk() (*string, bool) {
+	if o == nil || o.NodeId == nil {
+		return nil, false
+	}
+	return o.NodeId, true
+}
+
+// HasNodeId returns a boolean if a field has been set.
+func (o *NodeStatusSnapshotsDTO) HasNodeId() bool {
+	if o != nil && o.NodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeId gets a reference to the given string and assigns it to the NodeId field.
+func (o *NodeStatusSnapshotsDTO) SetNodeId(v string) {
+	o.NodeId = &v
+}
+
+// GetAddress returns the Address field value if set, zero value otherwise.
+func (o *NodeStatusSnapshotsDTO) GetAddress() string {
+	if o == nil || o.Address == nil {
+		var ret string
+		return ret
+	}
+	return *o.Address
+}
+
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeStatusSnapshotsDTO) GetAddressOk() (*string, bool) {
+	if o == nil || o.Address == nil {
+		return nil, false
+	}
+	return o.Address, true
+}
+
+// HasAddress returns a boolean if a field has been set.
+func (o *NodeStatusSnapshotsDTO) HasAddress() bool {
+	if o != nil && o.Address != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
+func (o *NodeStatusSnapshotsDTO) SetAddress(v string) {
+	o.Address = &v
+}
+
+// GetApiPort returns the ApiPort field value if set, zero value otherwise.
+func (o *NodeStatusSnapshotsDTO) GetApiPort() int32 {
+	if o == nil || o.ApiPort == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ApiPort
+}
+
+// GetApiPortOk returns a tuple with the ApiPort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeStatusSnapshotsDTO) GetApiPortOk() (*int32, bool) {
+	if o == nil || o.ApiPort == nil {
+		return nil, false
+	}
+	return o.ApiPort, true
+}
+
+// HasApiPort returns a boolean if a field has been set.
+func (o *NodeStatusSnapshotsDTO) HasApiPort() bool {
+	if o != nil && o.ApiPort != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetApiPort gets a reference to the given int32 and assigns it to the ApiPort field.
+func (o *NodeStatusSnapshotsDTO) SetApiPort(v int32) {
+	o.ApiPort = &v
+}
+
+// GetStatusSnapshots returns the StatusSnapshots field value if set, zero value otherwise.
+func (o *NodeStatusSnapshotsDTO) GetStatusSnapshots() []StatusSnapshotDTO {
+	if o == nil || o.StatusSnapshots == nil {
+		var ret []StatusSnapshotDTO
+		return ret
+	}
+	return *o.StatusSnapshots
+}
+
+// GetStatusSnapshotsOk returns a tuple with the StatusSnapshots field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeStatusSnapshotsDTO) GetStatusSnapshotsOk() (*[]StatusSnapshotDTO, bool) {
+	if o == nil || o.StatusSnapshots == nil {
+		return nil, false
+	}
+	return o.StatusSnapshots, true
+}
+
+// HasStatusSnapshots returns a boolean if a field has been set.
+func (o *NodeStatusSnapshotsDTO) HasStatusSnapshots() bool {
+	if o != nil && o.StatusSnapshots != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatusSnapshots gets a reference to the given []StatusSnapshotDTO and assigns it to the StatusSnapshots field.
+func (o *NodeStatusSnapshotsDTO) SetStatusSnapshots(v []StatusSnapshotDTO) {
+	o.StatusSnapshots = &v
+}
+
+func (o NodeStatusSnapshotsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.NodeId != nil {
+		toSerialize["nodeId"] = o.NodeId
+	}
+	if o.Address != nil {
+		toSerialize["address"] = o.Address
+	}
+	if o.ApiPort != nil {
+		toSerialize["apiPort"] = o.ApiPort
+	}
+	if o.StatusSnapshots != nil {
+		toSerialize["statusSnapshots"] = o.StatusSnapshots
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeStatusSnapshotsDTO struct {
+	value *NodeStatusSnapshotsDTO
+	isSet bool
+}
+
+func (v NullableNodeStatusSnapshotsDTO) Get() *NodeStatusSnapshotsDTO {
+	return v.value
+}
+
+func (v *NullableNodeStatusSnapshotsDTO) Set(val *NodeStatusSnapshotsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeStatusSnapshotsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeStatusSnapshotsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeStatusSnapshotsDTO(val *NodeStatusSnapshotsDTO) *NullableNodeStatusSnapshotsDTO {
+	return &NullableNodeStatusSnapshotsDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeStatusSnapshotsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeStatusSnapshotsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

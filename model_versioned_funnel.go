@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,288 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedFunnel struct for VersionedFunnel
 type VersionedFunnel struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments      string   `json:"comments,omitempty"`
-	Position      Position `json:"position,omitempty"`
-	ComponentType string   `json:"componentType,omitempty"`
+	Comments      *string   `json:"comments,omitempty"`
+	Position      *Position `json:"position,omitempty"`
+	ComponentType *string   `json:"componentType,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedFunnel instantiates a new VersionedFunnel object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedFunnel() *VersionedFunnel {
+	this := VersionedFunnel{}
+	return &this
+}
+
+// NewVersionedFunnelWithDefaults instantiates a new VersionedFunnel object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedFunnelWithDefaults() *VersionedFunnel {
+	this := VersionedFunnel{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedFunnel) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFunnel) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedFunnel) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedFunnel) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedFunnel) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFunnel) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedFunnel) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedFunnel) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedFunnel) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFunnel) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedFunnel) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedFunnel) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedFunnel) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFunnel) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedFunnel) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedFunnel) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedFunnel) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFunnel) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedFunnel) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedFunnel) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedFunnel) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFunnel) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedFunnel) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedFunnel) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedFunnel) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedFunnel struct {
+	value *VersionedFunnel
+	isSet bool
+}
+
+func (v NullableVersionedFunnel) Get() *VersionedFunnel {
+	return v.value
+}
+
+func (v *NullableVersionedFunnel) Set(val *VersionedFunnel) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedFunnel) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedFunnel) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedFunnel(val *VersionedFunnel) *NullableVersionedFunnel {
+	return &NullableVersionedFunnel{value: val, isSet: true}
+}
+
+func (v NullableVersionedFunnel) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedFunnel) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

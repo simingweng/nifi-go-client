@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,8 +11,140 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VariableRegistryUpdateRequestEntity struct for VariableRegistryUpdateRequestEntity
 type VariableRegistryUpdateRequestEntity struct {
-	Request              VariableRegistryUpdateRequestDto `json:"request,omitempty"`
-	ProcessGroupRevision RevisionDto                      `json:"processGroupRevision,omitempty"`
+	Request              *VariableRegistryUpdateRequestDTO `json:"request,omitempty"`
+	ProcessGroupRevision *RevisionDTO                      `json:"processGroupRevision,omitempty"`
+}
+
+// NewVariableRegistryUpdateRequestEntity instantiates a new VariableRegistryUpdateRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVariableRegistryUpdateRequestEntity() *VariableRegistryUpdateRequestEntity {
+	this := VariableRegistryUpdateRequestEntity{}
+	return &this
+}
+
+// NewVariableRegistryUpdateRequestEntityWithDefaults instantiates a new VariableRegistryUpdateRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVariableRegistryUpdateRequestEntityWithDefaults() *VariableRegistryUpdateRequestEntity {
+	this := VariableRegistryUpdateRequestEntity{}
+	return &this
+}
+
+// GetRequest returns the Request field value if set, zero value otherwise.
+func (o *VariableRegistryUpdateRequestEntity) GetRequest() VariableRegistryUpdateRequestDTO {
+	if o == nil || o.Request == nil {
+		var ret VariableRegistryUpdateRequestDTO
+		return ret
+	}
+	return *o.Request
+}
+
+// GetRequestOk returns a tuple with the Request field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryUpdateRequestEntity) GetRequestOk() (*VariableRegistryUpdateRequestDTO, bool) {
+	if o == nil || o.Request == nil {
+		return nil, false
+	}
+	return o.Request, true
+}
+
+// HasRequest returns a boolean if a field has been set.
+func (o *VariableRegistryUpdateRequestEntity) HasRequest() bool {
+	if o != nil && o.Request != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequest gets a reference to the given VariableRegistryUpdateRequestDTO and assigns it to the Request field.
+func (o *VariableRegistryUpdateRequestEntity) SetRequest(v VariableRegistryUpdateRequestDTO) {
+	o.Request = &v
+}
+
+// GetProcessGroupRevision returns the ProcessGroupRevision field value if set, zero value otherwise.
+func (o *VariableRegistryUpdateRequestEntity) GetProcessGroupRevision() RevisionDTO {
+	if o == nil || o.ProcessGroupRevision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroupRevision
+}
+
+// GetProcessGroupRevisionOk returns a tuple with the ProcessGroupRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VariableRegistryUpdateRequestEntity) GetProcessGroupRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.ProcessGroupRevision == nil {
+		return nil, false
+	}
+	return o.ProcessGroupRevision, true
+}
+
+// HasProcessGroupRevision returns a boolean if a field has been set.
+func (o *VariableRegistryUpdateRequestEntity) HasProcessGroupRevision() bool {
+	if o != nil && o.ProcessGroupRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupRevision gets a reference to the given RevisionDTO and assigns it to the ProcessGroupRevision field.
+func (o *VariableRegistryUpdateRequestEntity) SetProcessGroupRevision(v RevisionDTO) {
+	o.ProcessGroupRevision = &v
+}
+
+func (o VariableRegistryUpdateRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Request != nil {
+		toSerialize["request"] = o.Request
+	}
+	if o.ProcessGroupRevision != nil {
+		toSerialize["processGroupRevision"] = o.ProcessGroupRevision
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVariableRegistryUpdateRequestEntity struct {
+	value *VariableRegistryUpdateRequestEntity
+	isSet bool
+}
+
+func (v NullableVariableRegistryUpdateRequestEntity) Get() *VariableRegistryUpdateRequestEntity {
+	return v.value
+}
+
+func (v *NullableVariableRegistryUpdateRequestEntity) Set(val *VariableRegistryUpdateRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVariableRegistryUpdateRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVariableRegistryUpdateRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVariableRegistryUpdateRequestEntity(val *VariableRegistryUpdateRequestEntity) *NullableVariableRegistryUpdateRequestEntity {
+	return &NullableVariableRegistryUpdateRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableVariableRegistryUpdateRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVariableRegistryUpdateRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

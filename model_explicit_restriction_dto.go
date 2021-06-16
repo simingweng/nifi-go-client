@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
-// ExplicitRestrictionDto struct for ExplicitRestrictionDto
-type ExplicitRestrictionDto struct {
-	RequiredPermission RequiredPermissionDto `json:"requiredPermission,omitempty"`
+import (
+	"encoding/json"
+)
+
+// ExplicitRestrictionDTO struct for ExplicitRestrictionDTO
+type ExplicitRestrictionDTO struct {
+	RequiredPermission *RequiredPermissionDTO `json:"requiredPermission,omitempty"`
 	// The description of why the usage of this component is restricted for this required permission.
-	Explanation string `json:"explanation,omitempty"`
+	Explanation *string `json:"explanation,omitempty"`
+}
+
+// NewExplicitRestrictionDTO instantiates a new ExplicitRestrictionDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewExplicitRestrictionDTO() *ExplicitRestrictionDTO {
+	this := ExplicitRestrictionDTO{}
+	return &this
+}
+
+// NewExplicitRestrictionDTOWithDefaults instantiates a new ExplicitRestrictionDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewExplicitRestrictionDTOWithDefaults() *ExplicitRestrictionDTO {
+	this := ExplicitRestrictionDTO{}
+	return &this
+}
+
+// GetRequiredPermission returns the RequiredPermission field value if set, zero value otherwise.
+func (o *ExplicitRestrictionDTO) GetRequiredPermission() RequiredPermissionDTO {
+	if o == nil || o.RequiredPermission == nil {
+		var ret RequiredPermissionDTO
+		return ret
+	}
+	return *o.RequiredPermission
+}
+
+// GetRequiredPermissionOk returns a tuple with the RequiredPermission field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExplicitRestrictionDTO) GetRequiredPermissionOk() (*RequiredPermissionDTO, bool) {
+	if o == nil || o.RequiredPermission == nil {
+		return nil, false
+	}
+	return o.RequiredPermission, true
+}
+
+// HasRequiredPermission returns a boolean if a field has been set.
+func (o *ExplicitRestrictionDTO) HasRequiredPermission() bool {
+	if o != nil && o.RequiredPermission != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRequiredPermission gets a reference to the given RequiredPermissionDTO and assigns it to the RequiredPermission field.
+func (o *ExplicitRestrictionDTO) SetRequiredPermission(v RequiredPermissionDTO) {
+	o.RequiredPermission = &v
+}
+
+// GetExplanation returns the Explanation field value if set, zero value otherwise.
+func (o *ExplicitRestrictionDTO) GetExplanation() string {
+	if o == nil || o.Explanation == nil {
+		var ret string
+		return ret
+	}
+	return *o.Explanation
+}
+
+// GetExplanationOk returns a tuple with the Explanation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExplicitRestrictionDTO) GetExplanationOk() (*string, bool) {
+	if o == nil || o.Explanation == nil {
+		return nil, false
+	}
+	return o.Explanation, true
+}
+
+// HasExplanation returns a boolean if a field has been set.
+func (o *ExplicitRestrictionDTO) HasExplanation() bool {
+	if o != nil && o.Explanation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExplanation gets a reference to the given string and assigns it to the Explanation field.
+func (o *ExplicitRestrictionDTO) SetExplanation(v string) {
+	o.Explanation = &v
+}
+
+func (o ExplicitRestrictionDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.RequiredPermission != nil {
+		toSerialize["requiredPermission"] = o.RequiredPermission
+	}
+	if o.Explanation != nil {
+		toSerialize["explanation"] = o.Explanation
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableExplicitRestrictionDTO struct {
+	value *ExplicitRestrictionDTO
+	isSet bool
+}
+
+func (v NullableExplicitRestrictionDTO) Get() *ExplicitRestrictionDTO {
+	return v.value
+}
+
+func (v *NullableExplicitRestrictionDTO) Set(val *ExplicitRestrictionDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableExplicitRestrictionDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableExplicitRestrictionDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableExplicitRestrictionDTO(val *ExplicitRestrictionDTO) *NullableExplicitRestrictionDTO {
+	return &NullableExplicitRestrictionDTO{value: val, isSet: true}
+}
+
+func (v NullableExplicitRestrictionDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableExplicitRestrictionDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

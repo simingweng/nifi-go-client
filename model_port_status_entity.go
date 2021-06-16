@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,9 +11,141 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // PortStatusEntity struct for PortStatusEntity
 type PortStatusEntity struct {
-	PortStatus PortStatusDto `json:"portStatus,omitempty"`
+	PortStatus *PortStatusDTO `json:"portStatus,omitempty"`
 	// Indicates whether the user can read a given resource.
-	CanRead bool `json:"canRead,omitempty"`
+	CanRead *bool `json:"canRead,omitempty"`
+}
+
+// NewPortStatusEntity instantiates a new PortStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPortStatusEntity() *PortStatusEntity {
+	this := PortStatusEntity{}
+	return &this
+}
+
+// NewPortStatusEntityWithDefaults instantiates a new PortStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPortStatusEntityWithDefaults() *PortStatusEntity {
+	this := PortStatusEntity{}
+	return &this
+}
+
+// GetPortStatus returns the PortStatus field value if set, zero value otherwise.
+func (o *PortStatusEntity) GetPortStatus() PortStatusDTO {
+	if o == nil || o.PortStatus == nil {
+		var ret PortStatusDTO
+		return ret
+	}
+	return *o.PortStatus
+}
+
+// GetPortStatusOk returns a tuple with the PortStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusEntity) GetPortStatusOk() (*PortStatusDTO, bool) {
+	if o == nil || o.PortStatus == nil {
+		return nil, false
+	}
+	return o.PortStatus, true
+}
+
+// HasPortStatus returns a boolean if a field has been set.
+func (o *PortStatusEntity) HasPortStatus() bool {
+	if o != nil && o.PortStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPortStatus gets a reference to the given PortStatusDTO and assigns it to the PortStatus field.
+func (o *PortStatusEntity) SetPortStatus(v PortStatusDTO) {
+	o.PortStatus = &v
+}
+
+// GetCanRead returns the CanRead field value if set, zero value otherwise.
+func (o *PortStatusEntity) GetCanRead() bool {
+	if o == nil || o.CanRead == nil {
+		var ret bool
+		return ret
+	}
+	return *o.CanRead
+}
+
+// GetCanReadOk returns a tuple with the CanRead field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PortStatusEntity) GetCanReadOk() (*bool, bool) {
+	if o == nil || o.CanRead == nil {
+		return nil, false
+	}
+	return o.CanRead, true
+}
+
+// HasCanRead returns a boolean if a field has been set.
+func (o *PortStatusEntity) HasCanRead() bool {
+	if o != nil && o.CanRead != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCanRead gets a reference to the given bool and assigns it to the CanRead field.
+func (o *PortStatusEntity) SetCanRead(v bool) {
+	o.CanRead = &v
+}
+
+func (o PortStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.PortStatus != nil {
+		toSerialize["portStatus"] = o.PortStatus
+	}
+	if o.CanRead != nil {
+		toSerialize["canRead"] = o.CanRead
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePortStatusEntity struct {
+	value *PortStatusEntity
+	isSet bool
+}
+
+func (v NullablePortStatusEntity) Get() *PortStatusEntity {
+	return v.value
+}
+
+func (v *NullablePortStatusEntity) Set(val *PortStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePortStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePortStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePortStatusEntity(val *PortStatusEntity) *NullablePortStatusEntity {
+	return &NullablePortStatusEntity{value: val, isSet: true}
+}
+
+func (v NullablePortStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePortStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

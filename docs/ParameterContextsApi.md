@@ -19,17 +19,49 @@ Method | HTTP request | Description
 
 ## CreateParameterContext
 
-> ParameterContextEntity CreateParameterContext(ctx, body)
+> ParameterContextEntity CreateParameterContext(ctx).Body(body).Execute()
 
 Create a Parameter Context
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewParameterContextEntity() // ParameterContextEntity | The Parameter Context.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.CreateParameterContext(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.CreateParameterContext``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateParameterContext`: ParameterContextEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.CreateParameterContext`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateParameterContextRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**ParameterContextEntity**](ParameterContextEntity.md)| The Parameter Context. | 
+ **body** | [**ParameterContextEntity**](ParameterContextEntity.md) | The Parameter Context. | 
 
 ### Return type
 
@@ -51,32 +83,61 @@ No authorization required
 
 ## DeleteParameterContext
 
-> ParameterContextEntity DeleteParameterContext(ctx, id, optional)
+> ParameterContextEntity DeleteParameterContext(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the Parameter Context with the given ID
 
-Deletes the Parameter Context with the given ID.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The Parameter Context ID.
+    version := "version_example" // string | The version is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.DeleteParameterContext(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.DeleteParameterContext``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteParameterContext`: ParameterContextEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.DeleteParameterContext`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The Parameter Context ID. | 
- **optional** | ***DeleteParameterContextOpts** | optional parameters | nil if no parameters
+**id** | **string** | The Parameter Context ID. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteParameterContextOpts struct
+Other parameters are passed through a pointer to a apiDeleteParameterContextRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The version is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The version is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -98,32 +159,60 @@ No authorization required
 
 ## DeleteUpdateRequest
 
-> ParameterContextUpdateRequestEntity DeleteUpdateRequest(ctx, contextId, requestId, optional)
+> ParameterContextUpdateRequestEntity DeleteUpdateRequest(ctx, contextId, requestId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the Update Request with the given ID
 
-Deletes the Update Request with the given ID. After a request is created via a POST to /nifi-api/parameter-contexts/update-requests, it is expected that the client will properly clean up the request by DELETE'ing it, once the Update process has completed. If the request is deleted before the request completes, then the Update request will finish the step that it is currently performing and then will cancel any subsequent steps.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    contextId := "contextId_example" // string | The ID of the ParameterContext
+    requestId := "requestId_example" // string | The ID of the Update Request
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.DeleteUpdateRequest(context.Background(), contextId, requestId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.DeleteUpdateRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteUpdateRequest`: ParameterContextUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.DeleteUpdateRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**contextId** | **string**| The ID of the ParameterContext | 
-**requestId** | **string**| The ID of the Update Request | 
- **optional** | ***DeleteUpdateRequestOpts** | optional parameters | nil if no parameters
+**contextId** | **string** | The ID of the ParameterContext | 
+**requestId** | **string** | The ID of the Update Request | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteUpdateRequestOpts struct
+Other parameters are passed through a pointer to a apiDeleteUpdateRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -145,32 +234,60 @@ No authorization required
 
 ## DeleteValidationRequest
 
-> ParameterContextValidationRequestEntity DeleteValidationRequest(ctx, contextId, id, optional)
+> ParameterContextValidationRequestEntity DeleteValidationRequest(ctx, contextId, id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the Validation Request with the given ID
 
-Deletes the Validation Request with the given ID. After a request is created via a POST to /nifi-api/validation-contexts, it is expected that the client will properly clean up the request by DELETE'ing it, once the validation process has completed. If the request is deleted before the request completes, then the Validation request will finish the step that it is currently performing and then will cancel any subsequent steps.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    contextId := "contextId_example" // string | The ID of the Parameter Context
+    id := "id_example" // string | The ID of the Update Request
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.DeleteValidationRequest(context.Background(), contextId, id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.DeleteValidationRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteValidationRequest`: ParameterContextValidationRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.DeleteValidationRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**contextId** | **string**| The ID of the Parameter Context | 
-**id** | **string**| The ID of the Update Request | 
- **optional** | ***DeleteValidationRequestOpts** | optional parameters | nil if no parameters
+**contextId** | **string** | The ID of the Parameter Context | 
+**id** | **string** | The ID of the Update Request | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteValidationRequestOpts struct
+Other parameters are passed through a pointer to a apiDeleteValidationRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -192,19 +309,55 @@ No authorization required
 
 ## GetParameterContext
 
-> ParameterContextEntity GetParameterContext(ctx, id)
+> ParameterContextEntity GetParameterContext(ctx, id).Execute()
 
 Returns the Parameter Context with the given ID
 
-Returns the Parameter Context with the given ID.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The ID of the Parameter Context
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.GetParameterContext(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.GetParameterContext``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetParameterContext`: ParameterContextEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.GetParameterContext`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The ID of the Parameter Context | 
+**id** | **string** | The ID of the Parameter Context | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetParameterContextRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -226,20 +379,58 @@ No authorization required
 
 ## GetParameterContextUpdate
 
-> ParameterContextUpdateRequestEntity GetParameterContextUpdate(ctx, contextId, requestId)
+> ParameterContextUpdateRequestEntity GetParameterContextUpdate(ctx, contextId, requestId).Execute()
 
 Returns the Update Request with the given ID
 
-Returns the Update Request with the given ID. Once an Update Request has been created by performing a POST to /nifi-api/parameter-contexts, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. 
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    contextId := "contextId_example" // string | The ID of the Parameter Context
+    requestId := "requestId_example" // string | The ID of the Update Request
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.GetParameterContextUpdate(context.Background(), contextId, requestId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.GetParameterContextUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetParameterContextUpdate`: ParameterContextUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.GetParameterContextUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**contextId** | **string**| The ID of the Parameter Context | 
-**requestId** | **string**| The ID of the Update Request | 
+**contextId** | **string** | The ID of the Parameter Context | 
+**requestId** | **string** | The ID of the Update Request | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetParameterContextUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -261,20 +452,58 @@ No authorization required
 
 ## GetValidationRequest
 
-> ParameterContextValidationRequestEntity GetValidationRequest(ctx, contextId, id)
+> ParameterContextValidationRequestEntity GetValidationRequest(ctx, contextId, id).Execute()
 
 Returns the Validation Request with the given ID
 
-Returns the Validation Request with the given ID. Once a Validation Request has been created by performing a POST to /nifi-api/validation-contexts, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. 
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    contextId := "contextId_example" // string | The ID of the Parameter Context
+    id := "id_example" // string | The ID of the Validation Request
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.GetValidationRequest(context.Background(), contextId, id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.GetValidationRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetValidationRequest`: ParameterContextValidationRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.GetValidationRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**contextId** | **string**| The ID of the Parameter Context | 
-**id** | **string**| The ID of the Validation Request | 
+**contextId** | **string** | The ID of the Parameter Context | 
+**id** | **string** | The ID of the Validation Request | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetValidationRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -296,20 +525,57 @@ No authorization required
 
 ## SubmitParameterContextUpdate
 
-> ParameterContextUpdateRequestEntity SubmitParameterContextUpdate(ctx, contextId, body)
+> ParameterContextUpdateRequestEntity SubmitParameterContextUpdate(ctx, contextId).Body(body).Execute()
 
 Initiate the Update Request of a Parameter Context
 
-This will initiate the process of updating a Parameter Context. Changing the value of a Parameter may require that one or more components be stopped and restarted, so this acttion may take significantly more time than many other REST API actions. As a result, this endpoint will immediately return a ParameterContextUpdateRequestEntity, and the process of updating the necessary components will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /parameter-contexts/update-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /parameter-contexts/update-requests/{requestId}.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    contextId := "contextId_example" // string | 
+    body := *openapiclient.NewParameterContextEntity() // ParameterContextEntity | The updated version of the parameter context.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.SubmitParameterContextUpdate(context.Background(), contextId).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.SubmitParameterContextUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SubmitParameterContextUpdate`: ParameterContextUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.SubmitParameterContextUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**contextId** | **string**|  | 
-**body** | [**ParameterContextEntity**](ParameterContextEntity.md)| The updated version of the parameter context. | 
+**contextId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSubmitParameterContextUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ParameterContextEntity**](ParameterContextEntity.md) | The updated version of the parameter context. | 
 
 ### Return type
 
@@ -331,20 +597,57 @@ No authorization required
 
 ## SubmitValidationRequest
 
-> ParameterContextValidationRequestEntity SubmitValidationRequest(ctx, contextId, body)
+> ParameterContextValidationRequestEntity SubmitValidationRequest(ctx, contextId).Body(body).Execute()
 
 Initiate a Validation Request to determine how the validity of components will change if a Parameter Context were to be updated
 
-This will initiate the process of validating all components whose Process Group is bound to the specified Parameter Context. Performing validation against an arbitrary number of components may be expect and take significantly more time than many other REST API actions. As a result, this endpoint will immediately return a ParameterContextValidationRequestEntity, and the process of validating the necessary components will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /parameter-contexts/validation-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /parameter-contexts/validation-requests/{requestId}.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    contextId := "contextId_example" // string | 
+    body := *openapiclient.NewParameterContextValidationRequestEntity() // ParameterContextValidationRequestEntity | The validation request
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.SubmitValidationRequest(context.Background(), contextId).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.SubmitValidationRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SubmitValidationRequest`: ParameterContextValidationRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.SubmitValidationRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**contextId** | **string**|  | 
-**body** | [**ParameterContextValidationRequestEntity**](ParameterContextValidationRequestEntity.md)| The validation request | 
+**contextId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSubmitValidationRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ParameterContextValidationRequestEntity**](ParameterContextValidationRequestEntity.md) | The validation request | 
 
 ### Return type
 
@@ -366,20 +669,57 @@ No authorization required
 
 ## UpdateParameterContext
 
-> ParameterContextEntity UpdateParameterContext(ctx, id, body)
+> ParameterContextEntity UpdateParameterContext(ctx, id).Body(body).Execute()
 
 Modifies a Parameter Context
 
-This endpoint will update a Parameter Context to match the provided entity. However, this request will fail if any component is running and is referencing a Parameter in the Parameter Context. Generally, this endpoint is not called directly. Instead, an update request should be submitted by making a POST to the /parameter-contexts/update-requests endpoint. That endpoint will, in turn, call this endpoint.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | 
+    body := *openapiclient.NewParameterContextEntity() // ParameterContextEntity | The updated Parameter Context
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.ParameterContextsApi.UpdateParameterContext(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ParameterContextsApi.UpdateParameterContext``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateParameterContext`: ParameterContextEntity
+    fmt.Fprintf(os.Stdout, "Response from `ParameterContextsApi.UpdateParameterContext`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**|  | 
-**body** | [**ParameterContextEntity**](ParameterContextEntity.md)| The updated Parameter Context | 
+**id** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateParameterContextRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**ParameterContextEntity**](ParameterContextEntity.md) | The updated Parameter Context | 
 
 ### Return type
 

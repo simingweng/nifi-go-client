@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,13 +11,215 @@
 
 package nifi
 
-// NodeSystemDiagnosticsSnapshotDto struct for NodeSystemDiagnosticsSnapshotDto
-type NodeSystemDiagnosticsSnapshotDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeSystemDiagnosticsSnapshotDTO struct for NodeSystemDiagnosticsSnapshotDTO
+type NodeSystemDiagnosticsSnapshotDTO struct {
 	// The unique ID that identifies the node
-	NodeId string `json:"nodeId,omitempty"`
+	NodeId *string `json:"nodeId,omitempty"`
 	// The API address of the node
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// The API port used to communicate with the node
-	ApiPort  int32                        `json:"apiPort,omitempty"`
-	Snapshot SystemDiagnosticsSnapshotDto `json:"snapshot,omitempty"`
+	ApiPort  *int32                        `json:"apiPort,omitempty"`
+	Snapshot *SystemDiagnosticsSnapshotDTO `json:"snapshot,omitempty"`
+}
+
+// NewNodeSystemDiagnosticsSnapshotDTO instantiates a new NodeSystemDiagnosticsSnapshotDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeSystemDiagnosticsSnapshotDTO() *NodeSystemDiagnosticsSnapshotDTO {
+	this := NodeSystemDiagnosticsSnapshotDTO{}
+	return &this
+}
+
+// NewNodeSystemDiagnosticsSnapshotDTOWithDefaults instantiates a new NodeSystemDiagnosticsSnapshotDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeSystemDiagnosticsSnapshotDTOWithDefaults() *NodeSystemDiagnosticsSnapshotDTO {
+	this := NodeSystemDiagnosticsSnapshotDTO{}
+	return &this
+}
+
+// GetNodeId returns the NodeId field value if set, zero value otherwise.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetNodeId() string {
+	if o == nil || o.NodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.NodeId
+}
+
+// GetNodeIdOk returns a tuple with the NodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetNodeIdOk() (*string, bool) {
+	if o == nil || o.NodeId == nil {
+		return nil, false
+	}
+	return o.NodeId, true
+}
+
+// HasNodeId returns a boolean if a field has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) HasNodeId() bool {
+	if o != nil && o.NodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodeId gets a reference to the given string and assigns it to the NodeId field.
+func (o *NodeSystemDiagnosticsSnapshotDTO) SetNodeId(v string) {
+	o.NodeId = &v
+}
+
+// GetAddress returns the Address field value if set, zero value otherwise.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetAddress() string {
+	if o == nil || o.Address == nil {
+		var ret string
+		return ret
+	}
+	return *o.Address
+}
+
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetAddressOk() (*string, bool) {
+	if o == nil || o.Address == nil {
+		return nil, false
+	}
+	return o.Address, true
+}
+
+// HasAddress returns a boolean if a field has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) HasAddress() bool {
+	if o != nil && o.Address != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
+func (o *NodeSystemDiagnosticsSnapshotDTO) SetAddress(v string) {
+	o.Address = &v
+}
+
+// GetApiPort returns the ApiPort field value if set, zero value otherwise.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetApiPort() int32 {
+	if o == nil || o.ApiPort == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ApiPort
+}
+
+// GetApiPortOk returns a tuple with the ApiPort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetApiPortOk() (*int32, bool) {
+	if o == nil || o.ApiPort == nil {
+		return nil, false
+	}
+	return o.ApiPort, true
+}
+
+// HasApiPort returns a boolean if a field has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) HasApiPort() bool {
+	if o != nil && o.ApiPort != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetApiPort gets a reference to the given int32 and assigns it to the ApiPort field.
+func (o *NodeSystemDiagnosticsSnapshotDTO) SetApiPort(v int32) {
+	o.ApiPort = &v
+}
+
+// GetSnapshot returns the Snapshot field value if set, zero value otherwise.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetSnapshot() SystemDiagnosticsSnapshotDTO {
+	if o == nil || o.Snapshot == nil {
+		var ret SystemDiagnosticsSnapshotDTO
+		return ret
+	}
+	return *o.Snapshot
+}
+
+// GetSnapshotOk returns a tuple with the Snapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) GetSnapshotOk() (*SystemDiagnosticsSnapshotDTO, bool) {
+	if o == nil || o.Snapshot == nil {
+		return nil, false
+	}
+	return o.Snapshot, true
+}
+
+// HasSnapshot returns a boolean if a field has been set.
+func (o *NodeSystemDiagnosticsSnapshotDTO) HasSnapshot() bool {
+	if o != nil && o.Snapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSnapshot gets a reference to the given SystemDiagnosticsSnapshotDTO and assigns it to the Snapshot field.
+func (o *NodeSystemDiagnosticsSnapshotDTO) SetSnapshot(v SystemDiagnosticsSnapshotDTO) {
+	o.Snapshot = &v
+}
+
+func (o NodeSystemDiagnosticsSnapshotDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.NodeId != nil {
+		toSerialize["nodeId"] = o.NodeId
+	}
+	if o.Address != nil {
+		toSerialize["address"] = o.Address
+	}
+	if o.ApiPort != nil {
+		toSerialize["apiPort"] = o.ApiPort
+	}
+	if o.Snapshot != nil {
+		toSerialize["snapshot"] = o.Snapshot
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeSystemDiagnosticsSnapshotDTO struct {
+	value *NodeSystemDiagnosticsSnapshotDTO
+	isSet bool
+}
+
+func (v NullableNodeSystemDiagnosticsSnapshotDTO) Get() *NodeSystemDiagnosticsSnapshotDTO {
+	return v.value
+}
+
+func (v *NullableNodeSystemDiagnosticsSnapshotDTO) Set(val *NodeSystemDiagnosticsSnapshotDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeSystemDiagnosticsSnapshotDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeSystemDiagnosticsSnapshotDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeSystemDiagnosticsSnapshotDTO(val *NodeSystemDiagnosticsSnapshotDTO) *NullableNodeSystemDiagnosticsSnapshotDTO {
+	return &NullableNodeSystemDiagnosticsSnapshotDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeSystemDiagnosticsSnapshotDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeSystemDiagnosticsSnapshotDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

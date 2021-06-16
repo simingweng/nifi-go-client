@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// AccessStatusDto struct for AccessStatusDto
-type AccessStatusDto struct {
+import (
+	"encoding/json"
+)
+
+// AccessStatusDTO struct for AccessStatusDTO
+type AccessStatusDTO struct {
 	// The user identity.
-	Identity string `json:"identity,omitempty"`
+	Identity *string `json:"identity,omitempty"`
 	// The user access status.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 	// Additional details about the user access status.
-	Message string `json:"message,omitempty"`
+	Message *string `json:"message,omitempty"`
+}
+
+// NewAccessStatusDTO instantiates a new AccessStatusDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAccessStatusDTO() *AccessStatusDTO {
+	this := AccessStatusDTO{}
+	return &this
+}
+
+// NewAccessStatusDTOWithDefaults instantiates a new AccessStatusDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAccessStatusDTOWithDefaults() *AccessStatusDTO {
+	this := AccessStatusDTO{}
+	return &this
+}
+
+// GetIdentity returns the Identity field value if set, zero value otherwise.
+func (o *AccessStatusDTO) GetIdentity() string {
+	if o == nil || o.Identity == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identity
+}
+
+// GetIdentityOk returns a tuple with the Identity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessStatusDTO) GetIdentityOk() (*string, bool) {
+	if o == nil || o.Identity == nil {
+		return nil, false
+	}
+	return o.Identity, true
+}
+
+// HasIdentity returns a boolean if a field has been set.
+func (o *AccessStatusDTO) HasIdentity() bool {
+	if o != nil && o.Identity != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentity gets a reference to the given string and assigns it to the Identity field.
+func (o *AccessStatusDTO) SetIdentity(v string) {
+	o.Identity = &v
+}
+
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *AccessStatusDTO) GetStatus() string {
+	if o == nil || o.Status == nil {
+		var ret string
+		return ret
+	}
+	return *o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessStatusDTO) GetStatusOk() (*string, bool) {
+	if o == nil || o.Status == nil {
+		return nil, false
+	}
+	return o.Status, true
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *AccessStatusDTO) HasStatus() bool {
+	if o != nil && o.Status != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given string and assigns it to the Status field.
+func (o *AccessStatusDTO) SetStatus(v string) {
+	o.Status = &v
+}
+
+// GetMessage returns the Message field value if set, zero value otherwise.
+func (o *AccessStatusDTO) GetMessage() string {
+	if o == nil || o.Message == nil {
+		var ret string
+		return ret
+	}
+	return *o.Message
+}
+
+// GetMessageOk returns a tuple with the Message field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessStatusDTO) GetMessageOk() (*string, bool) {
+	if o == nil || o.Message == nil {
+		return nil, false
+	}
+	return o.Message, true
+}
+
+// HasMessage returns a boolean if a field has been set.
+func (o *AccessStatusDTO) HasMessage() bool {
+	if o != nil && o.Message != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMessage gets a reference to the given string and assigns it to the Message field.
+func (o *AccessStatusDTO) SetMessage(v string) {
+	o.Message = &v
+}
+
+func (o AccessStatusDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identity != nil {
+		toSerialize["identity"] = o.Identity
+	}
+	if o.Status != nil {
+		toSerialize["status"] = o.Status
+	}
+	if o.Message != nil {
+		toSerialize["message"] = o.Message
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAccessStatusDTO struct {
+	value *AccessStatusDTO
+	isSet bool
+}
+
+func (v NullableAccessStatusDTO) Get() *AccessStatusDTO {
+	return v.value
+}
+
+func (v *NullableAccessStatusDTO) Set(val *AccessStatusDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAccessStatusDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAccessStatusDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAccessStatusDTO(val *AccessStatusDTO) *NullableAccessStatusDTO {
+	return &NullableAccessStatusDTO{value: val, isSet: true}
+}
+
+func (v NullableAccessStatusDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAccessStatusDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

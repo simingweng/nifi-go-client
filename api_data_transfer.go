@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,6 +12,7 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
@@ -27,15 +28,44 @@ var (
 // DataTransferApiService DataTransferApi service
 type DataTransferApiService service
 
+type DataTransferApiApiCommitInputPortTransactionRequest struct {
+	ctx           _context.Context
+	ApiService    *DataTransferApiService
+	responseCode  *int32
+	portId        string
+	transactionId string
+}
+
+func (r DataTransferApiApiCommitInputPortTransactionRequest) ResponseCode(responseCode int32) DataTransferApiApiCommitInputPortTransactionRequest {
+	r.responseCode = &responseCode
+	return r
+}
+
+func (r DataTransferApiApiCommitInputPortTransactionRequest) Execute() (TransactionResultEntity, *_nethttp.Response, error) {
+	return r.ApiService.CommitInputPortTransactionExecute(r)
+}
+
 /*
-CommitInputPortTransaction Commit or cancel the specified transaction
+ * CommitInputPortTransaction Commit or cancel the specified transaction
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param responseCode The response code. Available values are BAD_CHECKSUM(19), CONFIRM_TRANSACTION(12) or CANCEL_TRANSACTION(15).
  * @param portId The input port id.
  * @param transactionId The transaction id.
-@return TransactionResultEntity
-*/
-func (a *DataTransferApiService) CommitInputPortTransaction(ctx _context.Context, responseCode int32, portId string, transactionId string) (TransactionResultEntity, *_nethttp.Response, error) {
+ * @return DataTransferApiApiCommitInputPortTransactionRequest
+ */
+func (a *DataTransferApiService) CommitInputPortTransaction(ctx _context.Context, portId string, transactionId string) DataTransferApiApiCommitInputPortTransactionRequest {
+	return DataTransferApiApiCommitInputPortTransactionRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		portId:        portId,
+		transactionId: transactionId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TransactionResultEntity
+ */
+func (a *DataTransferApiService) CommitInputPortTransactionExecute(r DataTransferApiApiCommitInputPortTransactionRequest) (TransactionResultEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -45,17 +75,23 @@ func (a *DataTransferApiService) CommitInputPortTransaction(ctx _context.Context
 		localVarReturnValue  TransactionResultEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/input-ports/{portId}/transactions/{transactionId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.CommitInputPortTransaction")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.QueryEscape(parameterToString(transactionId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/input-ports/{portId}/transactions/{transactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.PathEscape(parameterToString(r.transactionId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.responseCode == nil {
+		return localVarReturnValue, nil, reportError("responseCode is required and must be specified")
+	}
 
-	localVarQueryParams.Add("responseCode", parameterToString(responseCode, ""))
+	localVarQueryParams.Add("responseCode", parameterToString(*r.responseCode, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -73,18 +109,19 @@ func (a *DataTransferApiService) CommitInputPortTransaction(ctx _context.Context
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -109,16 +146,49 @@ func (a *DataTransferApiService) CommitInputPortTransaction(ctx _context.Context
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type DataTransferApiApiCommitOutputPortTransactionRequest struct {
+	ctx           _context.Context
+	ApiService    *DataTransferApiService
+	responseCode  *int32
+	checksum      *string
+	portId        string
+	transactionId string
+}
+
+func (r DataTransferApiApiCommitOutputPortTransactionRequest) ResponseCode(responseCode int32) DataTransferApiApiCommitOutputPortTransactionRequest {
+	r.responseCode = &responseCode
+	return r
+}
+func (r DataTransferApiApiCommitOutputPortTransactionRequest) Checksum(checksum string) DataTransferApiApiCommitOutputPortTransactionRequest {
+	r.checksum = &checksum
+	return r
+}
+
+func (r DataTransferApiApiCommitOutputPortTransactionRequest) Execute() (TransactionResultEntity, *_nethttp.Response, error) {
+	return r.ApiService.CommitOutputPortTransactionExecute(r)
+}
+
 /*
-CommitOutputPortTransaction Commit or cancel the specified transaction
+ * CommitOutputPortTransaction Commit or cancel the specified transaction
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param responseCode The response code. Available values are CONFIRM_TRANSACTION(12) or CANCEL_TRANSACTION(15).
- * @param checksum A checksum calculated at client side using CRC32 to check flow file content integrity. It must match with the value calculated at server side.
  * @param portId The output port id.
  * @param transactionId The transaction id.
-@return TransactionResultEntity
-*/
-func (a *DataTransferApiService) CommitOutputPortTransaction(ctx _context.Context, responseCode int32, checksum string, portId string, transactionId string) (TransactionResultEntity, *_nethttp.Response, error) {
+ * @return DataTransferApiApiCommitOutputPortTransactionRequest
+ */
+func (a *DataTransferApiService) CommitOutputPortTransaction(ctx _context.Context, portId string, transactionId string) DataTransferApiApiCommitOutputPortTransactionRequest {
+	return DataTransferApiApiCommitOutputPortTransactionRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		portId:        portId,
+		transactionId: transactionId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TransactionResultEntity
+ */
+func (a *DataTransferApiService) CommitOutputPortTransactionExecute(r DataTransferApiApiCommitOutputPortTransactionRequest) (TransactionResultEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -128,18 +198,27 @@ func (a *DataTransferApiService) CommitOutputPortTransaction(ctx _context.Contex
 		localVarReturnValue  TransactionResultEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/output-ports/{portId}/transactions/{transactionId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.CommitOutputPortTransaction")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.QueryEscape(parameterToString(transactionId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/output-ports/{portId}/transactions/{transactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.PathEscape(parameterToString(r.transactionId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.responseCode == nil {
+		return localVarReturnValue, nil, reportError("responseCode is required and must be specified")
+	}
+	if r.checksum == nil {
+		return localVarReturnValue, nil, reportError("checksum is required and must be specified")
+	}
 
-	localVarQueryParams.Add("responseCode", parameterToString(responseCode, ""))
-	localVarQueryParams.Add("checksum", parameterToString(checksum, ""))
+	localVarQueryParams.Add("responseCode", parameterToString(*r.responseCode, ""))
+	localVarQueryParams.Add("checksum", parameterToString(*r.checksum, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -157,18 +236,19 @@ func (a *DataTransferApiService) CommitOutputPortTransaction(ctx _context.Contex
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -193,14 +273,38 @@ func (a *DataTransferApiService) CommitOutputPortTransaction(ctx _context.Contex
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type DataTransferApiApiCreatePortTransactionRequest struct {
+	ctx        _context.Context
+	ApiService *DataTransferApiService
+	portType   string
+	portId     string
+}
+
+func (r DataTransferApiApiCreatePortTransactionRequest) Execute() (TransactionResultEntity, *_nethttp.Response, error) {
+	return r.ApiService.CreatePortTransactionExecute(r)
+}
+
 /*
-CreatePortTransaction Create a transaction to the specified output port or input port
+ * CreatePortTransaction Create a transaction to the specified output port or input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param portType The port type.
  * @param portId
-@return TransactionResultEntity
-*/
-func (a *DataTransferApiService) CreatePortTransaction(ctx _context.Context, portType string, portId string) (TransactionResultEntity, *_nethttp.Response, error) {
+ * @return DataTransferApiApiCreatePortTransactionRequest
+ */
+func (a *DataTransferApiService) CreatePortTransaction(ctx _context.Context, portType string, portId string) DataTransferApiApiCreatePortTransactionRequest {
+	return DataTransferApiApiCreatePortTransactionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		portType:   portType,
+		portId:     portId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TransactionResultEntity
+ */
+func (a *DataTransferApiService) CreatePortTransactionExecute(r DataTransferApiApiCreatePortTransactionRequest) (TransactionResultEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -210,11 +314,14 @@ func (a *DataTransferApiService) CreatePortTransaction(ctx _context.Context, por
 		localVarReturnValue  TransactionResultEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/{portType}/{portId}/transactions"
-	localVarPath = strings.Replace(localVarPath, "{"+"portType"+"}", _neturl.QueryEscape(parameterToString(portType, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.CreatePortTransaction")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/{portType}/{portId}/transactions"
+	localVarPath = strings.Replace(localVarPath, "{"+"portType"+"}", _neturl.PathEscape(parameterToString(r.portType, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -237,18 +344,19 @@ func (a *DataTransferApiService) CreatePortTransaction(ctx _context.Context, por
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -273,14 +381,38 @@ func (a *DataTransferApiService) CreatePortTransaction(ctx _context.Context, por
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type DataTransferApiApiExtendInputPortTransactionTTLRequest struct {
+	ctx           _context.Context
+	ApiService    *DataTransferApiService
+	portId        string
+	transactionId string
+}
+
+func (r DataTransferApiApiExtendInputPortTransactionTTLRequest) Execute() (TransactionResultEntity, *_nethttp.Response, error) {
+	return r.ApiService.ExtendInputPortTransactionTTLExecute(r)
+}
+
 /*
-ExtendInputPortTransactionTTL Extend transaction TTL
+ * ExtendInputPortTransactionTTL Extend transaction TTL
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param portId
  * @param transactionId
-@return TransactionResultEntity
-*/
-func (a *DataTransferApiService) ExtendInputPortTransactionTTL(ctx _context.Context, portId string, transactionId string) (TransactionResultEntity, *_nethttp.Response, error) {
+ * @return DataTransferApiApiExtendInputPortTransactionTTLRequest
+ */
+func (a *DataTransferApiService) ExtendInputPortTransactionTTL(ctx _context.Context, portId string, transactionId string) DataTransferApiApiExtendInputPortTransactionTTLRequest {
+	return DataTransferApiApiExtendInputPortTransactionTTLRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		portId:        portId,
+		transactionId: transactionId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TransactionResultEntity
+ */
+func (a *DataTransferApiService) ExtendInputPortTransactionTTLExecute(r DataTransferApiApiExtendInputPortTransactionTTLRequest) (TransactionResultEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -290,11 +422,14 @@ func (a *DataTransferApiService) ExtendInputPortTransactionTTL(ctx _context.Cont
 		localVarReturnValue  TransactionResultEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/input-ports/{portId}/transactions/{transactionId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.ExtendInputPortTransactionTTL")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.QueryEscape(parameterToString(transactionId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/input-ports/{portId}/transactions/{transactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.PathEscape(parameterToString(r.transactionId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -317,18 +452,19 @@ func (a *DataTransferApiService) ExtendInputPortTransactionTTL(ctx _context.Cont
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -353,14 +489,38 @@ func (a *DataTransferApiService) ExtendInputPortTransactionTTL(ctx _context.Cont
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type DataTransferApiApiExtendOutputPortTransactionTTLRequest struct {
+	ctx           _context.Context
+	ApiService    *DataTransferApiService
+	portId        string
+	transactionId string
+}
+
+func (r DataTransferApiApiExtendOutputPortTransactionTTLRequest) Execute() (TransactionResultEntity, *_nethttp.Response, error) {
+	return r.ApiService.ExtendOutputPortTransactionTTLExecute(r)
+}
+
 /*
-ExtendOutputPortTransactionTTL Extend transaction TTL
+ * ExtendOutputPortTransactionTTL Extend transaction TTL
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param portId
  * @param transactionId
-@return TransactionResultEntity
-*/
-func (a *DataTransferApiService) ExtendOutputPortTransactionTTL(ctx _context.Context, portId string, transactionId string) (TransactionResultEntity, *_nethttp.Response, error) {
+ * @return DataTransferApiApiExtendOutputPortTransactionTTLRequest
+ */
+func (a *DataTransferApiService) ExtendOutputPortTransactionTTL(ctx _context.Context, portId string, transactionId string) DataTransferApiApiExtendOutputPortTransactionTTLRequest {
+	return DataTransferApiApiExtendOutputPortTransactionTTLRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		portId:        portId,
+		transactionId: transactionId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return TransactionResultEntity
+ */
+func (a *DataTransferApiService) ExtendOutputPortTransactionTTLExecute(r DataTransferApiApiExtendOutputPortTransactionTTLRequest) (TransactionResultEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -370,11 +530,14 @@ func (a *DataTransferApiService) ExtendOutputPortTransactionTTL(ctx _context.Con
 		localVarReturnValue  TransactionResultEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/output-ports/{portId}/transactions/{transactionId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.ExtendOutputPortTransactionTTL")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.QueryEscape(parameterToString(transactionId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/output-ports/{portId}/transactions/{transactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.PathEscape(parameterToString(r.transactionId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -397,18 +560,19 @@ func (a *DataTransferApiService) ExtendOutputPortTransactionTTL(ctx _context.Con
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -433,14 +597,38 @@ func (a *DataTransferApiService) ExtendOutputPortTransactionTTL(ctx _context.Con
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type DataTransferApiApiReceiveFlowFilesRequest struct {
+	ctx           _context.Context
+	ApiService    *DataTransferApiService
+	portId        string
+	transactionId string
+}
+
+func (r DataTransferApiApiReceiveFlowFilesRequest) Execute() (string, *_nethttp.Response, error) {
+	return r.ApiService.ReceiveFlowFilesExecute(r)
+}
+
 /*
-ReceiveFlowFiles Transfer flow files to the input port
+ * ReceiveFlowFiles Transfer flow files to the input port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param portId The input port id.
  * @param transactionId
-@return string
-*/
-func (a *DataTransferApiService) ReceiveFlowFiles(ctx _context.Context, portId string, transactionId string) (string, *_nethttp.Response, error) {
+ * @return DataTransferApiApiReceiveFlowFilesRequest
+ */
+func (a *DataTransferApiService) ReceiveFlowFiles(ctx _context.Context, portId string, transactionId string) DataTransferApiApiReceiveFlowFilesRequest {
+	return DataTransferApiApiReceiveFlowFilesRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		portId:        portId,
+		transactionId: transactionId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return string
+ */
+func (a *DataTransferApiService) ReceiveFlowFilesExecute(r DataTransferApiApiReceiveFlowFilesRequest) (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -450,11 +638,14 @@ func (a *DataTransferApiService) ReceiveFlowFiles(ctx _context.Context, portId s
 		localVarReturnValue  string
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/input-ports/{portId}/transactions/{transactionId}/flow-files"
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.ReceiveFlowFiles")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.QueryEscape(parameterToString(transactionId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/input-ports/{portId}/transactions/{transactionId}/flow-files"
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.PathEscape(parameterToString(r.transactionId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -477,18 +668,19 @@ func (a *DataTransferApiService) ReceiveFlowFiles(ctx _context.Context, portId s
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -513,14 +705,38 @@ func (a *DataTransferApiService) ReceiveFlowFiles(ctx _context.Context, portId s
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type DataTransferApiApiTransferFlowFilesRequest struct {
+	ctx           _context.Context
+	ApiService    *DataTransferApiService
+	portId        string
+	transactionId string
+}
+
+func (r DataTransferApiApiTransferFlowFilesRequest) Execute() (map[string]interface{}, *_nethttp.Response, error) {
+	return r.ApiService.TransferFlowFilesExecute(r)
+}
+
 /*
-TransferFlowFiles Transfer flow files from the output port
+ * TransferFlowFiles Transfer flow files from the output port
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param portId The output port id.
  * @param transactionId
-@return map[string]interface{}
-*/
-func (a *DataTransferApiService) TransferFlowFiles(ctx _context.Context, portId string, transactionId string) (map[string]interface{}, *_nethttp.Response, error) {
+ * @return DataTransferApiApiTransferFlowFilesRequest
+ */
+func (a *DataTransferApiService) TransferFlowFiles(ctx _context.Context, portId string, transactionId string) DataTransferApiApiTransferFlowFilesRequest {
+	return DataTransferApiApiTransferFlowFilesRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		portId:        portId,
+		transactionId: transactionId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return map[string]interface{}
+ */
+func (a *DataTransferApiService) TransferFlowFilesExecute(r DataTransferApiApiTransferFlowFilesRequest) (map[string]interface{}, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -530,11 +746,14 @@ func (a *DataTransferApiService) TransferFlowFiles(ctx _context.Context, portId 
 		localVarReturnValue  map[string]interface{}
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/data-transfer/output-ports/{portId}/transactions/{transactionId}/flow-files"
-	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataTransferApiService.TransferFlowFiles")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.QueryEscape(parameterToString(transactionId, "")), -1)
+	localVarPath := localBasePath + "/data-transfer/output-ports/{portId}/transactions/{transactionId}/flow-files"
+	localVarPath = strings.Replace(localVarPath, "{"+"portId"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"transactionId"+"}", _neturl.PathEscape(parameterToString(r.transactionId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -557,18 +776,19 @@ func (a *DataTransferApiService) TransferFlowFiles(ctx _context.Context, portId 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

@@ -20,19 +20,51 @@ Method | HTTP request | Description
 
 ## CreateUser
 
-> UserEntity CreateUser(ctx, body)
+> UserEntity CreateUser(ctx).Body(body).Execute()
 
 Creates a user
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewUserEntity() // UserEntity | The user configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.CreateUser(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.CreateUser``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateUser`: UserEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.CreateUser`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateUserRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**UserEntity**](UserEntity.md)| The user configuration details. | 
+ **body** | [**UserEntity**](UserEntity.md) | The user configuration details. | 
 
 ### Return type
 
@@ -54,19 +86,51 @@ No authorization required
 
 ## CreateUserGroup
 
-> UserGroupEntity CreateUserGroup(ctx, body)
+> UserGroupEntity CreateUserGroup(ctx).Body(body).Execute()
 
 Creates a user group
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewUserGroupEntity() // UserGroupEntity | The user group configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.CreateUserGroup(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.CreateUserGroup``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateUserGroup`: UserGroupEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.CreateUserGroup`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateUserGroupRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**UserGroupEntity**](UserGroupEntity.md)| The user group configuration details. | 
+ **body** | [**UserGroupEntity**](UserGroupEntity.md) | The user group configuration details. | 
 
 ### Return type
 
@@ -88,19 +152,55 @@ No authorization required
 
 ## GetUser
 
-> UserEntity GetUser(ctx, id)
+> UserEntity GetUser(ctx, id).Execute()
 
 Gets a user
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The user id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.GetUser(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.GetUser``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetUser`: UserEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.GetUser`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The user id. | 
+**id** | **string** | The user id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetUserRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -122,19 +222,55 @@ No authorization required
 
 ## GetUserGroup
 
-> UserGroupEntity GetUserGroup(ctx, id)
+> UserGroupEntity GetUserGroup(ctx, id).Execute()
 
 Gets a user group
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The user group id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.GetUserGroup(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.GetUserGroup``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetUserGroup`: UserGroupEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.GetUserGroup`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The user group id. | 
+**id** | **string** | The user group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetUserGroupRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -156,15 +292,46 @@ No authorization required
 
 ## GetUserGroups
 
-> UserGroupsEntity GetUserGroups(ctx, )
+> UserGroupsEntity GetUserGroups(ctx).Execute()
 
 Gets all user groups
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.GetUserGroups(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.GetUserGroups``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetUserGroups`: UserGroupsEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.GetUserGroups`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetUserGroupsRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -186,15 +353,46 @@ No authorization required
 
 ## GetUsers
 
-> UsersEntity GetUsers(ctx, )
+> UsersEntity GetUsers(ctx).Execute()
 
 Gets all users
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.GetUsers(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.GetUsers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetUsers`: UsersEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.GetUsers`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetUsersRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -216,32 +414,61 @@ No authorization required
 
 ## RemoveUser
 
-> UserEntity RemoveUser(ctx, id, optional)
+> UserEntity RemoveUser(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes a user
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The user id.
+    version := "version_example" // string | The revision is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.RemoveUser(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.RemoveUser``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveUser`: UserEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.RemoveUser`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The user id. | 
- **optional** | ***RemoveUserOpts** | optional parameters | nil if no parameters
+**id** | **string** | The user id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a RemoveUserOpts struct
+Other parameters are passed through a pointer to a apiRemoveUserRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The revision is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The revision is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -263,32 +490,61 @@ No authorization required
 
 ## RemoveUserGroup
 
-> UserGroupEntity RemoveUserGroup(ctx, id, optional)
+> UserGroupEntity RemoveUserGroup(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes a user group
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The user group id.
+    version := "version_example" // string | The revision is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.RemoveUserGroup(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.RemoveUserGroup``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveUserGroup`: UserGroupEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.RemoveUserGroup`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The user group id. | 
- **optional** | ***RemoveUserGroupOpts** | optional parameters | nil if no parameters
+**id** | **string** | The user group id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a RemoveUserGroupOpts struct
+Other parameters are passed through a pointer to a apiRemoveUserGroupRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The revision is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The revision is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -310,19 +566,51 @@ No authorization required
 
 ## SearchTenants
 
-> TenantsEntity SearchTenants(ctx, q)
+> TenantsEntity SearchTenants(ctx).Q(q).Execute()
 
 Searches for a tenant with the specified identity
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    q := "q_example" // string | Identity to search for.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.SearchTenants(context.Background()).Q(q).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.SearchTenants``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SearchTenants`: TenantsEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.SearchTenants`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSearchTenantsRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**q** | **string**| Identity to search for. | 
+ **q** | **string** | Identity to search for. | 
 
 ### Return type
 
@@ -344,20 +632,57 @@ No authorization required
 
 ## UpdateUser
 
-> UserEntity UpdateUser(ctx, id, body)
+> UserEntity UpdateUser(ctx, id).Body(body).Execute()
 
 Updates a user
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The user id.
+    body := *openapiclient.NewUserEntity() // UserEntity | The user configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.UpdateUser(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.UpdateUser``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateUser`: UserEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.UpdateUser`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The user id. | 
-**body** | [**UserEntity**](UserEntity.md)| The user configuration details. | 
+**id** | **string** | The user id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateUserRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**UserEntity**](UserEntity.md) | The user configuration details. | 
 
 ### Return type
 
@@ -379,20 +704,57 @@ No authorization required
 
 ## UpdateUserGroup
 
-> UserGroupEntity UpdateUserGroup(ctx, id, body)
+> UserGroupEntity UpdateUserGroup(ctx, id).Body(body).Execute()
 
 Updates a user group
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The user group id.
+    body := *openapiclient.NewUserGroupEntity() // UserGroupEntity | The user group configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.TenantsApi.UpdateUserGroup(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TenantsApi.UpdateUserGroup``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateUserGroup`: UserGroupEntity
+    fmt.Fprintf(os.Stdout, "Response from `TenantsApi.UpdateUserGroup`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The user group id. | 
-**body** | [**UserGroupEntity**](UserGroupEntity.md)| The user group configuration details. | 
+**id** | **string** | The user group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateUserGroupRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**UserGroupEntity**](UserGroupEntity.md) | The user group configuration details. | 
 
 ### Return type
 

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedFlowEntity struct for VersionedFlowEntity
 type VersionedFlowEntity struct {
-	VersionedFlow VersionedFlowDto `json:"versionedFlow,omitempty"`
+	VersionedFlow *VersionedFlowDTO `json:"versionedFlow,omitempty"`
+}
+
+// NewVersionedFlowEntity instantiates a new VersionedFlowEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedFlowEntity() *VersionedFlowEntity {
+	this := VersionedFlowEntity{}
+	return &this
+}
+
+// NewVersionedFlowEntityWithDefaults instantiates a new VersionedFlowEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedFlowEntityWithDefaults() *VersionedFlowEntity {
+	this := VersionedFlowEntity{}
+	return &this
+}
+
+// GetVersionedFlow returns the VersionedFlow field value if set, zero value otherwise.
+func (o *VersionedFlowEntity) GetVersionedFlow() VersionedFlowDTO {
+	if o == nil || o.VersionedFlow == nil {
+		var ret VersionedFlowDTO
+		return ret
+	}
+	return *o.VersionedFlow
+}
+
+// GetVersionedFlowOk returns a tuple with the VersionedFlow field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlowEntity) GetVersionedFlowOk() (*VersionedFlowDTO, bool) {
+	if o == nil || o.VersionedFlow == nil {
+		return nil, false
+	}
+	return o.VersionedFlow, true
+}
+
+// HasVersionedFlow returns a boolean if a field has been set.
+func (o *VersionedFlowEntity) HasVersionedFlow() bool {
+	if o != nil && o.VersionedFlow != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlow gets a reference to the given VersionedFlowDTO and assigns it to the VersionedFlow field.
+func (o *VersionedFlowEntity) SetVersionedFlow(v VersionedFlowDTO) {
+	o.VersionedFlow = &v
+}
+
+func (o VersionedFlowEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.VersionedFlow != nil {
+		toSerialize["versionedFlow"] = o.VersionedFlow
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedFlowEntity struct {
+	value *VersionedFlowEntity
+	isSet bool
+}
+
+func (v NullableVersionedFlowEntity) Get() *VersionedFlowEntity {
+	return v.value
+}
+
+func (v *NullableVersionedFlowEntity) Set(val *VersionedFlowEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedFlowEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedFlowEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedFlowEntity(val *VersionedFlowEntity) *NullableVersionedFlowEntity {
+	return &NullableVersionedFlowEntity{value: val, isSet: true}
+}
+
+func (v NullableVersionedFlowEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedFlowEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

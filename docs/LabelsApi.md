@@ -12,17 +12,53 @@ Method | HTTP request | Description
 
 ## GetLabel
 
-> LabelEntity GetLabel(ctx, id)
+> LabelEntity GetLabel(ctx, id).Execute()
 
 Gets a label
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The label id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.LabelsApi.GetLabel(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `LabelsApi.GetLabel``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetLabel`: LabelEntity
+    fmt.Fprintf(os.Stdout, "Response from `LabelsApi.GetLabel`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The label id. | 
+**id** | **string** | The label id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetLabelRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -44,30 +80,59 @@ No authorization required
 
 ## RemoveLabel
 
-> LabelEntity RemoveLabel(ctx, id, optional)
+> LabelEntity RemoveLabel(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes a label
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The label id.
+    version := "version_example" // string | The revision is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.LabelsApi.RemoveLabel(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `LabelsApi.RemoveLabel``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveLabel`: LabelEntity
+    fmt.Fprintf(os.Stdout, "Response from `LabelsApi.RemoveLabel`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The label id. | 
- **optional** | ***RemoveLabelOpts** | optional parameters | nil if no parameters
+**id** | **string** | The label id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a RemoveLabelOpts struct
+Other parameters are passed through a pointer to a apiRemoveLabelRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The revision is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The revision is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -89,18 +154,55 @@ No authorization required
 
 ## UpdateLabel
 
-> LabelEntity UpdateLabel(ctx, id, body)
+> LabelEntity UpdateLabel(ctx, id).Body(body).Execute()
 
 Updates a label
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The label id.
+    body := *openapiclient.NewLabelEntity() // LabelEntity | The label configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.LabelsApi.UpdateLabel(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `LabelsApi.UpdateLabel``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateLabel`: LabelEntity
+    fmt.Fprintf(os.Stdout, "Response from `LabelsApi.UpdateLabel`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The label id. | 
-**body** | [**LabelEntity**](LabelEntity.md)| The label configuration details. | 
+**id** | **string** | The label id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateLabelRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**LabelEntity**](LabelEntity.md) | The label configuration details. | 
 
 ### Return type
 

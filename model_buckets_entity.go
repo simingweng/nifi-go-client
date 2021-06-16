@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // BucketsEntity struct for BucketsEntity
 type BucketsEntity struct {
-	Buckets []BucketEntity `json:"buckets,omitempty"`
+	Buckets *[]BucketEntity `json:"buckets,omitempty"`
+}
+
+// NewBucketsEntity instantiates a new BucketsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBucketsEntity() *BucketsEntity {
+	this := BucketsEntity{}
+	return &this
+}
+
+// NewBucketsEntityWithDefaults instantiates a new BucketsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBucketsEntityWithDefaults() *BucketsEntity {
+	this := BucketsEntity{}
+	return &this
+}
+
+// GetBuckets returns the Buckets field value if set, zero value otherwise.
+func (o *BucketsEntity) GetBuckets() []BucketEntity {
+	if o == nil || o.Buckets == nil {
+		var ret []BucketEntity
+		return ret
+	}
+	return *o.Buckets
+}
+
+// GetBucketsOk returns a tuple with the Buckets field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketsEntity) GetBucketsOk() (*[]BucketEntity, bool) {
+	if o == nil || o.Buckets == nil {
+		return nil, false
+	}
+	return o.Buckets, true
+}
+
+// HasBuckets returns a boolean if a field has been set.
+func (o *BucketsEntity) HasBuckets() bool {
+	if o != nil && o.Buckets != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBuckets gets a reference to the given []BucketEntity and assigns it to the Buckets field.
+func (o *BucketsEntity) SetBuckets(v []BucketEntity) {
+	o.Buckets = &v
+}
+
+func (o BucketsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Buckets != nil {
+		toSerialize["buckets"] = o.Buckets
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBucketsEntity struct {
+	value *BucketsEntity
+	isSet bool
+}
+
+func (v NullableBucketsEntity) Get() *BucketsEntity {
+	return v.value
+}
+
+func (v *NullableBucketsEntity) Set(val *BucketsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBucketsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBucketsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBucketsEntity(val *BucketsEntity) *NullableBucketsEntity {
+	return &NullableBucketsEntity{value: val, isSet: true}
+}
+
+func (v NullableBucketsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBucketsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

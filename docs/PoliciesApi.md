@@ -14,17 +14,49 @@ Method | HTTP request | Description
 
 ## CreateAccessPolicy
 
-> AccessPolicyEntity CreateAccessPolicy(ctx, body)
+> AccessPolicyEntity CreateAccessPolicy(ctx).Body(body).Execute()
 
 Creates an access policy
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewAccessPolicyEntity() // AccessPolicyEntity | The access policy configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PoliciesApi.CreateAccessPolicy(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `PoliciesApi.CreateAccessPolicy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateAccessPolicy`: AccessPolicyEntity
+    fmt.Fprintf(os.Stdout, "Response from `PoliciesApi.CreateAccessPolicy`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateAccessPolicyRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**AccessPolicyEntity**](AccessPolicyEntity.md)| The access policy configuration details. | 
+ **body** | [**AccessPolicyEntity**](AccessPolicyEntity.md) | The access policy configuration details. | 
 
 ### Return type
 
@@ -46,17 +78,53 @@ No authorization required
 
 ## GetAccessPolicy
 
-> AccessPolicyEntity GetAccessPolicy(ctx, id)
+> AccessPolicyEntity GetAccessPolicy(ctx, id).Execute()
 
 Gets an access policy
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The access policy id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PoliciesApi.GetAccessPolicy(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `PoliciesApi.GetAccessPolicy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetAccessPolicy`: AccessPolicyEntity
+    fmt.Fprintf(os.Stdout, "Response from `PoliciesApi.GetAccessPolicy`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The access policy id. | 
+**id** | **string** | The access policy id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetAccessPolicyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -78,20 +146,58 @@ No authorization required
 
 ## GetAccessPolicyForResource
 
-> AccessPolicyEntity GetAccessPolicyForResource(ctx, action, resource)
+> AccessPolicyEntity GetAccessPolicyForResource(ctx, action, resource).Execute()
 
 Gets an access policy for the specified action and resource
 
-Will return the effective policy if no component specific policy exists for the specified action and resource. Must have Read permissions to the policy with the desired action and resource. Permissions for the policy that is returned will be indicated in the response. This means the client could be authorized to get the policy for a given component but the effective policy may be inherited from an ancestor Process Group. If the client does not have permissions to that policy, the response will not include the policy and the permissions in the response will be marked accordingly. If the client does not have permissions to the policy of the desired action and resource a 403 response will be returned.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    action := "action_example" // string | The request action.
+    resource := "resource_example" // string | The resource of the policy.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PoliciesApi.GetAccessPolicyForResource(context.Background(), action, resource).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `PoliciesApi.GetAccessPolicyForResource``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetAccessPolicyForResource`: AccessPolicyEntity
+    fmt.Fprintf(os.Stdout, "Response from `PoliciesApi.GetAccessPolicyForResource`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**action** | **string**| The request action. | 
-**resource** | **string**| The resource of the policy. | 
+**action** | **string** | The request action. | 
+**resource** | **string** | The resource of the policy. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetAccessPolicyForResourceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
 
 ### Return type
 
@@ -113,30 +219,59 @@ No authorization required
 
 ## RemoveAccessPolicy
 
-> AccessPolicyEntity RemoveAccessPolicy(ctx, id, optional)
+> AccessPolicyEntity RemoveAccessPolicy(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes an access policy
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The access policy id.
+    version := "version_example" // string | The revision is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PoliciesApi.RemoveAccessPolicy(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `PoliciesApi.RemoveAccessPolicy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveAccessPolicy`: AccessPolicyEntity
+    fmt.Fprintf(os.Stdout, "Response from `PoliciesApi.RemoveAccessPolicy`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The access policy id. | 
- **optional** | ***RemoveAccessPolicyOpts** | optional parameters | nil if no parameters
+**id** | **string** | The access policy id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a RemoveAccessPolicyOpts struct
+Other parameters are passed through a pointer to a apiRemoveAccessPolicyRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The revision is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The revision is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -158,18 +293,55 @@ No authorization required
 
 ## UpdateAccessPolicy
 
-> AccessPolicyEntity UpdateAccessPolicy(ctx, id, body)
+> AccessPolicyEntity UpdateAccessPolicy(ctx, id).Body(body).Execute()
 
 Updates a access policy
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The access policy id.
+    body := *openapiclient.NewAccessPolicyEntity() // AccessPolicyEntity | The access policy configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PoliciesApi.UpdateAccessPolicy(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `PoliciesApi.UpdateAccessPolicy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateAccessPolicy`: AccessPolicyEntity
+    fmt.Fprintf(os.Stdout, "Response from `PoliciesApi.UpdateAccessPolicy`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The access policy id. | 
-**body** | [**AccessPolicyEntity**](AccessPolicyEntity.md)| The access policy configuration details. | 
+**id** | **string** | The access policy id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateAccessPolicyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**AccessPolicyEntity**](AccessPolicyEntity.md) | The access policy configuration details. | 
 
 ### Return type
 

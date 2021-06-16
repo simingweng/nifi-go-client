@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,24 +28,51 @@ var (
 // ConnectionsApiService ConnectionsApi service
 type ConnectionsApiService service
 
-// ConnectionsApiDeleteConnectionOpts Optional parameters for the method 'DeleteConnection'
-type ConnectionsApiDeleteConnectionOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type ConnectionsApiApiDeleteConnectionRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ConnectionsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ConnectionsApiApiDeleteConnectionRequest) Version(version string) ConnectionsApiApiDeleteConnectionRequest {
+	r.version = &version
+	return r
+}
+func (r ConnectionsApiApiDeleteConnectionRequest) ClientId(clientId string) ConnectionsApiApiDeleteConnectionRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r ConnectionsApiApiDeleteConnectionRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ConnectionsApiApiDeleteConnectionRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ConnectionsApiApiDeleteConnectionRequest) Execute() (ConnectionEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteConnectionExecute(r)
 }
 
 /*
-DeleteConnection Deletes a connection
+ * DeleteConnection Deletes a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
- * @param optional nil or *ConnectionsApiDeleteConnectionOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ConnectionEntity
-*/
-func (a *ConnectionsApiService) DeleteConnection(ctx _context.Context, id string, localVarOptionals *ConnectionsApiDeleteConnectionOpts) (ConnectionEntity, *_nethttp.Response, error) {
+ * @return ConnectionsApiApiDeleteConnectionRequest
+ */
+func (a *ConnectionsApiService) DeleteConnection(ctx _context.Context, id string) ConnectionsApiApiDeleteConnectionRequest {
+	return ConnectionsApiApiDeleteConnectionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionEntity
+ */
+func (a *ConnectionsApiService) DeleteConnectionExecute(r ConnectionsApiApiDeleteConnectionRequest) (ConnectionEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -55,22 +82,26 @@ func (a *ConnectionsApiService) DeleteConnection(ctx _context.Context, id string
 		localVarReturnValue  ConnectionEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/connections/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ConnectionsApiService.DeleteConnection")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/connections/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -89,18 +120,19 @@ func (a *ConnectionsApiService) DeleteConnection(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -125,13 +157,35 @@ func (a *ConnectionsApiService) DeleteConnection(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ConnectionsApiApiGetConnectionRequest struct {
+	ctx        _context.Context
+	ApiService *ConnectionsApiService
+	id         string
+}
+
+func (r ConnectionsApiApiGetConnectionRequest) Execute() (ConnectionEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetConnectionExecute(r)
+}
+
 /*
-GetConnection Gets a connection
+ * GetConnection Gets a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
-@return ConnectionEntity
-*/
-func (a *ConnectionsApiService) GetConnection(ctx _context.Context, id string) (ConnectionEntity, *_nethttp.Response, error) {
+ * @return ConnectionsApiApiGetConnectionRequest
+ */
+func (a *ConnectionsApiService) GetConnection(ctx _context.Context, id string) ConnectionsApiApiGetConnectionRequest {
+	return ConnectionsApiApiGetConnectionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionEntity
+ */
+func (a *ConnectionsApiService) GetConnectionExecute(r ConnectionsApiApiGetConnectionRequest) (ConnectionEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -141,9 +195,13 @@ func (a *ConnectionsApiService) GetConnection(ctx _context.Context, id string) (
 		localVarReturnValue  ConnectionEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/connections/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ConnectionsApiService.GetConnection")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/connections/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -166,18 +224,19 @@ func (a *ConnectionsApiService) GetConnection(ctx _context.Context, id string) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,14 +261,41 @@ func (a *ConnectionsApiService) GetConnection(ctx _context.Context, id string) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ConnectionsApiApiUpdateConnectionRequest struct {
+	ctx        _context.Context
+	ApiService *ConnectionsApiService
+	id         string
+	body       *ConnectionEntity
+}
+
+func (r ConnectionsApiApiUpdateConnectionRequest) Body(body ConnectionEntity) ConnectionsApiApiUpdateConnectionRequest {
+	r.body = &body
+	return r
+}
+
+func (r ConnectionsApiApiUpdateConnectionRequest) Execute() (ConnectionEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateConnectionExecute(r)
+}
+
 /*
-UpdateConnection Updates a connection
+ * UpdateConnection Updates a connection
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The connection id.
- * @param body The connection configuration details.
-@return ConnectionEntity
-*/
-func (a *ConnectionsApiService) UpdateConnection(ctx _context.Context, id string, body ConnectionEntity) (ConnectionEntity, *_nethttp.Response, error) {
+ * @return ConnectionsApiApiUpdateConnectionRequest
+ */
+func (a *ConnectionsApiService) UpdateConnection(ctx _context.Context, id string) ConnectionsApiApiUpdateConnectionRequest {
+	return ConnectionsApiApiUpdateConnectionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ConnectionEntity
+ */
+func (a *ConnectionsApiService) UpdateConnectionExecute(r ConnectionsApiApiUpdateConnectionRequest) (ConnectionEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -219,13 +305,20 @@ func (a *ConnectionsApiService) UpdateConnection(ctx _context.Context, id string
 		localVarReturnValue  ConnectionEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/connections/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ConnectionsApiService.UpdateConnection")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/connections/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -245,19 +338,20 @@ func (a *ConnectionsApiService) UpdateConnection(ctx _context.Context, id string
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

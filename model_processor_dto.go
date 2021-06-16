@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,51 +11,953 @@
 
 package nifi
 
-// ProcessorDto struct for ProcessorDto
-type ProcessorDto struct {
+import (
+	"encoding/json"
+)
+
+// ProcessorDTO struct for ProcessorDTO
+type ProcessorDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The name of the processor.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The type of the processor.
-	Type   string    `json:"type,omitempty"`
-	Bundle BundleDto `json:"bundle,omitempty"`
+	Type   *string    `json:"type,omitempty"`
+	Bundle *BundleDTO `json:"bundle,omitempty"`
 	// The state of the processor
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// Styles for the processor (background-color : #eee).
-	Style map[string]string `json:"style,omitempty"`
+	Style *map[string]string `json:"style,omitempty"`
 	// The available relationships that the processor currently supports.
-	Relationships []RelationshipDto `json:"relationships,omitempty"`
+	Relationships *[]RelationshipDTO `json:"relationships,omitempty"`
 	// The description of the processor.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Whether the processor supports parallel processing.
-	SupportsParallelProcessing bool `json:"supportsParallelProcessing,omitempty"`
+	SupportsParallelProcessing *bool `json:"supportsParallelProcessing,omitempty"`
 	// Whether the processor supports event driven scheduling.
-	SupportsEventDriven bool `json:"supportsEventDriven,omitempty"`
+	SupportsEventDriven *bool `json:"supportsEventDriven,omitempty"`
 	// Whether the processor supports batching. This makes the run duration settings available.
-	SupportsBatching bool `json:"supportsBatching,omitempty"`
+	SupportsBatching *bool `json:"supportsBatching,omitempty"`
 	// Whether the processor persists state.
-	PersistsState bool `json:"persistsState,omitempty"`
+	PersistsState *bool `json:"persistsState,omitempty"`
 	// Whether the processor requires elevated privileges.
-	Restricted bool `json:"restricted,omitempty"`
+	Restricted *bool `json:"restricted,omitempty"`
 	// Whether the processor has been deprecated.
-	Deprecated bool `json:"deprecated,omitempty"`
+	Deprecated *bool `json:"deprecated,omitempty"`
 	// Indicates if the execution node of a processor is restricted to run only on the primary node
-	ExecutionNodeRestricted bool `json:"executionNodeRestricted,omitempty"`
+	ExecutionNodeRestricted *bool `json:"executionNodeRestricted,omitempty"`
 	// Whether the processor has multiple versions available.
-	MultipleVersionsAvailable bool `json:"multipleVersionsAvailable,omitempty"`
+	MultipleVersionsAvailable *bool `json:"multipleVersionsAvailable,omitempty"`
 	// The input requirement for this processor.
-	InputRequirement string             `json:"inputRequirement,omitempty"`
-	Config           ProcessorConfigDto `json:"config,omitempty"`
+	InputRequirement *string             `json:"inputRequirement,omitempty"`
+	Config           *ProcessorConfigDTO `json:"config,omitempty"`
 	// The validation errors for the processor. These validation errors represent the problems with the processor that must be resolved before it can be started.
-	ValidationErrors []string `json:"validationErrors,omitempty"`
+	ValidationErrors *[]string `json:"validationErrors,omitempty"`
 	// Indicates whether the Processor is valid, invalid, or still in the process of validating (i.e., it is unknown whether or not the Processor is valid)
-	ValidationStatus string `json:"validationStatus,omitempty"`
+	ValidationStatus *string `json:"validationStatus,omitempty"`
 	// Whether the underlying extension is missing.
-	ExtensionMissing bool `json:"extensionMissing,omitempty"`
+	ExtensionMissing *bool `json:"extensionMissing,omitempty"`
+}
+
+// NewProcessorDTO instantiates a new ProcessorDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorDTO() *ProcessorDTO {
+	this := ProcessorDTO{}
+	return &this
+}
+
+// NewProcessorDTOWithDefaults instantiates a new ProcessorDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorDTOWithDefaults() *ProcessorDTO {
+	this := ProcessorDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProcessorDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *ProcessorDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *ProcessorDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *ProcessorDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ProcessorDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *ProcessorDTO) SetType(v string) {
+	o.Type = &v
+}
+
+// GetBundle returns the Bundle field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetBundle() BundleDTO {
+	if o == nil || o.Bundle == nil {
+		var ret BundleDTO
+		return ret
+	}
+	return *o.Bundle
+}
+
+// GetBundleOk returns a tuple with the Bundle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetBundleOk() (*BundleDTO, bool) {
+	if o == nil || o.Bundle == nil {
+		return nil, false
+	}
+	return o.Bundle, true
+}
+
+// HasBundle returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasBundle() bool {
+	if o != nil && o.Bundle != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBundle gets a reference to the given BundleDTO and assigns it to the Bundle field.
+func (o *ProcessorDTO) SetBundle(v BundleDTO) {
+	o.Bundle = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ProcessorDTO) SetState(v string) {
+	o.State = &v
+}
+
+// GetStyle returns the Style field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetStyle() map[string]string {
+	if o == nil || o.Style == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Style
+}
+
+// GetStyleOk returns a tuple with the Style field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetStyleOk() (*map[string]string, bool) {
+	if o == nil || o.Style == nil {
+		return nil, false
+	}
+	return o.Style, true
+}
+
+// HasStyle returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasStyle() bool {
+	if o != nil && o.Style != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStyle gets a reference to the given map[string]string and assigns it to the Style field.
+func (o *ProcessorDTO) SetStyle(v map[string]string) {
+	o.Style = &v
+}
+
+// GetRelationships returns the Relationships field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetRelationships() []RelationshipDTO {
+	if o == nil || o.Relationships == nil {
+		var ret []RelationshipDTO
+		return ret
+	}
+	return *o.Relationships
+}
+
+// GetRelationshipsOk returns a tuple with the Relationships field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetRelationshipsOk() (*[]RelationshipDTO, bool) {
+	if o == nil || o.Relationships == nil {
+		return nil, false
+	}
+	return o.Relationships, true
+}
+
+// HasRelationships returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasRelationships() bool {
+	if o != nil && o.Relationships != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRelationships gets a reference to the given []RelationshipDTO and assigns it to the Relationships field.
+func (o *ProcessorDTO) SetRelationships(v []RelationshipDTO) {
+	o.Relationships = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *ProcessorDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetSupportsParallelProcessing returns the SupportsParallelProcessing field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetSupportsParallelProcessing() bool {
+	if o == nil || o.SupportsParallelProcessing == nil {
+		var ret bool
+		return ret
+	}
+	return *o.SupportsParallelProcessing
+}
+
+// GetSupportsParallelProcessingOk returns a tuple with the SupportsParallelProcessing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetSupportsParallelProcessingOk() (*bool, bool) {
+	if o == nil || o.SupportsParallelProcessing == nil {
+		return nil, false
+	}
+	return o.SupportsParallelProcessing, true
+}
+
+// HasSupportsParallelProcessing returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasSupportsParallelProcessing() bool {
+	if o != nil && o.SupportsParallelProcessing != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSupportsParallelProcessing gets a reference to the given bool and assigns it to the SupportsParallelProcessing field.
+func (o *ProcessorDTO) SetSupportsParallelProcessing(v bool) {
+	o.SupportsParallelProcessing = &v
+}
+
+// GetSupportsEventDriven returns the SupportsEventDriven field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetSupportsEventDriven() bool {
+	if o == nil || o.SupportsEventDriven == nil {
+		var ret bool
+		return ret
+	}
+	return *o.SupportsEventDriven
+}
+
+// GetSupportsEventDrivenOk returns a tuple with the SupportsEventDriven field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetSupportsEventDrivenOk() (*bool, bool) {
+	if o == nil || o.SupportsEventDriven == nil {
+		return nil, false
+	}
+	return o.SupportsEventDriven, true
+}
+
+// HasSupportsEventDriven returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasSupportsEventDriven() bool {
+	if o != nil && o.SupportsEventDriven != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSupportsEventDriven gets a reference to the given bool and assigns it to the SupportsEventDriven field.
+func (o *ProcessorDTO) SetSupportsEventDriven(v bool) {
+	o.SupportsEventDriven = &v
+}
+
+// GetSupportsBatching returns the SupportsBatching field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetSupportsBatching() bool {
+	if o == nil || o.SupportsBatching == nil {
+		var ret bool
+		return ret
+	}
+	return *o.SupportsBatching
+}
+
+// GetSupportsBatchingOk returns a tuple with the SupportsBatching field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetSupportsBatchingOk() (*bool, bool) {
+	if o == nil || o.SupportsBatching == nil {
+		return nil, false
+	}
+	return o.SupportsBatching, true
+}
+
+// HasSupportsBatching returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasSupportsBatching() bool {
+	if o != nil && o.SupportsBatching != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSupportsBatching gets a reference to the given bool and assigns it to the SupportsBatching field.
+func (o *ProcessorDTO) SetSupportsBatching(v bool) {
+	o.SupportsBatching = &v
+}
+
+// GetPersistsState returns the PersistsState field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetPersistsState() bool {
+	if o == nil || o.PersistsState == nil {
+		var ret bool
+		return ret
+	}
+	return *o.PersistsState
+}
+
+// GetPersistsStateOk returns a tuple with the PersistsState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetPersistsStateOk() (*bool, bool) {
+	if o == nil || o.PersistsState == nil {
+		return nil, false
+	}
+	return o.PersistsState, true
+}
+
+// HasPersistsState returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasPersistsState() bool {
+	if o != nil && o.PersistsState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPersistsState gets a reference to the given bool and assigns it to the PersistsState field.
+func (o *ProcessorDTO) SetPersistsState(v bool) {
+	o.PersistsState = &v
+}
+
+// GetRestricted returns the Restricted field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetRestricted() bool {
+	if o == nil || o.Restricted == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Restricted
+}
+
+// GetRestrictedOk returns a tuple with the Restricted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetRestrictedOk() (*bool, bool) {
+	if o == nil || o.Restricted == nil {
+		return nil, false
+	}
+	return o.Restricted, true
+}
+
+// HasRestricted returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasRestricted() bool {
+	if o != nil && o.Restricted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRestricted gets a reference to the given bool and assigns it to the Restricted field.
+func (o *ProcessorDTO) SetRestricted(v bool) {
+	o.Restricted = &v
+}
+
+// GetDeprecated returns the Deprecated field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetDeprecated() bool {
+	if o == nil || o.Deprecated == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Deprecated
+}
+
+// GetDeprecatedOk returns a tuple with the Deprecated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetDeprecatedOk() (*bool, bool) {
+	if o == nil || o.Deprecated == nil {
+		return nil, false
+	}
+	return o.Deprecated, true
+}
+
+// HasDeprecated returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasDeprecated() bool {
+	if o != nil && o.Deprecated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDeprecated gets a reference to the given bool and assigns it to the Deprecated field.
+func (o *ProcessorDTO) SetDeprecated(v bool) {
+	o.Deprecated = &v
+}
+
+// GetExecutionNodeRestricted returns the ExecutionNodeRestricted field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetExecutionNodeRestricted() bool {
+	if o == nil || o.ExecutionNodeRestricted == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ExecutionNodeRestricted
+}
+
+// GetExecutionNodeRestrictedOk returns a tuple with the ExecutionNodeRestricted field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetExecutionNodeRestrictedOk() (*bool, bool) {
+	if o == nil || o.ExecutionNodeRestricted == nil {
+		return nil, false
+	}
+	return o.ExecutionNodeRestricted, true
+}
+
+// HasExecutionNodeRestricted returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasExecutionNodeRestricted() bool {
+	if o != nil && o.ExecutionNodeRestricted != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExecutionNodeRestricted gets a reference to the given bool and assigns it to the ExecutionNodeRestricted field.
+func (o *ProcessorDTO) SetExecutionNodeRestricted(v bool) {
+	o.ExecutionNodeRestricted = &v
+}
+
+// GetMultipleVersionsAvailable returns the MultipleVersionsAvailable field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetMultipleVersionsAvailable() bool {
+	if o == nil || o.MultipleVersionsAvailable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.MultipleVersionsAvailable
+}
+
+// GetMultipleVersionsAvailableOk returns a tuple with the MultipleVersionsAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetMultipleVersionsAvailableOk() (*bool, bool) {
+	if o == nil || o.MultipleVersionsAvailable == nil {
+		return nil, false
+	}
+	return o.MultipleVersionsAvailable, true
+}
+
+// HasMultipleVersionsAvailable returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasMultipleVersionsAvailable() bool {
+	if o != nil && o.MultipleVersionsAvailable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMultipleVersionsAvailable gets a reference to the given bool and assigns it to the MultipleVersionsAvailable field.
+func (o *ProcessorDTO) SetMultipleVersionsAvailable(v bool) {
+	o.MultipleVersionsAvailable = &v
+}
+
+// GetInputRequirement returns the InputRequirement field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetInputRequirement() string {
+	if o == nil || o.InputRequirement == nil {
+		var ret string
+		return ret
+	}
+	return *o.InputRequirement
+}
+
+// GetInputRequirementOk returns a tuple with the InputRequirement field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetInputRequirementOk() (*string, bool) {
+	if o == nil || o.InputRequirement == nil {
+		return nil, false
+	}
+	return o.InputRequirement, true
+}
+
+// HasInputRequirement returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasInputRequirement() bool {
+	if o != nil && o.InputRequirement != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputRequirement gets a reference to the given string and assigns it to the InputRequirement field.
+func (o *ProcessorDTO) SetInputRequirement(v string) {
+	o.InputRequirement = &v
+}
+
+// GetConfig returns the Config field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetConfig() ProcessorConfigDTO {
+	if o == nil || o.Config == nil {
+		var ret ProcessorConfigDTO
+		return ret
+	}
+	return *o.Config
+}
+
+// GetConfigOk returns a tuple with the Config field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetConfigOk() (*ProcessorConfigDTO, bool) {
+	if o == nil || o.Config == nil {
+		return nil, false
+	}
+	return o.Config, true
+}
+
+// HasConfig returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasConfig() bool {
+	if o != nil && o.Config != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConfig gets a reference to the given ProcessorConfigDTO and assigns it to the Config field.
+func (o *ProcessorDTO) SetConfig(v ProcessorConfigDTO) {
+	o.Config = &v
+}
+
+// GetValidationErrors returns the ValidationErrors field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetValidationErrors() []string {
+	if o == nil || o.ValidationErrors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ValidationErrors
+}
+
+// GetValidationErrorsOk returns a tuple with the ValidationErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetValidationErrorsOk() (*[]string, bool) {
+	if o == nil || o.ValidationErrors == nil {
+		return nil, false
+	}
+	return o.ValidationErrors, true
+}
+
+// HasValidationErrors returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasValidationErrors() bool {
+	if o != nil && o.ValidationErrors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationErrors gets a reference to the given []string and assigns it to the ValidationErrors field.
+func (o *ProcessorDTO) SetValidationErrors(v []string) {
+	o.ValidationErrors = &v
+}
+
+// GetValidationStatus returns the ValidationStatus field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetValidationStatus() string {
+	if o == nil || o.ValidationStatus == nil {
+		var ret string
+		return ret
+	}
+	return *o.ValidationStatus
+}
+
+// GetValidationStatusOk returns a tuple with the ValidationStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetValidationStatusOk() (*string, bool) {
+	if o == nil || o.ValidationStatus == nil {
+		return nil, false
+	}
+	return o.ValidationStatus, true
+}
+
+// HasValidationStatus returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasValidationStatus() bool {
+	if o != nil && o.ValidationStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetValidationStatus gets a reference to the given string and assigns it to the ValidationStatus field.
+func (o *ProcessorDTO) SetValidationStatus(v string) {
+	o.ValidationStatus = &v
+}
+
+// GetExtensionMissing returns the ExtensionMissing field value if set, zero value otherwise.
+func (o *ProcessorDTO) GetExtensionMissing() bool {
+	if o == nil || o.ExtensionMissing == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ExtensionMissing
+}
+
+// GetExtensionMissingOk returns a tuple with the ExtensionMissing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorDTO) GetExtensionMissingOk() (*bool, bool) {
+	if o == nil || o.ExtensionMissing == nil {
+		return nil, false
+	}
+	return o.ExtensionMissing, true
+}
+
+// HasExtensionMissing returns a boolean if a field has been set.
+func (o *ProcessorDTO) HasExtensionMissing() bool {
+	if o != nil && o.ExtensionMissing != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetExtensionMissing gets a reference to the given bool and assigns it to the ExtensionMissing field.
+func (o *ProcessorDTO) SetExtensionMissing(v bool) {
+	o.ExtensionMissing = &v
+}
+
+func (o ProcessorDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
+	}
+	if o.Bundle != nil {
+		toSerialize["bundle"] = o.Bundle
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.Style != nil {
+		toSerialize["style"] = o.Style
+	}
+	if o.Relationships != nil {
+		toSerialize["relationships"] = o.Relationships
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.SupportsParallelProcessing != nil {
+		toSerialize["supportsParallelProcessing"] = o.SupportsParallelProcessing
+	}
+	if o.SupportsEventDriven != nil {
+		toSerialize["supportsEventDriven"] = o.SupportsEventDriven
+	}
+	if o.SupportsBatching != nil {
+		toSerialize["supportsBatching"] = o.SupportsBatching
+	}
+	if o.PersistsState != nil {
+		toSerialize["persistsState"] = o.PersistsState
+	}
+	if o.Restricted != nil {
+		toSerialize["restricted"] = o.Restricted
+	}
+	if o.Deprecated != nil {
+		toSerialize["deprecated"] = o.Deprecated
+	}
+	if o.ExecutionNodeRestricted != nil {
+		toSerialize["executionNodeRestricted"] = o.ExecutionNodeRestricted
+	}
+	if o.MultipleVersionsAvailable != nil {
+		toSerialize["multipleVersionsAvailable"] = o.MultipleVersionsAvailable
+	}
+	if o.InputRequirement != nil {
+		toSerialize["inputRequirement"] = o.InputRequirement
+	}
+	if o.Config != nil {
+		toSerialize["config"] = o.Config
+	}
+	if o.ValidationErrors != nil {
+		toSerialize["validationErrors"] = o.ValidationErrors
+	}
+	if o.ValidationStatus != nil {
+		toSerialize["validationStatus"] = o.ValidationStatus
+	}
+	if o.ExtensionMissing != nil {
+		toSerialize["extensionMissing"] = o.ExtensionMissing
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorDTO struct {
+	value *ProcessorDTO
+	isSet bool
+}
+
+func (v NullableProcessorDTO) Get() *ProcessorDTO {
+	return v.value
+}
+
+func (v *NullableProcessorDTO) Set(val *ProcessorDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorDTO(val *ProcessorDTO) *NullableProcessorDTO {
+	return &NullableProcessorDTO{value: val, isSet: true}
+}
+
+func (v NullableProcessorDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

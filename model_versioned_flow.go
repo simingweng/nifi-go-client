@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,26 +11,488 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedFlow struct for VersionedFlow
 type VersionedFlow struct {
-	Link JaxbLink `json:"link,omitempty"`
+	Link *JaxbLink `json:"link,omitempty"`
 	// An ID to uniquely identify this object.
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The name of the item.
 	Name string `json:"name"`
 	// A description of the item.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The identifier of the bucket this items belongs to. This cannot be changed after the item is created.
 	BucketIdentifier string `json:"bucketIdentifier"`
 	// The name of the bucket this items belongs to.
-	BucketName string `json:"bucketName,omitempty"`
+	BucketName *string `json:"bucketName,omitempty"`
 	// The timestamp of when the item was created, as milliseconds since epoch.
-	CreatedTimestamp int64 `json:"createdTimestamp,omitempty"`
+	CreatedTimestamp *int64 `json:"createdTimestamp,omitempty"`
 	// The timestamp of when the item was last modified, as milliseconds since epoch.
-	ModifiedTimestamp int64 `json:"modifiedTimestamp,omitempty"`
+	ModifiedTimestamp *int64 `json:"modifiedTimestamp,omitempty"`
 	// The type of item.
-	Type        string      `json:"type"`
-	Permissions Permissions `json:"permissions,omitempty"`
+	Type        string       `json:"type"`
+	Permissions *Permissions `json:"permissions,omitempty"`
 	// The number of versions of this flow.
-	VersionCount int64 `json:"versionCount,omitempty"`
+	VersionCount *int64        `json:"versionCount,omitempty"`
+	Revision     *RevisionInfo `json:"revision,omitempty"`
+}
+
+// NewVersionedFlow instantiates a new VersionedFlow object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedFlow(name string, bucketIdentifier string, type_ string) *VersionedFlow {
+	this := VersionedFlow{}
+	this.Name = name
+	this.BucketIdentifier = bucketIdentifier
+	this.Type = type_
+	return &this
+}
+
+// NewVersionedFlowWithDefaults instantiates a new VersionedFlow object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedFlowWithDefaults() *VersionedFlow {
+	this := VersionedFlow{}
+	return &this
+}
+
+// GetLink returns the Link field value if set, zero value otherwise.
+func (o *VersionedFlow) GetLink() JaxbLink {
+	if o == nil || o.Link == nil {
+		var ret JaxbLink
+		return ret
+	}
+	return *o.Link
+}
+
+// GetLinkOk returns a tuple with the Link field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetLinkOk() (*JaxbLink, bool) {
+	if o == nil || o.Link == nil {
+		return nil, false
+	}
+	return o.Link, true
+}
+
+// HasLink returns a boolean if a field has been set.
+func (o *VersionedFlow) HasLink() bool {
+	if o != nil && o.Link != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLink gets a reference to the given JaxbLink and assigns it to the Link field.
+func (o *VersionedFlow) SetLink(v JaxbLink) {
+	o.Link = &v
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedFlow) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedFlow) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedFlow) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value
+func (o *VersionedFlow) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Name, true
+}
+
+// SetName sets field value
+func (o *VersionedFlow) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *VersionedFlow) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *VersionedFlow) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *VersionedFlow) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetBucketIdentifier returns the BucketIdentifier field value
+func (o *VersionedFlow) GetBucketIdentifier() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.BucketIdentifier
+}
+
+// GetBucketIdentifierOk returns a tuple with the BucketIdentifier field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetBucketIdentifierOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.BucketIdentifier, true
+}
+
+// SetBucketIdentifier sets field value
+func (o *VersionedFlow) SetBucketIdentifier(v string) {
+	o.BucketIdentifier = v
+}
+
+// GetBucketName returns the BucketName field value if set, zero value otherwise.
+func (o *VersionedFlow) GetBucketName() string {
+	if o == nil || o.BucketName == nil {
+		var ret string
+		return ret
+	}
+	return *o.BucketName
+}
+
+// GetBucketNameOk returns a tuple with the BucketName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetBucketNameOk() (*string, bool) {
+	if o == nil || o.BucketName == nil {
+		return nil, false
+	}
+	return o.BucketName, true
+}
+
+// HasBucketName returns a boolean if a field has been set.
+func (o *VersionedFlow) HasBucketName() bool {
+	if o != nil && o.BucketName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBucketName gets a reference to the given string and assigns it to the BucketName field.
+func (o *VersionedFlow) SetBucketName(v string) {
+	o.BucketName = &v
+}
+
+// GetCreatedTimestamp returns the CreatedTimestamp field value if set, zero value otherwise.
+func (o *VersionedFlow) GetCreatedTimestamp() int64 {
+	if o == nil || o.CreatedTimestamp == nil {
+		var ret int64
+		return ret
+	}
+	return *o.CreatedTimestamp
+}
+
+// GetCreatedTimestampOk returns a tuple with the CreatedTimestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetCreatedTimestampOk() (*int64, bool) {
+	if o == nil || o.CreatedTimestamp == nil {
+		return nil, false
+	}
+	return o.CreatedTimestamp, true
+}
+
+// HasCreatedTimestamp returns a boolean if a field has been set.
+func (o *VersionedFlow) HasCreatedTimestamp() bool {
+	if o != nil && o.CreatedTimestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCreatedTimestamp gets a reference to the given int64 and assigns it to the CreatedTimestamp field.
+func (o *VersionedFlow) SetCreatedTimestamp(v int64) {
+	o.CreatedTimestamp = &v
+}
+
+// GetModifiedTimestamp returns the ModifiedTimestamp field value if set, zero value otherwise.
+func (o *VersionedFlow) GetModifiedTimestamp() int64 {
+	if o == nil || o.ModifiedTimestamp == nil {
+		var ret int64
+		return ret
+	}
+	return *o.ModifiedTimestamp
+}
+
+// GetModifiedTimestampOk returns a tuple with the ModifiedTimestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetModifiedTimestampOk() (*int64, bool) {
+	if o == nil || o.ModifiedTimestamp == nil {
+		return nil, false
+	}
+	return o.ModifiedTimestamp, true
+}
+
+// HasModifiedTimestamp returns a boolean if a field has been set.
+func (o *VersionedFlow) HasModifiedTimestamp() bool {
+	if o != nil && o.ModifiedTimestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetModifiedTimestamp gets a reference to the given int64 and assigns it to the ModifiedTimestamp field.
+func (o *VersionedFlow) SetModifiedTimestamp(v int64) {
+	o.ModifiedTimestamp = &v
+}
+
+// GetType returns the Type field value
+func (o *VersionedFlow) GetType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Type, true
+}
+
+// SetType sets field value
+func (o *VersionedFlow) SetType(v string) {
+	o.Type = v
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *VersionedFlow) GetPermissions() Permissions {
+	if o == nil || o.Permissions == nil {
+		var ret Permissions
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetPermissionsOk() (*Permissions, bool) {
+	if o == nil || o.Permissions == nil {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *VersionedFlow) HasPermissions() bool {
+	if o != nil && o.Permissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given Permissions and assigns it to the Permissions field.
+func (o *VersionedFlow) SetPermissions(v Permissions) {
+	o.Permissions = &v
+}
+
+// GetVersionCount returns the VersionCount field value if set, zero value otherwise.
+func (o *VersionedFlow) GetVersionCount() int64 {
+	if o == nil || o.VersionCount == nil {
+		var ret int64
+		return ret
+	}
+	return *o.VersionCount
+}
+
+// GetVersionCountOk returns a tuple with the VersionCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetVersionCountOk() (*int64, bool) {
+	if o == nil || o.VersionCount == nil {
+		return nil, false
+	}
+	return o.VersionCount, true
+}
+
+// HasVersionCount returns a boolean if a field has been set.
+func (o *VersionedFlow) HasVersionCount() bool {
+	if o != nil && o.VersionCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionCount gets a reference to the given int64 and assigns it to the VersionCount field.
+func (o *VersionedFlow) SetVersionCount(v int64) {
+	o.VersionCount = &v
+}
+
+// GetRevision returns the Revision field value if set, zero value otherwise.
+func (o *VersionedFlow) GetRevision() RevisionInfo {
+	if o == nil || o.Revision == nil {
+		var ret RevisionInfo
+		return ret
+	}
+	return *o.Revision
+}
+
+// GetRevisionOk returns a tuple with the Revision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedFlow) GetRevisionOk() (*RevisionInfo, bool) {
+	if o == nil || o.Revision == nil {
+		return nil, false
+	}
+	return o.Revision, true
+}
+
+// HasRevision returns a boolean if a field has been set.
+func (o *VersionedFlow) HasRevision() bool {
+	if o != nil && o.Revision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRevision gets a reference to the given RevisionInfo and assigns it to the Revision field.
+func (o *VersionedFlow) SetRevision(v RevisionInfo) {
+	o.Revision = &v
+}
+
+func (o VersionedFlow) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Link != nil {
+		toSerialize["link"] = o.Link
+	}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if true {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if true {
+		toSerialize["bucketIdentifier"] = o.BucketIdentifier
+	}
+	if o.BucketName != nil {
+		toSerialize["bucketName"] = o.BucketName
+	}
+	if o.CreatedTimestamp != nil {
+		toSerialize["createdTimestamp"] = o.CreatedTimestamp
+	}
+	if o.ModifiedTimestamp != nil {
+		toSerialize["modifiedTimestamp"] = o.ModifiedTimestamp
+	}
+	if true {
+		toSerialize["type"] = o.Type
+	}
+	if o.Permissions != nil {
+		toSerialize["permissions"] = o.Permissions
+	}
+	if o.VersionCount != nil {
+		toSerialize["versionCount"] = o.VersionCount
+	}
+	if o.Revision != nil {
+		toSerialize["revision"] = o.Revision
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedFlow struct {
+	value *VersionedFlow
+	isSet bool
+}
+
+func (v NullableVersionedFlow) Get() *VersionedFlow {
+	return v.value
+}
+
+func (v *NullableVersionedFlow) Set(val *VersionedFlow) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedFlow) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedFlow) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedFlow(val *VersionedFlow) *NullableVersionedFlow {
+	return &NullableVersionedFlow{value: val, isSet: true}
+}
+
+func (v NullableVersionedFlow) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedFlow) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

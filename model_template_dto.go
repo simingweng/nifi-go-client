@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,21 +11,363 @@
 
 package nifi
 
-// TemplateDto struct for TemplateDto
-type TemplateDto struct {
+import (
+	"encoding/json"
+)
+
+// TemplateDTO struct for TemplateDTO
+type TemplateDTO struct {
 	// The URI for the template.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The id of the template.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The id of the Process Group that the template belongs to.
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The name of the template.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The description of the template.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The timestamp when this template was created.
-	Timestamp string `json:"timestamp,omitempty"`
+	Timestamp *string `json:"timestamp,omitempty"`
 	// The encoding version of this template.
-	EncodingVersion string         `json:"encodingVersion,omitempty"`
-	Snippet         FlowSnippetDto `json:"snippet,omitempty"`
+	EncodingVersion *string         `json:"encodingVersion,omitempty"`
+	Snippet         *FlowSnippetDTO `json:"snippet,omitempty"`
+}
+
+// NewTemplateDTO instantiates a new TemplateDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewTemplateDTO() *TemplateDTO {
+	this := TemplateDTO{}
+	return &this
+}
+
+// NewTemplateDTOWithDefaults instantiates a new TemplateDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewTemplateDTOWithDefaults() *TemplateDTO {
+	this := TemplateDTO{}
+	return &this
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *TemplateDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *TemplateDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *TemplateDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *TemplateDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *TemplateDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *TemplateDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *TemplateDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *TemplateDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *TemplateDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *TemplateDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *TemplateDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *TemplateDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *TemplateDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *TemplateDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *TemplateDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *TemplateDTO) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *TemplateDTO) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *TemplateDTO) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+// GetEncodingVersion returns the EncodingVersion field value if set, zero value otherwise.
+func (o *TemplateDTO) GetEncodingVersion() string {
+	if o == nil || o.EncodingVersion == nil {
+		var ret string
+		return ret
+	}
+	return *o.EncodingVersion
+}
+
+// GetEncodingVersionOk returns a tuple with the EncodingVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetEncodingVersionOk() (*string, bool) {
+	if o == nil || o.EncodingVersion == nil {
+		return nil, false
+	}
+	return o.EncodingVersion, true
+}
+
+// HasEncodingVersion returns a boolean if a field has been set.
+func (o *TemplateDTO) HasEncodingVersion() bool {
+	if o != nil && o.EncodingVersion != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEncodingVersion gets a reference to the given string and assigns it to the EncodingVersion field.
+func (o *TemplateDTO) SetEncodingVersion(v string) {
+	o.EncodingVersion = &v
+}
+
+// GetSnippet returns the Snippet field value if set, zero value otherwise.
+func (o *TemplateDTO) GetSnippet() FlowSnippetDTO {
+	if o == nil || o.Snippet == nil {
+		var ret FlowSnippetDTO
+		return ret
+	}
+	return *o.Snippet
+}
+
+// GetSnippetOk returns a tuple with the Snippet field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TemplateDTO) GetSnippetOk() (*FlowSnippetDTO, bool) {
+	if o == nil || o.Snippet == nil {
+		return nil, false
+	}
+	return o.Snippet, true
+}
+
+// HasSnippet returns a boolean if a field has been set.
+func (o *TemplateDTO) HasSnippet() bool {
+	if o != nil && o.Snippet != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSnippet gets a reference to the given FlowSnippetDTO and assigns it to the Snippet field.
+func (o *TemplateDTO) SetSnippet(v FlowSnippetDTO) {
+	o.Snippet = &v
+}
+
+func (o TemplateDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.EncodingVersion != nil {
+		toSerialize["encodingVersion"] = o.EncodingVersion
+	}
+	if o.Snippet != nil {
+		toSerialize["snippet"] = o.Snippet
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableTemplateDTO struct {
+	value *TemplateDTO
+	isSet bool
+}
+
+func (v NullableTemplateDTO) Get() *TemplateDTO {
+	return v.value
+}
+
+func (v *NullableTemplateDTO) Set(val *TemplateDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableTemplateDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableTemplateDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableTemplateDTO(val *TemplateDTO) *NullableTemplateDTO {
+	return &NullableTemplateDTO{value: val, isSet: true}
+}
+
+func (v NullableTemplateDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableTemplateDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

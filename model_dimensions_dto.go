@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// DimensionsDto struct for DimensionsDto
-type DimensionsDto struct {
+import (
+	"encoding/json"
+)
+
+// DimensionsDTO struct for DimensionsDTO
+type DimensionsDTO struct {
 	// The width of the label in pixels when at a 1:1 scale.
-	Width float64 `json:"width,omitempty"`
+	Width *float64 `json:"width,omitempty"`
 	// The height of the label in pixels when at a 1:1 scale.
-	Height float64 `json:"height,omitempty"`
+	Height *float64 `json:"height,omitempty"`
+}
+
+// NewDimensionsDTO instantiates a new DimensionsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewDimensionsDTO() *DimensionsDTO {
+	this := DimensionsDTO{}
+	return &this
+}
+
+// NewDimensionsDTOWithDefaults instantiates a new DimensionsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewDimensionsDTOWithDefaults() *DimensionsDTO {
+	this := DimensionsDTO{}
+	return &this
+}
+
+// GetWidth returns the Width field value if set, zero value otherwise.
+func (o *DimensionsDTO) GetWidth() float64 {
+	if o == nil || o.Width == nil {
+		var ret float64
+		return ret
+	}
+	return *o.Width
+}
+
+// GetWidthOk returns a tuple with the Width field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DimensionsDTO) GetWidthOk() (*float64, bool) {
+	if o == nil || o.Width == nil {
+		return nil, false
+	}
+	return o.Width, true
+}
+
+// HasWidth returns a boolean if a field has been set.
+func (o *DimensionsDTO) HasWidth() bool {
+	if o != nil && o.Width != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetWidth gets a reference to the given float64 and assigns it to the Width field.
+func (o *DimensionsDTO) SetWidth(v float64) {
+	o.Width = &v
+}
+
+// GetHeight returns the Height field value if set, zero value otherwise.
+func (o *DimensionsDTO) GetHeight() float64 {
+	if o == nil || o.Height == nil {
+		var ret float64
+		return ret
+	}
+	return *o.Height
+}
+
+// GetHeightOk returns a tuple with the Height field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DimensionsDTO) GetHeightOk() (*float64, bool) {
+	if o == nil || o.Height == nil {
+		return nil, false
+	}
+	return o.Height, true
+}
+
+// HasHeight returns a boolean if a field has been set.
+func (o *DimensionsDTO) HasHeight() bool {
+	if o != nil && o.Height != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHeight gets a reference to the given float64 and assigns it to the Height field.
+func (o *DimensionsDTO) SetHeight(v float64) {
+	o.Height = &v
+}
+
+func (o DimensionsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Width != nil {
+		toSerialize["width"] = o.Width
+	}
+	if o.Height != nil {
+		toSerialize["height"] = o.Height
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableDimensionsDTO struct {
+	value *DimensionsDTO
+	isSet bool
+}
+
+func (v NullableDimensionsDTO) Get() *DimensionsDTO {
+	return v.value
+}
+
+func (v *NullableDimensionsDTO) Set(val *DimensionsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableDimensionsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableDimensionsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableDimensionsDTO(val *DimensionsDTO) *NullableDimensionsDTO {
+	return &NullableDimensionsDTO{value: val, isSet: true}
+}
+
+func (v NullableDimensionsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableDimensionsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

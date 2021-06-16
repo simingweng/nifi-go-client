@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,177 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessGroupImportEntity struct for ProcessGroupImportEntity
 type ProcessGroupImportEntity struct {
-	ProcessGroupRevision RevisionDto `json:"processGroupRevision,omitempty"`
+	ProcessGroupRevision *RevisionDTO `json:"processGroupRevision,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool                  `json:"disconnectedNodeAcknowledged,omitempty"`
-	VersionedFlowSnapshot        VersionedFlowSnapshot `json:"versionedFlowSnapshot,omitempty"`
+	DisconnectedNodeAcknowledged *bool                  `json:"disconnectedNodeAcknowledged,omitempty"`
+	VersionedFlowSnapshot        *VersionedFlowSnapshot `json:"versionedFlowSnapshot,omitempty"`
+}
+
+// NewProcessGroupImportEntity instantiates a new ProcessGroupImportEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupImportEntity() *ProcessGroupImportEntity {
+	this := ProcessGroupImportEntity{}
+	return &this
+}
+
+// NewProcessGroupImportEntityWithDefaults instantiates a new ProcessGroupImportEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupImportEntityWithDefaults() *ProcessGroupImportEntity {
+	this := ProcessGroupImportEntity{}
+	return &this
+}
+
+// GetProcessGroupRevision returns the ProcessGroupRevision field value if set, zero value otherwise.
+func (o *ProcessGroupImportEntity) GetProcessGroupRevision() RevisionDTO {
+	if o == nil || o.ProcessGroupRevision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroupRevision
+}
+
+// GetProcessGroupRevisionOk returns a tuple with the ProcessGroupRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupImportEntity) GetProcessGroupRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.ProcessGroupRevision == nil {
+		return nil, false
+	}
+	return o.ProcessGroupRevision, true
+}
+
+// HasProcessGroupRevision returns a boolean if a field has been set.
+func (o *ProcessGroupImportEntity) HasProcessGroupRevision() bool {
+	if o != nil && o.ProcessGroupRevision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroupRevision gets a reference to the given RevisionDTO and assigns it to the ProcessGroupRevision field.
+func (o *ProcessGroupImportEntity) SetProcessGroupRevision(v RevisionDTO) {
+	o.ProcessGroupRevision = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *ProcessGroupImportEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupImportEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *ProcessGroupImportEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *ProcessGroupImportEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+// GetVersionedFlowSnapshot returns the VersionedFlowSnapshot field value if set, zero value otherwise.
+func (o *ProcessGroupImportEntity) GetVersionedFlowSnapshot() VersionedFlowSnapshot {
+	if o == nil || o.VersionedFlowSnapshot == nil {
+		var ret VersionedFlowSnapshot
+		return ret
+	}
+	return *o.VersionedFlowSnapshot
+}
+
+// GetVersionedFlowSnapshotOk returns a tuple with the VersionedFlowSnapshot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupImportEntity) GetVersionedFlowSnapshotOk() (*VersionedFlowSnapshot, bool) {
+	if o == nil || o.VersionedFlowSnapshot == nil {
+		return nil, false
+	}
+	return o.VersionedFlowSnapshot, true
+}
+
+// HasVersionedFlowSnapshot returns a boolean if a field has been set.
+func (o *ProcessGroupImportEntity) HasVersionedFlowSnapshot() bool {
+	if o != nil && o.VersionedFlowSnapshot != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlowSnapshot gets a reference to the given VersionedFlowSnapshot and assigns it to the VersionedFlowSnapshot field.
+func (o *ProcessGroupImportEntity) SetVersionedFlowSnapshot(v VersionedFlowSnapshot) {
+	o.VersionedFlowSnapshot = &v
+}
+
+func (o ProcessGroupImportEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ProcessGroupRevision != nil {
+		toSerialize["processGroupRevision"] = o.ProcessGroupRevision
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	if o.VersionedFlowSnapshot != nil {
+		toSerialize["versionedFlowSnapshot"] = o.VersionedFlowSnapshot
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupImportEntity struct {
+	value *ProcessGroupImportEntity
+	isSet bool
+}
+
+func (v NullableProcessGroupImportEntity) Get() *ProcessGroupImportEntity {
+	return v.value
+}
+
+func (v *NullableProcessGroupImportEntity) Set(val *ProcessGroupImportEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupImportEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupImportEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupImportEntity(val *ProcessGroupImportEntity) *NullableProcessGroupImportEntity {
+	return &NullableProcessGroupImportEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupImportEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupImportEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

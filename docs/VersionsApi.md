@@ -23,19 +23,51 @@ Method | HTTP request | Description
 
 ## CreateVersionControlRequest
 
-> string CreateVersionControlRequest(ctx, body)
+> string CreateVersionControlRequest(ctx).Body(body).Execute()
 
 Create a version control request
 
-Creates a request so that a Process Group can be placed under Version Control or have its Version Control configuration changed. Creating this request will prevent any other threads from simultaneously saving local changes to Version Control. It will not, however, actually save the local flow to the Flow Registry. A POST to /versions/process-groups/{id} should be used to initiate saving of the local flow to the Flow Registry. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    body := *openapiclient.NewCreateActiveRequestEntity() // CreateActiveRequestEntity | The versioned flow details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.CreateVersionControlRequest(context.Background()).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.CreateVersionControlRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateVersionControlRequest`: string
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.CreateVersionControlRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateVersionControlRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**body** | [**CreateActiveRequestEntity**](CreateActiveRequestEntity.md)| The versioned flow details. | 
+ **body** | [**CreateActiveRequestEntity**](CreateActiveRequestEntity.md) | The versioned flow details. | 
 
 ### Return type
 
@@ -57,30 +89,57 @@ No authorization required
 
 ## DeleteRevertRequest
 
-> VersionedFlowUpdateRequestEntity DeleteRevertRequest(ctx, id, optional)
+> VersionedFlowUpdateRequestEntity DeleteRevertRequest(ctx, id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the Revert Request with the given ID
 
-Deletes the Revert Request with the given ID. After a request is created via a POST to /versions/revert-requests/process-groups/{id}, it is expected that the client will properly clean up the request by DELETE'ing it, once the Revert process has completed. If the request is deleted before the request completes, then the Revert request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The ID of the Revert Request
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.DeleteRevertRequest(context.Background(), id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.DeleteRevertRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteRevertRequest`: VersionedFlowUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.DeleteRevertRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The ID of the Revert Request | 
- **optional** | ***DeleteRevertRequestOpts** | optional parameters | nil if no parameters
+**id** | **string** | The ID of the Revert Request | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteRevertRequestOpts struct
+Other parameters are passed through a pointer to a apiDeleteRevertRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -102,30 +161,57 @@ No authorization required
 
 ## DeleteUpdateRequest
 
-> VersionedFlowUpdateRequestEntity DeleteUpdateRequest(ctx, id, optional)
+> VersionedFlowUpdateRequestEntity DeleteUpdateRequest(ctx, id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the Update Request with the given ID
 
-Deletes the Update Request with the given ID. After a request is created via a POST to /versions/update-requests/process-groups/{id}, it is expected that the client will properly clean up the request by DELETE'ing it, once the Update process has completed. If the request is deleted before the request completes, then the Update request will finish the step that it is currently performing and then will cancel any subsequent steps. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The ID of the Update Request
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.DeleteUpdateRequest(context.Background(), id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.DeleteUpdateRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DeleteUpdateRequest`: VersionedFlowUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.DeleteUpdateRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The ID of the Update Request | 
- **optional** | ***DeleteUpdateRequestOpts** | optional parameters | nil if no parameters
+**id** | **string** | The ID of the Update Request | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteUpdateRequestOpts struct
+Other parameters are passed through a pointer to a apiDeleteUpdateRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -147,30 +233,55 @@ No authorization required
 
 ## DeleteVersionControlRequest
 
-> DeleteVersionControlRequest(ctx, id, optional)
+> DeleteVersionControlRequest(ctx, id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Deletes the version control request with the given ID
 
-Deletes the Version Control Request with the given ID. This will allow other threads to save flows to the Flow Registry. See also the documentation for POSTing to /versions/active-requests for information regarding why this is done. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The request ID.
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.DeleteVersionControlRequest(context.Background(), id).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.DeleteVersionControlRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The request ID. | 
- **optional** | ***DeleteVersionControlRequestOpts** | optional parameters | nil if no parameters
+**id** | **string** | The request ID. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a DeleteVersionControlRequestOpts struct
+Other parameters are passed through a pointer to a apiDeleteVersionControlRequestRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -192,17 +303,53 @@ No authorization required
 
 ## ExportFlowVersion
 
-> string ExportFlowVersion(ctx, id)
+> string ExportFlowVersion(ctx, id).Execute()
 
 Gets the latest version of a Process Group for download
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.ExportFlowVersion(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.ExportFlowVersion``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ExportFlowVersion`: string
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.ExportFlowVersion`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiExportFlowVersionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -224,19 +371,55 @@ No authorization required
 
 ## GetRevertRequest
 
-> VersionedFlowUpdateRequestEntity GetRevertRequest(ctx, id)
+> VersionedFlowUpdateRequestEntity GetRevertRequest(ctx, id).Execute()
 
 Returns the Revert Request with the given ID
 
-Returns the Revert Request with the given ID. Once a Revert Request has been created by performing a POST to /versions/revert-requests/process-groups/{id}, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The ID of the Revert Request
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.GetRevertRequest(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.GetRevertRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetRevertRequest`: VersionedFlowUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.GetRevertRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The ID of the Revert Request | 
+**id** | **string** | The ID of the Revert Request | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetRevertRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -258,19 +441,55 @@ No authorization required
 
 ## GetUpdateRequest
 
-> VersionedFlowUpdateRequestEntity GetUpdateRequest(ctx, id)
+> VersionedFlowUpdateRequestEntity GetUpdateRequest(ctx, id).Execute()
 
 Returns the Update Request with the given ID
 
-Returns the Update Request with the given ID. Once an Update Request has been created by performing a POST to /versions/update-requests/process-groups/{id}, that request can subsequently be retrieved via this endpoint, and the request that is fetched will contain the updated state, such as percent complete, the current state of the request, and any failures. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The ID of the Update Request
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.GetUpdateRequest(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.GetUpdateRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetUpdateRequest`: VersionedFlowUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.GetUpdateRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The ID of the Update Request | 
+**id** | **string** | The ID of the Update Request | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetUpdateRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -292,19 +511,55 @@ No authorization required
 
 ## GetVersionInformation
 
-> VersionControlInformationEntity GetVersionInformation(ctx, id)
+> VersionControlInformationEntity GetVersionInformation(ctx, id).Execute()
 
 Gets the Version Control information for a process group
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.GetVersionInformation(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.GetVersionInformation``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetVersionInformation`: VersionControlInformationEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.GetVersionInformation`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetVersionInformationRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -326,20 +581,57 @@ No authorization required
 
 ## InitiateRevertFlowVersion
 
-> VersionedFlowUpdateRequestEntity InitiateRevertFlowVersion(ctx, id, body)
+> VersionedFlowUpdateRequestEntity InitiateRevertFlowVersion(ctx, id).Body(body).Execute()
 
 Initiate the Revert Request of a Process Group with the given ID
 
-For a Process Group that is already under Version Control, this will initiate the action of reverting any local changes that have been made to the Process Group since it was last synchronized with the Flow Registry. This will result in the flow matching the Versioned Flow that exists in the Flow Registry. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a VersionedFlowUpdateRequestEntity, and the process of updating the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /versions/revert-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /versions/revert-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    body := *openapiclient.NewVersionControlInformationEntity() // VersionControlInformationEntity | The controller service configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.InitiateRevertFlowVersion(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.InitiateRevertFlowVersion``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `InitiateRevertFlowVersion`: VersionedFlowUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.InitiateRevertFlowVersion`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
-**body** | [**VersionControlInformationEntity**](VersionControlInformationEntity.md)| The controller service configuration details. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiInitiateRevertFlowVersionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**VersionControlInformationEntity**](VersionControlInformationEntity.md) | The controller service configuration details. | 
 
 ### Return type
 
@@ -361,20 +653,57 @@ No authorization required
 
 ## InitiateVersionControlUpdate
 
-> VersionedFlowUpdateRequestEntity InitiateVersionControlUpdate(ctx, id, body)
+> VersionedFlowUpdateRequestEntity InitiateVersionControlUpdate(ctx, id).Body(body).Execute()
 
 Initiate the Update Request of a Process Group with the given ID
 
-For a Process Group that is already under Version Control, this will initiate the action of changing from a specific version of the flow in the Flow Registry to a different version of the flow. This can be a lengthy process, as it will stop any Processors and disable any Controller Services necessary to perform the action and then restart them. As a result, the endpoint will immediately return a VersionedFlowUpdateRequestEntity, and the process of updating the flow will occur asynchronously in the background. The client may then periodically poll the status of the request by issuing a GET request to /versions/update-requests/{requestId}. Once the request is completed, the client is expected to issue a DELETE request to /versions/update-requests/{requestId}. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    body := *openapiclient.NewVersionControlInformationEntity() // VersionControlInformationEntity | The controller service configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.InitiateVersionControlUpdate(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.InitiateVersionControlUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `InitiateVersionControlUpdate`: VersionedFlowUpdateRequestEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.InitiateVersionControlUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
-**body** | [**VersionControlInformationEntity**](VersionControlInformationEntity.md)| The controller service configuration details. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiInitiateVersionControlUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**VersionControlInformationEntity**](VersionControlInformationEntity.md) | The controller service configuration details. | 
 
 ### Return type
 
@@ -396,20 +725,57 @@ No authorization required
 
 ## SaveToFlowRegistry
 
-> VersionControlInformationEntity SaveToFlowRegistry(ctx, id, body)
+> VersionControlInformationEntity SaveToFlowRegistry(ctx, id).Body(body).Execute()
 
 Save the Process Group with the given ID
 
-Begins version controlling the Process Group with the given ID or commits changes to the Versioned Flow, depending on if the provided VersionControlInformation includes a flowId. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    body := *openapiclient.NewStartVersionControlRequestEntity() // StartVersionControlRequestEntity | The versioned flow details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.SaveToFlowRegistry(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.SaveToFlowRegistry``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SaveToFlowRegistry`: VersionControlInformationEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.SaveToFlowRegistry`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
-**body** | [**StartVersionControlRequestEntity**](StartVersionControlRequestEntity.md)| The versioned flow details. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSaveToFlowRegistryRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**StartVersionControlRequestEntity**](StartVersionControlRequestEntity.md) | The versioned flow details. | 
 
 ### Return type
 
@@ -431,32 +797,61 @@ No authorization required
 
 ## StopVersionControl
 
-> VersionControlInformationEntity StopVersionControl(ctx, id, optional)
+> VersionControlInformationEntity StopVersionControl(ctx, id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
 
 Stops version controlling the Process Group with the given ID
 
-Stops version controlling the Process Group with the given ID. The Process Group will no longer track to any Versioned Flow. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    version := "version_example" // string | The version is used to verify the client is working with the latest version of the flow. (optional)
+    clientId := "clientId_example" // string | If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response. (optional)
+    disconnectedNodeAcknowledged := true // bool | Acknowledges that this node is disconnected to allow for mutable requests to proceed. (optional) (default to false)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.StopVersionControl(context.Background(), id).Version(version).ClientId(clientId).DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.StopVersionControl``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `StopVersionControl`: VersionControlInformationEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.StopVersionControl`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
- **optional** | ***StopVersionControlOpts** | optional parameters | nil if no parameters
+**id** | **string** | The process group id. | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a StopVersionControlOpts struct
+Other parameters are passed through a pointer to a apiStopVersionControlRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **version** | **optional.String**| The version is used to verify the client is working with the latest version of the flow. | 
- **clientId** | **optional.String**| If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response. | 
- **disconnectedNodeAcknowledged** | **optional.Bool**| Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
+ **version** | **string** | The version is used to verify the client is working with the latest version of the flow. | 
+ **clientId** | **string** | If the client id is not specified, a new one will be generated. This value (whether specified or generated) is included in the response. | 
+ **disconnectedNodeAcknowledged** | **bool** | Acknowledges that this node is disconnected to allow for mutable requests to proceed. | [default to false]
 
 ### Return type
 
@@ -478,20 +873,57 @@ No authorization required
 
 ## UpdateFlowVersion
 
-> VersionControlInformationEntity UpdateFlowVersion(ctx, id, body)
+> VersionControlInformationEntity UpdateFlowVersion(ctx, id).Body(body).Execute()
 
 Update the version of a Process Group with the given ID
 
-For a Process Group that is already under Version Control, this will update the version of the flow to a different version. This endpoint expects that the given snapshot will not modify any Processor that is currently running or any Controller Service that is enabled. Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The process group id.
+    body := *openapiclient.NewVersionedFlowSnapshotEntity() // VersionedFlowSnapshotEntity | The controller service configuration details.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.UpdateFlowVersion(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.UpdateFlowVersion``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateFlowVersion`: VersionControlInformationEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.UpdateFlowVersion`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The process group id. | 
-**body** | [**VersionedFlowSnapshotEntity**](VersionedFlowSnapshotEntity.md)| The controller service configuration details. | 
+**id** | **string** | The process group id. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateFlowVersionRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**VersionedFlowSnapshotEntity**](VersionedFlowSnapshotEntity.md) | The controller service configuration details. | 
 
 ### Return type
 
@@ -513,20 +945,57 @@ No authorization required
 
 ## UpdateVersionControlRequest
 
-> VersionControlInformationEntity UpdateVersionControlRequest(ctx, id, body)
+> VersionControlInformationEntity UpdateVersionControlRequest(ctx, id).Body(body).Execute()
 
 Updates the request with the given ID
 
-Note: This endpoint is subject to change as NiFi and it's REST API evolve.
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | The request ID.
+    body := *openapiclient.NewVersionControlComponentMappingEntity() // VersionControlComponentMappingEntity | The version control component mapping.
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.VersionsApi.UpdateVersionControlRequest(context.Background(), id).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `VersionsApi.UpdateVersionControlRequest``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateVersionControlRequest`: VersionControlInformationEntity
+    fmt.Fprintf(os.Stdout, "Response from `VersionsApi.UpdateVersionControlRequest`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| The request ID. | 
-**body** | [**VersionControlComponentMappingEntity**](VersionControlComponentMappingEntity.md)| The version control component mapping. | 
+**id** | **string** | The request ID. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateVersionControlRequestRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **body** | [**VersionControlComponentMappingEntity**](VersionControlComponentMappingEntity.md) | The version control component mapping. | 
 
 ### Return type
 

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // AccessStatusEntity struct for AccessStatusEntity
 type AccessStatusEntity struct {
-	AccessStatus AccessStatusDto `json:"accessStatus,omitempty"`
+	AccessStatus *AccessStatusDTO `json:"accessStatus,omitempty"`
+}
+
+// NewAccessStatusEntity instantiates a new AccessStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewAccessStatusEntity() *AccessStatusEntity {
+	this := AccessStatusEntity{}
+	return &this
+}
+
+// NewAccessStatusEntityWithDefaults instantiates a new AccessStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewAccessStatusEntityWithDefaults() *AccessStatusEntity {
+	this := AccessStatusEntity{}
+	return &this
+}
+
+// GetAccessStatus returns the AccessStatus field value if set, zero value otherwise.
+func (o *AccessStatusEntity) GetAccessStatus() AccessStatusDTO {
+	if o == nil || o.AccessStatus == nil {
+		var ret AccessStatusDTO
+		return ret
+	}
+	return *o.AccessStatus
+}
+
+// GetAccessStatusOk returns a tuple with the AccessStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessStatusEntity) GetAccessStatusOk() (*AccessStatusDTO, bool) {
+	if o == nil || o.AccessStatus == nil {
+		return nil, false
+	}
+	return o.AccessStatus, true
+}
+
+// HasAccessStatus returns a boolean if a field has been set.
+func (o *AccessStatusEntity) HasAccessStatus() bool {
+	if o != nil && o.AccessStatus != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAccessStatus gets a reference to the given AccessStatusDTO and assigns it to the AccessStatus field.
+func (o *AccessStatusEntity) SetAccessStatus(v AccessStatusDTO) {
+	o.AccessStatus = &v
+}
+
+func (o AccessStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.AccessStatus != nil {
+		toSerialize["accessStatus"] = o.AccessStatus
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableAccessStatusEntity struct {
+	value *AccessStatusEntity
+	isSet bool
+}
+
+func (v NullableAccessStatusEntity) Get() *AccessStatusEntity {
+	return v.value
+}
+
+func (v *NullableAccessStatusEntity) Set(val *AccessStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableAccessStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableAccessStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableAccessStatusEntity(val *AccessStatusEntity) *NullableAccessStatusEntity {
+	return &NullableAccessStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableAccessStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableAccessStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

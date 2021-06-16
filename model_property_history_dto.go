@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,8 +11,105 @@
 
 package nifi
 
-// PropertyHistoryDto struct for PropertyHistoryDto
-type PropertyHistoryDto struct {
+import (
+	"encoding/json"
+)
+
+// PropertyHistoryDTO struct for PropertyHistoryDTO
+type PropertyHistoryDTO struct {
 	// Previous values for a given property.
-	PreviousValues []PreviousValueDto `json:"previousValues,omitempty"`
+	PreviousValues *[]PreviousValueDTO `json:"previousValues,omitempty"`
+}
+
+// NewPropertyHistoryDTO instantiates a new PropertyHistoryDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPropertyHistoryDTO() *PropertyHistoryDTO {
+	this := PropertyHistoryDTO{}
+	return &this
+}
+
+// NewPropertyHistoryDTOWithDefaults instantiates a new PropertyHistoryDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPropertyHistoryDTOWithDefaults() *PropertyHistoryDTO {
+	this := PropertyHistoryDTO{}
+	return &this
+}
+
+// GetPreviousValues returns the PreviousValues field value if set, zero value otherwise.
+func (o *PropertyHistoryDTO) GetPreviousValues() []PreviousValueDTO {
+	if o == nil || o.PreviousValues == nil {
+		var ret []PreviousValueDTO
+		return ret
+	}
+	return *o.PreviousValues
+}
+
+// GetPreviousValuesOk returns a tuple with the PreviousValues field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PropertyHistoryDTO) GetPreviousValuesOk() (*[]PreviousValueDTO, bool) {
+	if o == nil || o.PreviousValues == nil {
+		return nil, false
+	}
+	return o.PreviousValues, true
+}
+
+// HasPreviousValues returns a boolean if a field has been set.
+func (o *PropertyHistoryDTO) HasPreviousValues() bool {
+	if o != nil && o.PreviousValues != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPreviousValues gets a reference to the given []PreviousValueDTO and assigns it to the PreviousValues field.
+func (o *PropertyHistoryDTO) SetPreviousValues(v []PreviousValueDTO) {
+	o.PreviousValues = &v
+}
+
+func (o PropertyHistoryDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.PreviousValues != nil {
+		toSerialize["previousValues"] = o.PreviousValues
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePropertyHistoryDTO struct {
+	value *PropertyHistoryDTO
+	isSet bool
+}
+
+func (v NullablePropertyHistoryDTO) Get() *PropertyHistoryDTO {
+	return v.value
+}
+
+func (v *NullablePropertyHistoryDTO) Set(val *PropertyHistoryDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePropertyHistoryDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePropertyHistoryDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePropertyHistoryDTO(val *PropertyHistoryDTO) *NullablePropertyHistoryDTO {
+	return &NullablePropertyHistoryDTO{value: val, isSet: true}
+}
+
+func (v NullablePropertyHistoryDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePropertyHistoryDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

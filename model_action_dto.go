@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,22 +11,399 @@
 
 package nifi
 
-// ActionDto struct for ActionDto
-type ActionDto struct {
+import (
+	"encoding/json"
+)
+
+// ActionDTO struct for ActionDTO
+type ActionDTO struct {
 	// The action id.
-	Id int32 `json:"id,omitempty"`
+	Id *int32 `json:"id,omitempty"`
 	// The identity of the user that performed the action.
-	UserIdentity string `json:"userIdentity,omitempty"`
+	UserIdentity *string `json:"userIdentity,omitempty"`
 	// The timestamp of the action.
-	Timestamp string `json:"timestamp,omitempty"`
+	Timestamp *string `json:"timestamp,omitempty"`
 	// The id of the source component.
-	SourceId string `json:"sourceId,omitempty"`
+	SourceId *string `json:"sourceId,omitempty"`
 	// The name of the source component.
-	SourceName string `json:"sourceName,omitempty"`
+	SourceName *string `json:"sourceName,omitempty"`
 	// The type of the source component.
-	SourceType       string                 `json:"sourceType,omitempty"`
-	ComponentDetails map[string]interface{} `json:"componentDetails,omitempty"`
+	SourceType       *string                 `json:"sourceType,omitempty"`
+	ComponentDetails *map[string]interface{} `json:"componentDetails,omitempty"`
 	// The operation that was performed.
-	Operation     string                 `json:"operation,omitempty"`
-	ActionDetails map[string]interface{} `json:"actionDetails,omitempty"`
+	Operation     *string                 `json:"operation,omitempty"`
+	ActionDetails *map[string]interface{} `json:"actionDetails,omitempty"`
+}
+
+// NewActionDTO instantiates a new ActionDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewActionDTO() *ActionDTO {
+	this := ActionDTO{}
+	return &this
+}
+
+// NewActionDTOWithDefaults instantiates a new ActionDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewActionDTOWithDefaults() *ActionDTO {
+	this := ActionDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ActionDTO) GetId() int32 {
+	if o == nil || o.Id == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetIdOk() (*int32, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ActionDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given int32 and assigns it to the Id field.
+func (o *ActionDTO) SetId(v int32) {
+	o.Id = &v
+}
+
+// GetUserIdentity returns the UserIdentity field value if set, zero value otherwise.
+func (o *ActionDTO) GetUserIdentity() string {
+	if o == nil || o.UserIdentity == nil {
+		var ret string
+		return ret
+	}
+	return *o.UserIdentity
+}
+
+// GetUserIdentityOk returns a tuple with the UserIdentity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetUserIdentityOk() (*string, bool) {
+	if o == nil || o.UserIdentity == nil {
+		return nil, false
+	}
+	return o.UserIdentity, true
+}
+
+// HasUserIdentity returns a boolean if a field has been set.
+func (o *ActionDTO) HasUserIdentity() bool {
+	if o != nil && o.UserIdentity != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUserIdentity gets a reference to the given string and assigns it to the UserIdentity field.
+func (o *ActionDTO) SetUserIdentity(v string) {
+	o.UserIdentity = &v
+}
+
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *ActionDTO) GetTimestamp() string {
+	if o == nil || o.Timestamp == nil {
+		var ret string
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetTimestampOk() (*string, bool) {
+	if o == nil || o.Timestamp == nil {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *ActionDTO) HasTimestamp() bool {
+	if o != nil && o.Timestamp != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given string and assigns it to the Timestamp field.
+func (o *ActionDTO) SetTimestamp(v string) {
+	o.Timestamp = &v
+}
+
+// GetSourceId returns the SourceId field value if set, zero value otherwise.
+func (o *ActionDTO) GetSourceId() string {
+	if o == nil || o.SourceId == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceId
+}
+
+// GetSourceIdOk returns a tuple with the SourceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetSourceIdOk() (*string, bool) {
+	if o == nil || o.SourceId == nil {
+		return nil, false
+	}
+	return o.SourceId, true
+}
+
+// HasSourceId returns a boolean if a field has been set.
+func (o *ActionDTO) HasSourceId() bool {
+	if o != nil && o.SourceId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceId gets a reference to the given string and assigns it to the SourceId field.
+func (o *ActionDTO) SetSourceId(v string) {
+	o.SourceId = &v
+}
+
+// GetSourceName returns the SourceName field value if set, zero value otherwise.
+func (o *ActionDTO) GetSourceName() string {
+	if o == nil || o.SourceName == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceName
+}
+
+// GetSourceNameOk returns a tuple with the SourceName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetSourceNameOk() (*string, bool) {
+	if o == nil || o.SourceName == nil {
+		return nil, false
+	}
+	return o.SourceName, true
+}
+
+// HasSourceName returns a boolean if a field has been set.
+func (o *ActionDTO) HasSourceName() bool {
+	if o != nil && o.SourceName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceName gets a reference to the given string and assigns it to the SourceName field.
+func (o *ActionDTO) SetSourceName(v string) {
+	o.SourceName = &v
+}
+
+// GetSourceType returns the SourceType field value if set, zero value otherwise.
+func (o *ActionDTO) GetSourceType() string {
+	if o == nil || o.SourceType == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceType
+}
+
+// GetSourceTypeOk returns a tuple with the SourceType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetSourceTypeOk() (*string, bool) {
+	if o == nil || o.SourceType == nil {
+		return nil, false
+	}
+	return o.SourceType, true
+}
+
+// HasSourceType returns a boolean if a field has been set.
+func (o *ActionDTO) HasSourceType() bool {
+	if o != nil && o.SourceType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceType gets a reference to the given string and assigns it to the SourceType field.
+func (o *ActionDTO) SetSourceType(v string) {
+	o.SourceType = &v
+}
+
+// GetComponentDetails returns the ComponentDetails field value if set, zero value otherwise.
+func (o *ActionDTO) GetComponentDetails() map[string]interface{} {
+	if o == nil || o.ComponentDetails == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return *o.ComponentDetails
+}
+
+// GetComponentDetailsOk returns a tuple with the ComponentDetails field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetComponentDetailsOk() (*map[string]interface{}, bool) {
+	if o == nil || o.ComponentDetails == nil {
+		return nil, false
+	}
+	return o.ComponentDetails, true
+}
+
+// HasComponentDetails returns a boolean if a field has been set.
+func (o *ActionDTO) HasComponentDetails() bool {
+	if o != nil && o.ComponentDetails != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentDetails gets a reference to the given map[string]interface{} and assigns it to the ComponentDetails field.
+func (o *ActionDTO) SetComponentDetails(v map[string]interface{}) {
+	o.ComponentDetails = &v
+}
+
+// GetOperation returns the Operation field value if set, zero value otherwise.
+func (o *ActionDTO) GetOperation() string {
+	if o == nil || o.Operation == nil {
+		var ret string
+		return ret
+	}
+	return *o.Operation
+}
+
+// GetOperationOk returns a tuple with the Operation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetOperationOk() (*string, bool) {
+	if o == nil || o.Operation == nil {
+		return nil, false
+	}
+	return o.Operation, true
+}
+
+// HasOperation returns a boolean if a field has been set.
+func (o *ActionDTO) HasOperation() bool {
+	if o != nil && o.Operation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOperation gets a reference to the given string and assigns it to the Operation field.
+func (o *ActionDTO) SetOperation(v string) {
+	o.Operation = &v
+}
+
+// GetActionDetails returns the ActionDetails field value if set, zero value otherwise.
+func (o *ActionDTO) GetActionDetails() map[string]interface{} {
+	if o == nil || o.ActionDetails == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return *o.ActionDetails
+}
+
+// GetActionDetailsOk returns a tuple with the ActionDetails field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ActionDTO) GetActionDetailsOk() (*map[string]interface{}, bool) {
+	if o == nil || o.ActionDetails == nil {
+		return nil, false
+	}
+	return o.ActionDetails, true
+}
+
+// HasActionDetails returns a boolean if a field has been set.
+func (o *ActionDTO) HasActionDetails() bool {
+	if o != nil && o.ActionDetails != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActionDetails gets a reference to the given map[string]interface{} and assigns it to the ActionDetails field.
+func (o *ActionDTO) SetActionDetails(v map[string]interface{}) {
+	o.ActionDetails = &v
+}
+
+func (o ActionDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.UserIdentity != nil {
+		toSerialize["userIdentity"] = o.UserIdentity
+	}
+	if o.Timestamp != nil {
+		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.SourceId != nil {
+		toSerialize["sourceId"] = o.SourceId
+	}
+	if o.SourceName != nil {
+		toSerialize["sourceName"] = o.SourceName
+	}
+	if o.SourceType != nil {
+		toSerialize["sourceType"] = o.SourceType
+	}
+	if o.ComponentDetails != nil {
+		toSerialize["componentDetails"] = o.ComponentDetails
+	}
+	if o.Operation != nil {
+		toSerialize["operation"] = o.Operation
+	}
+	if o.ActionDetails != nil {
+		toSerialize["actionDetails"] = o.ActionDetails
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableActionDTO struct {
+	value *ActionDTO
+	isSet bool
+}
+
+func (v NullableActionDTO) Get() *ActionDTO {
+	return v.value
+}
+
+func (v *NullableActionDTO) Set(val *ActionDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableActionDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableActionDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableActionDTO(val *ActionDTO) *NullableActionDTO {
+	return &NullableActionDTO{value: val, isSet: true}
+}
+
+func (v NullableActionDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableActionDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

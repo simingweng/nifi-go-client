@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// BucketDto struct for BucketDto
-type BucketDto struct {
+import (
+	"encoding/json"
+)
+
+// BucketDTO struct for BucketDTO
+type BucketDTO struct {
 	// The bucket identifier
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The bucket name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The bucket description
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The created timestamp of this bucket
-	Created int64 `json:"created,omitempty"`
+	Created *int64 `json:"created,omitempty"`
+}
+
+// NewBucketDTO instantiates a new BucketDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBucketDTO() *BucketDTO {
+	this := BucketDTO{}
+	return &this
+}
+
+// NewBucketDTOWithDefaults instantiates a new BucketDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBucketDTOWithDefaults() *BucketDTO {
+	this := BucketDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *BucketDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *BucketDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *BucketDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *BucketDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *BucketDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *BucketDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *BucketDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *BucketDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *BucketDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetCreated returns the Created field value if set, zero value otherwise.
+func (o *BucketDTO) GetCreated() int64 {
+	if o == nil || o.Created == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Created
+}
+
+// GetCreatedOk returns a tuple with the Created field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BucketDTO) GetCreatedOk() (*int64, bool) {
+	if o == nil || o.Created == nil {
+		return nil, false
+	}
+	return o.Created, true
+}
+
+// HasCreated returns a boolean if a field has been set.
+func (o *BucketDTO) HasCreated() bool {
+	if o != nil && o.Created != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCreated gets a reference to the given int64 and assigns it to the Created field.
+func (o *BucketDTO) SetCreated(v int64) {
+	o.Created = &v
+}
+
+func (o BucketDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Created != nil {
+		toSerialize["created"] = o.Created
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBucketDTO struct {
+	value *BucketDTO
+	isSet bool
+}
+
+func (v NullableBucketDTO) Get() *BucketDTO {
+	return v.value
+}
+
+func (v *NullableBucketDTO) Set(val *BucketDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBucketDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBucketDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBucketDTO(val *BucketDTO) *NullableBucketDTO {
+	return &NullableBucketDTO{value: val, isSet: true}
+}
+
+func (v NullableBucketDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBucketDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

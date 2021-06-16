@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// BundleDto struct for BundleDto
-type BundleDto struct {
+import (
+	"encoding/json"
+)
+
+// BundleDTO struct for BundleDTO
+type BundleDTO struct {
 	// The group of the bundle.
-	Group string `json:"group,omitempty"`
+	Group *string `json:"group,omitempty"`
 	// The artifact of the bundle.
-	Artifact string `json:"artifact,omitempty"`
+	Artifact *string `json:"artifact,omitempty"`
 	// The version of the bundle.
-	Version string `json:"version,omitempty"`
+	Version *string `json:"version,omitempty"`
+}
+
+// NewBundleDTO instantiates a new BundleDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBundleDTO() *BundleDTO {
+	this := BundleDTO{}
+	return &this
+}
+
+// NewBundleDTOWithDefaults instantiates a new BundleDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBundleDTOWithDefaults() *BundleDTO {
+	this := BundleDTO{}
+	return &this
+}
+
+// GetGroup returns the Group field value if set, zero value otherwise.
+func (o *BundleDTO) GetGroup() string {
+	if o == nil || o.Group == nil {
+		var ret string
+		return ret
+	}
+	return *o.Group
+}
+
+// GetGroupOk returns a tuple with the Group field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BundleDTO) GetGroupOk() (*string, bool) {
+	if o == nil || o.Group == nil {
+		return nil, false
+	}
+	return o.Group, true
+}
+
+// HasGroup returns a boolean if a field has been set.
+func (o *BundleDTO) HasGroup() bool {
+	if o != nil && o.Group != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroup gets a reference to the given string and assigns it to the Group field.
+func (o *BundleDTO) SetGroup(v string) {
+	o.Group = &v
+}
+
+// GetArtifact returns the Artifact field value if set, zero value otherwise.
+func (o *BundleDTO) GetArtifact() string {
+	if o == nil || o.Artifact == nil {
+		var ret string
+		return ret
+	}
+	return *o.Artifact
+}
+
+// GetArtifactOk returns a tuple with the Artifact field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BundleDTO) GetArtifactOk() (*string, bool) {
+	if o == nil || o.Artifact == nil {
+		return nil, false
+	}
+	return o.Artifact, true
+}
+
+// HasArtifact returns a boolean if a field has been set.
+func (o *BundleDTO) HasArtifact() bool {
+	if o != nil && o.Artifact != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetArtifact gets a reference to the given string and assigns it to the Artifact field.
+func (o *BundleDTO) SetArtifact(v string) {
+	o.Artifact = &v
+}
+
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *BundleDTO) GetVersion() string {
+	if o == nil || o.Version == nil {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BundleDTO) GetVersionOk() (*string, bool) {
+	if o == nil || o.Version == nil {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *BundleDTO) HasVersion() bool {
+	if o != nil && o.Version != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *BundleDTO) SetVersion(v string) {
+	o.Version = &v
+}
+
+func (o BundleDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Group != nil {
+		toSerialize["group"] = o.Group
+	}
+	if o.Artifact != nil {
+		toSerialize["artifact"] = o.Artifact
+	}
+	if o.Version != nil {
+		toSerialize["version"] = o.Version
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBundleDTO struct {
+	value *BundleDTO
+	isSet bool
+}
+
+func (v NullableBundleDTO) Get() *BundleDTO {
+	return v.value
+}
+
+func (v *NullableBundleDTO) Set(val *BundleDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBundleDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBundleDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBundleDTO(val *BundleDTO) *NullableBundleDTO {
+	return &NullableBundleDTO{value: val, isSet: true}
+}
+
+func (v NullableBundleDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBundleDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

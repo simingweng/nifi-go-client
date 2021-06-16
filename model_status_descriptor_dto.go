@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
-// StatusDescriptorDto struct for StatusDescriptorDto
-type StatusDescriptorDto struct {
+import (
+	"encoding/json"
+)
+
+// StatusDescriptorDTO struct for StatusDescriptorDTO
+type StatusDescriptorDTO struct {
 	// The name of the status field.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 	// The label for the status field.
-	Label string `json:"label,omitempty"`
+	Label *string `json:"label,omitempty"`
 	// The description of the status field.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// The formatter for the status descriptor.
-	Formatter string `json:"formatter,omitempty"`
+	Formatter *string `json:"formatter,omitempty"`
+}
+
+// NewStatusDescriptorDTO instantiates a new StatusDescriptorDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewStatusDescriptorDTO() *StatusDescriptorDTO {
+	this := StatusDescriptorDTO{}
+	return &this
+}
+
+// NewStatusDescriptorDTOWithDefaults instantiates a new StatusDescriptorDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewStatusDescriptorDTOWithDefaults() *StatusDescriptorDTO {
+	this := StatusDescriptorDTO{}
+	return &this
+}
+
+// GetField returns the Field field value if set, zero value otherwise.
+func (o *StatusDescriptorDTO) GetField() string {
+	if o == nil || o.Field == nil {
+		var ret string
+		return ret
+	}
+	return *o.Field
+}
+
+// GetFieldOk returns a tuple with the Field field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusDescriptorDTO) GetFieldOk() (*string, bool) {
+	if o == nil || o.Field == nil {
+		return nil, false
+	}
+	return o.Field, true
+}
+
+// HasField returns a boolean if a field has been set.
+func (o *StatusDescriptorDTO) HasField() bool {
+	if o != nil && o.Field != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetField gets a reference to the given string and assigns it to the Field field.
+func (o *StatusDescriptorDTO) SetField(v string) {
+	o.Field = &v
+}
+
+// GetLabel returns the Label field value if set, zero value otherwise.
+func (o *StatusDescriptorDTO) GetLabel() string {
+	if o == nil || o.Label == nil {
+		var ret string
+		return ret
+	}
+	return *o.Label
+}
+
+// GetLabelOk returns a tuple with the Label field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusDescriptorDTO) GetLabelOk() (*string, bool) {
+	if o == nil || o.Label == nil {
+		return nil, false
+	}
+	return o.Label, true
+}
+
+// HasLabel returns a boolean if a field has been set.
+func (o *StatusDescriptorDTO) HasLabel() bool {
+	if o != nil && o.Label != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabel gets a reference to the given string and assigns it to the Label field.
+func (o *StatusDescriptorDTO) SetLabel(v string) {
+	o.Label = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *StatusDescriptorDTO) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusDescriptorDTO) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *StatusDescriptorDTO) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *StatusDescriptorDTO) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetFormatter returns the Formatter field value if set, zero value otherwise.
+func (o *StatusDescriptorDTO) GetFormatter() string {
+	if o == nil || o.Formatter == nil {
+		var ret string
+		return ret
+	}
+	return *o.Formatter
+}
+
+// GetFormatterOk returns a tuple with the Formatter field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatusDescriptorDTO) GetFormatterOk() (*string, bool) {
+	if o == nil || o.Formatter == nil {
+		return nil, false
+	}
+	return o.Formatter, true
+}
+
+// HasFormatter returns a boolean if a field has been set.
+func (o *StatusDescriptorDTO) HasFormatter() bool {
+	if o != nil && o.Formatter != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFormatter gets a reference to the given string and assigns it to the Formatter field.
+func (o *StatusDescriptorDTO) SetFormatter(v string) {
+	o.Formatter = &v
+}
+
+func (o StatusDescriptorDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Field != nil {
+		toSerialize["field"] = o.Field
+	}
+	if o.Label != nil {
+		toSerialize["label"] = o.Label
+	}
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
+	}
+	if o.Formatter != nil {
+		toSerialize["formatter"] = o.Formatter
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableStatusDescriptorDTO struct {
+	value *StatusDescriptorDTO
+	isSet bool
+}
+
+func (v NullableStatusDescriptorDTO) Get() *StatusDescriptorDTO {
+	return v.value
+}
+
+func (v *NullableStatusDescriptorDTO) Set(val *StatusDescriptorDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableStatusDescriptorDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableStatusDescriptorDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableStatusDescriptorDTO(val *StatusDescriptorDTO) *NullableStatusDescriptorDTO {
+	return &NullableStatusDescriptorDTO{value: val, isSet: true}
+}
+
+func (v NullableStatusDescriptorDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableStatusDescriptorDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

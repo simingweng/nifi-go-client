@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,214 @@
 
 package nifi
 
-// ComponentStateDto struct for ComponentStateDto
-type ComponentStateDto struct {
+import (
+	"encoding/json"
+)
+
+// ComponentStateDTO struct for ComponentStateDTO
+type ComponentStateDTO struct {
 	// The component identifier.
-	ComponentId string `json:"componentId,omitempty"`
+	ComponentId *string `json:"componentId,omitempty"`
 	// Description of the state this component persists.
-	StateDescription string      `json:"stateDescription,omitempty"`
-	ClusterState     StateMapDto `json:"clusterState,omitempty"`
-	LocalState       StateMapDto `json:"localState,omitempty"`
+	StateDescription *string      `json:"stateDescription,omitempty"`
+	ClusterState     *StateMapDTO `json:"clusterState,omitempty"`
+	LocalState       *StateMapDTO `json:"localState,omitempty"`
+}
+
+// NewComponentStateDTO instantiates a new ComponentStateDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewComponentStateDTO() *ComponentStateDTO {
+	this := ComponentStateDTO{}
+	return &this
+}
+
+// NewComponentStateDTOWithDefaults instantiates a new ComponentStateDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewComponentStateDTOWithDefaults() *ComponentStateDTO {
+	this := ComponentStateDTO{}
+	return &this
+}
+
+// GetComponentId returns the ComponentId field value if set, zero value otherwise.
+func (o *ComponentStateDTO) GetComponentId() string {
+	if o == nil || o.ComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentId
+}
+
+// GetComponentIdOk returns a tuple with the ComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentStateDTO) GetComponentIdOk() (*string, bool) {
+	if o == nil || o.ComponentId == nil {
+		return nil, false
+	}
+	return o.ComponentId, true
+}
+
+// HasComponentId returns a boolean if a field has been set.
+func (o *ComponentStateDTO) HasComponentId() bool {
+	if o != nil && o.ComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentId gets a reference to the given string and assigns it to the ComponentId field.
+func (o *ComponentStateDTO) SetComponentId(v string) {
+	o.ComponentId = &v
+}
+
+// GetStateDescription returns the StateDescription field value if set, zero value otherwise.
+func (o *ComponentStateDTO) GetStateDescription() string {
+	if o == nil || o.StateDescription == nil {
+		var ret string
+		return ret
+	}
+	return *o.StateDescription
+}
+
+// GetStateDescriptionOk returns a tuple with the StateDescription field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentStateDTO) GetStateDescriptionOk() (*string, bool) {
+	if o == nil || o.StateDescription == nil {
+		return nil, false
+	}
+	return o.StateDescription, true
+}
+
+// HasStateDescription returns a boolean if a field has been set.
+func (o *ComponentStateDTO) HasStateDescription() bool {
+	if o != nil && o.StateDescription != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStateDescription gets a reference to the given string and assigns it to the StateDescription field.
+func (o *ComponentStateDTO) SetStateDescription(v string) {
+	o.StateDescription = &v
+}
+
+// GetClusterState returns the ClusterState field value if set, zero value otherwise.
+func (o *ComponentStateDTO) GetClusterState() StateMapDTO {
+	if o == nil || o.ClusterState == nil {
+		var ret StateMapDTO
+		return ret
+	}
+	return *o.ClusterState
+}
+
+// GetClusterStateOk returns a tuple with the ClusterState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentStateDTO) GetClusterStateOk() (*StateMapDTO, bool) {
+	if o == nil || o.ClusterState == nil {
+		return nil, false
+	}
+	return o.ClusterState, true
+}
+
+// HasClusterState returns a boolean if a field has been set.
+func (o *ComponentStateDTO) HasClusterState() bool {
+	if o != nil && o.ClusterState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterState gets a reference to the given StateMapDTO and assigns it to the ClusterState field.
+func (o *ComponentStateDTO) SetClusterState(v StateMapDTO) {
+	o.ClusterState = &v
+}
+
+// GetLocalState returns the LocalState field value if set, zero value otherwise.
+func (o *ComponentStateDTO) GetLocalState() StateMapDTO {
+	if o == nil || o.LocalState == nil {
+		var ret StateMapDTO
+		return ret
+	}
+	return *o.LocalState
+}
+
+// GetLocalStateOk returns a tuple with the LocalState field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentStateDTO) GetLocalStateOk() (*StateMapDTO, bool) {
+	if o == nil || o.LocalState == nil {
+		return nil, false
+	}
+	return o.LocalState, true
+}
+
+// HasLocalState returns a boolean if a field has been set.
+func (o *ComponentStateDTO) HasLocalState() bool {
+	if o != nil && o.LocalState != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocalState gets a reference to the given StateMapDTO and assigns it to the LocalState field.
+func (o *ComponentStateDTO) SetLocalState(v StateMapDTO) {
+	o.LocalState = &v
+}
+
+func (o ComponentStateDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.ComponentId != nil {
+		toSerialize["componentId"] = o.ComponentId
+	}
+	if o.StateDescription != nil {
+		toSerialize["stateDescription"] = o.StateDescription
+	}
+	if o.ClusterState != nil {
+		toSerialize["clusterState"] = o.ClusterState
+	}
+	if o.LocalState != nil {
+		toSerialize["localState"] = o.LocalState
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableComponentStateDTO struct {
+	value *ComponentStateDTO
+	isSet bool
+}
+
+func (v NullableComponentStateDTO) Get() *ComponentStateDTO {
+	return v.value
+}
+
+func (v *NullableComponentStateDTO) Set(val *ComponentStateDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableComponentStateDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableComponentStateDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableComponentStateDTO(val *ComponentStateDTO) *NullableComponentStateDTO {
+	return &NullableComponentStateDTO{value: val, isSet: true}
+}
+
+func (v NullableComponentStateDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableComponentStateDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

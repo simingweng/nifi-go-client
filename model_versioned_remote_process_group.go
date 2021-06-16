@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,35 +11,692 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedRemoteProcessGroup struct for VersionedRemoteProcessGroup
 type VersionedRemoteProcessGroup struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments string   `json:"comments,omitempty"`
-	Position Position `json:"position,omitempty"`
+	Comments *string   `json:"comments,omitempty"`
+	Position *Position `json:"position,omitempty"`
 	// [DEPRECATED] The target URI of the remote process group. If target uri is not set, but uris are set, then returns the first uri in the uris. If neither target uri nor uris are set, then returns null.
-	TargetUri string `json:"targetUri,omitempty"`
+	TargetUri *string `json:"targetUri,omitempty"`
 	// The target URIs of the remote process group. If target uris is not set but target uri is set, then returns the single target uri. If neither target uris nor target uri is set, then returns null.
-	TargetUris string `json:"targetUris,omitempty"`
+	TargetUris *string `json:"targetUris,omitempty"`
 	// The time period used for the timeout when communicating with the target.
-	CommunicationsTimeout string `json:"communicationsTimeout,omitempty"`
+	CommunicationsTimeout *string `json:"communicationsTimeout,omitempty"`
 	// When yielding, this amount of time must elapse before the remote process group is scheduled again.
-	YieldDuration string `json:"yieldDuration,omitempty"`
+	YieldDuration *string `json:"yieldDuration,omitempty"`
 	// The Transport Protocol that is used for Site-to-Site communications
-	TransportProtocol string `json:"transportProtocol,omitempty"`
+	TransportProtocol *string `json:"transportProtocol,omitempty"`
 	// The local network interface to send/receive data. If not specified, any local address is used. If clustered, all nodes must have an interface with this identifier.
-	LocalNetworkInterface string `json:"localNetworkInterface,omitempty"`
-	ProxyHost             string `json:"proxyHost,omitempty"`
-	ProxyPort             int32  `json:"proxyPort,omitempty"`
-	ProxyUser             string `json:"proxyUser,omitempty"`
+	LocalNetworkInterface *string `json:"localNetworkInterface,omitempty"`
+	ProxyHost             *string `json:"proxyHost,omitempty"`
+	ProxyPort             *int32  `json:"proxyPort,omitempty"`
+	ProxyUser             *string `json:"proxyUser,omitempty"`
 	// A Set of Input Ports that can be connected to, in order to send data to the remote NiFi instance
-	InputPorts []VersionedRemoteGroupPort `json:"inputPorts,omitempty"`
+	InputPorts *[]VersionedRemoteGroupPort `json:"inputPorts,omitempty"`
 	// A Set of Output Ports that can be connected to, in order to pull data from the remote NiFi instance
-	OutputPorts   []VersionedRemoteGroupPort `json:"outputPorts,omitempty"`
-	ComponentType string                     `json:"componentType,omitempty"`
+	OutputPorts   *[]VersionedRemoteGroupPort `json:"outputPorts,omitempty"`
+	ComponentType *string                     `json:"componentType,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedRemoteProcessGroup instantiates a new VersionedRemoteProcessGroup object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedRemoteProcessGroup() *VersionedRemoteProcessGroup {
+	this := VersionedRemoteProcessGroup{}
+	return &this
+}
+
+// NewVersionedRemoteProcessGroupWithDefaults instantiates a new VersionedRemoteProcessGroup object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedRemoteProcessGroupWithDefaults() *VersionedRemoteProcessGroup {
+	this := VersionedRemoteProcessGroup{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedRemoteProcessGroup) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedRemoteProcessGroup) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedRemoteProcessGroup) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedRemoteProcessGroup) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetTargetUri returns the TargetUri field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetTargetUri() string {
+	if o == nil || o.TargetUri == nil {
+		var ret string
+		return ret
+	}
+	return *o.TargetUri
+}
+
+// GetTargetUriOk returns a tuple with the TargetUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetTargetUriOk() (*string, bool) {
+	if o == nil || o.TargetUri == nil {
+		return nil, false
+	}
+	return o.TargetUri, true
+}
+
+// HasTargetUri returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasTargetUri() bool {
+	if o != nil && o.TargetUri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetUri gets a reference to the given string and assigns it to the TargetUri field.
+func (o *VersionedRemoteProcessGroup) SetTargetUri(v string) {
+	o.TargetUri = &v
+}
+
+// GetTargetUris returns the TargetUris field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetTargetUris() string {
+	if o == nil || o.TargetUris == nil {
+		var ret string
+		return ret
+	}
+	return *o.TargetUris
+}
+
+// GetTargetUrisOk returns a tuple with the TargetUris field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetTargetUrisOk() (*string, bool) {
+	if o == nil || o.TargetUris == nil {
+		return nil, false
+	}
+	return o.TargetUris, true
+}
+
+// HasTargetUris returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasTargetUris() bool {
+	if o != nil && o.TargetUris != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetUris gets a reference to the given string and assigns it to the TargetUris field.
+func (o *VersionedRemoteProcessGroup) SetTargetUris(v string) {
+	o.TargetUris = &v
+}
+
+// GetCommunicationsTimeout returns the CommunicationsTimeout field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetCommunicationsTimeout() string {
+	if o == nil || o.CommunicationsTimeout == nil {
+		var ret string
+		return ret
+	}
+	return *o.CommunicationsTimeout
+}
+
+// GetCommunicationsTimeoutOk returns a tuple with the CommunicationsTimeout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetCommunicationsTimeoutOk() (*string, bool) {
+	if o == nil || o.CommunicationsTimeout == nil {
+		return nil, false
+	}
+	return o.CommunicationsTimeout, true
+}
+
+// HasCommunicationsTimeout returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasCommunicationsTimeout() bool {
+	if o != nil && o.CommunicationsTimeout != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCommunicationsTimeout gets a reference to the given string and assigns it to the CommunicationsTimeout field.
+func (o *VersionedRemoteProcessGroup) SetCommunicationsTimeout(v string) {
+	o.CommunicationsTimeout = &v
+}
+
+// GetYieldDuration returns the YieldDuration field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetYieldDuration() string {
+	if o == nil || o.YieldDuration == nil {
+		var ret string
+		return ret
+	}
+	return *o.YieldDuration
+}
+
+// GetYieldDurationOk returns a tuple with the YieldDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetYieldDurationOk() (*string, bool) {
+	if o == nil || o.YieldDuration == nil {
+		return nil, false
+	}
+	return o.YieldDuration, true
+}
+
+// HasYieldDuration returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasYieldDuration() bool {
+	if o != nil && o.YieldDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetYieldDuration gets a reference to the given string and assigns it to the YieldDuration field.
+func (o *VersionedRemoteProcessGroup) SetYieldDuration(v string) {
+	o.YieldDuration = &v
+}
+
+// GetTransportProtocol returns the TransportProtocol field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetTransportProtocol() string {
+	if o == nil || o.TransportProtocol == nil {
+		var ret string
+		return ret
+	}
+	return *o.TransportProtocol
+}
+
+// GetTransportProtocolOk returns a tuple with the TransportProtocol field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetTransportProtocolOk() (*string, bool) {
+	if o == nil || o.TransportProtocol == nil {
+		return nil, false
+	}
+	return o.TransportProtocol, true
+}
+
+// HasTransportProtocol returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasTransportProtocol() bool {
+	if o != nil && o.TransportProtocol != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransportProtocol gets a reference to the given string and assigns it to the TransportProtocol field.
+func (o *VersionedRemoteProcessGroup) SetTransportProtocol(v string) {
+	o.TransportProtocol = &v
+}
+
+// GetLocalNetworkInterface returns the LocalNetworkInterface field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetLocalNetworkInterface() string {
+	if o == nil || o.LocalNetworkInterface == nil {
+		var ret string
+		return ret
+	}
+	return *o.LocalNetworkInterface
+}
+
+// GetLocalNetworkInterfaceOk returns a tuple with the LocalNetworkInterface field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetLocalNetworkInterfaceOk() (*string, bool) {
+	if o == nil || o.LocalNetworkInterface == nil {
+		return nil, false
+	}
+	return o.LocalNetworkInterface, true
+}
+
+// HasLocalNetworkInterface returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasLocalNetworkInterface() bool {
+	if o != nil && o.LocalNetworkInterface != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocalNetworkInterface gets a reference to the given string and assigns it to the LocalNetworkInterface field.
+func (o *VersionedRemoteProcessGroup) SetLocalNetworkInterface(v string) {
+	o.LocalNetworkInterface = &v
+}
+
+// GetProxyHost returns the ProxyHost field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetProxyHost() string {
+	if o == nil || o.ProxyHost == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProxyHost
+}
+
+// GetProxyHostOk returns a tuple with the ProxyHost field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetProxyHostOk() (*string, bool) {
+	if o == nil || o.ProxyHost == nil {
+		return nil, false
+	}
+	return o.ProxyHost, true
+}
+
+// HasProxyHost returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasProxyHost() bool {
+	if o != nil && o.ProxyHost != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProxyHost gets a reference to the given string and assigns it to the ProxyHost field.
+func (o *VersionedRemoteProcessGroup) SetProxyHost(v string) {
+	o.ProxyHost = &v
+}
+
+// GetProxyPort returns the ProxyPort field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetProxyPort() int32 {
+	if o == nil || o.ProxyPort == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ProxyPort
+}
+
+// GetProxyPortOk returns a tuple with the ProxyPort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetProxyPortOk() (*int32, bool) {
+	if o == nil || o.ProxyPort == nil {
+		return nil, false
+	}
+	return o.ProxyPort, true
+}
+
+// HasProxyPort returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasProxyPort() bool {
+	if o != nil && o.ProxyPort != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProxyPort gets a reference to the given int32 and assigns it to the ProxyPort field.
+func (o *VersionedRemoteProcessGroup) SetProxyPort(v int32) {
+	o.ProxyPort = &v
+}
+
+// GetProxyUser returns the ProxyUser field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetProxyUser() string {
+	if o == nil || o.ProxyUser == nil {
+		var ret string
+		return ret
+	}
+	return *o.ProxyUser
+}
+
+// GetProxyUserOk returns a tuple with the ProxyUser field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetProxyUserOk() (*string, bool) {
+	if o == nil || o.ProxyUser == nil {
+		return nil, false
+	}
+	return o.ProxyUser, true
+}
+
+// HasProxyUser returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasProxyUser() bool {
+	if o != nil && o.ProxyUser != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProxyUser gets a reference to the given string and assigns it to the ProxyUser field.
+func (o *VersionedRemoteProcessGroup) SetProxyUser(v string) {
+	o.ProxyUser = &v
+}
+
+// GetInputPorts returns the InputPorts field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetInputPorts() []VersionedRemoteGroupPort {
+	if o == nil || o.InputPorts == nil {
+		var ret []VersionedRemoteGroupPort
+		return ret
+	}
+	return *o.InputPorts
+}
+
+// GetInputPortsOk returns a tuple with the InputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetInputPortsOk() (*[]VersionedRemoteGroupPort, bool) {
+	if o == nil || o.InputPorts == nil {
+		return nil, false
+	}
+	return o.InputPorts, true
+}
+
+// HasInputPorts returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasInputPorts() bool {
+	if o != nil && o.InputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPorts gets a reference to the given []VersionedRemoteGroupPort and assigns it to the InputPorts field.
+func (o *VersionedRemoteProcessGroup) SetInputPorts(v []VersionedRemoteGroupPort) {
+	o.InputPorts = &v
+}
+
+// GetOutputPorts returns the OutputPorts field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetOutputPorts() []VersionedRemoteGroupPort {
+	if o == nil || o.OutputPorts == nil {
+		var ret []VersionedRemoteGroupPort
+		return ret
+	}
+	return *o.OutputPorts
+}
+
+// GetOutputPortsOk returns a tuple with the OutputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetOutputPortsOk() (*[]VersionedRemoteGroupPort, bool) {
+	if o == nil || o.OutputPorts == nil {
+		return nil, false
+	}
+	return o.OutputPorts, true
+}
+
+// HasOutputPorts returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasOutputPorts() bool {
+	if o != nil && o.OutputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPorts gets a reference to the given []VersionedRemoteGroupPort and assigns it to the OutputPorts field.
+func (o *VersionedRemoteProcessGroup) SetOutputPorts(v []VersionedRemoteGroupPort) {
+	o.OutputPorts = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedRemoteProcessGroup) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedRemoteProcessGroup) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedRemoteProcessGroup) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedRemoteProcessGroup) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedRemoteProcessGroup) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedRemoteProcessGroup) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.TargetUri != nil {
+		toSerialize["targetUri"] = o.TargetUri
+	}
+	if o.TargetUris != nil {
+		toSerialize["targetUris"] = o.TargetUris
+	}
+	if o.CommunicationsTimeout != nil {
+		toSerialize["communicationsTimeout"] = o.CommunicationsTimeout
+	}
+	if o.YieldDuration != nil {
+		toSerialize["yieldDuration"] = o.YieldDuration
+	}
+	if o.TransportProtocol != nil {
+		toSerialize["transportProtocol"] = o.TransportProtocol
+	}
+	if o.LocalNetworkInterface != nil {
+		toSerialize["localNetworkInterface"] = o.LocalNetworkInterface
+	}
+	if o.ProxyHost != nil {
+		toSerialize["proxyHost"] = o.ProxyHost
+	}
+	if o.ProxyPort != nil {
+		toSerialize["proxyPort"] = o.ProxyPort
+	}
+	if o.ProxyUser != nil {
+		toSerialize["proxyUser"] = o.ProxyUser
+	}
+	if o.InputPorts != nil {
+		toSerialize["inputPorts"] = o.InputPorts
+	}
+	if o.OutputPorts != nil {
+		toSerialize["outputPorts"] = o.OutputPorts
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedRemoteProcessGroup struct {
+	value *VersionedRemoteProcessGroup
+	isSet bool
+}
+
+func (v NullableVersionedRemoteProcessGroup) Get() *VersionedRemoteProcessGroup {
+	return v.value
+}
+
+func (v *NullableVersionedRemoteProcessGroup) Set(val *VersionedRemoteProcessGroup) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedRemoteProcessGroup) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedRemoteProcessGroup) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedRemoteProcessGroup(val *VersionedRemoteProcessGroup) *NullableVersionedRemoteProcessGroup {
+	return &NullableVersionedRemoteProcessGroup{value: val, isSet: true}
+}
+
+func (v NullableVersionedRemoteProcessGroup) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedRemoteProcessGroup) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

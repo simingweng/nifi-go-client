@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// BulletinBoardDto struct for BulletinBoardDto
-type BulletinBoardDto struct {
+import (
+	"encoding/json"
+)
+
+// BulletinBoardDTO struct for BulletinBoardDTO
+type BulletinBoardDTO struct {
 	// The bulletins in the bulletin board, that matches the supplied request.
-	Bulletins []BulletinEntity `json:"bulletins,omitempty"`
+	Bulletins *[]BulletinEntity `json:"bulletins,omitempty"`
 	// The timestamp when this report was generated.
-	Generated string `json:"generated,omitempty"`
+	Generated *string `json:"generated,omitempty"`
+}
+
+// NewBulletinBoardDTO instantiates a new BulletinBoardDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBulletinBoardDTO() *BulletinBoardDTO {
+	this := BulletinBoardDTO{}
+	return &this
+}
+
+// NewBulletinBoardDTOWithDefaults instantiates a new BulletinBoardDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBulletinBoardDTOWithDefaults() *BulletinBoardDTO {
+	this := BulletinBoardDTO{}
+	return &this
+}
+
+// GetBulletins returns the Bulletins field value if set, zero value otherwise.
+func (o *BulletinBoardDTO) GetBulletins() []BulletinEntity {
+	if o == nil || o.Bulletins == nil {
+		var ret []BulletinEntity
+		return ret
+	}
+	return *o.Bulletins
+}
+
+// GetBulletinsOk returns a tuple with the Bulletins field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinBoardDTO) GetBulletinsOk() (*[]BulletinEntity, bool) {
+	if o == nil || o.Bulletins == nil {
+		return nil, false
+	}
+	return o.Bulletins, true
+}
+
+// HasBulletins returns a boolean if a field has been set.
+func (o *BulletinBoardDTO) HasBulletins() bool {
+	if o != nil && o.Bulletins != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBulletins gets a reference to the given []BulletinEntity and assigns it to the Bulletins field.
+func (o *BulletinBoardDTO) SetBulletins(v []BulletinEntity) {
+	o.Bulletins = &v
+}
+
+// GetGenerated returns the Generated field value if set, zero value otherwise.
+func (o *BulletinBoardDTO) GetGenerated() string {
+	if o == nil || o.Generated == nil {
+		var ret string
+		return ret
+	}
+	return *o.Generated
+}
+
+// GetGeneratedOk returns a tuple with the Generated field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulletinBoardDTO) GetGeneratedOk() (*string, bool) {
+	if o == nil || o.Generated == nil {
+		return nil, false
+	}
+	return o.Generated, true
+}
+
+// HasGenerated returns a boolean if a field has been set.
+func (o *BulletinBoardDTO) HasGenerated() bool {
+	if o != nil && o.Generated != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerated gets a reference to the given string and assigns it to the Generated field.
+func (o *BulletinBoardDTO) SetGenerated(v string) {
+	o.Generated = &v
+}
+
+func (o BulletinBoardDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Bulletins != nil {
+		toSerialize["bulletins"] = o.Bulletins
+	}
+	if o.Generated != nil {
+		toSerialize["generated"] = o.Generated
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBulletinBoardDTO struct {
+	value *BulletinBoardDTO
+	isSet bool
+}
+
+func (v NullableBulletinBoardDTO) Get() *BulletinBoardDTO {
+	return v.value
+}
+
+func (v *NullableBulletinBoardDTO) Set(val *BulletinBoardDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBulletinBoardDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBulletinBoardDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBulletinBoardDTO(val *BulletinBoardDTO) *NullableBulletinBoardDTO {
+	return &NullableBulletinBoardDTO{value: val, isSet: true}
+}
+
+func (v NullableBulletinBoardDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBulletinBoardDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

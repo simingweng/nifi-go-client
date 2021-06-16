@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,28 +11,475 @@
 
 package nifi
 
-// SnippetDto struct for SnippetDto
-type SnippetDto struct {
+import (
+	"encoding/json"
+)
+
+// SnippetDTO struct for SnippetDTO
+type SnippetDTO struct {
 	// The id of the snippet.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The URI of the snippet.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The group id for the components in the snippet.
-	ParentGroupId string `json:"parentGroupId,omitempty"`
+	ParentGroupId *string `json:"parentGroupId,omitempty"`
 	// The ids of the process groups in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	ProcessGroups map[string]RevisionDto `json:"processGroups,omitempty"`
+	ProcessGroups *map[string]RevisionDTO `json:"processGroups,omitempty"`
 	// The ids of the remote process groups in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	RemoteProcessGroups map[string]RevisionDto `json:"remoteProcessGroups,omitempty"`
+	RemoteProcessGroups *map[string]RevisionDTO `json:"remoteProcessGroups,omitempty"`
 	// The ids of the processors in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	Processors map[string]RevisionDto `json:"processors,omitempty"`
+	Processors *map[string]RevisionDTO `json:"processors,omitempty"`
 	// The ids of the input ports in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	InputPorts map[string]RevisionDto `json:"inputPorts,omitempty"`
+	InputPorts *map[string]RevisionDTO `json:"inputPorts,omitempty"`
 	// The ids of the output ports in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	OutputPorts map[string]RevisionDto `json:"outputPorts,omitempty"`
+	OutputPorts *map[string]RevisionDTO `json:"outputPorts,omitempty"`
 	// The ids of the connections in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	Connections map[string]RevisionDto `json:"connections,omitempty"`
+	Connections *map[string]RevisionDTO `json:"connections,omitempty"`
 	// The ids of the labels in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	Labels map[string]RevisionDto `json:"labels,omitempty"`
+	Labels *map[string]RevisionDTO `json:"labels,omitempty"`
 	// The ids of the funnels in this snippet. These ids will be populated within each response. They can be specified when creating a snippet. However, once a snippet has been created its contents cannot be modified (these ids are ignored during update requests).
-	Funnels map[string]RevisionDto `json:"funnels,omitempty"`
+	Funnels *map[string]RevisionDTO `json:"funnels,omitempty"`
+}
+
+// NewSnippetDTO instantiates a new SnippetDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewSnippetDTO() *SnippetDTO {
+	this := SnippetDTO{}
+	return &this
+}
+
+// NewSnippetDTOWithDefaults instantiates a new SnippetDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewSnippetDTOWithDefaults() *SnippetDTO {
+	this := SnippetDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *SnippetDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *SnippetDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *SnippetDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *SnippetDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *SnippetDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *SnippetDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *SnippetDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *SnippetDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *SnippetDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetProcessGroups returns the ProcessGroups field value if set, zero value otherwise.
+func (o *SnippetDTO) GetProcessGroups() map[string]RevisionDTO {
+	if o == nil || o.ProcessGroups == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.ProcessGroups
+}
+
+// GetProcessGroupsOk returns a tuple with the ProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetProcessGroupsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.ProcessGroups == nil {
+		return nil, false
+	}
+	return o.ProcessGroups, true
+}
+
+// HasProcessGroups returns a boolean if a field has been set.
+func (o *SnippetDTO) HasProcessGroups() bool {
+	if o != nil && o.ProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroups gets a reference to the given map[string]RevisionDTO and assigns it to the ProcessGroups field.
+func (o *SnippetDTO) SetProcessGroups(v map[string]RevisionDTO) {
+	o.ProcessGroups = &v
+}
+
+// GetRemoteProcessGroups returns the RemoteProcessGroups field value if set, zero value otherwise.
+func (o *SnippetDTO) GetRemoteProcessGroups() map[string]RevisionDTO {
+	if o == nil || o.RemoteProcessGroups == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.RemoteProcessGroups
+}
+
+// GetRemoteProcessGroupsOk returns a tuple with the RemoteProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetRemoteProcessGroupsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.RemoteProcessGroups == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroups, true
+}
+
+// HasRemoteProcessGroups returns a boolean if a field has been set.
+func (o *SnippetDTO) HasRemoteProcessGroups() bool {
+	if o != nil && o.RemoteProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroups gets a reference to the given map[string]RevisionDTO and assigns it to the RemoteProcessGroups field.
+func (o *SnippetDTO) SetRemoteProcessGroups(v map[string]RevisionDTO) {
+	o.RemoteProcessGroups = &v
+}
+
+// GetProcessors returns the Processors field value if set, zero value otherwise.
+func (o *SnippetDTO) GetProcessors() map[string]RevisionDTO {
+	if o == nil || o.Processors == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.Processors
+}
+
+// GetProcessorsOk returns a tuple with the Processors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetProcessorsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.Processors == nil {
+		return nil, false
+	}
+	return o.Processors, true
+}
+
+// HasProcessors returns a boolean if a field has been set.
+func (o *SnippetDTO) HasProcessors() bool {
+	if o != nil && o.Processors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessors gets a reference to the given map[string]RevisionDTO and assigns it to the Processors field.
+func (o *SnippetDTO) SetProcessors(v map[string]RevisionDTO) {
+	o.Processors = &v
+}
+
+// GetInputPorts returns the InputPorts field value if set, zero value otherwise.
+func (o *SnippetDTO) GetInputPorts() map[string]RevisionDTO {
+	if o == nil || o.InputPorts == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.InputPorts
+}
+
+// GetInputPortsOk returns a tuple with the InputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetInputPortsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.InputPorts == nil {
+		return nil, false
+	}
+	return o.InputPorts, true
+}
+
+// HasInputPorts returns a boolean if a field has been set.
+func (o *SnippetDTO) HasInputPorts() bool {
+	if o != nil && o.InputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPorts gets a reference to the given map[string]RevisionDTO and assigns it to the InputPorts field.
+func (o *SnippetDTO) SetInputPorts(v map[string]RevisionDTO) {
+	o.InputPorts = &v
+}
+
+// GetOutputPorts returns the OutputPorts field value if set, zero value otherwise.
+func (o *SnippetDTO) GetOutputPorts() map[string]RevisionDTO {
+	if o == nil || o.OutputPorts == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.OutputPorts
+}
+
+// GetOutputPortsOk returns a tuple with the OutputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetOutputPortsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.OutputPorts == nil {
+		return nil, false
+	}
+	return o.OutputPorts, true
+}
+
+// HasOutputPorts returns a boolean if a field has been set.
+func (o *SnippetDTO) HasOutputPorts() bool {
+	if o != nil && o.OutputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPorts gets a reference to the given map[string]RevisionDTO and assigns it to the OutputPorts field.
+func (o *SnippetDTO) SetOutputPorts(v map[string]RevisionDTO) {
+	o.OutputPorts = &v
+}
+
+// GetConnections returns the Connections field value if set, zero value otherwise.
+func (o *SnippetDTO) GetConnections() map[string]RevisionDTO {
+	if o == nil || o.Connections == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.Connections
+}
+
+// GetConnectionsOk returns a tuple with the Connections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetConnectionsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.Connections == nil {
+		return nil, false
+	}
+	return o.Connections, true
+}
+
+// HasConnections returns a boolean if a field has been set.
+func (o *SnippetDTO) HasConnections() bool {
+	if o != nil && o.Connections != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnections gets a reference to the given map[string]RevisionDTO and assigns it to the Connections field.
+func (o *SnippetDTO) SetConnections(v map[string]RevisionDTO) {
+	o.Connections = &v
+}
+
+// GetLabels returns the Labels field value if set, zero value otherwise.
+func (o *SnippetDTO) GetLabels() map[string]RevisionDTO {
+	if o == nil || o.Labels == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.Labels
+}
+
+// GetLabelsOk returns a tuple with the Labels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetLabelsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.Labels == nil {
+		return nil, false
+	}
+	return o.Labels, true
+}
+
+// HasLabels returns a boolean if a field has been set.
+func (o *SnippetDTO) HasLabels() bool {
+	if o != nil && o.Labels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabels gets a reference to the given map[string]RevisionDTO and assigns it to the Labels field.
+func (o *SnippetDTO) SetLabels(v map[string]RevisionDTO) {
+	o.Labels = &v
+}
+
+// GetFunnels returns the Funnels field value if set, zero value otherwise.
+func (o *SnippetDTO) GetFunnels() map[string]RevisionDTO {
+	if o == nil || o.Funnels == nil {
+		var ret map[string]RevisionDTO
+		return ret
+	}
+	return *o.Funnels
+}
+
+// GetFunnelsOk returns a tuple with the Funnels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SnippetDTO) GetFunnelsOk() (*map[string]RevisionDTO, bool) {
+	if o == nil || o.Funnels == nil {
+		return nil, false
+	}
+	return o.Funnels, true
+}
+
+// HasFunnels returns a boolean if a field has been set.
+func (o *SnippetDTO) HasFunnels() bool {
+	if o != nil && o.Funnels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFunnels gets a reference to the given map[string]RevisionDTO and assigns it to the Funnels field.
+func (o *SnippetDTO) SetFunnels(v map[string]RevisionDTO) {
+	o.Funnels = &v
+}
+
+func (o SnippetDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.ProcessGroups != nil {
+		toSerialize["processGroups"] = o.ProcessGroups
+	}
+	if o.RemoteProcessGroups != nil {
+		toSerialize["remoteProcessGroups"] = o.RemoteProcessGroups
+	}
+	if o.Processors != nil {
+		toSerialize["processors"] = o.Processors
+	}
+	if o.InputPorts != nil {
+		toSerialize["inputPorts"] = o.InputPorts
+	}
+	if o.OutputPorts != nil {
+		toSerialize["outputPorts"] = o.OutputPorts
+	}
+	if o.Connections != nil {
+		toSerialize["connections"] = o.Connections
+	}
+	if o.Labels != nil {
+		toSerialize["labels"] = o.Labels
+	}
+	if o.Funnels != nil {
+		toSerialize["funnels"] = o.Funnels
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableSnippetDTO struct {
+	value *SnippetDTO
+	isSet bool
+}
+
+func (v NullableSnippetDTO) Get() *SnippetDTO {
+	return v.value
+}
+
+func (v *NullableSnippetDTO) Set(val *SnippetDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableSnippetDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableSnippetDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableSnippetDTO(val *SnippetDTO) *NullableSnippetDTO {
+	return &NullableSnippetDTO{value: val, isSet: true}
+}
+
+func (v NullableSnippetDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableSnippetDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

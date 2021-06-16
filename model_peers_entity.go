@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // PeersEntity struct for PeersEntity
 type PeersEntity struct {
-	Peers []PeerDto `json:"peers,omitempty"`
+	Peers *[]PeerDTO `json:"peers,omitempty"`
+}
+
+// NewPeersEntity instantiates a new PeersEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewPeersEntity() *PeersEntity {
+	this := PeersEntity{}
+	return &this
+}
+
+// NewPeersEntityWithDefaults instantiates a new PeersEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewPeersEntityWithDefaults() *PeersEntity {
+	this := PeersEntity{}
+	return &this
+}
+
+// GetPeers returns the Peers field value if set, zero value otherwise.
+func (o *PeersEntity) GetPeers() []PeerDTO {
+	if o == nil || o.Peers == nil {
+		var ret []PeerDTO
+		return ret
+	}
+	return *o.Peers
+}
+
+// GetPeersOk returns a tuple with the Peers field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PeersEntity) GetPeersOk() (*[]PeerDTO, bool) {
+	if o == nil || o.Peers == nil {
+		return nil, false
+	}
+	return o.Peers, true
+}
+
+// HasPeers returns a boolean if a field has been set.
+func (o *PeersEntity) HasPeers() bool {
+	if o != nil && o.Peers != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPeers gets a reference to the given []PeerDTO and assigns it to the Peers field.
+func (o *PeersEntity) SetPeers(v []PeerDTO) {
+	o.Peers = &v
+}
+
+func (o PeersEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Peers != nil {
+		toSerialize["peers"] = o.Peers
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullablePeersEntity struct {
+	value *PeersEntity
+	isSet bool
+}
+
+func (v NullablePeersEntity) Get() *PeersEntity {
+	return v.value
+}
+
+func (v *NullablePeersEntity) Set(val *PeersEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullablePeersEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullablePeersEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullablePeersEntity(val *PeersEntity) *NullablePeersEntity {
+	return &NullablePeersEntity{value: val, isSet: true}
+}
+
+func (v NullablePeersEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullablePeersEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

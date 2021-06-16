@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,7 +11,104 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // RegistryClientsEntity struct for RegistryClientsEntity
 type RegistryClientsEntity struct {
-	Registries []RegistryClientEntity `json:"registries,omitempty"`
+	Registries *[]RegistryClientEntity `json:"registries,omitempty"`
+}
+
+// NewRegistryClientsEntity instantiates a new RegistryClientsEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewRegistryClientsEntity() *RegistryClientsEntity {
+	this := RegistryClientsEntity{}
+	return &this
+}
+
+// NewRegistryClientsEntityWithDefaults instantiates a new RegistryClientsEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewRegistryClientsEntityWithDefaults() *RegistryClientsEntity {
+	this := RegistryClientsEntity{}
+	return &this
+}
+
+// GetRegistries returns the Registries field value if set, zero value otherwise.
+func (o *RegistryClientsEntity) GetRegistries() []RegistryClientEntity {
+	if o == nil || o.Registries == nil {
+		var ret []RegistryClientEntity
+		return ret
+	}
+	return *o.Registries
+}
+
+// GetRegistriesOk returns a tuple with the Registries field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RegistryClientsEntity) GetRegistriesOk() (*[]RegistryClientEntity, bool) {
+	if o == nil || o.Registries == nil {
+		return nil, false
+	}
+	return o.Registries, true
+}
+
+// HasRegistries returns a boolean if a field has been set.
+func (o *RegistryClientsEntity) HasRegistries() bool {
+	if o != nil && o.Registries != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRegistries gets a reference to the given []RegistryClientEntity and assigns it to the Registries field.
+func (o *RegistryClientsEntity) SetRegistries(v []RegistryClientEntity) {
+	o.Registries = &v
+}
+
+func (o RegistryClientsEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Registries != nil {
+		toSerialize["registries"] = o.Registries
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableRegistryClientsEntity struct {
+	value *RegistryClientsEntity
+	isSet bool
+}
+
+func (v NullableRegistryClientsEntity) Get() *RegistryClientsEntity {
+	return v.value
+}
+
+func (v *NullableRegistryClientsEntity) Set(val *RegistryClientsEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableRegistryClientsEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableRegistryClientsEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableRegistryClientsEntity(val *RegistryClientsEntity) *NullableRegistryClientsEntity {
+	return &NullableRegistryClientsEntity{value: val, isSet: true}
+}
+
+func (v NullableRegistryClientsEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableRegistryClientsEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

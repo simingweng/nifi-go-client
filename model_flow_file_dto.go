@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,42 +11,734 @@
 
 package nifi
 
-// FlowFileDto struct for FlowFileDto
-type FlowFileDto struct {
+import (
+	"encoding/json"
+)
+
+// FlowFileDTO struct for FlowFileDTO
+type FlowFileDTO struct {
 	// The URI that can be used to access this FlowFile.
-	Uri string `json:"uri,omitempty"`
+	Uri *string `json:"uri,omitempty"`
 	// The FlowFile UUID.
-	Uuid string `json:"uuid,omitempty"`
+	Uuid *string `json:"uuid,omitempty"`
 	// The FlowFile filename.
-	Filename string `json:"filename,omitempty"`
+	Filename *string `json:"filename,omitempty"`
 	// The FlowFile's position in the queue.
-	Position int32 `json:"position,omitempty"`
+	Position *int32 `json:"position,omitempty"`
 	// The FlowFile file size.
-	Size int64 `json:"size,omitempty"`
+	Size *int64 `json:"size,omitempty"`
 	// How long this FlowFile has been enqueued.
-	QueuedDuration int64 `json:"queuedDuration,omitempty"`
+	QueuedDuration *int64 `json:"queuedDuration,omitempty"`
 	// Duration since the FlowFile's greatest ancestor entered the flow.
-	LineageDuration int64 `json:"lineageDuration,omitempty"`
+	LineageDuration *int64 `json:"lineageDuration,omitempty"`
 	// How long in milliseconds until the FlowFile penalty expires.
-	PenaltyExpiresIn int64 `json:"penaltyExpiresIn,omitempty"`
+	PenaltyExpiresIn *int64 `json:"penaltyExpiresIn,omitempty"`
 	// The id of the node where this FlowFile resides.
-	ClusterNodeId string `json:"clusterNodeId,omitempty"`
+	ClusterNodeId *string `json:"clusterNodeId,omitempty"`
 	// The label for the node where this FlowFile resides.
-	ClusterNodeAddress string `json:"clusterNodeAddress,omitempty"`
+	ClusterNodeAddress *string `json:"clusterNodeAddress,omitempty"`
 	// The FlowFile attributes.
-	Attributes map[string]string `json:"attributes,omitempty"`
+	Attributes *map[string]string `json:"attributes,omitempty"`
 	// The section in which the content claim lives.
-	ContentClaimSection string `json:"contentClaimSection,omitempty"`
+	ContentClaimSection *string `json:"contentClaimSection,omitempty"`
 	// The container in which the content claim lives.
-	ContentClaimContainer string `json:"contentClaimContainer,omitempty"`
+	ContentClaimContainer *string `json:"contentClaimContainer,omitempty"`
 	// The identifier of the content claim.
-	ContentClaimIdentifier string `json:"contentClaimIdentifier,omitempty"`
+	ContentClaimIdentifier *string `json:"contentClaimIdentifier,omitempty"`
 	// The offset into the content claim where the flowfile's content begins.
-	ContentClaimOffset int64 `json:"contentClaimOffset,omitempty"`
+	ContentClaimOffset *int64 `json:"contentClaimOffset,omitempty"`
 	// The file size of the content claim formatted.
-	ContentClaimFileSize string `json:"contentClaimFileSize,omitempty"`
+	ContentClaimFileSize *string `json:"contentClaimFileSize,omitempty"`
 	// The file size of the content claim in bytes.
-	ContentClaimFileSizeBytes int64 `json:"contentClaimFileSizeBytes,omitempty"`
+	ContentClaimFileSizeBytes *int64 `json:"contentClaimFileSizeBytes,omitempty"`
 	// If the FlowFile is penalized.
-	Penalized bool `json:"penalized,omitempty"`
+	Penalized *bool `json:"penalized,omitempty"`
+}
+
+// NewFlowFileDTO instantiates a new FlowFileDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewFlowFileDTO() *FlowFileDTO {
+	this := FlowFileDTO{}
+	return &this
+}
+
+// NewFlowFileDTOWithDefaults instantiates a new FlowFileDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewFlowFileDTOWithDefaults() *FlowFileDTO {
+	this := FlowFileDTO{}
+	return &this
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *FlowFileDTO) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetUuid returns the Uuid field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetUuid() string {
+	if o == nil || o.Uuid == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uuid
+}
+
+// GetUuidOk returns a tuple with the Uuid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetUuidOk() (*string, bool) {
+	if o == nil || o.Uuid == nil {
+		return nil, false
+	}
+	return o.Uuid, true
+}
+
+// HasUuid returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasUuid() bool {
+	if o != nil && o.Uuid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUuid gets a reference to the given string and assigns it to the Uuid field.
+func (o *FlowFileDTO) SetUuid(v string) {
+	o.Uuid = &v
+}
+
+// GetFilename returns the Filename field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetFilename() string {
+	if o == nil || o.Filename == nil {
+		var ret string
+		return ret
+	}
+	return *o.Filename
+}
+
+// GetFilenameOk returns a tuple with the Filename field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetFilenameOk() (*string, bool) {
+	if o == nil || o.Filename == nil {
+		return nil, false
+	}
+	return o.Filename, true
+}
+
+// HasFilename returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasFilename() bool {
+	if o != nil && o.Filename != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFilename gets a reference to the given string and assigns it to the Filename field.
+func (o *FlowFileDTO) SetFilename(v string) {
+	o.Filename = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetPosition() int32 {
+	if o == nil || o.Position == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetPositionOk() (*int32, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given int32 and assigns it to the Position field.
+func (o *FlowFileDTO) SetPosition(v int32) {
+	o.Position = &v
+}
+
+// GetSize returns the Size field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetSize() int64 {
+	if o == nil || o.Size == nil {
+		var ret int64
+		return ret
+	}
+	return *o.Size
+}
+
+// GetSizeOk returns a tuple with the Size field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetSizeOk() (*int64, bool) {
+	if o == nil || o.Size == nil {
+		return nil, false
+	}
+	return o.Size, true
+}
+
+// HasSize returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasSize() bool {
+	if o != nil && o.Size != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSize gets a reference to the given int64 and assigns it to the Size field.
+func (o *FlowFileDTO) SetSize(v int64) {
+	o.Size = &v
+}
+
+// GetQueuedDuration returns the QueuedDuration field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetQueuedDuration() int64 {
+	if o == nil || o.QueuedDuration == nil {
+		var ret int64
+		return ret
+	}
+	return *o.QueuedDuration
+}
+
+// GetQueuedDurationOk returns a tuple with the QueuedDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetQueuedDurationOk() (*int64, bool) {
+	if o == nil || o.QueuedDuration == nil {
+		return nil, false
+	}
+	return o.QueuedDuration, true
+}
+
+// HasQueuedDuration returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasQueuedDuration() bool {
+	if o != nil && o.QueuedDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetQueuedDuration gets a reference to the given int64 and assigns it to the QueuedDuration field.
+func (o *FlowFileDTO) SetQueuedDuration(v int64) {
+	o.QueuedDuration = &v
+}
+
+// GetLineageDuration returns the LineageDuration field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetLineageDuration() int64 {
+	if o == nil || o.LineageDuration == nil {
+		var ret int64
+		return ret
+	}
+	return *o.LineageDuration
+}
+
+// GetLineageDurationOk returns a tuple with the LineageDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetLineageDurationOk() (*int64, bool) {
+	if o == nil || o.LineageDuration == nil {
+		return nil, false
+	}
+	return o.LineageDuration, true
+}
+
+// HasLineageDuration returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasLineageDuration() bool {
+	if o != nil && o.LineageDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLineageDuration gets a reference to the given int64 and assigns it to the LineageDuration field.
+func (o *FlowFileDTO) SetLineageDuration(v int64) {
+	o.LineageDuration = &v
+}
+
+// GetPenaltyExpiresIn returns the PenaltyExpiresIn field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetPenaltyExpiresIn() int64 {
+	if o == nil || o.PenaltyExpiresIn == nil {
+		var ret int64
+		return ret
+	}
+	return *o.PenaltyExpiresIn
+}
+
+// GetPenaltyExpiresInOk returns a tuple with the PenaltyExpiresIn field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetPenaltyExpiresInOk() (*int64, bool) {
+	if o == nil || o.PenaltyExpiresIn == nil {
+		return nil, false
+	}
+	return o.PenaltyExpiresIn, true
+}
+
+// HasPenaltyExpiresIn returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasPenaltyExpiresIn() bool {
+	if o != nil && o.PenaltyExpiresIn != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPenaltyExpiresIn gets a reference to the given int64 and assigns it to the PenaltyExpiresIn field.
+func (o *FlowFileDTO) SetPenaltyExpiresIn(v int64) {
+	o.PenaltyExpiresIn = &v
+}
+
+// GetClusterNodeId returns the ClusterNodeId field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetClusterNodeId() string {
+	if o == nil || o.ClusterNodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeId
+}
+
+// GetClusterNodeIdOk returns a tuple with the ClusterNodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetClusterNodeIdOk() (*string, bool) {
+	if o == nil || o.ClusterNodeId == nil {
+		return nil, false
+	}
+	return o.ClusterNodeId, true
+}
+
+// HasClusterNodeId returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasClusterNodeId() bool {
+	if o != nil && o.ClusterNodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeId gets a reference to the given string and assigns it to the ClusterNodeId field.
+func (o *FlowFileDTO) SetClusterNodeId(v string) {
+	o.ClusterNodeId = &v
+}
+
+// GetClusterNodeAddress returns the ClusterNodeAddress field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetClusterNodeAddress() string {
+	if o == nil || o.ClusterNodeAddress == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeAddress
+}
+
+// GetClusterNodeAddressOk returns a tuple with the ClusterNodeAddress field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetClusterNodeAddressOk() (*string, bool) {
+	if o == nil || o.ClusterNodeAddress == nil {
+		return nil, false
+	}
+	return o.ClusterNodeAddress, true
+}
+
+// HasClusterNodeAddress returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasClusterNodeAddress() bool {
+	if o != nil && o.ClusterNodeAddress != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeAddress gets a reference to the given string and assigns it to the ClusterNodeAddress field.
+func (o *FlowFileDTO) SetClusterNodeAddress(v string) {
+	o.ClusterNodeAddress = &v
+}
+
+// GetAttributes returns the Attributes field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetAttributes() map[string]string {
+	if o == nil || o.Attributes == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Attributes
+}
+
+// GetAttributesOk returns a tuple with the Attributes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetAttributesOk() (*map[string]string, bool) {
+	if o == nil || o.Attributes == nil {
+		return nil, false
+	}
+	return o.Attributes, true
+}
+
+// HasAttributes returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasAttributes() bool {
+	if o != nil && o.Attributes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAttributes gets a reference to the given map[string]string and assigns it to the Attributes field.
+func (o *FlowFileDTO) SetAttributes(v map[string]string) {
+	o.Attributes = &v
+}
+
+// GetContentClaimSection returns the ContentClaimSection field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetContentClaimSection() string {
+	if o == nil || o.ContentClaimSection == nil {
+		var ret string
+		return ret
+	}
+	return *o.ContentClaimSection
+}
+
+// GetContentClaimSectionOk returns a tuple with the ContentClaimSection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetContentClaimSectionOk() (*string, bool) {
+	if o == nil || o.ContentClaimSection == nil {
+		return nil, false
+	}
+	return o.ContentClaimSection, true
+}
+
+// HasContentClaimSection returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasContentClaimSection() bool {
+	if o != nil && o.ContentClaimSection != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentClaimSection gets a reference to the given string and assigns it to the ContentClaimSection field.
+func (o *FlowFileDTO) SetContentClaimSection(v string) {
+	o.ContentClaimSection = &v
+}
+
+// GetContentClaimContainer returns the ContentClaimContainer field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetContentClaimContainer() string {
+	if o == nil || o.ContentClaimContainer == nil {
+		var ret string
+		return ret
+	}
+	return *o.ContentClaimContainer
+}
+
+// GetContentClaimContainerOk returns a tuple with the ContentClaimContainer field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetContentClaimContainerOk() (*string, bool) {
+	if o == nil || o.ContentClaimContainer == nil {
+		return nil, false
+	}
+	return o.ContentClaimContainer, true
+}
+
+// HasContentClaimContainer returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasContentClaimContainer() bool {
+	if o != nil && o.ContentClaimContainer != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentClaimContainer gets a reference to the given string and assigns it to the ContentClaimContainer field.
+func (o *FlowFileDTO) SetContentClaimContainer(v string) {
+	o.ContentClaimContainer = &v
+}
+
+// GetContentClaimIdentifier returns the ContentClaimIdentifier field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetContentClaimIdentifier() string {
+	if o == nil || o.ContentClaimIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.ContentClaimIdentifier
+}
+
+// GetContentClaimIdentifierOk returns a tuple with the ContentClaimIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetContentClaimIdentifierOk() (*string, bool) {
+	if o == nil || o.ContentClaimIdentifier == nil {
+		return nil, false
+	}
+	return o.ContentClaimIdentifier, true
+}
+
+// HasContentClaimIdentifier returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasContentClaimIdentifier() bool {
+	if o != nil && o.ContentClaimIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentClaimIdentifier gets a reference to the given string and assigns it to the ContentClaimIdentifier field.
+func (o *FlowFileDTO) SetContentClaimIdentifier(v string) {
+	o.ContentClaimIdentifier = &v
+}
+
+// GetContentClaimOffset returns the ContentClaimOffset field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetContentClaimOffset() int64 {
+	if o == nil || o.ContentClaimOffset == nil {
+		var ret int64
+		return ret
+	}
+	return *o.ContentClaimOffset
+}
+
+// GetContentClaimOffsetOk returns a tuple with the ContentClaimOffset field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetContentClaimOffsetOk() (*int64, bool) {
+	if o == nil || o.ContentClaimOffset == nil {
+		return nil, false
+	}
+	return o.ContentClaimOffset, true
+}
+
+// HasContentClaimOffset returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasContentClaimOffset() bool {
+	if o != nil && o.ContentClaimOffset != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentClaimOffset gets a reference to the given int64 and assigns it to the ContentClaimOffset field.
+func (o *FlowFileDTO) SetContentClaimOffset(v int64) {
+	o.ContentClaimOffset = &v
+}
+
+// GetContentClaimFileSize returns the ContentClaimFileSize field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetContentClaimFileSize() string {
+	if o == nil || o.ContentClaimFileSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.ContentClaimFileSize
+}
+
+// GetContentClaimFileSizeOk returns a tuple with the ContentClaimFileSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetContentClaimFileSizeOk() (*string, bool) {
+	if o == nil || o.ContentClaimFileSize == nil {
+		return nil, false
+	}
+	return o.ContentClaimFileSize, true
+}
+
+// HasContentClaimFileSize returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasContentClaimFileSize() bool {
+	if o != nil && o.ContentClaimFileSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentClaimFileSize gets a reference to the given string and assigns it to the ContentClaimFileSize field.
+func (o *FlowFileDTO) SetContentClaimFileSize(v string) {
+	o.ContentClaimFileSize = &v
+}
+
+// GetContentClaimFileSizeBytes returns the ContentClaimFileSizeBytes field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetContentClaimFileSizeBytes() int64 {
+	if o == nil || o.ContentClaimFileSizeBytes == nil {
+		var ret int64
+		return ret
+	}
+	return *o.ContentClaimFileSizeBytes
+}
+
+// GetContentClaimFileSizeBytesOk returns a tuple with the ContentClaimFileSizeBytes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetContentClaimFileSizeBytesOk() (*int64, bool) {
+	if o == nil || o.ContentClaimFileSizeBytes == nil {
+		return nil, false
+	}
+	return o.ContentClaimFileSizeBytes, true
+}
+
+// HasContentClaimFileSizeBytes returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasContentClaimFileSizeBytes() bool {
+	if o != nil && o.ContentClaimFileSizeBytes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentClaimFileSizeBytes gets a reference to the given int64 and assigns it to the ContentClaimFileSizeBytes field.
+func (o *FlowFileDTO) SetContentClaimFileSizeBytes(v int64) {
+	o.ContentClaimFileSizeBytes = &v
+}
+
+// GetPenalized returns the Penalized field value if set, zero value otherwise.
+func (o *FlowFileDTO) GetPenalized() bool {
+	if o == nil || o.Penalized == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Penalized
+}
+
+// GetPenalizedOk returns a tuple with the Penalized field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FlowFileDTO) GetPenalizedOk() (*bool, bool) {
+	if o == nil || o.Penalized == nil {
+		return nil, false
+	}
+	return o.Penalized, true
+}
+
+// HasPenalized returns a boolean if a field has been set.
+func (o *FlowFileDTO) HasPenalized() bool {
+	if o != nil && o.Penalized != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPenalized gets a reference to the given bool and assigns it to the Penalized field.
+func (o *FlowFileDTO) SetPenalized(v bool) {
+	o.Penalized = &v
+}
+
+func (o FlowFileDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.Uuid != nil {
+		toSerialize["uuid"] = o.Uuid
+	}
+	if o.Filename != nil {
+		toSerialize["filename"] = o.Filename
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Size != nil {
+		toSerialize["size"] = o.Size
+	}
+	if o.QueuedDuration != nil {
+		toSerialize["queuedDuration"] = o.QueuedDuration
+	}
+	if o.LineageDuration != nil {
+		toSerialize["lineageDuration"] = o.LineageDuration
+	}
+	if o.PenaltyExpiresIn != nil {
+		toSerialize["penaltyExpiresIn"] = o.PenaltyExpiresIn
+	}
+	if o.ClusterNodeId != nil {
+		toSerialize["clusterNodeId"] = o.ClusterNodeId
+	}
+	if o.ClusterNodeAddress != nil {
+		toSerialize["clusterNodeAddress"] = o.ClusterNodeAddress
+	}
+	if o.Attributes != nil {
+		toSerialize["attributes"] = o.Attributes
+	}
+	if o.ContentClaimSection != nil {
+		toSerialize["contentClaimSection"] = o.ContentClaimSection
+	}
+	if o.ContentClaimContainer != nil {
+		toSerialize["contentClaimContainer"] = o.ContentClaimContainer
+	}
+	if o.ContentClaimIdentifier != nil {
+		toSerialize["contentClaimIdentifier"] = o.ContentClaimIdentifier
+	}
+	if o.ContentClaimOffset != nil {
+		toSerialize["contentClaimOffset"] = o.ContentClaimOffset
+	}
+	if o.ContentClaimFileSize != nil {
+		toSerialize["contentClaimFileSize"] = o.ContentClaimFileSize
+	}
+	if o.ContentClaimFileSizeBytes != nil {
+		toSerialize["contentClaimFileSizeBytes"] = o.ContentClaimFileSizeBytes
+	}
+	if o.Penalized != nil {
+		toSerialize["penalized"] = o.Penalized
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableFlowFileDTO struct {
+	value *FlowFileDTO
+	isSet bool
+}
+
+func (v NullableFlowFileDTO) Get() *FlowFileDTO {
+	return v.value
+}
+
+func (v *NullableFlowFileDTO) Set(val *FlowFileDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableFlowFileDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableFlowFileDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableFlowFileDTO(val *FlowFileDTO) *NullableFlowFileDTO {
+	return &NullableFlowFileDTO{value: val, isSet: true}
+}
+
+func (v NullableFlowFileDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableFlowFileDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

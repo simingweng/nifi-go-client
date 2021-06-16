@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,60 +11,1137 @@
 
 package nifi
 
-// ProcessGroupDto struct for ProcessGroupDto
-type ProcessGroupDto struct {
+import (
+	"encoding/json"
+)
+
+// ProcessGroupDTO struct for ProcessGroupDTO
+type ProcessGroupDTO struct {
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The ID of the corresponding component that is under version control
-	VersionedComponentId string `json:"versionedComponentId,omitempty"`
+	VersionedComponentId *string `json:"versionedComponentId,omitempty"`
 	// The id of parent process group of this component if applicable.
-	ParentGroupId string      `json:"parentGroupId,omitempty"`
-	Position      PositionDto `json:"position,omitempty"`
+	ParentGroupId *string      `json:"parentGroupId,omitempty"`
+	Position      *PositionDTO `json:"position,omitempty"`
 	// The name of the process group.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The comments for the process group.
-	Comments string `json:"comments,omitempty"`
+	Comments *string `json:"comments,omitempty"`
 	// The variables that are configured for the Process Group. Note that this map contains only those variables that are defined on this Process Group and not any variables that are defined in the parent Process Group, etc. I.e., this Map will not contain all variables that are accessible by components in this Process Group by rather only the variables that are defined for this Process Group itself.
-	Variables                 map[string]string               `json:"variables,omitempty"`
-	VersionControlInformation VersionControlInformationDto    `json:"versionControlInformation,omitempty"`
-	ParameterContext          ParameterContextReferenceEntity `json:"parameterContext,omitempty"`
+	Variables                 *map[string]string               `json:"variables,omitempty"`
+	VersionControlInformation *VersionControlInformationDTO    `json:"versionControlInformation,omitempty"`
+	ParameterContext          *ParameterContextReferenceEntity `json:"parameterContext,omitempty"`
 	// The FlowFile Concurrency for this Process Group.
-	FlowfileConcurrency string `json:"flowfileConcurrency,omitempty"`
+	FlowfileConcurrency *string `json:"flowfileConcurrency,omitempty"`
 	// The Oubound Policy that is used for determining how FlowFiles should be transferred out of the Process Group.
-	FlowfileOutboundPolicy string `json:"flowfileOutboundPolicy,omitempty"`
+	FlowfileOutboundPolicy *string `json:"flowfileOutboundPolicy,omitempty"`
 	// The number of running components in this process group.
-	RunningCount int32 `json:"runningCount,omitempty"`
+	RunningCount *int32 `json:"runningCount,omitempty"`
 	// The number of stopped components in the process group.
-	StoppedCount int32 `json:"stoppedCount,omitempty"`
+	StoppedCount *int32 `json:"stoppedCount,omitempty"`
 	// The number of invalid components in the process group.
-	InvalidCount int32 `json:"invalidCount,omitempty"`
+	InvalidCount *int32 `json:"invalidCount,omitempty"`
 	// The number of disabled components in the process group.
-	DisabledCount int32 `json:"disabledCount,omitempty"`
+	DisabledCount *int32 `json:"disabledCount,omitempty"`
 	// The number of active remote ports in the process group.
-	ActiveRemotePortCount int32 `json:"activeRemotePortCount,omitempty"`
+	ActiveRemotePortCount *int32 `json:"activeRemotePortCount,omitempty"`
 	// The number of inactive remote ports in the process group.
-	InactiveRemotePortCount int32 `json:"inactiveRemotePortCount,omitempty"`
+	InactiveRemotePortCount *int32 `json:"inactiveRemotePortCount,omitempty"`
 	// The number of up to date versioned process groups in the process group.
-	UpToDateCount int32 `json:"upToDateCount,omitempty"`
+	UpToDateCount *int32 `json:"upToDateCount,omitempty"`
 	// The number of locally modified versioned process groups in the process group.
-	LocallyModifiedCount int32 `json:"locallyModifiedCount,omitempty"`
+	LocallyModifiedCount *int32 `json:"locallyModifiedCount,omitempty"`
 	// The number of stale versioned process groups in the process group.
-	StaleCount int32 `json:"staleCount,omitempty"`
+	StaleCount *int32 `json:"staleCount,omitempty"`
 	// The number of locally modified and stale versioned process groups in the process group.
-	LocallyModifiedAndStaleCount int32 `json:"locallyModifiedAndStaleCount,omitempty"`
+	LocallyModifiedAndStaleCount *int32 `json:"locallyModifiedAndStaleCount,omitempty"`
 	// The number of versioned process groups in the process group that are unable to sync to a registry.
-	SyncFailureCount int32 `json:"syncFailureCount,omitempty"`
+	SyncFailureCount *int32 `json:"syncFailureCount,omitempty"`
 	// The number of local input ports in the process group.
-	LocalInputPortCount int32 `json:"localInputPortCount,omitempty"`
+	LocalInputPortCount *int32 `json:"localInputPortCount,omitempty"`
 	// The number of local output ports in the process group.
-	LocalOutputPortCount int32 `json:"localOutputPortCount,omitempty"`
+	LocalOutputPortCount *int32 `json:"localOutputPortCount,omitempty"`
 	// The number of public input ports in the process group.
-	PublicInputPortCount int32 `json:"publicInputPortCount,omitempty"`
+	PublicInputPortCount *int32 `json:"publicInputPortCount,omitempty"`
 	// The number of public output ports in the process group.
-	PublicOutputPortCount int32          `json:"publicOutputPortCount,omitempty"`
-	Contents              FlowSnippetDto `json:"contents,omitempty"`
+	PublicOutputPortCount *int32          `json:"publicOutputPortCount,omitempty"`
+	Contents              *FlowSnippetDTO `json:"contents,omitempty"`
 	// The number of input ports in the process group.
-	InputPortCount int32 `json:"inputPortCount,omitempty"`
+	InputPortCount *int32 `json:"inputPortCount,omitempty"`
 	// The number of output ports in the process group.
-	OutputPortCount int32 `json:"outputPortCount,omitempty"`
+	OutputPortCount *int32 `json:"outputPortCount,omitempty"`
+}
+
+// NewProcessGroupDTO instantiates a new ProcessGroupDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessGroupDTO() *ProcessGroupDTO {
+	this := ProcessGroupDTO{}
+	return &this
+}
+
+// NewProcessGroupDTOWithDefaults instantiates a new ProcessGroupDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessGroupDTOWithDefaults() *ProcessGroupDTO {
+	this := ProcessGroupDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProcessGroupDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetVersionedComponentId returns the VersionedComponentId field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetVersionedComponentId() string {
+	if o == nil || o.VersionedComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.VersionedComponentId
+}
+
+// GetVersionedComponentIdOk returns a tuple with the VersionedComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetVersionedComponentIdOk() (*string, bool) {
+	if o == nil || o.VersionedComponentId == nil {
+		return nil, false
+	}
+	return o.VersionedComponentId, true
+}
+
+// HasVersionedComponentId returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasVersionedComponentId() bool {
+	if o != nil && o.VersionedComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedComponentId gets a reference to the given string and assigns it to the VersionedComponentId field.
+func (o *ProcessGroupDTO) SetVersionedComponentId(v string) {
+	o.VersionedComponentId = &v
+}
+
+// GetParentGroupId returns the ParentGroupId field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetParentGroupId() string {
+	if o == nil || o.ParentGroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParentGroupId
+}
+
+// GetParentGroupIdOk returns a tuple with the ParentGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetParentGroupIdOk() (*string, bool) {
+	if o == nil || o.ParentGroupId == nil {
+		return nil, false
+	}
+	return o.ParentGroupId, true
+}
+
+// HasParentGroupId returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasParentGroupId() bool {
+	if o != nil && o.ParentGroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroupId gets a reference to the given string and assigns it to the ParentGroupId field.
+func (o *ProcessGroupDTO) SetParentGroupId(v string) {
+	o.ParentGroupId = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *ProcessGroupDTO) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ProcessGroupDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *ProcessGroupDTO) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetVariables returns the Variables field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetVariables() map[string]string {
+	if o == nil || o.Variables == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Variables
+}
+
+// GetVariablesOk returns a tuple with the Variables field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetVariablesOk() (*map[string]string, bool) {
+	if o == nil || o.Variables == nil {
+		return nil, false
+	}
+	return o.Variables, true
+}
+
+// HasVariables returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasVariables() bool {
+	if o != nil && o.Variables != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVariables gets a reference to the given map[string]string and assigns it to the Variables field.
+func (o *ProcessGroupDTO) SetVariables(v map[string]string) {
+	o.Variables = &v
+}
+
+// GetVersionControlInformation returns the VersionControlInformation field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetVersionControlInformation() VersionControlInformationDTO {
+	if o == nil || o.VersionControlInformation == nil {
+		var ret VersionControlInformationDTO
+		return ret
+	}
+	return *o.VersionControlInformation
+}
+
+// GetVersionControlInformationOk returns a tuple with the VersionControlInformation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetVersionControlInformationOk() (*VersionControlInformationDTO, bool) {
+	if o == nil || o.VersionControlInformation == nil {
+		return nil, false
+	}
+	return o.VersionControlInformation, true
+}
+
+// HasVersionControlInformation returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasVersionControlInformation() bool {
+	if o != nil && o.VersionControlInformation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionControlInformation gets a reference to the given VersionControlInformationDTO and assigns it to the VersionControlInformation field.
+func (o *ProcessGroupDTO) SetVersionControlInformation(v VersionControlInformationDTO) {
+	o.VersionControlInformation = &v
+}
+
+// GetParameterContext returns the ParameterContext field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetParameterContext() ParameterContextReferenceEntity {
+	if o == nil || o.ParameterContext == nil {
+		var ret ParameterContextReferenceEntity
+		return ret
+	}
+	return *o.ParameterContext
+}
+
+// GetParameterContextOk returns a tuple with the ParameterContext field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetParameterContextOk() (*ParameterContextReferenceEntity, bool) {
+	if o == nil || o.ParameterContext == nil {
+		return nil, false
+	}
+	return o.ParameterContext, true
+}
+
+// HasParameterContext returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasParameterContext() bool {
+	if o != nil && o.ParameterContext != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContext gets a reference to the given ParameterContextReferenceEntity and assigns it to the ParameterContext field.
+func (o *ProcessGroupDTO) SetParameterContext(v ParameterContextReferenceEntity) {
+	o.ParameterContext = &v
+}
+
+// GetFlowfileConcurrency returns the FlowfileConcurrency field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetFlowfileConcurrency() string {
+	if o == nil || o.FlowfileConcurrency == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowfileConcurrency
+}
+
+// GetFlowfileConcurrencyOk returns a tuple with the FlowfileConcurrency field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetFlowfileConcurrencyOk() (*string, bool) {
+	if o == nil || o.FlowfileConcurrency == nil {
+		return nil, false
+	}
+	return o.FlowfileConcurrency, true
+}
+
+// HasFlowfileConcurrency returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasFlowfileConcurrency() bool {
+	if o != nil && o.FlowfileConcurrency != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowfileConcurrency gets a reference to the given string and assigns it to the FlowfileConcurrency field.
+func (o *ProcessGroupDTO) SetFlowfileConcurrency(v string) {
+	o.FlowfileConcurrency = &v
+}
+
+// GetFlowfileOutboundPolicy returns the FlowfileOutboundPolicy field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetFlowfileOutboundPolicy() string {
+	if o == nil || o.FlowfileOutboundPolicy == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowfileOutboundPolicy
+}
+
+// GetFlowfileOutboundPolicyOk returns a tuple with the FlowfileOutboundPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetFlowfileOutboundPolicyOk() (*string, bool) {
+	if o == nil || o.FlowfileOutboundPolicy == nil {
+		return nil, false
+	}
+	return o.FlowfileOutboundPolicy, true
+}
+
+// HasFlowfileOutboundPolicy returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasFlowfileOutboundPolicy() bool {
+	if o != nil && o.FlowfileOutboundPolicy != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowfileOutboundPolicy gets a reference to the given string and assigns it to the FlowfileOutboundPolicy field.
+func (o *ProcessGroupDTO) SetFlowfileOutboundPolicy(v string) {
+	o.FlowfileOutboundPolicy = &v
+}
+
+// GetRunningCount returns the RunningCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetRunningCount() int32 {
+	if o == nil || o.RunningCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.RunningCount
+}
+
+// GetRunningCountOk returns a tuple with the RunningCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetRunningCountOk() (*int32, bool) {
+	if o == nil || o.RunningCount == nil {
+		return nil, false
+	}
+	return o.RunningCount, true
+}
+
+// HasRunningCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasRunningCount() bool {
+	if o != nil && o.RunningCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRunningCount gets a reference to the given int32 and assigns it to the RunningCount field.
+func (o *ProcessGroupDTO) SetRunningCount(v int32) {
+	o.RunningCount = &v
+}
+
+// GetStoppedCount returns the StoppedCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetStoppedCount() int32 {
+	if o == nil || o.StoppedCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.StoppedCount
+}
+
+// GetStoppedCountOk returns a tuple with the StoppedCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetStoppedCountOk() (*int32, bool) {
+	if o == nil || o.StoppedCount == nil {
+		return nil, false
+	}
+	return o.StoppedCount, true
+}
+
+// HasStoppedCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasStoppedCount() bool {
+	if o != nil && o.StoppedCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStoppedCount gets a reference to the given int32 and assigns it to the StoppedCount field.
+func (o *ProcessGroupDTO) SetStoppedCount(v int32) {
+	o.StoppedCount = &v
+}
+
+// GetInvalidCount returns the InvalidCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetInvalidCount() int32 {
+	if o == nil || o.InvalidCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.InvalidCount
+}
+
+// GetInvalidCountOk returns a tuple with the InvalidCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetInvalidCountOk() (*int32, bool) {
+	if o == nil || o.InvalidCount == nil {
+		return nil, false
+	}
+	return o.InvalidCount, true
+}
+
+// HasInvalidCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasInvalidCount() bool {
+	if o != nil && o.InvalidCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInvalidCount gets a reference to the given int32 and assigns it to the InvalidCount field.
+func (o *ProcessGroupDTO) SetInvalidCount(v int32) {
+	o.InvalidCount = &v
+}
+
+// GetDisabledCount returns the DisabledCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetDisabledCount() int32 {
+	if o == nil || o.DisabledCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.DisabledCount
+}
+
+// GetDisabledCountOk returns a tuple with the DisabledCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetDisabledCountOk() (*int32, bool) {
+	if o == nil || o.DisabledCount == nil {
+		return nil, false
+	}
+	return o.DisabledCount, true
+}
+
+// HasDisabledCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasDisabledCount() bool {
+	if o != nil && o.DisabledCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisabledCount gets a reference to the given int32 and assigns it to the DisabledCount field.
+func (o *ProcessGroupDTO) SetDisabledCount(v int32) {
+	o.DisabledCount = &v
+}
+
+// GetActiveRemotePortCount returns the ActiveRemotePortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetActiveRemotePortCount() int32 {
+	if o == nil || o.ActiveRemotePortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.ActiveRemotePortCount
+}
+
+// GetActiveRemotePortCountOk returns a tuple with the ActiveRemotePortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetActiveRemotePortCountOk() (*int32, bool) {
+	if o == nil || o.ActiveRemotePortCount == nil {
+		return nil, false
+	}
+	return o.ActiveRemotePortCount, true
+}
+
+// HasActiveRemotePortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasActiveRemotePortCount() bool {
+	if o != nil && o.ActiveRemotePortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActiveRemotePortCount gets a reference to the given int32 and assigns it to the ActiveRemotePortCount field.
+func (o *ProcessGroupDTO) SetActiveRemotePortCount(v int32) {
+	o.ActiveRemotePortCount = &v
+}
+
+// GetInactiveRemotePortCount returns the InactiveRemotePortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetInactiveRemotePortCount() int32 {
+	if o == nil || o.InactiveRemotePortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.InactiveRemotePortCount
+}
+
+// GetInactiveRemotePortCountOk returns a tuple with the InactiveRemotePortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetInactiveRemotePortCountOk() (*int32, bool) {
+	if o == nil || o.InactiveRemotePortCount == nil {
+		return nil, false
+	}
+	return o.InactiveRemotePortCount, true
+}
+
+// HasInactiveRemotePortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasInactiveRemotePortCount() bool {
+	if o != nil && o.InactiveRemotePortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInactiveRemotePortCount gets a reference to the given int32 and assigns it to the InactiveRemotePortCount field.
+func (o *ProcessGroupDTO) SetInactiveRemotePortCount(v int32) {
+	o.InactiveRemotePortCount = &v
+}
+
+// GetUpToDateCount returns the UpToDateCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetUpToDateCount() int32 {
+	if o == nil || o.UpToDateCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.UpToDateCount
+}
+
+// GetUpToDateCountOk returns a tuple with the UpToDateCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetUpToDateCountOk() (*int32, bool) {
+	if o == nil || o.UpToDateCount == nil {
+		return nil, false
+	}
+	return o.UpToDateCount, true
+}
+
+// HasUpToDateCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasUpToDateCount() bool {
+	if o != nil && o.UpToDateCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUpToDateCount gets a reference to the given int32 and assigns it to the UpToDateCount field.
+func (o *ProcessGroupDTO) SetUpToDateCount(v int32) {
+	o.UpToDateCount = &v
+}
+
+// GetLocallyModifiedCount returns the LocallyModifiedCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetLocallyModifiedCount() int32 {
+	if o == nil || o.LocallyModifiedCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LocallyModifiedCount
+}
+
+// GetLocallyModifiedCountOk returns a tuple with the LocallyModifiedCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetLocallyModifiedCountOk() (*int32, bool) {
+	if o == nil || o.LocallyModifiedCount == nil {
+		return nil, false
+	}
+	return o.LocallyModifiedCount, true
+}
+
+// HasLocallyModifiedCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasLocallyModifiedCount() bool {
+	if o != nil && o.LocallyModifiedCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocallyModifiedCount gets a reference to the given int32 and assigns it to the LocallyModifiedCount field.
+func (o *ProcessGroupDTO) SetLocallyModifiedCount(v int32) {
+	o.LocallyModifiedCount = &v
+}
+
+// GetStaleCount returns the StaleCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetStaleCount() int32 {
+	if o == nil || o.StaleCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.StaleCount
+}
+
+// GetStaleCountOk returns a tuple with the StaleCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetStaleCountOk() (*int32, bool) {
+	if o == nil || o.StaleCount == nil {
+		return nil, false
+	}
+	return o.StaleCount, true
+}
+
+// HasStaleCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasStaleCount() bool {
+	if o != nil && o.StaleCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetStaleCount gets a reference to the given int32 and assigns it to the StaleCount field.
+func (o *ProcessGroupDTO) SetStaleCount(v int32) {
+	o.StaleCount = &v
+}
+
+// GetLocallyModifiedAndStaleCount returns the LocallyModifiedAndStaleCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetLocallyModifiedAndStaleCount() int32 {
+	if o == nil || o.LocallyModifiedAndStaleCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LocallyModifiedAndStaleCount
+}
+
+// GetLocallyModifiedAndStaleCountOk returns a tuple with the LocallyModifiedAndStaleCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetLocallyModifiedAndStaleCountOk() (*int32, bool) {
+	if o == nil || o.LocallyModifiedAndStaleCount == nil {
+		return nil, false
+	}
+	return o.LocallyModifiedAndStaleCount, true
+}
+
+// HasLocallyModifiedAndStaleCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasLocallyModifiedAndStaleCount() bool {
+	if o != nil && o.LocallyModifiedAndStaleCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocallyModifiedAndStaleCount gets a reference to the given int32 and assigns it to the LocallyModifiedAndStaleCount field.
+func (o *ProcessGroupDTO) SetLocallyModifiedAndStaleCount(v int32) {
+	o.LocallyModifiedAndStaleCount = &v
+}
+
+// GetSyncFailureCount returns the SyncFailureCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetSyncFailureCount() int32 {
+	if o == nil || o.SyncFailureCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.SyncFailureCount
+}
+
+// GetSyncFailureCountOk returns a tuple with the SyncFailureCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetSyncFailureCountOk() (*int32, bool) {
+	if o == nil || o.SyncFailureCount == nil {
+		return nil, false
+	}
+	return o.SyncFailureCount, true
+}
+
+// HasSyncFailureCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasSyncFailureCount() bool {
+	if o != nil && o.SyncFailureCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSyncFailureCount gets a reference to the given int32 and assigns it to the SyncFailureCount field.
+func (o *ProcessGroupDTO) SetSyncFailureCount(v int32) {
+	o.SyncFailureCount = &v
+}
+
+// GetLocalInputPortCount returns the LocalInputPortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetLocalInputPortCount() int32 {
+	if o == nil || o.LocalInputPortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LocalInputPortCount
+}
+
+// GetLocalInputPortCountOk returns a tuple with the LocalInputPortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetLocalInputPortCountOk() (*int32, bool) {
+	if o == nil || o.LocalInputPortCount == nil {
+		return nil, false
+	}
+	return o.LocalInputPortCount, true
+}
+
+// HasLocalInputPortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasLocalInputPortCount() bool {
+	if o != nil && o.LocalInputPortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocalInputPortCount gets a reference to the given int32 and assigns it to the LocalInputPortCount field.
+func (o *ProcessGroupDTO) SetLocalInputPortCount(v int32) {
+	o.LocalInputPortCount = &v
+}
+
+// GetLocalOutputPortCount returns the LocalOutputPortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetLocalOutputPortCount() int32 {
+	if o == nil || o.LocalOutputPortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.LocalOutputPortCount
+}
+
+// GetLocalOutputPortCountOk returns a tuple with the LocalOutputPortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetLocalOutputPortCountOk() (*int32, bool) {
+	if o == nil || o.LocalOutputPortCount == nil {
+		return nil, false
+	}
+	return o.LocalOutputPortCount, true
+}
+
+// HasLocalOutputPortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasLocalOutputPortCount() bool {
+	if o != nil && o.LocalOutputPortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLocalOutputPortCount gets a reference to the given int32 and assigns it to the LocalOutputPortCount field.
+func (o *ProcessGroupDTO) SetLocalOutputPortCount(v int32) {
+	o.LocalOutputPortCount = &v
+}
+
+// GetPublicInputPortCount returns the PublicInputPortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetPublicInputPortCount() int32 {
+	if o == nil || o.PublicInputPortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PublicInputPortCount
+}
+
+// GetPublicInputPortCountOk returns a tuple with the PublicInputPortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetPublicInputPortCountOk() (*int32, bool) {
+	if o == nil || o.PublicInputPortCount == nil {
+		return nil, false
+	}
+	return o.PublicInputPortCount, true
+}
+
+// HasPublicInputPortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasPublicInputPortCount() bool {
+	if o != nil && o.PublicInputPortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPublicInputPortCount gets a reference to the given int32 and assigns it to the PublicInputPortCount field.
+func (o *ProcessGroupDTO) SetPublicInputPortCount(v int32) {
+	o.PublicInputPortCount = &v
+}
+
+// GetPublicOutputPortCount returns the PublicOutputPortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetPublicOutputPortCount() int32 {
+	if o == nil || o.PublicOutputPortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.PublicOutputPortCount
+}
+
+// GetPublicOutputPortCountOk returns a tuple with the PublicOutputPortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetPublicOutputPortCountOk() (*int32, bool) {
+	if o == nil || o.PublicOutputPortCount == nil {
+		return nil, false
+	}
+	return o.PublicOutputPortCount, true
+}
+
+// HasPublicOutputPortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasPublicOutputPortCount() bool {
+	if o != nil && o.PublicOutputPortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPublicOutputPortCount gets a reference to the given int32 and assigns it to the PublicOutputPortCount field.
+func (o *ProcessGroupDTO) SetPublicOutputPortCount(v int32) {
+	o.PublicOutputPortCount = &v
+}
+
+// GetContents returns the Contents field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetContents() FlowSnippetDTO {
+	if o == nil || o.Contents == nil {
+		var ret FlowSnippetDTO
+		return ret
+	}
+	return *o.Contents
+}
+
+// GetContentsOk returns a tuple with the Contents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetContentsOk() (*FlowSnippetDTO, bool) {
+	if o == nil || o.Contents == nil {
+		return nil, false
+	}
+	return o.Contents, true
+}
+
+// HasContents returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasContents() bool {
+	if o != nil && o.Contents != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContents gets a reference to the given FlowSnippetDTO and assigns it to the Contents field.
+func (o *ProcessGroupDTO) SetContents(v FlowSnippetDTO) {
+	o.Contents = &v
+}
+
+// GetInputPortCount returns the InputPortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetInputPortCount() int32 {
+	if o == nil || o.InputPortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.InputPortCount
+}
+
+// GetInputPortCountOk returns a tuple with the InputPortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetInputPortCountOk() (*int32, bool) {
+	if o == nil || o.InputPortCount == nil {
+		return nil, false
+	}
+	return o.InputPortCount, true
+}
+
+// HasInputPortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasInputPortCount() bool {
+	if o != nil && o.InputPortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPortCount gets a reference to the given int32 and assigns it to the InputPortCount field.
+func (o *ProcessGroupDTO) SetInputPortCount(v int32) {
+	o.InputPortCount = &v
+}
+
+// GetOutputPortCount returns the OutputPortCount field value if set, zero value otherwise.
+func (o *ProcessGroupDTO) GetOutputPortCount() int32 {
+	if o == nil || o.OutputPortCount == nil {
+		var ret int32
+		return ret
+	}
+	return *o.OutputPortCount
+}
+
+// GetOutputPortCountOk returns a tuple with the OutputPortCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessGroupDTO) GetOutputPortCountOk() (*int32, bool) {
+	if o == nil || o.OutputPortCount == nil {
+		return nil, false
+	}
+	return o.OutputPortCount, true
+}
+
+// HasOutputPortCount returns a boolean if a field has been set.
+func (o *ProcessGroupDTO) HasOutputPortCount() bool {
+	if o != nil && o.OutputPortCount != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPortCount gets a reference to the given int32 and assigns it to the OutputPortCount field.
+func (o *ProcessGroupDTO) SetOutputPortCount(v int32) {
+	o.OutputPortCount = &v
+}
+
+func (o ProcessGroupDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.VersionedComponentId != nil {
+		toSerialize["versionedComponentId"] = o.VersionedComponentId
+	}
+	if o.ParentGroupId != nil {
+		toSerialize["parentGroupId"] = o.ParentGroupId
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Variables != nil {
+		toSerialize["variables"] = o.Variables
+	}
+	if o.VersionControlInformation != nil {
+		toSerialize["versionControlInformation"] = o.VersionControlInformation
+	}
+	if o.ParameterContext != nil {
+		toSerialize["parameterContext"] = o.ParameterContext
+	}
+	if o.FlowfileConcurrency != nil {
+		toSerialize["flowfileConcurrency"] = o.FlowfileConcurrency
+	}
+	if o.FlowfileOutboundPolicy != nil {
+		toSerialize["flowfileOutboundPolicy"] = o.FlowfileOutboundPolicy
+	}
+	if o.RunningCount != nil {
+		toSerialize["runningCount"] = o.RunningCount
+	}
+	if o.StoppedCount != nil {
+		toSerialize["stoppedCount"] = o.StoppedCount
+	}
+	if o.InvalidCount != nil {
+		toSerialize["invalidCount"] = o.InvalidCount
+	}
+	if o.DisabledCount != nil {
+		toSerialize["disabledCount"] = o.DisabledCount
+	}
+	if o.ActiveRemotePortCount != nil {
+		toSerialize["activeRemotePortCount"] = o.ActiveRemotePortCount
+	}
+	if o.InactiveRemotePortCount != nil {
+		toSerialize["inactiveRemotePortCount"] = o.InactiveRemotePortCount
+	}
+	if o.UpToDateCount != nil {
+		toSerialize["upToDateCount"] = o.UpToDateCount
+	}
+	if o.LocallyModifiedCount != nil {
+		toSerialize["locallyModifiedCount"] = o.LocallyModifiedCount
+	}
+	if o.StaleCount != nil {
+		toSerialize["staleCount"] = o.StaleCount
+	}
+	if o.LocallyModifiedAndStaleCount != nil {
+		toSerialize["locallyModifiedAndStaleCount"] = o.LocallyModifiedAndStaleCount
+	}
+	if o.SyncFailureCount != nil {
+		toSerialize["syncFailureCount"] = o.SyncFailureCount
+	}
+	if o.LocalInputPortCount != nil {
+		toSerialize["localInputPortCount"] = o.LocalInputPortCount
+	}
+	if o.LocalOutputPortCount != nil {
+		toSerialize["localOutputPortCount"] = o.LocalOutputPortCount
+	}
+	if o.PublicInputPortCount != nil {
+		toSerialize["publicInputPortCount"] = o.PublicInputPortCount
+	}
+	if o.PublicOutputPortCount != nil {
+		toSerialize["publicOutputPortCount"] = o.PublicOutputPortCount
+	}
+	if o.Contents != nil {
+		toSerialize["contents"] = o.Contents
+	}
+	if o.InputPortCount != nil {
+		toSerialize["inputPortCount"] = o.InputPortCount
+	}
+	if o.OutputPortCount != nil {
+		toSerialize["outputPortCount"] = o.OutputPortCount
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessGroupDTO struct {
+	value *ProcessGroupDTO
+	isSet bool
+}
+
+func (v NullableProcessGroupDTO) Get() *ProcessGroupDTO {
+	return v.value
+}
+
+func (v *NullableProcessGroupDTO) Set(val *ProcessGroupDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessGroupDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessGroupDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessGroupDTO(val *ProcessGroupDTO) *NullableProcessGroupDTO {
+	return &NullableProcessGroupDTO{value: val, isSet: true}
+}
+
+func (v NullableProcessGroupDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessGroupDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // RemoteProcessGroupsApiService RemoteProcessGroupsApi service
 type RemoteProcessGroupsApiService service
 
+type RemoteProcessGroupsApiApiGetRemoteProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+}
+
+func (r RemoteProcessGroupsApiApiGetRemoteProcessGroupRequest) Execute() (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetRemoteProcessGroupExecute(r)
+}
+
 /*
-GetRemoteProcessGroup Gets a remote process group
+ * GetRemoteProcessGroup Gets a remote process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
-@return RemoteProcessGroupEntity
-*/
-func (a *RemoteProcessGroupsApiService) GetRemoteProcessGroup(ctx _context.Context, id string) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiGetRemoteProcessGroupRequest
+ */
+func (a *RemoteProcessGroupsApiService) GetRemoteProcessGroup(ctx _context.Context, id string) RemoteProcessGroupsApiApiGetRemoteProcessGroupRequest {
+	return RemoteProcessGroupsApiApiGetRemoteProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupEntity
+ */
+func (a *RemoteProcessGroupsApiService) GetRemoteProcessGroupExecute(r RemoteProcessGroupsApiApiGetRemoteProcessGroupRequest) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *RemoteProcessGroupsApiService) GetRemoteProcessGroup(ctx _context.Conte
 		localVarReturnValue  RemoteProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.GetRemoteProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/remote-process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *RemoteProcessGroupsApiService) GetRemoteProcessGroup(ctx _context.Conte
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,13 +132,35 @@ func (a *RemoteProcessGroupsApiService) GetRemoteProcessGroup(ctx _context.Conte
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiGetStateRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+}
+
+func (r RemoteProcessGroupsApiApiGetStateRequest) Execute() (ComponentStateEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetStateExecute(r)
+}
+
 /*
-GetState Gets the state for a RemoteProcessGroup
+ * GetState Gets the state for a RemoteProcessGroup
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return ComponentStateEntity
-*/
-func (a *RemoteProcessGroupsApiService) GetState(ctx _context.Context, id string) (ComponentStateEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiGetStateRequest
+ */
+func (a *RemoteProcessGroupsApiService) GetState(ctx _context.Context, id string) RemoteProcessGroupsApiApiGetStateRequest {
+	return RemoteProcessGroupsApiApiGetStateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ComponentStateEntity
+ */
+func (a *RemoteProcessGroupsApiService) GetStateExecute(r RemoteProcessGroupsApiApiGetStateRequest) (ComponentStateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -121,9 +170,13 @@ func (a *RemoteProcessGroupsApiService) GetState(ctx _context.Context, id string
 		localVarReturnValue  ComponentStateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}/state"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.GetState")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/remote-process-groups/{id}/state"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -146,18 +199,19 @@ func (a *RemoteProcessGroupsApiService) GetState(ctx _context.Context, id string
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -182,24 +236,51 @@ func (a *RemoteProcessGroupsApiService) GetState(ctx _context.Context, id string
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// RemoteProcessGroupsApiRemoveRemoteProcessGroupOpts Optional parameters for the method 'RemoveRemoteProcessGroup'
-type RemoteProcessGroupsApiRemoveRemoteProcessGroupOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest struct {
+	ctx                          _context.Context
+	ApiService                   *RemoteProcessGroupsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest) Version(version string) RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest {
+	r.version = &version
+	return r
+}
+func (r RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest) ClientId(clientId string) RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest) Execute() (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.RemoveRemoteProcessGroupExecute(r)
 }
 
 /*
-RemoveRemoteProcessGroup Deletes a remote process group
+ * RemoveRemoteProcessGroup Deletes a remote process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
- * @param optional nil or *RemoteProcessGroupsApiRemoveRemoteProcessGroupOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return RemoteProcessGroupEntity
-*/
-func (a *RemoteProcessGroupsApiService) RemoveRemoteProcessGroup(ctx _context.Context, id string, localVarOptionals *RemoteProcessGroupsApiRemoveRemoteProcessGroupOpts) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest
+ */
+func (a *RemoteProcessGroupsApiService) RemoveRemoteProcessGroup(ctx _context.Context, id string) RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest {
+	return RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupEntity
+ */
+func (a *RemoteProcessGroupsApiService) RemoveRemoteProcessGroupExecute(r RemoteProcessGroupsApiApiRemoveRemoteProcessGroupRequest) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -209,22 +290,26 @@ func (a *RemoteProcessGroupsApiService) RemoveRemoteProcessGroup(ctx _context.Co
 		localVarReturnValue  RemoteProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.RemoveRemoteProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/remote-process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -243,18 +328,19 @@ func (a *RemoteProcessGroupsApiService) RemoveRemoteProcessGroup(ctx _context.Co
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -279,14 +365,41 @@ func (a *RemoteProcessGroupsApiService) RemoveRemoteProcessGroup(ctx _context.Co
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+	body       *RemoteProcessGroupEntity
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest) Body(body RemoteProcessGroupEntity) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest {
+	r.body = &body
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest) Execute() (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRemoteProcessGroupExecute(r)
+}
+
 /*
-UpdateRemoteProcessGroup Updates a remote process group
+ * UpdateRemoteProcessGroup Updates a remote process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
- * @param body The remote process group.
-@return RemoteProcessGroupEntity
-*/
-func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroup(ctx _context.Context, id string, body RemoteProcessGroupEntity) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroup(ctx _context.Context, id string) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest {
+	return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupEntity
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupExecute(r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRequest) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -296,13 +409,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroup(ctx _context.Co
 		localVarReturnValue  RemoteProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.UpdateRemoteProcessGroup")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/remote-process-groups/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -322,19 +442,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroup(ctx _context.Co
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -359,16 +480,45 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroup(ctx _context.Co
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+	portId     string
+	body       *RemoteProcessGroupPortEntity
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest) Body(body RemoteProcessGroupPortEntity) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest {
+	r.body = &body
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest) Execute() (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRemoteProcessGroupInputPortExecute(r)
+}
+
 /*
-UpdateRemoteProcessGroupInputPort Updates a remote port
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateRemoteProcessGroupInputPort Updates a remote port
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
  * @param portId The remote process group port id.
- * @param body The remote process group port.
-@return RemoteProcessGroupPortEntity
-*/
-func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPort(ctx _context.Context, id string, portId string, body RemoteProcessGroupPortEntity) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPort(ctx _context.Context, id string, portId string) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest {
+	return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		portId:     portId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupPortEntity
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortExecute(r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRequest) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -378,15 +528,21 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPort(ctx _c
 		localVarReturnValue  RemoteProcessGroupPortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}/input-ports/{port-id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.UpdateRemoteProcessGroupInputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localVarPath := localBasePath + "/remote-process-groups/{id}/input-ports/{port-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -406,19 +562,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPort(ctx _c
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -443,16 +600,45 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPort(ctx _c
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+	portId     string
+	body       *RemotePortRunStatusEntity
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest) Body(body RemotePortRunStatusEntity) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest {
+	r.body = &body
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest) Execute() (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRemoteProcessGroupInputPortRunStatusExecute(r)
+}
+
 /*
-UpdateRemoteProcessGroupInputPortRunStatus Updates run status of a remote port
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateRemoteProcessGroupInputPortRunStatus Updates run status of a remote port
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
  * @param portId The remote process group port id.
- * @param body The remote process group port.
-@return RemoteProcessGroupPortEntity
-*/
-func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortRunStatus(ctx _context.Context, id string, portId string, body RemotePortRunStatusEntity) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortRunStatus(ctx _context.Context, id string, portId string) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest {
+	return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		portId:     portId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupPortEntity
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortRunStatusExecute(r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupInputPortRunStatusRequest) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -462,15 +648,21 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortRunStat
 		localVarReturnValue  RemoteProcessGroupPortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}/input-ports/{port-id}/run-status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.UpdateRemoteProcessGroupInputPortRunStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localVarPath := localBasePath + "/remote-process-groups/{id}/input-ports/{port-id}/run-status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -490,19 +682,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortRunStat
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -527,16 +720,45 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupInputPortRunStat
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+	portId     string
+	body       *RemoteProcessGroupPortEntity
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest) Body(body RemoteProcessGroupPortEntity) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest {
+	r.body = &body
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest) Execute() (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRemoteProcessGroupOutputPortExecute(r)
+}
+
 /*
-UpdateRemoteProcessGroupOutputPort Updates a remote port
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateRemoteProcessGroupOutputPort Updates a remote port
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
  * @param portId The remote process group port id.
- * @param body The remote process group port.
-@return RemoteProcessGroupPortEntity
-*/
-func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPort(ctx _context.Context, id string, portId string, body RemoteProcessGroupPortEntity) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPort(ctx _context.Context, id string, portId string) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest {
+	return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		portId:     portId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupPortEntity
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortExecute(r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRequest) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -546,15 +768,21 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPort(ctx _
 		localVarReturnValue  RemoteProcessGroupPortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}/output-ports/{port-id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.UpdateRemoteProcessGroupOutputPort")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localVarPath := localBasePath + "/remote-process-groups/{id}/output-ports/{port-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -574,19 +802,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPort(ctx _
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -611,16 +840,45 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPort(ctx _
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+	portId     string
+	body       *RemotePortRunStatusEntity
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest) Body(body RemotePortRunStatusEntity) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest {
+	r.body = &body
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest) Execute() (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRemoteProcessGroupOutputPortRunStatusExecute(r)
+}
+
 /*
-UpdateRemoteProcessGroupOutputPortRunStatus Updates run status of a remote port
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * UpdateRemoteProcessGroupOutputPortRunStatus Updates run status of a remote port
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
  * @param portId The remote process group port id.
- * @param body The remote process group port.
-@return RemoteProcessGroupPortEntity
-*/
-func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortRunStatus(ctx _context.Context, id string, portId string, body RemotePortRunStatusEntity) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortRunStatus(ctx _context.Context, id string, portId string) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest {
+	return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		portId:     portId,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupPortEntity
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortRunStatusExecute(r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupOutputPortRunStatusRequest) (RemoteProcessGroupPortEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -630,15 +888,21 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortRunSta
 		localVarReturnValue  RemoteProcessGroupPortEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}/output-ports/{port-id}/run-status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.UpdateRemoteProcessGroupOutputPortRunStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
 
-	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.QueryEscape(parameterToString(portId, "")), -1)
+	localVarPath := localBasePath + "/remote-process-groups/{id}/output-ports/{port-id}/run-status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"port-id"+"}", _neturl.PathEscape(parameterToString(r.portId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -658,19 +922,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortRunSta
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -695,14 +960,41 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupOutputPortRunSta
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest struct {
+	ctx        _context.Context
+	ApiService *RemoteProcessGroupsApiService
+	id         string
+	body       *RemotePortRunStatusEntity
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest) Body(body RemotePortRunStatusEntity) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest {
+	r.body = &body
+	return r
+}
+
+func (r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest) Execute() (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRemoteProcessGroupRunStatusExecute(r)
+}
+
 /*
-UpdateRemoteProcessGroupRunStatus Updates run status of a remote process group
+ * UpdateRemoteProcessGroupRunStatus Updates run status of a remote process group
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The remote process group id.
- * @param body The remote process group run status.
-@return RemoteProcessGroupEntity
-*/
-func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupRunStatus(ctx _context.Context, id string, body RemotePortRunStatusEntity) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
+ * @return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupRunStatus(ctx _context.Context, id string) RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest {
+	return RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return RemoteProcessGroupEntity
+ */
+func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupRunStatusExecute(r RemoteProcessGroupsApiApiUpdateRemoteProcessGroupRunStatusRequest) (RemoteProcessGroupEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -712,13 +1004,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupRunStatus(ctx _c
 		localVarReturnValue  RemoteProcessGroupEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/remote-process-groups/{id}/run-status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RemoteProcessGroupsApiService.UpdateRemoteProcessGroupRunStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/remote-process-groups/{id}/run-status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -738,19 +1037,20 @@ func (a *RemoteProcessGroupsApiService) UpdateRemoteProcessGroupRunStatus(ctx _c
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

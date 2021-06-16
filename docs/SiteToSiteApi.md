@@ -11,13 +11,44 @@ Method | HTTP request | Description
 
 ## GetPeers
 
-> PeersEntity GetPeers(ctx, )
+> PeersEntity GetPeers(ctx).Execute()
 
 Returns the available Peers and its status of this NiFi
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.SiteToSiteApi.GetPeers(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SiteToSiteApi.GetPeers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetPeers`: PeersEntity
+    fmt.Fprintf(os.Stdout, "Response from `SiteToSiteApi.GetPeers`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetPeersRequest struct via the builder pattern
+
 
 ### Return type
 
@@ -39,13 +70,44 @@ No authorization required
 
 ## GetSiteToSiteDetails
 
-> ControllerEntity GetSiteToSiteDetails(ctx, )
+> ControllerEntity GetSiteToSiteDetails(ctx).Execute()
 
 Returns the details about this NiFi necessary to communicate via site to site
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.SiteToSiteApi.GetSiteToSiteDetails(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SiteToSiteApi.GetSiteToSiteDetails``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetSiteToSiteDetails`: ControllerEntity
+    fmt.Fprintf(os.Stdout, "Response from `SiteToSiteApi.GetSiteToSiteDetails`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetSiteToSiteDetailsRequest struct via the builder pattern
+
 
 ### Return type
 

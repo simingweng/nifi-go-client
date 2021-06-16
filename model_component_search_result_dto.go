@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,16 +11,288 @@
 
 package nifi
 
-// ComponentSearchResultDto struct for ComponentSearchResultDto
-type ComponentSearchResultDto struct {
+import (
+	"encoding/json"
+)
+
+// ComponentSearchResultDTO struct for ComponentSearchResultDTO
+type ComponentSearchResultDTO struct {
 	// The id of the component that matched the search.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The group id of the component that matched the search.
-	GroupId        string               `json:"groupId,omitempty"`
-	ParentGroup    SearchResultGroupDto `json:"parentGroup,omitempty"`
-	VersionedGroup SearchResultGroupDto `json:"versionedGroup,omitempty"`
+	GroupId        *string               `json:"groupId,omitempty"`
+	ParentGroup    *SearchResultGroupDTO `json:"parentGroup,omitempty"`
+	VersionedGroup *SearchResultGroupDTO `json:"versionedGroup,omitempty"`
 	// The name of the component that matched the search.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// What matched the search from the component.
-	Matches []string `json:"matches,omitempty"`
+	Matches *[]string `json:"matches,omitempty"`
+}
+
+// NewComponentSearchResultDTO instantiates a new ComponentSearchResultDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewComponentSearchResultDTO() *ComponentSearchResultDTO {
+	this := ComponentSearchResultDTO{}
+	return &this
+}
+
+// NewComponentSearchResultDTOWithDefaults instantiates a new ComponentSearchResultDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewComponentSearchResultDTOWithDefaults() *ComponentSearchResultDTO {
+	this := ComponentSearchResultDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ComponentSearchResultDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentSearchResultDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ComponentSearchResultDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ComponentSearchResultDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *ComponentSearchResultDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentSearchResultDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *ComponentSearchResultDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *ComponentSearchResultDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetParentGroup returns the ParentGroup field value if set, zero value otherwise.
+func (o *ComponentSearchResultDTO) GetParentGroup() SearchResultGroupDTO {
+	if o == nil || o.ParentGroup == nil {
+		var ret SearchResultGroupDTO
+		return ret
+	}
+	return *o.ParentGroup
+}
+
+// GetParentGroupOk returns a tuple with the ParentGroup field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentSearchResultDTO) GetParentGroupOk() (*SearchResultGroupDTO, bool) {
+	if o == nil || o.ParentGroup == nil {
+		return nil, false
+	}
+	return o.ParentGroup, true
+}
+
+// HasParentGroup returns a boolean if a field has been set.
+func (o *ComponentSearchResultDTO) HasParentGroup() bool {
+	if o != nil && o.ParentGroup != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentGroup gets a reference to the given SearchResultGroupDTO and assigns it to the ParentGroup field.
+func (o *ComponentSearchResultDTO) SetParentGroup(v SearchResultGroupDTO) {
+	o.ParentGroup = &v
+}
+
+// GetVersionedGroup returns the VersionedGroup field value if set, zero value otherwise.
+func (o *ComponentSearchResultDTO) GetVersionedGroup() SearchResultGroupDTO {
+	if o == nil || o.VersionedGroup == nil {
+		var ret SearchResultGroupDTO
+		return ret
+	}
+	return *o.VersionedGroup
+}
+
+// GetVersionedGroupOk returns a tuple with the VersionedGroup field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentSearchResultDTO) GetVersionedGroupOk() (*SearchResultGroupDTO, bool) {
+	if o == nil || o.VersionedGroup == nil {
+		return nil, false
+	}
+	return o.VersionedGroup, true
+}
+
+// HasVersionedGroup returns a boolean if a field has been set.
+func (o *ComponentSearchResultDTO) HasVersionedGroup() bool {
+	if o != nil && o.VersionedGroup != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedGroup gets a reference to the given SearchResultGroupDTO and assigns it to the VersionedGroup field.
+func (o *ComponentSearchResultDTO) SetVersionedGroup(v SearchResultGroupDTO) {
+	o.VersionedGroup = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *ComponentSearchResultDTO) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentSearchResultDTO) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *ComponentSearchResultDTO) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *ComponentSearchResultDTO) SetName(v string) {
+	o.Name = &v
+}
+
+// GetMatches returns the Matches field value if set, zero value otherwise.
+func (o *ComponentSearchResultDTO) GetMatches() []string {
+	if o == nil || o.Matches == nil {
+		var ret []string
+		return ret
+	}
+	return *o.Matches
+}
+
+// GetMatchesOk returns a tuple with the Matches field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ComponentSearchResultDTO) GetMatchesOk() (*[]string, bool) {
+	if o == nil || o.Matches == nil {
+		return nil, false
+	}
+	return o.Matches, true
+}
+
+// HasMatches returns a boolean if a field has been set.
+func (o *ComponentSearchResultDTO) HasMatches() bool {
+	if o != nil && o.Matches != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetMatches gets a reference to the given []string and assigns it to the Matches field.
+func (o *ComponentSearchResultDTO) SetMatches(v []string) {
+	o.Matches = &v
+}
+
+func (o ComponentSearchResultDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.ParentGroup != nil {
+		toSerialize["parentGroup"] = o.ParentGroup
+	}
+	if o.VersionedGroup != nil {
+		toSerialize["versionedGroup"] = o.VersionedGroup
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Matches != nil {
+		toSerialize["matches"] = o.Matches
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableComponentSearchResultDTO struct {
+	value *ComponentSearchResultDTO
+	isSet bool
+}
+
+func (v NullableComponentSearchResultDTO) Get() *ComponentSearchResultDTO {
+	return v.value
+}
+
+func (v *NullableComponentSearchResultDTO) Set(val *ComponentSearchResultDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableComponentSearchResultDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableComponentSearchResultDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableComponentSearchResultDTO(val *ComponentSearchResultDTO) *NullableComponentSearchResultDTO {
+	return &NullableComponentSearchResultDTO{value: val, isSet: true}
+}
+
+func (v NullableComponentSearchResultDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableComponentSearchResultDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

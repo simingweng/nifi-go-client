@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,18 +11,360 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // TenantEntity struct for TenantEntity
 type TenantEntity struct {
-	Revision RevisionDto `json:"revision,omitempty"`
+	Revision *RevisionDTO `json:"revision,omitempty"`
 	// The id of the component.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The URI for futures requests to the component.
-	Uri         string         `json:"uri,omitempty"`
-	Position    PositionDto    `json:"position,omitempty"`
-	Permissions PermissionsDto `json:"permissions,omitempty"`
+	Uri         *string         `json:"uri,omitempty"`
+	Position    *PositionDTO    `json:"position,omitempty"`
+	Permissions *PermissionsDTO `json:"permissions,omitempty"`
 	// The bulletins for this component.
-	Bulletins []BulletinEntity `json:"bulletins,omitempty"`
+	Bulletins *[]BulletinEntity `json:"bulletins,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool      `json:"disconnectedNodeAcknowledged,omitempty"`
-	Component                    TenantDto `json:"component,omitempty"`
+	DisconnectedNodeAcknowledged *bool      `json:"disconnectedNodeAcknowledged,omitempty"`
+	Component                    *TenantDTO `json:"component,omitempty"`
+}
+
+// NewTenantEntity instantiates a new TenantEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewTenantEntity() *TenantEntity {
+	this := TenantEntity{}
+	return &this
+}
+
+// NewTenantEntityWithDefaults instantiates a new TenantEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewTenantEntityWithDefaults() *TenantEntity {
+	this := TenantEntity{}
+	return &this
+}
+
+// GetRevision returns the Revision field value if set, zero value otherwise.
+func (o *TenantEntity) GetRevision() RevisionDTO {
+	if o == nil || o.Revision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.Revision
+}
+
+// GetRevisionOk returns a tuple with the Revision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.Revision == nil {
+		return nil, false
+	}
+	return o.Revision, true
+}
+
+// HasRevision returns a boolean if a field has been set.
+func (o *TenantEntity) HasRevision() bool {
+	if o != nil && o.Revision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRevision gets a reference to the given RevisionDTO and assigns it to the Revision field.
+func (o *TenantEntity) SetRevision(v RevisionDTO) {
+	o.Revision = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *TenantEntity) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *TenantEntity) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *TenantEntity) SetId(v string) {
+	o.Id = &v
+}
+
+// GetUri returns the Uri field value if set, zero value otherwise.
+func (o *TenantEntity) GetUri() string {
+	if o == nil || o.Uri == nil {
+		var ret string
+		return ret
+	}
+	return *o.Uri
+}
+
+// GetUriOk returns a tuple with the Uri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetUriOk() (*string, bool) {
+	if o == nil || o.Uri == nil {
+		return nil, false
+	}
+	return o.Uri, true
+}
+
+// HasUri returns a boolean if a field has been set.
+func (o *TenantEntity) HasUri() bool {
+	if o != nil && o.Uri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUri gets a reference to the given string and assigns it to the Uri field.
+func (o *TenantEntity) SetUri(v string) {
+	o.Uri = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *TenantEntity) GetPosition() PositionDTO {
+	if o == nil || o.Position == nil {
+		var ret PositionDTO
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetPositionOk() (*PositionDTO, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *TenantEntity) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given PositionDTO and assigns it to the Position field.
+func (o *TenantEntity) SetPosition(v PositionDTO) {
+	o.Position = &v
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *TenantEntity) GetPermissions() PermissionsDTO {
+	if o == nil || o.Permissions == nil {
+		var ret PermissionsDTO
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetPermissionsOk() (*PermissionsDTO, bool) {
+	if o == nil || o.Permissions == nil {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *TenantEntity) HasPermissions() bool {
+	if o != nil && o.Permissions != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given PermissionsDTO and assigns it to the Permissions field.
+func (o *TenantEntity) SetPermissions(v PermissionsDTO) {
+	o.Permissions = &v
+}
+
+// GetBulletins returns the Bulletins field value if set, zero value otherwise.
+func (o *TenantEntity) GetBulletins() []BulletinEntity {
+	if o == nil || o.Bulletins == nil {
+		var ret []BulletinEntity
+		return ret
+	}
+	return *o.Bulletins
+}
+
+// GetBulletinsOk returns a tuple with the Bulletins field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetBulletinsOk() (*[]BulletinEntity, bool) {
+	if o == nil || o.Bulletins == nil {
+		return nil, false
+	}
+	return o.Bulletins, true
+}
+
+// HasBulletins returns a boolean if a field has been set.
+func (o *TenantEntity) HasBulletins() bool {
+	if o != nil && o.Bulletins != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetBulletins gets a reference to the given []BulletinEntity and assigns it to the Bulletins field.
+func (o *TenantEntity) SetBulletins(v []BulletinEntity) {
+	o.Bulletins = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *TenantEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *TenantEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *TenantEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+// GetComponent returns the Component field value if set, zero value otherwise.
+func (o *TenantEntity) GetComponent() TenantDTO {
+	if o == nil || o.Component == nil {
+		var ret TenantDTO
+		return ret
+	}
+	return *o.Component
+}
+
+// GetComponentOk returns a tuple with the Component field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TenantEntity) GetComponentOk() (*TenantDTO, bool) {
+	if o == nil || o.Component == nil {
+		return nil, false
+	}
+	return o.Component, true
+}
+
+// HasComponent returns a boolean if a field has been set.
+func (o *TenantEntity) HasComponent() bool {
+	if o != nil && o.Component != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponent gets a reference to the given TenantDTO and assigns it to the Component field.
+func (o *TenantEntity) SetComponent(v TenantDTO) {
+	o.Component = &v
+}
+
+func (o TenantEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Revision != nil {
+		toSerialize["revision"] = o.Revision
+	}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Uri != nil {
+		toSerialize["uri"] = o.Uri
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.Permissions != nil {
+		toSerialize["permissions"] = o.Permissions
+	}
+	if o.Bulletins != nil {
+		toSerialize["bulletins"] = o.Bulletins
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	if o.Component != nil {
+		toSerialize["component"] = o.Component
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableTenantEntity struct {
+	value *TenantEntity
+	isSet bool
+}
+
+func (v NullableTenantEntity) Get() *TenantEntity {
+	return v.value
+}
+
+func (v *NullableTenantEntity) Set(val *TenantEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableTenantEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableTenantEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableTenantEntity(val *TenantEntity) *NullableTenantEntity {
+	return &NullableTenantEntity{value: val, isSet: true}
+}
+
+func (v NullableTenantEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableTenantEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

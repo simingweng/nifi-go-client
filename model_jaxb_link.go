@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // JaxbLink struct for JaxbLink
 type JaxbLink struct {
 	// The href for the link
-	Href string `json:"href,omitempty"`
+	Href *string `json:"href,omitempty"`
 	// The params for the link
-	Params map[string]string `json:"params,omitempty"`
+	Params *map[string]string `json:"params,omitempty"`
+}
+
+// NewJaxbLink instantiates a new JaxbLink object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewJaxbLink() *JaxbLink {
+	this := JaxbLink{}
+	return &this
+}
+
+// NewJaxbLinkWithDefaults instantiates a new JaxbLink object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewJaxbLinkWithDefaults() *JaxbLink {
+	this := JaxbLink{}
+	return &this
+}
+
+// GetHref returns the Href field value if set, zero value otherwise.
+func (o *JaxbLink) GetHref() string {
+	if o == nil || o.Href == nil {
+		var ret string
+		return ret
+	}
+	return *o.Href
+}
+
+// GetHrefOk returns a tuple with the Href field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *JaxbLink) GetHrefOk() (*string, bool) {
+	if o == nil || o.Href == nil {
+		return nil, false
+	}
+	return o.Href, true
+}
+
+// HasHref returns a boolean if a field has been set.
+func (o *JaxbLink) HasHref() bool {
+	if o != nil && o.Href != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHref gets a reference to the given string and assigns it to the Href field.
+func (o *JaxbLink) SetHref(v string) {
+	o.Href = &v
+}
+
+// GetParams returns the Params field value if set, zero value otherwise.
+func (o *JaxbLink) GetParams() map[string]string {
+	if o == nil || o.Params == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Params
+}
+
+// GetParamsOk returns a tuple with the Params field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *JaxbLink) GetParamsOk() (*map[string]string, bool) {
+	if o == nil || o.Params == nil {
+		return nil, false
+	}
+	return o.Params, true
+}
+
+// HasParams returns a boolean if a field has been set.
+func (o *JaxbLink) HasParams() bool {
+	if o != nil && o.Params != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParams gets a reference to the given map[string]string and assigns it to the Params field.
+func (o *JaxbLink) SetParams(v map[string]string) {
+	o.Params = &v
+}
+
+func (o JaxbLink) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Href != nil {
+		toSerialize["href"] = o.Href
+	}
+	if o.Params != nil {
+		toSerialize["params"] = o.Params
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableJaxbLink struct {
+	value *JaxbLink
+	isSet bool
+}
+
+func (v NullableJaxbLink) Get() *JaxbLink {
+	return v.value
+}
+
+func (v *NullableJaxbLink) Set(val *JaxbLink) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableJaxbLink) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableJaxbLink) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableJaxbLink(val *JaxbLink) *NullableJaxbLink {
+	return &NullableJaxbLink{value: val, isSet: true}
+}
+
+func (v NullableJaxbLink) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableJaxbLink) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

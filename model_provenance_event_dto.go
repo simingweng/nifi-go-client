@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,88 +11,1585 @@
 
 package nifi
 
-// ProvenanceEventDto struct for ProvenanceEventDto
-type ProvenanceEventDto struct {
+import (
+	"encoding/json"
+)
+
+// ProvenanceEventDTO struct for ProvenanceEventDTO
+type ProvenanceEventDTO struct {
 	// The event uuid.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The event id. This is a one up number thats unique per node.
-	EventId int64 `json:"eventId,omitempty"`
+	EventId *int64 `json:"eventId,omitempty"`
 	// The timestamp of the event.
-	EventTime string `json:"eventTime,omitempty"`
+	EventTime *string `json:"eventTime,omitempty"`
 	// The event duration in milliseconds.
-	EventDuration int64 `json:"eventDuration,omitempty"`
+	EventDuration *int64 `json:"eventDuration,omitempty"`
 	// The duration since the lineage began, in milliseconds.
-	LineageDuration int64 `json:"lineageDuration,omitempty"`
+	LineageDuration *int64 `json:"lineageDuration,omitempty"`
 	// The type of the event.
-	EventType string `json:"eventType,omitempty"`
+	EventType *string `json:"eventType,omitempty"`
 	// The uuid of the flowfile for the event.
-	FlowFileUuid string `json:"flowFileUuid,omitempty"`
+	FlowFileUuid *string `json:"flowFileUuid,omitempty"`
 	// The size of the flowfile for the event.
-	FileSize string `json:"fileSize,omitempty"`
+	FileSize *string `json:"fileSize,omitempty"`
 	// The size of the flowfile in bytes for the event.
-	FileSizeBytes int64 `json:"fileSizeBytes,omitempty"`
+	FileSizeBytes *int64 `json:"fileSizeBytes,omitempty"`
 	// The identifier for the node where the event originated.
-	ClusterNodeId string `json:"clusterNodeId,omitempty"`
+	ClusterNodeId *string `json:"clusterNodeId,omitempty"`
 	// The label for the node where the event originated.
-	ClusterNodeAddress string `json:"clusterNodeAddress,omitempty"`
+	ClusterNodeAddress *string `json:"clusterNodeAddress,omitempty"`
 	// The id of the group that the component resides in. If the component is no longer in the flow, the group id will not be set.
-	GroupId string `json:"groupId,omitempty"`
+	GroupId *string `json:"groupId,omitempty"`
 	// The id of the component that generated the event.
-	ComponentId string `json:"componentId,omitempty"`
+	ComponentId *string `json:"componentId,omitempty"`
 	// The type of the component that generated the event.
-	ComponentType string `json:"componentType,omitempty"`
+	ComponentType *string `json:"componentType,omitempty"`
 	// The name of the component that generated the event.
-	ComponentName string `json:"componentName,omitempty"`
+	ComponentName *string `json:"componentName,omitempty"`
 	// The source system flowfile id.
-	SourceSystemFlowFileId string `json:"sourceSystemFlowFileId,omitempty"`
+	SourceSystemFlowFileId *string `json:"sourceSystemFlowFileId,omitempty"`
 	// The alternate identifier uri for the fileflow for the event.
-	AlternateIdentifierUri string `json:"alternateIdentifierUri,omitempty"`
+	AlternateIdentifierUri *string `json:"alternateIdentifierUri,omitempty"`
 	// The attributes of the flowfile for the event.
-	Attributes []AttributeDto `json:"attributes,omitempty"`
+	Attributes *[]AttributeDTO `json:"attributes,omitempty"`
 	// The parent uuids for the event.
-	ParentUuids []string `json:"parentUuids,omitempty"`
+	ParentUuids *[]string `json:"parentUuids,omitempty"`
 	// The child uuids for the event.
-	ChildUuids []string `json:"childUuids,omitempty"`
+	ChildUuids *[]string `json:"childUuids,omitempty"`
 	// The source/destination system uri if the event was a RECEIVE/SEND.
-	TransitUri string `json:"transitUri,omitempty"`
+	TransitUri *string `json:"transitUri,omitempty"`
 	// The relationship to which the flowfile was routed if the event is of type ROUTE.
-	Relationship string `json:"relationship,omitempty"`
+	Relationship *string `json:"relationship,omitempty"`
 	// The event details.
-	Details string `json:"details,omitempty"`
+	Details *string `json:"details,omitempty"`
 	// Whether the input and output content claim is the same.
-	ContentEqual bool `json:"contentEqual,omitempty"`
+	ContentEqual *bool `json:"contentEqual,omitempty"`
 	// Whether the input content is still available.
-	InputContentAvailable bool `json:"inputContentAvailable,omitempty"`
+	InputContentAvailable *bool `json:"inputContentAvailable,omitempty"`
 	// The section in which the input content claim lives.
-	InputContentClaimSection string `json:"inputContentClaimSection,omitempty"`
+	InputContentClaimSection *string `json:"inputContentClaimSection,omitempty"`
 	// The container in which the input content claim lives.
-	InputContentClaimContainer string `json:"inputContentClaimContainer,omitempty"`
+	InputContentClaimContainer *string `json:"inputContentClaimContainer,omitempty"`
 	// The identifier of the input content claim.
-	InputContentClaimIdentifier string `json:"inputContentClaimIdentifier,omitempty"`
+	InputContentClaimIdentifier *string `json:"inputContentClaimIdentifier,omitempty"`
 	// The offset into the input content claim where the flowfiles content begins.
-	InputContentClaimOffset int64 `json:"inputContentClaimOffset,omitempty"`
+	InputContentClaimOffset *int64 `json:"inputContentClaimOffset,omitempty"`
 	// The file size of the input content claim formatted.
-	InputContentClaimFileSize string `json:"inputContentClaimFileSize,omitempty"`
+	InputContentClaimFileSize *string `json:"inputContentClaimFileSize,omitempty"`
 	// The file size of the intput content claim in bytes.
-	InputContentClaimFileSizeBytes int64 `json:"inputContentClaimFileSizeBytes,omitempty"`
+	InputContentClaimFileSizeBytes *int64 `json:"inputContentClaimFileSizeBytes,omitempty"`
 	// Whether the output content is still available.
-	OutputContentAvailable bool `json:"outputContentAvailable,omitempty"`
+	OutputContentAvailable *bool `json:"outputContentAvailable,omitempty"`
 	// The section in which the output content claim lives.
-	OutputContentClaimSection string `json:"outputContentClaimSection,omitempty"`
+	OutputContentClaimSection *string `json:"outputContentClaimSection,omitempty"`
 	// The container in which the output content claim lives.
-	OutputContentClaimContainer string `json:"outputContentClaimContainer,omitempty"`
+	OutputContentClaimContainer *string `json:"outputContentClaimContainer,omitempty"`
 	// The identifier of the output content claim.
-	OutputContentClaimIdentifier string `json:"outputContentClaimIdentifier,omitempty"`
+	OutputContentClaimIdentifier *string `json:"outputContentClaimIdentifier,omitempty"`
 	// The offset into the output content claim where the flowfiles content begins.
-	OutputContentClaimOffset int64 `json:"outputContentClaimOffset,omitempty"`
+	OutputContentClaimOffset *int64 `json:"outputContentClaimOffset,omitempty"`
 	// The file size of the output content claim formatted.
-	OutputContentClaimFileSize string `json:"outputContentClaimFileSize,omitempty"`
+	OutputContentClaimFileSize *string `json:"outputContentClaimFileSize,omitempty"`
 	// The file size of the output content claim in bytes.
-	OutputContentClaimFileSizeBytes int64 `json:"outputContentClaimFileSizeBytes,omitempty"`
+	OutputContentClaimFileSizeBytes *int64 `json:"outputContentClaimFileSizeBytes,omitempty"`
 	// Whether or not replay is available.
-	ReplayAvailable bool `json:"replayAvailable,omitempty"`
+	ReplayAvailable *bool `json:"replayAvailable,omitempty"`
 	// Explanation as to why replay is unavailable.
-	ReplayExplanation string `json:"replayExplanation,omitempty"`
+	ReplayExplanation *string `json:"replayExplanation,omitempty"`
 	// The identifier of the queue/connection from which the flowfile was pulled to genereate this event. May be null if the queue/connection is unknown or the flowfile was generated from this event.
-	SourceConnectionIdentifier string `json:"sourceConnectionIdentifier,omitempty"`
+	SourceConnectionIdentifier *string `json:"sourceConnectionIdentifier,omitempty"`
+}
+
+// NewProvenanceEventDTO instantiates a new ProvenanceEventDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProvenanceEventDTO() *ProvenanceEventDTO {
+	this := ProvenanceEventDTO{}
+	return &this
+}
+
+// NewProvenanceEventDTOWithDefaults instantiates a new ProvenanceEventDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProvenanceEventDTOWithDefaults() *ProvenanceEventDTO {
+	this := ProvenanceEventDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *ProvenanceEventDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetEventId returns the EventId field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetEventId() int64 {
+	if o == nil || o.EventId == nil {
+		var ret int64
+		return ret
+	}
+	return *o.EventId
+}
+
+// GetEventIdOk returns a tuple with the EventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetEventIdOk() (*int64, bool) {
+	if o == nil || o.EventId == nil {
+		return nil, false
+	}
+	return o.EventId, true
+}
+
+// HasEventId returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasEventId() bool {
+	if o != nil && o.EventId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventId gets a reference to the given int64 and assigns it to the EventId field.
+func (o *ProvenanceEventDTO) SetEventId(v int64) {
+	o.EventId = &v
+}
+
+// GetEventTime returns the EventTime field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetEventTime() string {
+	if o == nil || o.EventTime == nil {
+		var ret string
+		return ret
+	}
+	return *o.EventTime
+}
+
+// GetEventTimeOk returns a tuple with the EventTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetEventTimeOk() (*string, bool) {
+	if o == nil || o.EventTime == nil {
+		return nil, false
+	}
+	return o.EventTime, true
+}
+
+// HasEventTime returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasEventTime() bool {
+	if o != nil && o.EventTime != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventTime gets a reference to the given string and assigns it to the EventTime field.
+func (o *ProvenanceEventDTO) SetEventTime(v string) {
+	o.EventTime = &v
+}
+
+// GetEventDuration returns the EventDuration field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetEventDuration() int64 {
+	if o == nil || o.EventDuration == nil {
+		var ret int64
+		return ret
+	}
+	return *o.EventDuration
+}
+
+// GetEventDurationOk returns a tuple with the EventDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetEventDurationOk() (*int64, bool) {
+	if o == nil || o.EventDuration == nil {
+		return nil, false
+	}
+	return o.EventDuration, true
+}
+
+// HasEventDuration returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasEventDuration() bool {
+	if o != nil && o.EventDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventDuration gets a reference to the given int64 and assigns it to the EventDuration field.
+func (o *ProvenanceEventDTO) SetEventDuration(v int64) {
+	o.EventDuration = &v
+}
+
+// GetLineageDuration returns the LineageDuration field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetLineageDuration() int64 {
+	if o == nil || o.LineageDuration == nil {
+		var ret int64
+		return ret
+	}
+	return *o.LineageDuration
+}
+
+// GetLineageDurationOk returns a tuple with the LineageDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetLineageDurationOk() (*int64, bool) {
+	if o == nil || o.LineageDuration == nil {
+		return nil, false
+	}
+	return o.LineageDuration, true
+}
+
+// HasLineageDuration returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasLineageDuration() bool {
+	if o != nil && o.LineageDuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLineageDuration gets a reference to the given int64 and assigns it to the LineageDuration field.
+func (o *ProvenanceEventDTO) SetLineageDuration(v int64) {
+	o.LineageDuration = &v
+}
+
+// GetEventType returns the EventType field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetEventType() string {
+	if o == nil || o.EventType == nil {
+		var ret string
+		return ret
+	}
+	return *o.EventType
+}
+
+// GetEventTypeOk returns a tuple with the EventType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetEventTypeOk() (*string, bool) {
+	if o == nil || o.EventType == nil {
+		return nil, false
+	}
+	return o.EventType, true
+}
+
+// HasEventType returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasEventType() bool {
+	if o != nil && o.EventType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventType gets a reference to the given string and assigns it to the EventType field.
+func (o *ProvenanceEventDTO) SetEventType(v string) {
+	o.EventType = &v
+}
+
+// GetFlowFileUuid returns the FlowFileUuid field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetFlowFileUuid() string {
+	if o == nil || o.FlowFileUuid == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowFileUuid
+}
+
+// GetFlowFileUuidOk returns a tuple with the FlowFileUuid field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetFlowFileUuidOk() (*string, bool) {
+	if o == nil || o.FlowFileUuid == nil {
+		return nil, false
+	}
+	return o.FlowFileUuid, true
+}
+
+// HasFlowFileUuid returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasFlowFileUuid() bool {
+	if o != nil && o.FlowFileUuid != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileUuid gets a reference to the given string and assigns it to the FlowFileUuid field.
+func (o *ProvenanceEventDTO) SetFlowFileUuid(v string) {
+	o.FlowFileUuid = &v
+}
+
+// GetFileSize returns the FileSize field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetFileSize() string {
+	if o == nil || o.FileSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.FileSize
+}
+
+// GetFileSizeOk returns a tuple with the FileSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetFileSizeOk() (*string, bool) {
+	if o == nil || o.FileSize == nil {
+		return nil, false
+	}
+	return o.FileSize, true
+}
+
+// HasFileSize returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasFileSize() bool {
+	if o != nil && o.FileSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFileSize gets a reference to the given string and assigns it to the FileSize field.
+func (o *ProvenanceEventDTO) SetFileSize(v string) {
+	o.FileSize = &v
+}
+
+// GetFileSizeBytes returns the FileSizeBytes field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetFileSizeBytes() int64 {
+	if o == nil || o.FileSizeBytes == nil {
+		var ret int64
+		return ret
+	}
+	return *o.FileSizeBytes
+}
+
+// GetFileSizeBytesOk returns a tuple with the FileSizeBytes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetFileSizeBytesOk() (*int64, bool) {
+	if o == nil || o.FileSizeBytes == nil {
+		return nil, false
+	}
+	return o.FileSizeBytes, true
+}
+
+// HasFileSizeBytes returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasFileSizeBytes() bool {
+	if o != nil && o.FileSizeBytes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFileSizeBytes gets a reference to the given int64 and assigns it to the FileSizeBytes field.
+func (o *ProvenanceEventDTO) SetFileSizeBytes(v int64) {
+	o.FileSizeBytes = &v
+}
+
+// GetClusterNodeId returns the ClusterNodeId field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetClusterNodeId() string {
+	if o == nil || o.ClusterNodeId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeId
+}
+
+// GetClusterNodeIdOk returns a tuple with the ClusterNodeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetClusterNodeIdOk() (*string, bool) {
+	if o == nil || o.ClusterNodeId == nil {
+		return nil, false
+	}
+	return o.ClusterNodeId, true
+}
+
+// HasClusterNodeId returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasClusterNodeId() bool {
+	if o != nil && o.ClusterNodeId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeId gets a reference to the given string and assigns it to the ClusterNodeId field.
+func (o *ProvenanceEventDTO) SetClusterNodeId(v string) {
+	o.ClusterNodeId = &v
+}
+
+// GetClusterNodeAddress returns the ClusterNodeAddress field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetClusterNodeAddress() string {
+	if o == nil || o.ClusterNodeAddress == nil {
+		var ret string
+		return ret
+	}
+	return *o.ClusterNodeAddress
+}
+
+// GetClusterNodeAddressOk returns a tuple with the ClusterNodeAddress field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetClusterNodeAddressOk() (*string, bool) {
+	if o == nil || o.ClusterNodeAddress == nil {
+		return nil, false
+	}
+	return o.ClusterNodeAddress, true
+}
+
+// HasClusterNodeAddress returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasClusterNodeAddress() bool {
+	if o != nil && o.ClusterNodeAddress != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetClusterNodeAddress gets a reference to the given string and assigns it to the ClusterNodeAddress field.
+func (o *ProvenanceEventDTO) SetClusterNodeAddress(v string) {
+	o.ClusterNodeAddress = &v
+}
+
+// GetGroupId returns the GroupId field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetGroupId() string {
+	if o == nil || o.GroupId == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupId
+}
+
+// GetGroupIdOk returns a tuple with the GroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetGroupIdOk() (*string, bool) {
+	if o == nil || o.GroupId == nil {
+		return nil, false
+	}
+	return o.GroupId, true
+}
+
+// HasGroupId returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasGroupId() bool {
+	if o != nil && o.GroupId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupId gets a reference to the given string and assigns it to the GroupId field.
+func (o *ProvenanceEventDTO) SetGroupId(v string) {
+	o.GroupId = &v
+}
+
+// GetComponentId returns the ComponentId field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetComponentId() string {
+	if o == nil || o.ComponentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentId
+}
+
+// GetComponentIdOk returns a tuple with the ComponentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetComponentIdOk() (*string, bool) {
+	if o == nil || o.ComponentId == nil {
+		return nil, false
+	}
+	return o.ComponentId, true
+}
+
+// HasComponentId returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasComponentId() bool {
+	if o != nil && o.ComponentId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentId gets a reference to the given string and assigns it to the ComponentId field.
+func (o *ProvenanceEventDTO) SetComponentId(v string) {
+	o.ComponentId = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *ProvenanceEventDTO) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetComponentName returns the ComponentName field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetComponentName() string {
+	if o == nil || o.ComponentName == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentName
+}
+
+// GetComponentNameOk returns a tuple with the ComponentName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetComponentNameOk() (*string, bool) {
+	if o == nil || o.ComponentName == nil {
+		return nil, false
+	}
+	return o.ComponentName, true
+}
+
+// HasComponentName returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasComponentName() bool {
+	if o != nil && o.ComponentName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentName gets a reference to the given string and assigns it to the ComponentName field.
+func (o *ProvenanceEventDTO) SetComponentName(v string) {
+	o.ComponentName = &v
+}
+
+// GetSourceSystemFlowFileId returns the SourceSystemFlowFileId field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetSourceSystemFlowFileId() string {
+	if o == nil || o.SourceSystemFlowFileId == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceSystemFlowFileId
+}
+
+// GetSourceSystemFlowFileIdOk returns a tuple with the SourceSystemFlowFileId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetSourceSystemFlowFileIdOk() (*string, bool) {
+	if o == nil || o.SourceSystemFlowFileId == nil {
+		return nil, false
+	}
+	return o.SourceSystemFlowFileId, true
+}
+
+// HasSourceSystemFlowFileId returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasSourceSystemFlowFileId() bool {
+	if o != nil && o.SourceSystemFlowFileId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceSystemFlowFileId gets a reference to the given string and assigns it to the SourceSystemFlowFileId field.
+func (o *ProvenanceEventDTO) SetSourceSystemFlowFileId(v string) {
+	o.SourceSystemFlowFileId = &v
+}
+
+// GetAlternateIdentifierUri returns the AlternateIdentifierUri field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetAlternateIdentifierUri() string {
+	if o == nil || o.AlternateIdentifierUri == nil {
+		var ret string
+		return ret
+	}
+	return *o.AlternateIdentifierUri
+}
+
+// GetAlternateIdentifierUriOk returns a tuple with the AlternateIdentifierUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetAlternateIdentifierUriOk() (*string, bool) {
+	if o == nil || o.AlternateIdentifierUri == nil {
+		return nil, false
+	}
+	return o.AlternateIdentifierUri, true
+}
+
+// HasAlternateIdentifierUri returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasAlternateIdentifierUri() bool {
+	if o != nil && o.AlternateIdentifierUri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAlternateIdentifierUri gets a reference to the given string and assigns it to the AlternateIdentifierUri field.
+func (o *ProvenanceEventDTO) SetAlternateIdentifierUri(v string) {
+	o.AlternateIdentifierUri = &v
+}
+
+// GetAttributes returns the Attributes field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetAttributes() []AttributeDTO {
+	if o == nil || o.Attributes == nil {
+		var ret []AttributeDTO
+		return ret
+	}
+	return *o.Attributes
+}
+
+// GetAttributesOk returns a tuple with the Attributes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetAttributesOk() (*[]AttributeDTO, bool) {
+	if o == nil || o.Attributes == nil {
+		return nil, false
+	}
+	return o.Attributes, true
+}
+
+// HasAttributes returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasAttributes() bool {
+	if o != nil && o.Attributes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAttributes gets a reference to the given []AttributeDTO and assigns it to the Attributes field.
+func (o *ProvenanceEventDTO) SetAttributes(v []AttributeDTO) {
+	o.Attributes = &v
+}
+
+// GetParentUuids returns the ParentUuids field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetParentUuids() []string {
+	if o == nil || o.ParentUuids == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ParentUuids
+}
+
+// GetParentUuidsOk returns a tuple with the ParentUuids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetParentUuidsOk() (*[]string, bool) {
+	if o == nil || o.ParentUuids == nil {
+		return nil, false
+	}
+	return o.ParentUuids, true
+}
+
+// HasParentUuids returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasParentUuids() bool {
+	if o != nil && o.ParentUuids != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParentUuids gets a reference to the given []string and assigns it to the ParentUuids field.
+func (o *ProvenanceEventDTO) SetParentUuids(v []string) {
+	o.ParentUuids = &v
+}
+
+// GetChildUuids returns the ChildUuids field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetChildUuids() []string {
+	if o == nil || o.ChildUuids == nil {
+		var ret []string
+		return ret
+	}
+	return *o.ChildUuids
+}
+
+// GetChildUuidsOk returns a tuple with the ChildUuids field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetChildUuidsOk() (*[]string, bool) {
+	if o == nil || o.ChildUuids == nil {
+		return nil, false
+	}
+	return o.ChildUuids, true
+}
+
+// HasChildUuids returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasChildUuids() bool {
+	if o != nil && o.ChildUuids != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetChildUuids gets a reference to the given []string and assigns it to the ChildUuids field.
+func (o *ProvenanceEventDTO) SetChildUuids(v []string) {
+	o.ChildUuids = &v
+}
+
+// GetTransitUri returns the TransitUri field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetTransitUri() string {
+	if o == nil || o.TransitUri == nil {
+		var ret string
+		return ret
+	}
+	return *o.TransitUri
+}
+
+// GetTransitUriOk returns a tuple with the TransitUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetTransitUriOk() (*string, bool) {
+	if o == nil || o.TransitUri == nil {
+		return nil, false
+	}
+	return o.TransitUri, true
+}
+
+// HasTransitUri returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasTransitUri() bool {
+	if o != nil && o.TransitUri != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransitUri gets a reference to the given string and assigns it to the TransitUri field.
+func (o *ProvenanceEventDTO) SetTransitUri(v string) {
+	o.TransitUri = &v
+}
+
+// GetRelationship returns the Relationship field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetRelationship() string {
+	if o == nil || o.Relationship == nil {
+		var ret string
+		return ret
+	}
+	return *o.Relationship
+}
+
+// GetRelationshipOk returns a tuple with the Relationship field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetRelationshipOk() (*string, bool) {
+	if o == nil || o.Relationship == nil {
+		return nil, false
+	}
+	return o.Relationship, true
+}
+
+// HasRelationship returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasRelationship() bool {
+	if o != nil && o.Relationship != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRelationship gets a reference to the given string and assigns it to the Relationship field.
+func (o *ProvenanceEventDTO) SetRelationship(v string) {
+	o.Relationship = &v
+}
+
+// GetDetails returns the Details field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetDetails() string {
+	if o == nil || o.Details == nil {
+		var ret string
+		return ret
+	}
+	return *o.Details
+}
+
+// GetDetailsOk returns a tuple with the Details field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetDetailsOk() (*string, bool) {
+	if o == nil || o.Details == nil {
+		return nil, false
+	}
+	return o.Details, true
+}
+
+// HasDetails returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasDetails() bool {
+	if o != nil && o.Details != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDetails gets a reference to the given string and assigns it to the Details field.
+func (o *ProvenanceEventDTO) SetDetails(v string) {
+	o.Details = &v
+}
+
+// GetContentEqual returns the ContentEqual field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetContentEqual() bool {
+	if o == nil || o.ContentEqual == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ContentEqual
+}
+
+// GetContentEqualOk returns a tuple with the ContentEqual field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetContentEqualOk() (*bool, bool) {
+	if o == nil || o.ContentEqual == nil {
+		return nil, false
+	}
+	return o.ContentEqual, true
+}
+
+// HasContentEqual returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasContentEqual() bool {
+	if o != nil && o.ContentEqual != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetContentEqual gets a reference to the given bool and assigns it to the ContentEqual field.
+func (o *ProvenanceEventDTO) SetContentEqual(v bool) {
+	o.ContentEqual = &v
+}
+
+// GetInputContentAvailable returns the InputContentAvailable field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentAvailable() bool {
+	if o == nil || o.InputContentAvailable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.InputContentAvailable
+}
+
+// GetInputContentAvailableOk returns a tuple with the InputContentAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentAvailableOk() (*bool, bool) {
+	if o == nil || o.InputContentAvailable == nil {
+		return nil, false
+	}
+	return o.InputContentAvailable, true
+}
+
+// HasInputContentAvailable returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentAvailable() bool {
+	if o != nil && o.InputContentAvailable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentAvailable gets a reference to the given bool and assigns it to the InputContentAvailable field.
+func (o *ProvenanceEventDTO) SetInputContentAvailable(v bool) {
+	o.InputContentAvailable = &v
+}
+
+// GetInputContentClaimSection returns the InputContentClaimSection field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentClaimSection() string {
+	if o == nil || o.InputContentClaimSection == nil {
+		var ret string
+		return ret
+	}
+	return *o.InputContentClaimSection
+}
+
+// GetInputContentClaimSectionOk returns a tuple with the InputContentClaimSection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentClaimSectionOk() (*string, bool) {
+	if o == nil || o.InputContentClaimSection == nil {
+		return nil, false
+	}
+	return o.InputContentClaimSection, true
+}
+
+// HasInputContentClaimSection returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentClaimSection() bool {
+	if o != nil && o.InputContentClaimSection != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentClaimSection gets a reference to the given string and assigns it to the InputContentClaimSection field.
+func (o *ProvenanceEventDTO) SetInputContentClaimSection(v string) {
+	o.InputContentClaimSection = &v
+}
+
+// GetInputContentClaimContainer returns the InputContentClaimContainer field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentClaimContainer() string {
+	if o == nil || o.InputContentClaimContainer == nil {
+		var ret string
+		return ret
+	}
+	return *o.InputContentClaimContainer
+}
+
+// GetInputContentClaimContainerOk returns a tuple with the InputContentClaimContainer field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentClaimContainerOk() (*string, bool) {
+	if o == nil || o.InputContentClaimContainer == nil {
+		return nil, false
+	}
+	return o.InputContentClaimContainer, true
+}
+
+// HasInputContentClaimContainer returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentClaimContainer() bool {
+	if o != nil && o.InputContentClaimContainer != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentClaimContainer gets a reference to the given string and assigns it to the InputContentClaimContainer field.
+func (o *ProvenanceEventDTO) SetInputContentClaimContainer(v string) {
+	o.InputContentClaimContainer = &v
+}
+
+// GetInputContentClaimIdentifier returns the InputContentClaimIdentifier field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentClaimIdentifier() string {
+	if o == nil || o.InputContentClaimIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.InputContentClaimIdentifier
+}
+
+// GetInputContentClaimIdentifierOk returns a tuple with the InputContentClaimIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentClaimIdentifierOk() (*string, bool) {
+	if o == nil || o.InputContentClaimIdentifier == nil {
+		return nil, false
+	}
+	return o.InputContentClaimIdentifier, true
+}
+
+// HasInputContentClaimIdentifier returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentClaimIdentifier() bool {
+	if o != nil && o.InputContentClaimIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentClaimIdentifier gets a reference to the given string and assigns it to the InputContentClaimIdentifier field.
+func (o *ProvenanceEventDTO) SetInputContentClaimIdentifier(v string) {
+	o.InputContentClaimIdentifier = &v
+}
+
+// GetInputContentClaimOffset returns the InputContentClaimOffset field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentClaimOffset() int64 {
+	if o == nil || o.InputContentClaimOffset == nil {
+		var ret int64
+		return ret
+	}
+	return *o.InputContentClaimOffset
+}
+
+// GetInputContentClaimOffsetOk returns a tuple with the InputContentClaimOffset field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentClaimOffsetOk() (*int64, bool) {
+	if o == nil || o.InputContentClaimOffset == nil {
+		return nil, false
+	}
+	return o.InputContentClaimOffset, true
+}
+
+// HasInputContentClaimOffset returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentClaimOffset() bool {
+	if o != nil && o.InputContentClaimOffset != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentClaimOffset gets a reference to the given int64 and assigns it to the InputContentClaimOffset field.
+func (o *ProvenanceEventDTO) SetInputContentClaimOffset(v int64) {
+	o.InputContentClaimOffset = &v
+}
+
+// GetInputContentClaimFileSize returns the InputContentClaimFileSize field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentClaimFileSize() string {
+	if o == nil || o.InputContentClaimFileSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.InputContentClaimFileSize
+}
+
+// GetInputContentClaimFileSizeOk returns a tuple with the InputContentClaimFileSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentClaimFileSizeOk() (*string, bool) {
+	if o == nil || o.InputContentClaimFileSize == nil {
+		return nil, false
+	}
+	return o.InputContentClaimFileSize, true
+}
+
+// HasInputContentClaimFileSize returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentClaimFileSize() bool {
+	if o != nil && o.InputContentClaimFileSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentClaimFileSize gets a reference to the given string and assigns it to the InputContentClaimFileSize field.
+func (o *ProvenanceEventDTO) SetInputContentClaimFileSize(v string) {
+	o.InputContentClaimFileSize = &v
+}
+
+// GetInputContentClaimFileSizeBytes returns the InputContentClaimFileSizeBytes field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetInputContentClaimFileSizeBytes() int64 {
+	if o == nil || o.InputContentClaimFileSizeBytes == nil {
+		var ret int64
+		return ret
+	}
+	return *o.InputContentClaimFileSizeBytes
+}
+
+// GetInputContentClaimFileSizeBytesOk returns a tuple with the InputContentClaimFileSizeBytes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetInputContentClaimFileSizeBytesOk() (*int64, bool) {
+	if o == nil || o.InputContentClaimFileSizeBytes == nil {
+		return nil, false
+	}
+	return o.InputContentClaimFileSizeBytes, true
+}
+
+// HasInputContentClaimFileSizeBytes returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasInputContentClaimFileSizeBytes() bool {
+	if o != nil && o.InputContentClaimFileSizeBytes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputContentClaimFileSizeBytes gets a reference to the given int64 and assigns it to the InputContentClaimFileSizeBytes field.
+func (o *ProvenanceEventDTO) SetInputContentClaimFileSizeBytes(v int64) {
+	o.InputContentClaimFileSizeBytes = &v
+}
+
+// GetOutputContentAvailable returns the OutputContentAvailable field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentAvailable() bool {
+	if o == nil || o.OutputContentAvailable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.OutputContentAvailable
+}
+
+// GetOutputContentAvailableOk returns a tuple with the OutputContentAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentAvailableOk() (*bool, bool) {
+	if o == nil || o.OutputContentAvailable == nil {
+		return nil, false
+	}
+	return o.OutputContentAvailable, true
+}
+
+// HasOutputContentAvailable returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentAvailable() bool {
+	if o != nil && o.OutputContentAvailable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentAvailable gets a reference to the given bool and assigns it to the OutputContentAvailable field.
+func (o *ProvenanceEventDTO) SetOutputContentAvailable(v bool) {
+	o.OutputContentAvailable = &v
+}
+
+// GetOutputContentClaimSection returns the OutputContentClaimSection field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentClaimSection() string {
+	if o == nil || o.OutputContentClaimSection == nil {
+		var ret string
+		return ret
+	}
+	return *o.OutputContentClaimSection
+}
+
+// GetOutputContentClaimSectionOk returns a tuple with the OutputContentClaimSection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentClaimSectionOk() (*string, bool) {
+	if o == nil || o.OutputContentClaimSection == nil {
+		return nil, false
+	}
+	return o.OutputContentClaimSection, true
+}
+
+// HasOutputContentClaimSection returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentClaimSection() bool {
+	if o != nil && o.OutputContentClaimSection != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentClaimSection gets a reference to the given string and assigns it to the OutputContentClaimSection field.
+func (o *ProvenanceEventDTO) SetOutputContentClaimSection(v string) {
+	o.OutputContentClaimSection = &v
+}
+
+// GetOutputContentClaimContainer returns the OutputContentClaimContainer field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentClaimContainer() string {
+	if o == nil || o.OutputContentClaimContainer == nil {
+		var ret string
+		return ret
+	}
+	return *o.OutputContentClaimContainer
+}
+
+// GetOutputContentClaimContainerOk returns a tuple with the OutputContentClaimContainer field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentClaimContainerOk() (*string, bool) {
+	if o == nil || o.OutputContentClaimContainer == nil {
+		return nil, false
+	}
+	return o.OutputContentClaimContainer, true
+}
+
+// HasOutputContentClaimContainer returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentClaimContainer() bool {
+	if o != nil && o.OutputContentClaimContainer != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentClaimContainer gets a reference to the given string and assigns it to the OutputContentClaimContainer field.
+func (o *ProvenanceEventDTO) SetOutputContentClaimContainer(v string) {
+	o.OutputContentClaimContainer = &v
+}
+
+// GetOutputContentClaimIdentifier returns the OutputContentClaimIdentifier field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentClaimIdentifier() string {
+	if o == nil || o.OutputContentClaimIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.OutputContentClaimIdentifier
+}
+
+// GetOutputContentClaimIdentifierOk returns a tuple with the OutputContentClaimIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentClaimIdentifierOk() (*string, bool) {
+	if o == nil || o.OutputContentClaimIdentifier == nil {
+		return nil, false
+	}
+	return o.OutputContentClaimIdentifier, true
+}
+
+// HasOutputContentClaimIdentifier returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentClaimIdentifier() bool {
+	if o != nil && o.OutputContentClaimIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentClaimIdentifier gets a reference to the given string and assigns it to the OutputContentClaimIdentifier field.
+func (o *ProvenanceEventDTO) SetOutputContentClaimIdentifier(v string) {
+	o.OutputContentClaimIdentifier = &v
+}
+
+// GetOutputContentClaimOffset returns the OutputContentClaimOffset field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentClaimOffset() int64 {
+	if o == nil || o.OutputContentClaimOffset == nil {
+		var ret int64
+		return ret
+	}
+	return *o.OutputContentClaimOffset
+}
+
+// GetOutputContentClaimOffsetOk returns a tuple with the OutputContentClaimOffset field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentClaimOffsetOk() (*int64, bool) {
+	if o == nil || o.OutputContentClaimOffset == nil {
+		return nil, false
+	}
+	return o.OutputContentClaimOffset, true
+}
+
+// HasOutputContentClaimOffset returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentClaimOffset() bool {
+	if o != nil && o.OutputContentClaimOffset != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentClaimOffset gets a reference to the given int64 and assigns it to the OutputContentClaimOffset field.
+func (o *ProvenanceEventDTO) SetOutputContentClaimOffset(v int64) {
+	o.OutputContentClaimOffset = &v
+}
+
+// GetOutputContentClaimFileSize returns the OutputContentClaimFileSize field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentClaimFileSize() string {
+	if o == nil || o.OutputContentClaimFileSize == nil {
+		var ret string
+		return ret
+	}
+	return *o.OutputContentClaimFileSize
+}
+
+// GetOutputContentClaimFileSizeOk returns a tuple with the OutputContentClaimFileSize field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentClaimFileSizeOk() (*string, bool) {
+	if o == nil || o.OutputContentClaimFileSize == nil {
+		return nil, false
+	}
+	return o.OutputContentClaimFileSize, true
+}
+
+// HasOutputContentClaimFileSize returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentClaimFileSize() bool {
+	if o != nil && o.OutputContentClaimFileSize != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentClaimFileSize gets a reference to the given string and assigns it to the OutputContentClaimFileSize field.
+func (o *ProvenanceEventDTO) SetOutputContentClaimFileSize(v string) {
+	o.OutputContentClaimFileSize = &v
+}
+
+// GetOutputContentClaimFileSizeBytes returns the OutputContentClaimFileSizeBytes field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetOutputContentClaimFileSizeBytes() int64 {
+	if o == nil || o.OutputContentClaimFileSizeBytes == nil {
+		var ret int64
+		return ret
+	}
+	return *o.OutputContentClaimFileSizeBytes
+}
+
+// GetOutputContentClaimFileSizeBytesOk returns a tuple with the OutputContentClaimFileSizeBytes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetOutputContentClaimFileSizeBytesOk() (*int64, bool) {
+	if o == nil || o.OutputContentClaimFileSizeBytes == nil {
+		return nil, false
+	}
+	return o.OutputContentClaimFileSizeBytes, true
+}
+
+// HasOutputContentClaimFileSizeBytes returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasOutputContentClaimFileSizeBytes() bool {
+	if o != nil && o.OutputContentClaimFileSizeBytes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputContentClaimFileSizeBytes gets a reference to the given int64 and assigns it to the OutputContentClaimFileSizeBytes field.
+func (o *ProvenanceEventDTO) SetOutputContentClaimFileSizeBytes(v int64) {
+	o.OutputContentClaimFileSizeBytes = &v
+}
+
+// GetReplayAvailable returns the ReplayAvailable field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetReplayAvailable() bool {
+	if o == nil || o.ReplayAvailable == nil {
+		var ret bool
+		return ret
+	}
+	return *o.ReplayAvailable
+}
+
+// GetReplayAvailableOk returns a tuple with the ReplayAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetReplayAvailableOk() (*bool, bool) {
+	if o == nil || o.ReplayAvailable == nil {
+		return nil, false
+	}
+	return o.ReplayAvailable, true
+}
+
+// HasReplayAvailable returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasReplayAvailable() bool {
+	if o != nil && o.ReplayAvailable != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReplayAvailable gets a reference to the given bool and assigns it to the ReplayAvailable field.
+func (o *ProvenanceEventDTO) SetReplayAvailable(v bool) {
+	o.ReplayAvailable = &v
+}
+
+// GetReplayExplanation returns the ReplayExplanation field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetReplayExplanation() string {
+	if o == nil || o.ReplayExplanation == nil {
+		var ret string
+		return ret
+	}
+	return *o.ReplayExplanation
+}
+
+// GetReplayExplanationOk returns a tuple with the ReplayExplanation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetReplayExplanationOk() (*string, bool) {
+	if o == nil || o.ReplayExplanation == nil {
+		return nil, false
+	}
+	return o.ReplayExplanation, true
+}
+
+// HasReplayExplanation returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasReplayExplanation() bool {
+	if o != nil && o.ReplayExplanation != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReplayExplanation gets a reference to the given string and assigns it to the ReplayExplanation field.
+func (o *ProvenanceEventDTO) SetReplayExplanation(v string) {
+	o.ReplayExplanation = &v
+}
+
+// GetSourceConnectionIdentifier returns the SourceConnectionIdentifier field value if set, zero value otherwise.
+func (o *ProvenanceEventDTO) GetSourceConnectionIdentifier() string {
+	if o == nil || o.SourceConnectionIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.SourceConnectionIdentifier
+}
+
+// GetSourceConnectionIdentifierOk returns a tuple with the SourceConnectionIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProvenanceEventDTO) GetSourceConnectionIdentifierOk() (*string, bool) {
+	if o == nil || o.SourceConnectionIdentifier == nil {
+		return nil, false
+	}
+	return o.SourceConnectionIdentifier, true
+}
+
+// HasSourceConnectionIdentifier returns a boolean if a field has been set.
+func (o *ProvenanceEventDTO) HasSourceConnectionIdentifier() bool {
+	if o != nil && o.SourceConnectionIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceConnectionIdentifier gets a reference to the given string and assigns it to the SourceConnectionIdentifier field.
+func (o *ProvenanceEventDTO) SetSourceConnectionIdentifier(v string) {
+	o.SourceConnectionIdentifier = &v
+}
+
+func (o ProvenanceEventDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.EventId != nil {
+		toSerialize["eventId"] = o.EventId
+	}
+	if o.EventTime != nil {
+		toSerialize["eventTime"] = o.EventTime
+	}
+	if o.EventDuration != nil {
+		toSerialize["eventDuration"] = o.EventDuration
+	}
+	if o.LineageDuration != nil {
+		toSerialize["lineageDuration"] = o.LineageDuration
+	}
+	if o.EventType != nil {
+		toSerialize["eventType"] = o.EventType
+	}
+	if o.FlowFileUuid != nil {
+		toSerialize["flowFileUuid"] = o.FlowFileUuid
+	}
+	if o.FileSize != nil {
+		toSerialize["fileSize"] = o.FileSize
+	}
+	if o.FileSizeBytes != nil {
+		toSerialize["fileSizeBytes"] = o.FileSizeBytes
+	}
+	if o.ClusterNodeId != nil {
+		toSerialize["clusterNodeId"] = o.ClusterNodeId
+	}
+	if o.ClusterNodeAddress != nil {
+		toSerialize["clusterNodeAddress"] = o.ClusterNodeAddress
+	}
+	if o.GroupId != nil {
+		toSerialize["groupId"] = o.GroupId
+	}
+	if o.ComponentId != nil {
+		toSerialize["componentId"] = o.ComponentId
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.ComponentName != nil {
+		toSerialize["componentName"] = o.ComponentName
+	}
+	if o.SourceSystemFlowFileId != nil {
+		toSerialize["sourceSystemFlowFileId"] = o.SourceSystemFlowFileId
+	}
+	if o.AlternateIdentifierUri != nil {
+		toSerialize["alternateIdentifierUri"] = o.AlternateIdentifierUri
+	}
+	if o.Attributes != nil {
+		toSerialize["attributes"] = o.Attributes
+	}
+	if o.ParentUuids != nil {
+		toSerialize["parentUuids"] = o.ParentUuids
+	}
+	if o.ChildUuids != nil {
+		toSerialize["childUuids"] = o.ChildUuids
+	}
+	if o.TransitUri != nil {
+		toSerialize["transitUri"] = o.TransitUri
+	}
+	if o.Relationship != nil {
+		toSerialize["relationship"] = o.Relationship
+	}
+	if o.Details != nil {
+		toSerialize["details"] = o.Details
+	}
+	if o.ContentEqual != nil {
+		toSerialize["contentEqual"] = o.ContentEqual
+	}
+	if o.InputContentAvailable != nil {
+		toSerialize["inputContentAvailable"] = o.InputContentAvailable
+	}
+	if o.InputContentClaimSection != nil {
+		toSerialize["inputContentClaimSection"] = o.InputContentClaimSection
+	}
+	if o.InputContentClaimContainer != nil {
+		toSerialize["inputContentClaimContainer"] = o.InputContentClaimContainer
+	}
+	if o.InputContentClaimIdentifier != nil {
+		toSerialize["inputContentClaimIdentifier"] = o.InputContentClaimIdentifier
+	}
+	if o.InputContentClaimOffset != nil {
+		toSerialize["inputContentClaimOffset"] = o.InputContentClaimOffset
+	}
+	if o.InputContentClaimFileSize != nil {
+		toSerialize["inputContentClaimFileSize"] = o.InputContentClaimFileSize
+	}
+	if o.InputContentClaimFileSizeBytes != nil {
+		toSerialize["inputContentClaimFileSizeBytes"] = o.InputContentClaimFileSizeBytes
+	}
+	if o.OutputContentAvailable != nil {
+		toSerialize["outputContentAvailable"] = o.OutputContentAvailable
+	}
+	if o.OutputContentClaimSection != nil {
+		toSerialize["outputContentClaimSection"] = o.OutputContentClaimSection
+	}
+	if o.OutputContentClaimContainer != nil {
+		toSerialize["outputContentClaimContainer"] = o.OutputContentClaimContainer
+	}
+	if o.OutputContentClaimIdentifier != nil {
+		toSerialize["outputContentClaimIdentifier"] = o.OutputContentClaimIdentifier
+	}
+	if o.OutputContentClaimOffset != nil {
+		toSerialize["outputContentClaimOffset"] = o.OutputContentClaimOffset
+	}
+	if o.OutputContentClaimFileSize != nil {
+		toSerialize["outputContentClaimFileSize"] = o.OutputContentClaimFileSize
+	}
+	if o.OutputContentClaimFileSizeBytes != nil {
+		toSerialize["outputContentClaimFileSizeBytes"] = o.OutputContentClaimFileSizeBytes
+	}
+	if o.ReplayAvailable != nil {
+		toSerialize["replayAvailable"] = o.ReplayAvailable
+	}
+	if o.ReplayExplanation != nil {
+		toSerialize["replayExplanation"] = o.ReplayExplanation
+	}
+	if o.SourceConnectionIdentifier != nil {
+		toSerialize["sourceConnectionIdentifier"] = o.SourceConnectionIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProvenanceEventDTO struct {
+	value *ProvenanceEventDTO
+	isSet bool
+}
+
+func (v NullableProvenanceEventDTO) Get() *ProvenanceEventDTO {
+	return v.value
+}
+
+func (v *NullableProvenanceEventDTO) Set(val *ProvenanceEventDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProvenanceEventDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProvenanceEventDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProvenanceEventDTO(val *ProvenanceEventDTO) *NullableProvenanceEventDTO {
+	return &NullableProvenanceEventDTO{value: val, isSet: true}
+}
+
+func (v NullableProvenanceEventDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProvenanceEventDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

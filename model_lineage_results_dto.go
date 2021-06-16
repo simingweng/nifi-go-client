@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,12 +11,179 @@
 
 package nifi
 
-// LineageResultsDto struct for LineageResultsDto
-type LineageResultsDto struct {
+import (
+	"encoding/json"
+)
+
+// LineageResultsDTO struct for LineageResultsDTO
+type LineageResultsDTO struct {
 	// Any errors that occurred while generating the lineage.
-	Errors []string `json:"errors,omitempty"`
+	Errors *[]string `json:"errors,omitempty"`
 	// The nodes in the lineage.
-	Nodes []ProvenanceNodeDto `json:"nodes,omitempty"`
+	Nodes *[]ProvenanceNodeDTO `json:"nodes,omitempty"`
 	// The links between the nodes in the lineage.
-	Links []ProvenanceLinkDto `json:"links,omitempty"`
+	Links *[]ProvenanceLinkDTO `json:"links,omitempty"`
+}
+
+// NewLineageResultsDTO instantiates a new LineageResultsDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewLineageResultsDTO() *LineageResultsDTO {
+	this := LineageResultsDTO{}
+	return &this
+}
+
+// NewLineageResultsDTOWithDefaults instantiates a new LineageResultsDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewLineageResultsDTOWithDefaults() *LineageResultsDTO {
+	this := LineageResultsDTO{}
+	return &this
+}
+
+// GetErrors returns the Errors field value if set, zero value otherwise.
+func (o *LineageResultsDTO) GetErrors() []string {
+	if o == nil || o.Errors == nil {
+		var ret []string
+		return ret
+	}
+	return *o.Errors
+}
+
+// GetErrorsOk returns a tuple with the Errors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageResultsDTO) GetErrorsOk() (*[]string, bool) {
+	if o == nil || o.Errors == nil {
+		return nil, false
+	}
+	return o.Errors, true
+}
+
+// HasErrors returns a boolean if a field has been set.
+func (o *LineageResultsDTO) HasErrors() bool {
+	if o != nil && o.Errors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetErrors gets a reference to the given []string and assigns it to the Errors field.
+func (o *LineageResultsDTO) SetErrors(v []string) {
+	o.Errors = &v
+}
+
+// GetNodes returns the Nodes field value if set, zero value otherwise.
+func (o *LineageResultsDTO) GetNodes() []ProvenanceNodeDTO {
+	if o == nil || o.Nodes == nil {
+		var ret []ProvenanceNodeDTO
+		return ret
+	}
+	return *o.Nodes
+}
+
+// GetNodesOk returns a tuple with the Nodes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageResultsDTO) GetNodesOk() (*[]ProvenanceNodeDTO, bool) {
+	if o == nil || o.Nodes == nil {
+		return nil, false
+	}
+	return o.Nodes, true
+}
+
+// HasNodes returns a boolean if a field has been set.
+func (o *LineageResultsDTO) HasNodes() bool {
+	if o != nil && o.Nodes != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNodes gets a reference to the given []ProvenanceNodeDTO and assigns it to the Nodes field.
+func (o *LineageResultsDTO) SetNodes(v []ProvenanceNodeDTO) {
+	o.Nodes = &v
+}
+
+// GetLinks returns the Links field value if set, zero value otherwise.
+func (o *LineageResultsDTO) GetLinks() []ProvenanceLinkDTO {
+	if o == nil || o.Links == nil {
+		var ret []ProvenanceLinkDTO
+		return ret
+	}
+	return *o.Links
+}
+
+// GetLinksOk returns a tuple with the Links field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LineageResultsDTO) GetLinksOk() (*[]ProvenanceLinkDTO, bool) {
+	if o == nil || o.Links == nil {
+		return nil, false
+	}
+	return o.Links, true
+}
+
+// HasLinks returns a boolean if a field has been set.
+func (o *LineageResultsDTO) HasLinks() bool {
+	if o != nil && o.Links != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLinks gets a reference to the given []ProvenanceLinkDTO and assigns it to the Links field.
+func (o *LineageResultsDTO) SetLinks(v []ProvenanceLinkDTO) {
+	o.Links = &v
+}
+
+func (o LineageResultsDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Errors != nil {
+		toSerialize["errors"] = o.Errors
+	}
+	if o.Nodes != nil {
+		toSerialize["nodes"] = o.Nodes
+	}
+	if o.Links != nil {
+		toSerialize["links"] = o.Links
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableLineageResultsDTO struct {
+	value *LineageResultsDTO
+	isSet bool
+}
+
+func (v NullableLineageResultsDTO) Get() *LineageResultsDTO {
+	return v.value
+}
+
+func (v *NullableLineageResultsDTO) Set(val *LineageResultsDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableLineageResultsDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableLineageResultsDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableLineageResultsDTO(val *LineageResultsDTO) *NullableLineageResultsDTO {
+	return &NullableLineageResultsDTO{value: val, isSet: true}
+}
+
+func (v NullableLineageResultsDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableLineageResultsDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

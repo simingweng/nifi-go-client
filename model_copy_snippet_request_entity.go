@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,14 +11,216 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // CopySnippetRequestEntity struct for CopySnippetRequestEntity
 type CopySnippetRequestEntity struct {
 	// The identifier of the snippet.
-	SnippetId string `json:"snippetId,omitempty"`
+	SnippetId *string `json:"snippetId,omitempty"`
 	// The x coordinate of the origin of the bounding box where the new components will be placed.
-	OriginX float64 `json:"originX,omitempty"`
+	OriginX *float64 `json:"originX,omitempty"`
 	// The y coordinate of the origin of the bounding box where the new components will be placed.
-	OriginY float64 `json:"originY,omitempty"`
+	OriginY *float64 `json:"originY,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool `json:"disconnectedNodeAcknowledged,omitempty"`
+	DisconnectedNodeAcknowledged *bool `json:"disconnectedNodeAcknowledged,omitempty"`
+}
+
+// NewCopySnippetRequestEntity instantiates a new CopySnippetRequestEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCopySnippetRequestEntity() *CopySnippetRequestEntity {
+	this := CopySnippetRequestEntity{}
+	return &this
+}
+
+// NewCopySnippetRequestEntityWithDefaults instantiates a new CopySnippetRequestEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCopySnippetRequestEntityWithDefaults() *CopySnippetRequestEntity {
+	this := CopySnippetRequestEntity{}
+	return &this
+}
+
+// GetSnippetId returns the SnippetId field value if set, zero value otherwise.
+func (o *CopySnippetRequestEntity) GetSnippetId() string {
+	if o == nil || o.SnippetId == nil {
+		var ret string
+		return ret
+	}
+	return *o.SnippetId
+}
+
+// GetSnippetIdOk returns a tuple with the SnippetId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CopySnippetRequestEntity) GetSnippetIdOk() (*string, bool) {
+	if o == nil || o.SnippetId == nil {
+		return nil, false
+	}
+	return o.SnippetId, true
+}
+
+// HasSnippetId returns a boolean if a field has been set.
+func (o *CopySnippetRequestEntity) HasSnippetId() bool {
+	if o != nil && o.SnippetId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSnippetId gets a reference to the given string and assigns it to the SnippetId field.
+func (o *CopySnippetRequestEntity) SetSnippetId(v string) {
+	o.SnippetId = &v
+}
+
+// GetOriginX returns the OriginX field value if set, zero value otherwise.
+func (o *CopySnippetRequestEntity) GetOriginX() float64 {
+	if o == nil || o.OriginX == nil {
+		var ret float64
+		return ret
+	}
+	return *o.OriginX
+}
+
+// GetOriginXOk returns a tuple with the OriginX field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CopySnippetRequestEntity) GetOriginXOk() (*float64, bool) {
+	if o == nil || o.OriginX == nil {
+		return nil, false
+	}
+	return o.OriginX, true
+}
+
+// HasOriginX returns a boolean if a field has been set.
+func (o *CopySnippetRequestEntity) HasOriginX() bool {
+	if o != nil && o.OriginX != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOriginX gets a reference to the given float64 and assigns it to the OriginX field.
+func (o *CopySnippetRequestEntity) SetOriginX(v float64) {
+	o.OriginX = &v
+}
+
+// GetOriginY returns the OriginY field value if set, zero value otherwise.
+func (o *CopySnippetRequestEntity) GetOriginY() float64 {
+	if o == nil || o.OriginY == nil {
+		var ret float64
+		return ret
+	}
+	return *o.OriginY
+}
+
+// GetOriginYOk returns a tuple with the OriginY field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CopySnippetRequestEntity) GetOriginYOk() (*float64, bool) {
+	if o == nil || o.OriginY == nil {
+		return nil, false
+	}
+	return o.OriginY, true
+}
+
+// HasOriginY returns a boolean if a field has been set.
+func (o *CopySnippetRequestEntity) HasOriginY() bool {
+	if o != nil && o.OriginY != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOriginY gets a reference to the given float64 and assigns it to the OriginY field.
+func (o *CopySnippetRequestEntity) SetOriginY(v float64) {
+	o.OriginY = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *CopySnippetRequestEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CopySnippetRequestEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *CopySnippetRequestEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *CopySnippetRequestEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+func (o CopySnippetRequestEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.SnippetId != nil {
+		toSerialize["snippetId"] = o.SnippetId
+	}
+	if o.OriginX != nil {
+		toSerialize["originX"] = o.OriginX
+	}
+	if o.OriginY != nil {
+		toSerialize["originY"] = o.OriginY
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableCopySnippetRequestEntity struct {
+	value *CopySnippetRequestEntity
+	isSet bool
+}
+
+func (v NullableCopySnippetRequestEntity) Get() *CopySnippetRequestEntity {
+	return v.value
+}
+
+func (v *NullableCopySnippetRequestEntity) Set(val *CopySnippetRequestEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableCopySnippetRequestEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableCopySnippetRequestEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableCopySnippetRequestEntity(val *CopySnippetRequestEntity) *NullableCopySnippetRequestEntity {
+	return &NullableCopySnippetRequestEntity{value: val, isSet: true}
+}
+
+func (v NullableCopySnippetRequestEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableCopySnippetRequestEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

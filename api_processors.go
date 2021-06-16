@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -12,8 +12,8 @@
 package nifi
 
 import (
+	"bytes"
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -28,13 +28,35 @@ var (
 // ProcessorsApiService ProcessorsApi service
 type ProcessorsApiService service
 
+type ProcessorsApiApiClearStateRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+}
+
+func (r ProcessorsApiApiClearStateRequest) Execute() (ComponentStateEntity, *_nethttp.Response, error) {
+	return r.ApiService.ClearStateExecute(r)
+}
+
 /*
-ClearState Clears the state for a processor
+ * ClearState Clears the state for a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return ComponentStateEntity
-*/
-func (a *ProcessorsApiService) ClearState(ctx _context.Context, id string) (ComponentStateEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiClearStateRequest
+ */
+func (a *ProcessorsApiService) ClearState(ctx _context.Context, id string) ProcessorsApiApiClearStateRequest {
+	return ProcessorsApiApiClearStateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ComponentStateEntity
+ */
+func (a *ProcessorsApiService) ClearStateExecute(r ProcessorsApiApiClearStateRequest) (ComponentStateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -44,9 +66,13 @@ func (a *ProcessorsApiService) ClearState(ctx _context.Context, id string) (Comp
 		localVarReturnValue  ComponentStateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}/state/clear-requests"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.ClearState")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}/state/clear-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -69,18 +95,19 @@ func (a *ProcessorsApiService) ClearState(ctx _context.Context, id string) (Comp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -105,24 +132,51 @@ func (a *ProcessorsApiService) ClearState(ctx _context.Context, id string) (Comp
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessorsApiDeleteProcessorOpts Optional parameters for the method 'DeleteProcessor'
-type ProcessorsApiDeleteProcessorOpts struct {
-	Version                      optional.String
-	ClientId                     optional.String
-	DisconnectedNodeAcknowledged optional.Bool
+type ProcessorsApiApiDeleteProcessorRequest struct {
+	ctx                          _context.Context
+	ApiService                   *ProcessorsApiService
+	id                           string
+	version                      *string
+	clientId                     *string
+	disconnectedNodeAcknowledged *bool
+}
+
+func (r ProcessorsApiApiDeleteProcessorRequest) Version(version string) ProcessorsApiApiDeleteProcessorRequest {
+	r.version = &version
+	return r
+}
+func (r ProcessorsApiApiDeleteProcessorRequest) ClientId(clientId string) ProcessorsApiApiDeleteProcessorRequest {
+	r.clientId = &clientId
+	return r
+}
+func (r ProcessorsApiApiDeleteProcessorRequest) DisconnectedNodeAcknowledged(disconnectedNodeAcknowledged bool) ProcessorsApiApiDeleteProcessorRequest {
+	r.disconnectedNodeAcknowledged = &disconnectedNodeAcknowledged
+	return r
+}
+
+func (r ProcessorsApiApiDeleteProcessorRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.DeleteProcessorExecute(r)
 }
 
 /*
-DeleteProcessor Deletes a processor
+ * DeleteProcessor Deletes a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
- * @param optional nil or *ProcessorsApiDeleteProcessorOpts - Optional Parameters:
- * @param "Version" (optional.String) -  The revision is used to verify the client is working with the latest version of the flow.
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
- * @param "DisconnectedNodeAcknowledged" (optional.Bool) -  Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-@return ProcessorEntity
-*/
-func (a *ProcessorsApiService) DeleteProcessor(ctx _context.Context, id string, localVarOptionals *ProcessorsApiDeleteProcessorOpts) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiDeleteProcessorRequest
+ */
+func (a *ProcessorsApiService) DeleteProcessor(ctx _context.Context, id string) ProcessorsApiApiDeleteProcessorRequest {
+	return ProcessorsApiApiDeleteProcessorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessorsApiService) DeleteProcessorExecute(r ProcessorsApiApiDeleteProcessorRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -132,22 +186,26 @@ func (a *ProcessorsApiService) DeleteProcessor(ctx _context.Context, id string, 
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.DeleteProcessor")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if localVarOptionals != nil && localVarOptionals.Version.IsSet() {
-		localVarQueryParams.Add("version", parameterToString(localVarOptionals.Version.Value(), ""))
+	if r.version != nil {
+		localVarQueryParams.Add("version", parameterToString(*r.version, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
 	}
-	if localVarOptionals != nil && localVarOptionals.DisconnectedNodeAcknowledged.IsSet() {
-		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(localVarOptionals.DisconnectedNodeAcknowledged.Value(), ""))
+	if r.disconnectedNodeAcknowledged != nil {
+		localVarQueryParams.Add("disconnectedNodeAcknowledged", parameterToString(*r.disconnectedNodeAcknowledged, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -166,18 +224,19 @@ func (a *ProcessorsApiService) DeleteProcessor(ctx _context.Context, id string, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -202,13 +261,35 @@ func (a *ProcessorsApiService) DeleteProcessor(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessorsApiApiGetProcessorRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+}
+
+func (r ProcessorsApiApiGetProcessorRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorExecute(r)
+}
+
 /*
-GetProcessor Gets a processor
+ * GetProcessor Gets a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return ProcessorEntity
-*/
-func (a *ProcessorsApiService) GetProcessor(ctx _context.Context, id string) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiGetProcessorRequest
+ */
+func (a *ProcessorsApiService) GetProcessor(ctx _context.Context, id string) ProcessorsApiApiGetProcessorRequest {
+	return ProcessorsApiApiGetProcessorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessorsApiService) GetProcessorExecute(r ProcessorsApiApiGetProcessorRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -218,9 +299,13 @@ func (a *ProcessorsApiService) GetProcessor(ctx _context.Context, id string) (Pr
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.GetProcessor")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -243,18 +328,19 @@ func (a *ProcessorsApiService) GetProcessor(ctx _context.Context, id string) (Pr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -279,14 +365,36 @@ func (a *ProcessorsApiService) GetProcessor(ctx _context.Context, id string) (Pr
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessorsApiApiGetProcessorDiagnosticsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+}
+
+func (r ProcessorsApiApiGetProcessorDiagnosticsRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorDiagnosticsExecute(r)
+}
+
 /*
-GetProcessorDiagnostics Gets diagnostics information about a processor
-Note: This endpoint is subject to change as NiFi and it&#39;s REST API evolve.
+ * GetProcessorDiagnostics Gets diagnostics information about a processor
+ * Note: This endpoint is subject to change as NiFi and it's REST API evolve.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return ProcessorEntity
-*/
-func (a *ProcessorsApiService) GetProcessorDiagnostics(ctx _context.Context, id string) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiGetProcessorDiagnosticsRequest
+ */
+func (a *ProcessorsApiService) GetProcessorDiagnostics(ctx _context.Context, id string) ProcessorsApiApiGetProcessorDiagnosticsRequest {
+	return ProcessorsApiApiGetProcessorDiagnosticsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessorsApiService) GetProcessorDiagnosticsExecute(r ProcessorsApiApiGetProcessorDiagnosticsRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -296,9 +404,13 @@ func (a *ProcessorsApiService) GetProcessorDiagnostics(ctx _context.Context, id 
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}/diagnostics"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.GetProcessorDiagnostics")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}/diagnostics"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -321,18 +433,19 @@ func (a *ProcessorsApiService) GetProcessorDiagnostics(ctx _context.Context, id 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -357,19 +470,38 @@ func (a *ProcessorsApiService) GetProcessorDiagnostics(ctx _context.Context, id 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessorsApiGetProcessorRunStatusDetailsOpts Optional parameters for the method 'GetProcessorRunStatusDetails'
-type ProcessorsApiGetProcessorRunStatusDetailsOpts struct {
-	Body optional.Interface
+type ProcessorsApiApiGetProcessorRunStatusDetailsRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	body       *RunStatusDetailsRequestEntity
+}
+
+func (r ProcessorsApiApiGetProcessorRunStatusDetailsRequest) Body(body RunStatusDetailsRequestEntity) ProcessorsApiApiGetProcessorRunStatusDetailsRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessorsApiApiGetProcessorRunStatusDetailsRequest) Execute() (ProcessorsRunStatusDetailsEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetProcessorRunStatusDetailsExecute(r)
 }
 
 /*
-GetProcessorRunStatusDetails Submits a query to retrieve the run status details of all processors that are in the given list of Processor IDs
+ * GetProcessorRunStatusDetails Submits a query to retrieve the run status details of all processors that are in the given list of Processor IDs
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *ProcessorsApiGetProcessorRunStatusDetailsOpts - Optional Parameters:
- * @param "Body" (optional.Interface of RunStatusDetailsRequestEntity) -  The request for the processors that should be included in the results
-@return ProcessorsRunStatusDetailsEntity
-*/
-func (a *ProcessorsApiService) GetProcessorRunStatusDetails(ctx _context.Context, localVarOptionals *ProcessorsApiGetProcessorRunStatusDetailsOpts) (ProcessorsRunStatusDetailsEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiGetProcessorRunStatusDetailsRequest
+ */
+func (a *ProcessorsApiService) GetProcessorRunStatusDetails(ctx _context.Context) ProcessorsApiApiGetProcessorRunStatusDetailsRequest {
+	return ProcessorsApiApiGetProcessorRunStatusDetailsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorsRunStatusDetailsEntity
+ */
+func (a *ProcessorsApiService) GetProcessorRunStatusDetailsExecute(r ProcessorsApiApiGetProcessorRunStatusDetailsRequest) (ProcessorsRunStatusDetailsEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -379,8 +511,13 @@ func (a *ProcessorsApiService) GetProcessorRunStatusDetails(ctx _context.Context
 		localVarReturnValue  ProcessorsRunStatusDetailsEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/run-status-details/queries"
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.GetProcessorRunStatusDetails")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/run-status-details/queries"
+
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -403,26 +540,20 @@ func (a *ProcessorsApiService) GetProcessorRunStatusDetails(ctx _context.Context
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
-		localVarOptionalBody, localVarOptionalBodyok := localVarOptionals.Body.Value().(RunStatusDetailsRequestEntity)
-		if !localVarOptionalBodyok {
-			return localVarReturnValue, nil, reportError("body should be RunStatusDetailsRequestEntity")
-		}
-		localVarPostBody = &localVarOptionalBody
-	}
-
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -447,21 +578,46 @@ func (a *ProcessorsApiService) GetProcessorRunStatusDetails(ctx _context.Context
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-// ProcessorsApiGetPropertyDescriptorOpts Optional parameters for the method 'GetPropertyDescriptor'
-type ProcessorsApiGetPropertyDescriptorOpts struct {
-	ClientId optional.String
+type ProcessorsApiApiGetPropertyDescriptorRequest struct {
+	ctx          _context.Context
+	ApiService   *ProcessorsApiService
+	id           string
+	propertyName *string
+	clientId     *string
+}
+
+func (r ProcessorsApiApiGetPropertyDescriptorRequest) PropertyName(propertyName string) ProcessorsApiApiGetPropertyDescriptorRequest {
+	r.propertyName = &propertyName
+	return r
+}
+func (r ProcessorsApiApiGetPropertyDescriptorRequest) ClientId(clientId string) ProcessorsApiApiGetPropertyDescriptorRequest {
+	r.clientId = &clientId
+	return r
+}
+
+func (r ProcessorsApiApiGetPropertyDescriptorRequest) Execute() (PropertyDescriptorEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetPropertyDescriptorExecute(r)
 }
 
 /*
-GetPropertyDescriptor Gets the descriptor for a processor property
+ * GetPropertyDescriptor Gets the descriptor for a processor property
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
- * @param propertyName The property name.
- * @param optional nil or *ProcessorsApiGetPropertyDescriptorOpts - Optional Parameters:
- * @param "ClientId" (optional.String) -  If the client id is not specified, new one will be generated. This value (whether specified or generated) is included in the response.
-@return PropertyDescriptorEntity
-*/
-func (a *ProcessorsApiService) GetPropertyDescriptor(ctx _context.Context, id string, propertyName string, localVarOptionals *ProcessorsApiGetPropertyDescriptorOpts) (PropertyDescriptorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiGetPropertyDescriptorRequest
+ */
+func (a *ProcessorsApiService) GetPropertyDescriptor(ctx _context.Context, id string) ProcessorsApiApiGetPropertyDescriptorRequest {
+	return ProcessorsApiApiGetPropertyDescriptorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return PropertyDescriptorEntity
+ */
+func (a *ProcessorsApiService) GetPropertyDescriptorExecute(r ProcessorsApiApiGetPropertyDescriptorRequest) (PropertyDescriptorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -471,18 +627,25 @@ func (a *ProcessorsApiService) GetPropertyDescriptor(ctx _context.Context, id st
 		localVarReturnValue  PropertyDescriptorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}/descriptors"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.GetPropertyDescriptor")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}/descriptors"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-
-	if localVarOptionals != nil && localVarOptionals.ClientId.IsSet() {
-		localVarQueryParams.Add("clientId", parameterToString(localVarOptionals.ClientId.Value(), ""))
+	if r.propertyName == nil {
+		return localVarReturnValue, nil, reportError("propertyName is required and must be specified")
 	}
-	localVarQueryParams.Add("propertyName", parameterToString(propertyName, ""))
+
+	if r.clientId != nil {
+		localVarQueryParams.Add("clientId", parameterToString(*r.clientId, ""))
+	}
+	localVarQueryParams.Add("propertyName", parameterToString(*r.propertyName, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -500,18 +663,19 @@ func (a *ProcessorsApiService) GetPropertyDescriptor(ctx _context.Context, id st
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -536,13 +700,35 @@ func (a *ProcessorsApiService) GetPropertyDescriptor(ctx _context.Context, id st
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessorsApiApiGetStateRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+}
+
+func (r ProcessorsApiApiGetStateRequest) Execute() (ComponentStateEntity, *_nethttp.Response, error) {
+	return r.ApiService.GetStateExecute(r)
+}
+
 /*
-GetState Gets the state for a processor
+ * GetState Gets the state for a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return ComponentStateEntity
-*/
-func (a *ProcessorsApiService) GetState(ctx _context.Context, id string) (ComponentStateEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiGetStateRequest
+ */
+func (a *ProcessorsApiService) GetState(ctx _context.Context, id string) ProcessorsApiApiGetStateRequest {
+	return ProcessorsApiApiGetStateRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ComponentStateEntity
+ */
+func (a *ProcessorsApiService) GetStateExecute(r ProcessorsApiApiGetStateRequest) (ComponentStateEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -552,9 +738,13 @@ func (a *ProcessorsApiService) GetState(ctx _context.Context, id string) (Compon
 		localVarReturnValue  ComponentStateEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}/state"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.GetState")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}/state"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -577,18 +767,19 @@ func (a *ProcessorsApiService) GetState(ctx _context.Context, id string) (Compon
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -613,13 +804,35 @@ func (a *ProcessorsApiService) GetState(ctx _context.Context, id string) (Compon
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessorsApiApiTerminateProcessorRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+}
+
+func (r ProcessorsApiApiTerminateProcessorRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.TerminateProcessorExecute(r)
+}
+
 /*
-TerminateProcessor Terminates a processor, essentially \"deleting\" its threads and any active tasks
+ * TerminateProcessor Terminates a processor, essentially \"deleting\" its threads and any active tasks
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
-@return ProcessorEntity
-*/
-func (a *ProcessorsApiService) TerminateProcessor(ctx _context.Context, id string) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiTerminateProcessorRequest
+ */
+func (a *ProcessorsApiService) TerminateProcessor(ctx _context.Context, id string) ProcessorsApiApiTerminateProcessorRequest {
+	return ProcessorsApiApiTerminateProcessorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessorsApiService) TerminateProcessorExecute(r ProcessorsApiApiTerminateProcessorRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -629,9 +842,13 @@ func (a *ProcessorsApiService) TerminateProcessor(ctx _context.Context, id strin
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}/threads"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.TerminateProcessor")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}/threads"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -654,18 +871,19 @@ func (a *ProcessorsApiService) TerminateProcessor(ctx _context.Context, id strin
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -690,14 +908,41 @@ func (a *ProcessorsApiService) TerminateProcessor(ctx _context.Context, id strin
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessorsApiApiUpdateProcessorRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+	body       *ProcessorEntity
+}
+
+func (r ProcessorsApiApiUpdateProcessorRequest) Body(body ProcessorEntity) ProcessorsApiApiUpdateProcessorRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessorsApiApiUpdateProcessorRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateProcessorExecute(r)
+}
+
 /*
-UpdateProcessor Updates a processor
+ * UpdateProcessor Updates a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
- * @param body The processor configuration details.
-@return ProcessorEntity
-*/
-func (a *ProcessorsApiService) UpdateProcessor(ctx _context.Context, id string, body ProcessorEntity) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiUpdateProcessorRequest
+ */
+func (a *ProcessorsApiService) UpdateProcessor(ctx _context.Context, id string) ProcessorsApiApiUpdateProcessorRequest {
+	return ProcessorsApiApiUpdateProcessorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessorsApiService) UpdateProcessorExecute(r ProcessorsApiApiUpdateProcessorRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -707,13 +952,20 @@ func (a *ProcessorsApiService) UpdateProcessor(ctx _context.Context, id string, 
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.UpdateProcessor")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -733,19 +985,20 @@ func (a *ProcessorsApiService) UpdateProcessor(ctx _context.Context, id string, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -770,14 +1023,41 @@ func (a *ProcessorsApiService) UpdateProcessor(ctx _context.Context, id string, 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ProcessorsApiApiUpdateRunStatusRequest struct {
+	ctx        _context.Context
+	ApiService *ProcessorsApiService
+	id         string
+	body       *ProcessorRunStatusEntity
+}
+
+func (r ProcessorsApiApiUpdateRunStatusRequest) Body(body ProcessorRunStatusEntity) ProcessorsApiApiUpdateRunStatusRequest {
+	r.body = &body
+	return r
+}
+
+func (r ProcessorsApiApiUpdateRunStatusRequest) Execute() (ProcessorEntity, *_nethttp.Response, error) {
+	return r.ApiService.UpdateRunStatusExecute(r)
+}
+
 /*
-UpdateRunStatus Updates run status of a processor
+ * UpdateRunStatus Updates run status of a processor
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id The processor id.
- * @param body The processor run status.
-@return ProcessorEntity
-*/
-func (a *ProcessorsApiService) UpdateRunStatus(ctx _context.Context, id string, body ProcessorRunStatusEntity) (ProcessorEntity, *_nethttp.Response, error) {
+ * @return ProcessorsApiApiUpdateRunStatusRequest
+ */
+func (a *ProcessorsApiService) UpdateRunStatus(ctx _context.Context, id string) ProcessorsApiApiUpdateRunStatusRequest {
+	return ProcessorsApiApiUpdateRunStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+/*
+ * Execute executes the request
+ * @return ProcessorEntity
+ */
+func (a *ProcessorsApiService) UpdateRunStatusExecute(r ProcessorsApiApiUpdateRunStatusRequest) (ProcessorEntity, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -787,13 +1067,20 @@ func (a *ProcessorsApiService) UpdateRunStatus(ctx _context.Context, id string, 
 		localVarReturnValue  ProcessorEntity
 	)
 
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/processors/{id}/run-status"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")), -1)
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProcessorsApiService.UpdateRunStatus")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/processors/{id}/run-status"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -813,19 +1100,20 @@ func (a *ProcessorsApiService) UpdateRunStatus(ctx _context.Context, id string, 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = &body
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(r)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}

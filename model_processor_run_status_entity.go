@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,11 +11,178 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // ProcessorRunStatusEntity struct for ProcessorRunStatusEntity
 type ProcessorRunStatusEntity struct {
-	Revision RevisionDto `json:"revision,omitempty"`
+	Revision *RevisionDTO `json:"revision,omitempty"`
 	// The run status of the Processor.
-	State string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
 	// Acknowledges that this node is disconnected to allow for mutable requests to proceed.
-	DisconnectedNodeAcknowledged bool `json:"disconnectedNodeAcknowledged,omitempty"`
+	DisconnectedNodeAcknowledged *bool `json:"disconnectedNodeAcknowledged,omitempty"`
+}
+
+// NewProcessorRunStatusEntity instantiates a new ProcessorRunStatusEntity object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewProcessorRunStatusEntity() *ProcessorRunStatusEntity {
+	this := ProcessorRunStatusEntity{}
+	return &this
+}
+
+// NewProcessorRunStatusEntityWithDefaults instantiates a new ProcessorRunStatusEntity object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewProcessorRunStatusEntityWithDefaults() *ProcessorRunStatusEntity {
+	this := ProcessorRunStatusEntity{}
+	return &this
+}
+
+// GetRevision returns the Revision field value if set, zero value otherwise.
+func (o *ProcessorRunStatusEntity) GetRevision() RevisionDTO {
+	if o == nil || o.Revision == nil {
+		var ret RevisionDTO
+		return ret
+	}
+	return *o.Revision
+}
+
+// GetRevisionOk returns a tuple with the Revision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorRunStatusEntity) GetRevisionOk() (*RevisionDTO, bool) {
+	if o == nil || o.Revision == nil {
+		return nil, false
+	}
+	return o.Revision, true
+}
+
+// HasRevision returns a boolean if a field has been set.
+func (o *ProcessorRunStatusEntity) HasRevision() bool {
+	if o != nil && o.Revision != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRevision gets a reference to the given RevisionDTO and assigns it to the Revision field.
+func (o *ProcessorRunStatusEntity) SetRevision(v RevisionDTO) {
+	o.Revision = &v
+}
+
+// GetState returns the State field value if set, zero value otherwise.
+func (o *ProcessorRunStatusEntity) GetState() string {
+	if o == nil || o.State == nil {
+		var ret string
+		return ret
+	}
+	return *o.State
+}
+
+// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorRunStatusEntity) GetStateOk() (*string, bool) {
+	if o == nil || o.State == nil {
+		return nil, false
+	}
+	return o.State, true
+}
+
+// HasState returns a boolean if a field has been set.
+func (o *ProcessorRunStatusEntity) HasState() bool {
+	if o != nil && o.State != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetState gets a reference to the given string and assigns it to the State field.
+func (o *ProcessorRunStatusEntity) SetState(v string) {
+	o.State = &v
+}
+
+// GetDisconnectedNodeAcknowledged returns the DisconnectedNodeAcknowledged field value if set, zero value otherwise.
+func (o *ProcessorRunStatusEntity) GetDisconnectedNodeAcknowledged() bool {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		var ret bool
+		return ret
+	}
+	return *o.DisconnectedNodeAcknowledged
+}
+
+// GetDisconnectedNodeAcknowledgedOk returns a tuple with the DisconnectedNodeAcknowledged field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessorRunStatusEntity) GetDisconnectedNodeAcknowledgedOk() (*bool, bool) {
+	if o == nil || o.DisconnectedNodeAcknowledged == nil {
+		return nil, false
+	}
+	return o.DisconnectedNodeAcknowledged, true
+}
+
+// HasDisconnectedNodeAcknowledged returns a boolean if a field has been set.
+func (o *ProcessorRunStatusEntity) HasDisconnectedNodeAcknowledged() bool {
+	if o != nil && o.DisconnectedNodeAcknowledged != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisconnectedNodeAcknowledged gets a reference to the given bool and assigns it to the DisconnectedNodeAcknowledged field.
+func (o *ProcessorRunStatusEntity) SetDisconnectedNodeAcknowledged(v bool) {
+	o.DisconnectedNodeAcknowledged = &v
+}
+
+func (o ProcessorRunStatusEntity) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Revision != nil {
+		toSerialize["revision"] = o.Revision
+	}
+	if o.State != nil {
+		toSerialize["state"] = o.State
+	}
+	if o.DisconnectedNodeAcknowledged != nil {
+		toSerialize["disconnectedNodeAcknowledged"] = o.DisconnectedNodeAcknowledged
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableProcessorRunStatusEntity struct {
+	value *ProcessorRunStatusEntity
+	isSet bool
+}
+
+func (v NullableProcessorRunStatusEntity) Get() *ProcessorRunStatusEntity {
+	return v.value
+}
+
+func (v *NullableProcessorRunStatusEntity) Set(val *ProcessorRunStatusEntity) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableProcessorRunStatusEntity) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableProcessorRunStatusEntity) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableProcessorRunStatusEntity(val *ProcessorRunStatusEntity) *NullableProcessorRunStatusEntity {
+	return &NullableProcessorRunStatusEntity{value: val, isSet: true}
+}
+
+func (v NullableProcessorRunStatusEntity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableProcessorRunStatusEntity) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

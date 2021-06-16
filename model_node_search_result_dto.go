@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,10 +11,142 @@
 
 package nifi
 
-// NodeSearchResultDto struct for NodeSearchResultDto
-type NodeSearchResultDto struct {
+import (
+	"encoding/json"
+)
+
+// NodeSearchResultDTO struct for NodeSearchResultDTO
+type NodeSearchResultDTO struct {
 	// The id of the node that matched the search.
-	Id string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 	// The address of the node that matched the search.
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
+}
+
+// NewNodeSearchResultDTO instantiates a new NodeSearchResultDTO object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewNodeSearchResultDTO() *NodeSearchResultDTO {
+	this := NodeSearchResultDTO{}
+	return &this
+}
+
+// NewNodeSearchResultDTOWithDefaults instantiates a new NodeSearchResultDTO object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewNodeSearchResultDTOWithDefaults() *NodeSearchResultDTO {
+	this := NodeSearchResultDTO{}
+	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *NodeSearchResultDTO) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeSearchResultDTO) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *NodeSearchResultDTO) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *NodeSearchResultDTO) SetId(v string) {
+	o.Id = &v
+}
+
+// GetAddress returns the Address field value if set, zero value otherwise.
+func (o *NodeSearchResultDTO) GetAddress() string {
+	if o == nil || o.Address == nil {
+		var ret string
+		return ret
+	}
+	return *o.Address
+}
+
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeSearchResultDTO) GetAddressOk() (*string, bool) {
+	if o == nil || o.Address == nil {
+		return nil, false
+	}
+	return o.Address, true
+}
+
+// HasAddress returns a boolean if a field has been set.
+func (o *NodeSearchResultDTO) HasAddress() bool {
+	if o != nil && o.Address != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
+func (o *NodeSearchResultDTO) SetAddress(v string) {
+	o.Address = &v
+}
+
+func (o NodeSearchResultDTO) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Address != nil {
+		toSerialize["address"] = o.Address
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableNodeSearchResultDTO struct {
+	value *NodeSearchResultDTO
+	isSet bool
+}
+
+func (v NullableNodeSearchResultDTO) Get() *NodeSearchResultDTO {
+	return v.value
+}
+
+func (v *NullableNodeSearchResultDTO) Set(val *NodeSearchResultDTO) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableNodeSearchResultDTO) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableNodeSearchResultDTO) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableNodeSearchResultDTO(val *NodeSearchResultDTO) *NullableNodeSearchResultDTO {
+	return &NullableNodeSearchResultDTO{value: val, isSet: true}
+}
+
+func (v NullableNodeSearchResultDTO) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableNodeSearchResultDTO) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

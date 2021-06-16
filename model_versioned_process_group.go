@@ -3,7 +3,7 @@
  *
  * The Rest Api provides programmatic access to command and control a NiFi instance in real time. Start and                                              stop processors, monitor queues, query provenance data, and more. Each endpoint below includes a description,                                             definitions of the expected input and output, potential response codes, and the authorizations required                                             to invoke each service.
  *
- * API version: 1.12.0-SNAPSHOT
+ * API version: 1.13.2
  * Contact: dev@nifi.apache.org
  */
 
@@ -11,39 +11,805 @@
 
 package nifi
 
+import (
+	"encoding/json"
+)
+
 // VersionedProcessGroup struct for VersionedProcessGroup
 type VersionedProcessGroup struct {
 	// The component's unique identifier
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 	// The component's name
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// The user-supplied comments for the component
-	Comments string   `json:"comments,omitempty"`
-	Position Position `json:"position,omitempty"`
+	Comments *string   `json:"comments,omitempty"`
+	Position *Position `json:"position,omitempty"`
 	// The child Process Groups
-	ProcessGroups []VersionedProcessGroup `json:"processGroups,omitempty"`
+	ProcessGroups *[]VersionedProcessGroup `json:"processGroups,omitempty"`
 	// The Remote Process Groups
-	RemoteProcessGroups []VersionedRemoteProcessGroup `json:"remoteProcessGroups,omitempty"`
+	RemoteProcessGroups *[]VersionedRemoteProcessGroup `json:"remoteProcessGroups,omitempty"`
 	// The Processors
-	Processors []VersionedProcessor `json:"processors,omitempty"`
+	Processors *[]VersionedProcessor `json:"processors,omitempty"`
 	// The Input Ports
-	InputPorts []VersionedPort `json:"inputPorts,omitempty"`
+	InputPorts *[]VersionedPort `json:"inputPorts,omitempty"`
 	// The Output Ports
-	OutputPorts []VersionedPort `json:"outputPorts,omitempty"`
+	OutputPorts *[]VersionedPort `json:"outputPorts,omitempty"`
 	// The Connections
-	Connections []VersionedConnection `json:"connections,omitempty"`
+	Connections *[]VersionedConnection `json:"connections,omitempty"`
 	// The Labels
-	Labels []VersionedLabel `json:"labels,omitempty"`
+	Labels *[]VersionedLabel `json:"labels,omitempty"`
 	// The Funnels
-	Funnels []VersionedFunnel `json:"funnels,omitempty"`
+	Funnels *[]VersionedFunnel `json:"funnels,omitempty"`
 	// The Controller Services
-	ControllerServices       []VersionedControllerService `json:"controllerServices,omitempty"`
-	VersionedFlowCoordinates VersionedFlowCoordinates     `json:"versionedFlowCoordinates,omitempty"`
+	ControllerServices       *[]VersionedControllerService `json:"controllerServices,omitempty"`
+	VersionedFlowCoordinates *VersionedFlowCoordinates     `json:"versionedFlowCoordinates,omitempty"`
 	// The Variables in the Variable Registry for this Process Group (not including any ancestor or descendant Process Groups)
-	Variables map[string]string `json:"variables,omitempty"`
+	Variables *map[string]string `json:"variables,omitempty"`
 	// The name of the parameter context used by this process group
-	ParameterContextName string `json:"parameterContextName,omitempty"`
-	ComponentType        string `json:"componentType,omitempty"`
+	ParameterContextName *string `json:"parameterContextName,omitempty"`
+	// The configured FlowFile Concurrency for the Process Group
+	FlowFileConcurrency *string `json:"flowFileConcurrency,omitempty"`
+	// The FlowFile Outbound Policy for the Process Group
+	FlowFileOutboundPolicy *string `json:"flowFileOutboundPolicy,omitempty"`
+	ComponentType          *string `json:"componentType,omitempty"`
 	// The ID of the Process Group that this component belongs to
-	GroupIdentifier string `json:"groupIdentifier,omitempty"`
+	GroupIdentifier *string `json:"groupIdentifier,omitempty"`
+}
+
+// NewVersionedProcessGroup instantiates a new VersionedProcessGroup object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewVersionedProcessGroup() *VersionedProcessGroup {
+	this := VersionedProcessGroup{}
+	return &this
+}
+
+// NewVersionedProcessGroupWithDefaults instantiates a new VersionedProcessGroup object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewVersionedProcessGroupWithDefaults() *VersionedProcessGroup {
+	this := VersionedProcessGroup{}
+	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *VersionedProcessGroup) SetIdentifier(v string) {
+	o.Identifier = &v
+}
+
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+// HasName returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *VersionedProcessGroup) SetName(v string) {
+	o.Name = &v
+}
+
+// GetComments returns the Comments field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetComments() string {
+	if o == nil || o.Comments == nil {
+		var ret string
+		return ret
+	}
+	return *o.Comments
+}
+
+// GetCommentsOk returns a tuple with the Comments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetCommentsOk() (*string, bool) {
+	if o == nil || o.Comments == nil {
+		return nil, false
+	}
+	return o.Comments, true
+}
+
+// HasComments returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasComments() bool {
+	if o != nil && o.Comments != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComments gets a reference to the given string and assigns it to the Comments field.
+func (o *VersionedProcessGroup) SetComments(v string) {
+	o.Comments = &v
+}
+
+// GetPosition returns the Position field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetPosition() Position {
+	if o == nil || o.Position == nil {
+		var ret Position
+		return ret
+	}
+	return *o.Position
+}
+
+// GetPositionOk returns a tuple with the Position field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetPositionOk() (*Position, bool) {
+	if o == nil || o.Position == nil {
+		return nil, false
+	}
+	return o.Position, true
+}
+
+// HasPosition returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasPosition() bool {
+	if o != nil && o.Position != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPosition gets a reference to the given Position and assigns it to the Position field.
+func (o *VersionedProcessGroup) SetPosition(v Position) {
+	o.Position = &v
+}
+
+// GetProcessGroups returns the ProcessGroups field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetProcessGroups() []VersionedProcessGroup {
+	if o == nil || o.ProcessGroups == nil {
+		var ret []VersionedProcessGroup
+		return ret
+	}
+	return *o.ProcessGroups
+}
+
+// GetProcessGroupsOk returns a tuple with the ProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetProcessGroupsOk() (*[]VersionedProcessGroup, bool) {
+	if o == nil || o.ProcessGroups == nil {
+		return nil, false
+	}
+	return o.ProcessGroups, true
+}
+
+// HasProcessGroups returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasProcessGroups() bool {
+	if o != nil && o.ProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessGroups gets a reference to the given []VersionedProcessGroup and assigns it to the ProcessGroups field.
+func (o *VersionedProcessGroup) SetProcessGroups(v []VersionedProcessGroup) {
+	o.ProcessGroups = &v
+}
+
+// GetRemoteProcessGroups returns the RemoteProcessGroups field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetRemoteProcessGroups() []VersionedRemoteProcessGroup {
+	if o == nil || o.RemoteProcessGroups == nil {
+		var ret []VersionedRemoteProcessGroup
+		return ret
+	}
+	return *o.RemoteProcessGroups
+}
+
+// GetRemoteProcessGroupsOk returns a tuple with the RemoteProcessGroups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetRemoteProcessGroupsOk() (*[]VersionedRemoteProcessGroup, bool) {
+	if o == nil || o.RemoteProcessGroups == nil {
+		return nil, false
+	}
+	return o.RemoteProcessGroups, true
+}
+
+// HasRemoteProcessGroups returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasRemoteProcessGroups() bool {
+	if o != nil && o.RemoteProcessGroups != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteProcessGroups gets a reference to the given []VersionedRemoteProcessGroup and assigns it to the RemoteProcessGroups field.
+func (o *VersionedProcessGroup) SetRemoteProcessGroups(v []VersionedRemoteProcessGroup) {
+	o.RemoteProcessGroups = &v
+}
+
+// GetProcessors returns the Processors field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetProcessors() []VersionedProcessor {
+	if o == nil || o.Processors == nil {
+		var ret []VersionedProcessor
+		return ret
+	}
+	return *o.Processors
+}
+
+// GetProcessorsOk returns a tuple with the Processors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetProcessorsOk() (*[]VersionedProcessor, bool) {
+	if o == nil || o.Processors == nil {
+		return nil, false
+	}
+	return o.Processors, true
+}
+
+// HasProcessors returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasProcessors() bool {
+	if o != nil && o.Processors != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessors gets a reference to the given []VersionedProcessor and assigns it to the Processors field.
+func (o *VersionedProcessGroup) SetProcessors(v []VersionedProcessor) {
+	o.Processors = &v
+}
+
+// GetInputPorts returns the InputPorts field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetInputPorts() []VersionedPort {
+	if o == nil || o.InputPorts == nil {
+		var ret []VersionedPort
+		return ret
+	}
+	return *o.InputPorts
+}
+
+// GetInputPortsOk returns a tuple with the InputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetInputPortsOk() (*[]VersionedPort, bool) {
+	if o == nil || o.InputPorts == nil {
+		return nil, false
+	}
+	return o.InputPorts, true
+}
+
+// HasInputPorts returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasInputPorts() bool {
+	if o != nil && o.InputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInputPorts gets a reference to the given []VersionedPort and assigns it to the InputPorts field.
+func (o *VersionedProcessGroup) SetInputPorts(v []VersionedPort) {
+	o.InputPorts = &v
+}
+
+// GetOutputPorts returns the OutputPorts field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetOutputPorts() []VersionedPort {
+	if o == nil || o.OutputPorts == nil {
+		var ret []VersionedPort
+		return ret
+	}
+	return *o.OutputPorts
+}
+
+// GetOutputPortsOk returns a tuple with the OutputPorts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetOutputPortsOk() (*[]VersionedPort, bool) {
+	if o == nil || o.OutputPorts == nil {
+		return nil, false
+	}
+	return o.OutputPorts, true
+}
+
+// HasOutputPorts returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasOutputPorts() bool {
+	if o != nil && o.OutputPorts != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputPorts gets a reference to the given []VersionedPort and assigns it to the OutputPorts field.
+func (o *VersionedProcessGroup) SetOutputPorts(v []VersionedPort) {
+	o.OutputPorts = &v
+}
+
+// GetConnections returns the Connections field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetConnections() []VersionedConnection {
+	if o == nil || o.Connections == nil {
+		var ret []VersionedConnection
+		return ret
+	}
+	return *o.Connections
+}
+
+// GetConnectionsOk returns a tuple with the Connections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetConnectionsOk() (*[]VersionedConnection, bool) {
+	if o == nil || o.Connections == nil {
+		return nil, false
+	}
+	return o.Connections, true
+}
+
+// HasConnections returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasConnections() bool {
+	if o != nil && o.Connections != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConnections gets a reference to the given []VersionedConnection and assigns it to the Connections field.
+func (o *VersionedProcessGroup) SetConnections(v []VersionedConnection) {
+	o.Connections = &v
+}
+
+// GetLabels returns the Labels field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetLabels() []VersionedLabel {
+	if o == nil || o.Labels == nil {
+		var ret []VersionedLabel
+		return ret
+	}
+	return *o.Labels
+}
+
+// GetLabelsOk returns a tuple with the Labels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetLabelsOk() (*[]VersionedLabel, bool) {
+	if o == nil || o.Labels == nil {
+		return nil, false
+	}
+	return o.Labels, true
+}
+
+// HasLabels returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasLabels() bool {
+	if o != nil && o.Labels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetLabels gets a reference to the given []VersionedLabel and assigns it to the Labels field.
+func (o *VersionedProcessGroup) SetLabels(v []VersionedLabel) {
+	o.Labels = &v
+}
+
+// GetFunnels returns the Funnels field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetFunnels() []VersionedFunnel {
+	if o == nil || o.Funnels == nil {
+		var ret []VersionedFunnel
+		return ret
+	}
+	return *o.Funnels
+}
+
+// GetFunnelsOk returns a tuple with the Funnels field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetFunnelsOk() (*[]VersionedFunnel, bool) {
+	if o == nil || o.Funnels == nil {
+		return nil, false
+	}
+	return o.Funnels, true
+}
+
+// HasFunnels returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasFunnels() bool {
+	if o != nil && o.Funnels != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFunnels gets a reference to the given []VersionedFunnel and assigns it to the Funnels field.
+func (o *VersionedProcessGroup) SetFunnels(v []VersionedFunnel) {
+	o.Funnels = &v
+}
+
+// GetControllerServices returns the ControllerServices field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetControllerServices() []VersionedControllerService {
+	if o == nil || o.ControllerServices == nil {
+		var ret []VersionedControllerService
+		return ret
+	}
+	return *o.ControllerServices
+}
+
+// GetControllerServicesOk returns a tuple with the ControllerServices field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetControllerServicesOk() (*[]VersionedControllerService, bool) {
+	if o == nil || o.ControllerServices == nil {
+		return nil, false
+	}
+	return o.ControllerServices, true
+}
+
+// HasControllerServices returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasControllerServices() bool {
+	if o != nil && o.ControllerServices != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetControllerServices gets a reference to the given []VersionedControllerService and assigns it to the ControllerServices field.
+func (o *VersionedProcessGroup) SetControllerServices(v []VersionedControllerService) {
+	o.ControllerServices = &v
+}
+
+// GetVersionedFlowCoordinates returns the VersionedFlowCoordinates field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetVersionedFlowCoordinates() VersionedFlowCoordinates {
+	if o == nil || o.VersionedFlowCoordinates == nil {
+		var ret VersionedFlowCoordinates
+		return ret
+	}
+	return *o.VersionedFlowCoordinates
+}
+
+// GetVersionedFlowCoordinatesOk returns a tuple with the VersionedFlowCoordinates field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetVersionedFlowCoordinatesOk() (*VersionedFlowCoordinates, bool) {
+	if o == nil || o.VersionedFlowCoordinates == nil {
+		return nil, false
+	}
+	return o.VersionedFlowCoordinates, true
+}
+
+// HasVersionedFlowCoordinates returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasVersionedFlowCoordinates() bool {
+	if o != nil && o.VersionedFlowCoordinates != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersionedFlowCoordinates gets a reference to the given VersionedFlowCoordinates and assigns it to the VersionedFlowCoordinates field.
+func (o *VersionedProcessGroup) SetVersionedFlowCoordinates(v VersionedFlowCoordinates) {
+	o.VersionedFlowCoordinates = &v
+}
+
+// GetVariables returns the Variables field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetVariables() map[string]string {
+	if o == nil || o.Variables == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Variables
+}
+
+// GetVariablesOk returns a tuple with the Variables field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetVariablesOk() (*map[string]string, bool) {
+	if o == nil || o.Variables == nil {
+		return nil, false
+	}
+	return o.Variables, true
+}
+
+// HasVariables returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasVariables() bool {
+	if o != nil && o.Variables != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVariables gets a reference to the given map[string]string and assigns it to the Variables field.
+func (o *VersionedProcessGroup) SetVariables(v map[string]string) {
+	o.Variables = &v
+}
+
+// GetParameterContextName returns the ParameterContextName field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetParameterContextName() string {
+	if o == nil || o.ParameterContextName == nil {
+		var ret string
+		return ret
+	}
+	return *o.ParameterContextName
+}
+
+// GetParameterContextNameOk returns a tuple with the ParameterContextName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetParameterContextNameOk() (*string, bool) {
+	if o == nil || o.ParameterContextName == nil {
+		return nil, false
+	}
+	return o.ParameterContextName, true
+}
+
+// HasParameterContextName returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasParameterContextName() bool {
+	if o != nil && o.ParameterContextName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetParameterContextName gets a reference to the given string and assigns it to the ParameterContextName field.
+func (o *VersionedProcessGroup) SetParameterContextName(v string) {
+	o.ParameterContextName = &v
+}
+
+// GetFlowFileConcurrency returns the FlowFileConcurrency field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetFlowFileConcurrency() string {
+	if o == nil || o.FlowFileConcurrency == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowFileConcurrency
+}
+
+// GetFlowFileConcurrencyOk returns a tuple with the FlowFileConcurrency field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetFlowFileConcurrencyOk() (*string, bool) {
+	if o == nil || o.FlowFileConcurrency == nil {
+		return nil, false
+	}
+	return o.FlowFileConcurrency, true
+}
+
+// HasFlowFileConcurrency returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasFlowFileConcurrency() bool {
+	if o != nil && o.FlowFileConcurrency != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileConcurrency gets a reference to the given string and assigns it to the FlowFileConcurrency field.
+func (o *VersionedProcessGroup) SetFlowFileConcurrency(v string) {
+	o.FlowFileConcurrency = &v
+}
+
+// GetFlowFileOutboundPolicy returns the FlowFileOutboundPolicy field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetFlowFileOutboundPolicy() string {
+	if o == nil || o.FlowFileOutboundPolicy == nil {
+		var ret string
+		return ret
+	}
+	return *o.FlowFileOutboundPolicy
+}
+
+// GetFlowFileOutboundPolicyOk returns a tuple with the FlowFileOutboundPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetFlowFileOutboundPolicyOk() (*string, bool) {
+	if o == nil || o.FlowFileOutboundPolicy == nil {
+		return nil, false
+	}
+	return o.FlowFileOutboundPolicy, true
+}
+
+// HasFlowFileOutboundPolicy returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasFlowFileOutboundPolicy() bool {
+	if o != nil && o.FlowFileOutboundPolicy != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetFlowFileOutboundPolicy gets a reference to the given string and assigns it to the FlowFileOutboundPolicy field.
+func (o *VersionedProcessGroup) SetFlowFileOutboundPolicy(v string) {
+	o.FlowFileOutboundPolicy = &v
+}
+
+// GetComponentType returns the ComponentType field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetComponentType() string {
+	if o == nil || o.ComponentType == nil {
+		var ret string
+		return ret
+	}
+	return *o.ComponentType
+}
+
+// GetComponentTypeOk returns a tuple with the ComponentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetComponentTypeOk() (*string, bool) {
+	if o == nil || o.ComponentType == nil {
+		return nil, false
+	}
+	return o.ComponentType, true
+}
+
+// HasComponentType returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasComponentType() bool {
+	if o != nil && o.ComponentType != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComponentType gets a reference to the given string and assigns it to the ComponentType field.
+func (o *VersionedProcessGroup) SetComponentType(v string) {
+	o.ComponentType = &v
+}
+
+// GetGroupIdentifier returns the GroupIdentifier field value if set, zero value otherwise.
+func (o *VersionedProcessGroup) GetGroupIdentifier() string {
+	if o == nil || o.GroupIdentifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.GroupIdentifier
+}
+
+// GetGroupIdentifierOk returns a tuple with the GroupIdentifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VersionedProcessGroup) GetGroupIdentifierOk() (*string, bool) {
+	if o == nil || o.GroupIdentifier == nil {
+		return nil, false
+	}
+	return o.GroupIdentifier, true
+}
+
+// HasGroupIdentifier returns a boolean if a field has been set.
+func (o *VersionedProcessGroup) HasGroupIdentifier() bool {
+	if o != nil && o.GroupIdentifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetGroupIdentifier gets a reference to the given string and assigns it to the GroupIdentifier field.
+func (o *VersionedProcessGroup) SetGroupIdentifier(v string) {
+	o.GroupIdentifier = &v
+}
+
+func (o VersionedProcessGroup) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
+	}
+	if o.Comments != nil {
+		toSerialize["comments"] = o.Comments
+	}
+	if o.Position != nil {
+		toSerialize["position"] = o.Position
+	}
+	if o.ProcessGroups != nil {
+		toSerialize["processGroups"] = o.ProcessGroups
+	}
+	if o.RemoteProcessGroups != nil {
+		toSerialize["remoteProcessGroups"] = o.RemoteProcessGroups
+	}
+	if o.Processors != nil {
+		toSerialize["processors"] = o.Processors
+	}
+	if o.InputPorts != nil {
+		toSerialize["inputPorts"] = o.InputPorts
+	}
+	if o.OutputPorts != nil {
+		toSerialize["outputPorts"] = o.OutputPorts
+	}
+	if o.Connections != nil {
+		toSerialize["connections"] = o.Connections
+	}
+	if o.Labels != nil {
+		toSerialize["labels"] = o.Labels
+	}
+	if o.Funnels != nil {
+		toSerialize["funnels"] = o.Funnels
+	}
+	if o.ControllerServices != nil {
+		toSerialize["controllerServices"] = o.ControllerServices
+	}
+	if o.VersionedFlowCoordinates != nil {
+		toSerialize["versionedFlowCoordinates"] = o.VersionedFlowCoordinates
+	}
+	if o.Variables != nil {
+		toSerialize["variables"] = o.Variables
+	}
+	if o.ParameterContextName != nil {
+		toSerialize["parameterContextName"] = o.ParameterContextName
+	}
+	if o.FlowFileConcurrency != nil {
+		toSerialize["flowFileConcurrency"] = o.FlowFileConcurrency
+	}
+	if o.FlowFileOutboundPolicy != nil {
+		toSerialize["flowFileOutboundPolicy"] = o.FlowFileOutboundPolicy
+	}
+	if o.ComponentType != nil {
+		toSerialize["componentType"] = o.ComponentType
+	}
+	if o.GroupIdentifier != nil {
+		toSerialize["groupIdentifier"] = o.GroupIdentifier
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableVersionedProcessGroup struct {
+	value *VersionedProcessGroup
+	isSet bool
+}
+
+func (v NullableVersionedProcessGroup) Get() *VersionedProcessGroup {
+	return v.value
+}
+
+func (v *NullableVersionedProcessGroup) Set(val *VersionedProcessGroup) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableVersionedProcessGroup) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableVersionedProcessGroup) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableVersionedProcessGroup(val *VersionedProcessGroup) *NullableVersionedProcessGroup {
+	return &NullableVersionedProcessGroup{value: val, isSet: true}
+}
+
+func (v NullableVersionedProcessGroup) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableVersionedProcessGroup) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }
